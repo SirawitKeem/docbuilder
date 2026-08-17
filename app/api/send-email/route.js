@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { createDocumentRecord } from "@/lib/data/documents";
 
 async function getAccessToken() {
   const body = new URLSearchParams({
@@ -81,6 +82,12 @@ export async function POST(request) {
     // If Microsoft Graph API credentials are set, use Microsoft Graph
     if (process.env.CLIENT_ID && process.env.CLIENT_SECRET && process.env.TENANT_ID) {
       await sendGraphMail({ to, subject, message, attachmentBase64, attachmentName });
+      await createDocumentRecord({
+        name: attachmentName || "NDA.pdf",
+        templateId: "nda",
+        templateName: "NDA",
+        sentTo: to,
+      });
       return Response.json({ success: true, provider: "Microsoft Graph" });
     }
 
@@ -110,6 +117,13 @@ export async function POST(request) {
         subject,
         text: message,
         attachments,
+      });
+
+      await createDocumentRecord({
+        name: attachmentName || "NDA.pdf",
+        templateId: "nda",
+        templateName: "NDA",
+        sentTo: to,
       });
 
       return Response.json({ success: true, provider: "Nodemailer (Gmail)" });
