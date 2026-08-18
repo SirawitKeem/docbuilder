@@ -2,9 +2,9 @@ export default function DocumentFooter({ title, pageNumber, totalPages }) {
   const displayTitle = title ? title.toUpperCase() : "NON-DISCLOSURE AGREEMENT";
 
   return (
-    <div className="mt-4 pt-2 shrink-0">
-      <div className="flex items-center gap-3">
-        {/* Green Bar with Title inside, angled cut, black slash */}
+    <div className="mt-4 pt-2 shrink-0 w-full">
+      <div className="flex items-center justify-between gap-4 w-full">
+        {/* Green Bar with Title inside */}
         <div className="flex-1 relative h-5 flex items-center overflow-hidden rounded-xs">
           {/* Main Green Bar with right angled cut */}
           <div
@@ -27,8 +27,8 @@ export default function DocumentFooter({ title, pageNumber, totalPages }) {
           />
         </div>
 
-        {/* Page Number */}
-        <span className="text-[11px] font-medium text-gray-800 whitespace-nowrap shrink-0">
+        {/* Page Number - Right Aligned Flush */}
+        <span className="text-[11px] font-medium text-gray-800 whitespace-nowrap text-right shrink-0">
           Page {pageNumber} of {totalPages}
         </span>
       </div>

@@ -21,7 +21,7 @@ function BrandStripe() {
       <polygon points="0,14 9,14 16,0 7,0" fill="#191919" />
       <polygon points="13,14 22,14 29,0 20,0" fill="#191919" />
       {/* Green solid bar extending to the right edge */}
-      <polygon points="27,14 340,14 340,0 36,0" fill="#1B7B51" />
+      <polygon points="27,14 340,14 340,0 34,0" fill="#1B7B51" />
     </svg>
   );
 }
