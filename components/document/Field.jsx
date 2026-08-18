@@ -31,7 +31,7 @@ export default function Field({ id, placeholder, type = "text", minWidth = 4 }) 
     ? "border-primary-500 bg-white ring-2 ring-primary-100"
     : isEmpty
     ? "border-dashed border-primary-300 bg-primary-50 hover:bg-primary-100"
-    : "border-transparent bg-primary-50/70 hover:bg-primary-100/80";
+    : "border-transparent bg-primary-50/80 hover:bg-primary-100";
 
   if (type === "textarea") {
     return (
@@ -42,19 +42,17 @@ export default function Field({ id, placeholder, type = "text", minWidth = 4 }) 
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         rows={2}
-        className={`block w-full max-w-full my-1 px-2 py-1 rounded border outline-none transition-colors duration-150 resize-none text-inherit font-inherit leading-inherit ${stateClasses}`}
+        className={`block w-full max-w-full my-1 px-2.5 py-1.5 rounded border outline-none transition-colors duration-150 resize-none text-inherit font-inherit leading-inherit ${stateClasses}`}
       />
     );
   }
 
-  // คำนวณความกว้างกล่องอินพุท:
-  // หากมีค่า ให้ปรับกว้างตามความยาวจริงของตัวอักษรทันที (ไม่เหลือพื้นที่ว่างส่วนเกินด้านขวา)
-  // หากยังไม่มีค่า ให้ใช้ความกว้างของ placeholder หรือ minWidth
+  // คำนวณความกว้างอินพุทให้พอดี ไม่ถูกตัดซ่อนตัวอักษรท้าย (เพิ่มเผื่อ 1.8ch สำหรับ padding ภายใน)
   const visualLen = getThaiVisualWidth(value);
   const placeholderLen = getThaiVisualWidth(placeholder);
   const calcWidth = value
-    ? Math.max(1, visualLen + 0.6)
-    : Math.max(minWidth || 4, placeholderLen || 4);
+    ? visualLen + 1.8
+    : Math.max(minWidth || 4, placeholderLen + 1.8);
 
   return (
     <input
@@ -65,7 +63,7 @@ export default function Field({ id, placeholder, type = "text", minWidth = 4 }) 
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       style={{ width: `${calcWidth}ch` }}
-      className={`inline-block align-baseline max-w-full px-1 py-0.5 mx-0.5 rounded border outline-none transition-colors duration-150 text-inherit font-inherit ${stateClasses}`}
+      className={`inline-block align-baseline max-w-full px-1.5 py-0.5 mx-0.5 rounded border outline-none transition-colors duration-150 text-inherit font-inherit ${stateClasses}`}
     />
   );
 }
