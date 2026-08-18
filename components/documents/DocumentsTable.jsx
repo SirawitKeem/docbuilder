@@ -1,6 +1,8 @@
 "use client";
 
-import { Eye, MoreVertical } from "lucide-react";
+import { useState } from "react";
+import { Eye, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const statusStyles = {
   sent: "bg-success-100 text-success-600",
@@ -18,7 +20,31 @@ export default function DocumentsTable({
   documents = [],
   showSentTo = false,
   emptyMessage = "ยังไม่มีเอกสารในระบบ",
+  onRefresh,
 }) {
+  const router = useRouter();
+  const [deletingId, setDeletingId] = useState(null);
+
+  const handleDelete = async (id) => {
+    if (!confirm("คุณต้องการลบเอกสารฉบับนี้ออกจากระบบใช่หรือไม่?")) return;
+    setDeletingId(id);
+    try {
+      await fetch(`/api/documents?id=${id}`, { method: "DELETE" });
+      if (onRefresh) {
+        onRefresh();
+      } else {
+        router.refresh();
+        window.location.reload();
+      }
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const handleView = (doc) => {
+    router.push(`/create/${doc.templateId || "nda"}`);
+  };
+
   return (
     <div className="bg-white border border-gray-200 rounded-card overflow-hidden shadow-card">
       <table className="w-full text-sm">
@@ -64,12 +90,21 @@ export default function DocumentsTable({
                   </span>
                 </td>
                 <td className="px-5 py-4">
-                  <div className="flex items-center justify-end gap-1">
-                    <button className="p-1.5 rounded hover:bg-gray-100 text-gray-500" title="ดูเอกสาร">
+                  <div className="flex items-center justify-end gap-2">
+                    <button
+                      onClick={() => handleView(doc)}
+                      className="p-1.5 rounded hover:bg-gray-100 text-gray-600 transition-colors"
+                      title="ดู / สร้างเอกสาร"
+                    >
                       <Eye size={16} />
                     </button>
-                    <button className="p-1.5 rounded hover:bg-gray-100 text-gray-500" title="เพิ่มเติม">
-                      <MoreVertical size={16} />
+                    <button
+                      onClick={() => handleDelete(doc.id)}
+                      disabled={deletingId === doc.id}
+                      className="p-1.5 rounded hover:bg-red-50 text-red-500 transition-colors disabled:opacity-40"
+                      title="ลบเอกสาร"
+                    >
+                      <Trash2 size={16} />
                     </button>
                   </div>
                 </td>
