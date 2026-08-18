@@ -14,23 +14,36 @@ export default function DistributorPage5() {
       {/* Signature Block - Symmetrical 2 Columns */}
       <div className="grid grid-cols-2 gap-10 mt-8">
         {/* Main Distributor (Crest Zendo) */}
-        <div className="text-center space-y-2">
-          <p className="font-bold">{distributorParty.name}</p>
-          <div className="pt-16 border-b border-dotted border-gray-400 w-3/4 mx-auto" />
+        <div className="text-center space-y-3">
+          <p className="font-bold">
+            <Field id="distributor_company_name" placeholder={distributorParty.name} minWidth={20} />
+          </p>
+
+          <div className="my-4 text-center">
+            <p className="text-gray-900 mb-1">ลงชื่อ...................................................</p>
+            <p className="text-xs text-gray-500">(ผู้ลงนามฝั่งผู้จัดจำหน่ายหลัก)</p>
+          </div>
+
           <p className="text-gray-900 font-normal">
-            ( {distributorParty.signatoryName} )
+            (&nbsp;<Field id="disclosing_signatory_name" placeholder={distributorParty.signatoryName} minWidth={16} />&nbsp;)
           </p>
           <p className="text-gray-900 font-normal">
-            ตำแหน่ง {distributorParty.signatoryPosition}
+            ตำแหน่ง{" "}
+            <Field id="disclosing_signatory_position" placeholder={distributorParty.signatoryPosition} minWidth={12} />
           </p>
         </div>
 
         {/* Reseller */}
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-3">
           <p className="font-bold">
-            ( <Field id="reseller_name" placeholder="ชื่อบริษัท Reseller" minWidth={20} /> )
+            (&nbsp;<Field id="reseller_name" placeholder="ชื่อบริษัท Reseller" minWidth={20} />&nbsp;)
           </p>
-          <div className="pt-16 border-b border-dotted border-gray-400 w-3/4 mx-auto" />
+
+          <div className="my-4 text-center">
+            <p className="text-gray-900 mb-1">ลงชื่อ...................................................</p>
+            <p className="text-xs text-gray-500">(ผู้ลงนามฝั่ง Reseller)</p>
+          </div>
+
           <p className="text-gray-900 font-normal">
             (&nbsp;<Field id="reseller_signatory_name" placeholder="ชื่อ-นามสกุล" minWidth={16} />&nbsp;)
           </p>

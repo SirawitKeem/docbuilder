@@ -50,11 +50,14 @@ export default function NdaPage4() {
         <div className="text-center flex flex-col justify-between">
           <div>
             <p className="font-bold mb-1">ผู้เปิดเผยข้อมูล (Disclosing Party)</p>
-            <p className="font-bold">{disclosingParty.name}</p>
+            <p className="font-bold">
+              <Field id="disclosing_party_name" placeholder={disclosingParty.name} minWidth={20} />
+            </p>
           </div>
 
-          <div className="my-6 text-center text-gray-400 select-none">
-            ...................................................
+          <div className="my-5 text-center">
+            <p className="text-gray-900 mb-1">ลงชื่อ...................................................</p>
+            <p className="text-xs text-gray-500">(ผู้ลงนามฝั่งผู้เปิดเผยข้อมูล)</p>
           </div>
 
           <div>
@@ -75,12 +78,13 @@ export default function NdaPage4() {
           <div>
             <p className="font-bold mb-1">ผู้รับข้อมูล (Receiving Party)</p>
             <div className="flex justify-center">
-              <Field id="receiving_party_name" placeholder="..................................." minWidth={20} />
+              <Field id="receiving_party_name" placeholder="ชื่อบริษัทผู้รับข้อมูล" minWidth={20} />
             </div>
           </div>
 
-          <div className="my-6 text-center text-gray-400 select-none">
-            ...................................................
+          <div className="my-5 text-center">
+            <p className="text-gray-900 mb-1">ลงชื่อ...................................................</p>
+            <p className="text-xs text-gray-500">(ผู้ลงนามฝั่งผู้รับข้อมูล)</p>
           </div>
 
           <div>
@@ -91,7 +95,7 @@ export default function NdaPage4() {
             </div>
             <div className="flex justify-center items-center">
               <span className="mr-1 text-gray-900">ตำแหน่ง</span>
-              <Field id="receiving_signatory_position" placeholder="..................................." minWidth={16} />
+              <Field id="receiving_signatory_position" placeholder="เช่น กรรมการผู้จัดการ" minWidth={16} />
             </div>
           </div>
         </div>
