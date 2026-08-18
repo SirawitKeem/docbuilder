@@ -1,22 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai+Looped:wght@300;400;500;600;700;800&display=swap');
 
 @page {
-  size: A4;
+  size: A4 portrait;
   margin: 0;
 }
 
-body {
+html, body {
   margin: 0;
+  padding: 0;
   background: white;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
 }
 
 .print-page {
   font-family: 'Noto Sans Thai Looped', var(--font-noto-thai-looped), sans-serif;
   width: 210mm;
-  min-height: 297mm;
-  padding: 18mm 22mm;
+  height: 297mm;
+  max-height: 297mm;
+  padding: 13mm 17mm 8mm 17mm;
   box-sizing: border-box;
   page-break-after: always;
+  page-break-inside: avoid;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -27,4 +33,6 @@ body {
 
 .print-page-body {
   flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }
