@@ -66,7 +66,19 @@ function EditorContent({ templateId }) {
       ? { blob: await (await fetch(`data:application/pdf;base64,${pdfBase64}`)).blob() }
       : await generatePdf();
 
-    // 1. ลองใช้ File System Access API (เปิดหน้าต่าง "Save As..." ให้เลือกโฟลเดอร์ที่ต้องการเซฟได้เอง)
+    // บันทึก Record เอกสารลงระบบ
+    fetch("/api/documents", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: fileName,
+        templateId,
+        templateName: schema.fullName,
+        values,
+      }),
+    }).catch(() => {});
+
+    // 1. ลองใช้ File System Access API (เปิดหน้าต่าง "Save As...")
     if ("showSaveFilePicker" in window) {
       try {
         const handle = await window.showSaveFilePicker({
@@ -83,11 +95,11 @@ function EditorContent({ templateId }) {
         await writable.close();
         return;
       } catch (err) {
-        if (err.name === "AbortError") return; // ผู้ใช้กด Cancel หน้าต่าง Save As
+        if (err.name === "AbortError") return;
       }
     }
 
-    // 2. Fallback สำหรับเบราว์เซอร์อื่น
+    // 2. Fallback
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -111,6 +123,9 @@ function EditorContent({ templateId }) {
         defaultSubject={schema.fullName}
         fileName={fileName}
         attachmentBase64={pdfBase64}
+        templateId={templateId}
+        templateName={schema.fullName}
+        values={values}
         onBack={() => setMode("review")}
         onSent={({ to }) => {
           setSentTo(to);

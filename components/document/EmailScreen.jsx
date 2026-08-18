@@ -8,6 +8,9 @@ export default function EmailScreen({
   fileName,
   attachmentBase64,
   pdfBase64,
+  templateId,
+  templateName,
+  values,
   onBack,
   onSent,
 }) {
@@ -39,6 +42,9 @@ export default function EmailScreen({
           message,
           attachmentBase64: activeAttachment,
           attachmentName: fileName,
+          templateId,
+          templateName,
+          values,
         }),
       });
       const data = await res.json();

@@ -69,7 +69,7 @@ async function sendGraphMail({ to, subject, message, attachmentBase64, attachmen
 
 export async function POST(request) {
   try {
-    const { to, subject, message, attachmentBase64, attachmentName } =
+    const { to, subject, message, attachmentBase64, attachmentName, templateId, templateName, values } =
       await request.json();
 
     if (!to || !subject) {
@@ -84,9 +84,10 @@ export async function POST(request) {
       await sendGraphMail({ to, subject, message, attachmentBase64, attachmentName });
       await documentsRepo.create({
         name: attachmentName || "NDA.pdf",
-        templateId: "nda",
-        templateName: "NDA",
+        templateId: templateId || "nda",
+        templateName: templateName || "NDA",
         sentTo: to,
+        values: values || {},
       });
       return Response.json({ success: true, provider: "Microsoft Graph" });
     }
@@ -121,9 +122,10 @@ export async function POST(request) {
 
       await documentsRepo.create({
         name: attachmentName || "NDA.pdf",
-        templateId: "nda",
-        templateName: "NDA",
+        templateId: templateId || "nda",
+        templateName: templateName || "NDA",
         sentTo: to,
+        values: values || {},
       });
 
       return Response.json({ success: true, provider: "Nodemailer (Gmail)" });
