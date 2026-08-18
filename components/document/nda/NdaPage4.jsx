@@ -58,8 +58,15 @@ export default function NdaPage4() {
           </div>
 
           <div>
-            <p className="font-medium mb-1">{disclosingParty.signatoryName}</p>
-            <p className="text-gray-700">{disclosingParty.signatoryPosition}</p>
+            <div className="flex justify-center items-center mb-1">
+              <span className="mr-1">(</span>
+              <Field id="disclosing_signatory_name" placeholder={disclosingParty.signatoryName} minWidth={16} />
+              <span className="ml-1">)</span>
+            </div>
+            <div className="flex justify-center items-center">
+              <span className="mr-1 text-gray-900">ตำแหน่ง</span>
+              <Field id="disclosing_signatory_position" placeholder={disclosingParty.signatoryPosition} minWidth={12} />
+            </div>
           </div>
         </div>
 
