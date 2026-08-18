@@ -67,20 +67,11 @@ export default function DistributorPage1() {
         </li>
         <li className="pl-4">
           <span className="font-bold">1.3. &ldquo;ผลิตภัณฑ์&rdquo; (Product)</span>{" "}
-          หมายถึง ซอฟต์แวร์ ระบบปฏิบัติการ หรือเครื่องมือทางไอที รวมถึง{" "}
-          <span className="font-bold">&ldquo;สิทธิ์การใช้งาน&rdquo;</span> เอกสารคู่มือ การอัปเดต และแพตช์แก้ไขความปลอดภัย ซึ่ง{" "}
-          <span className="font-bold">&ldquo;ผู้จัดจำหน่ายหลัก&rdquo;</span> ได้รับสิทธิ์จัดจำหน่ายจาก{" "}
-          <span className="font-bold">&ldquo;เจ้าของผลิตภัณฑ์&rdquo;</span>
+          หมายถึง ซอฟต์แวร์ ระบบปฏิบัติการ หรือเครื่องมือทางไอที รวมถึง &ldquo;สิทธิ์การใช้งาน&rdquo; เอกสารคู่มือ การอัปเดต และแพตช์แก้ไขความปลอดภัย ซึ่ง &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ได้รับสิทธิ์จัดจำหน่ายจาก &ldquo;เจ้าของผลิตภัณฑ์&rdquo;
         </li>
         <li className="pl-4">
           <span className="font-bold">1.4. &ldquo;สิทธิ์การใช้งาน&rdquo; (License/Subscription)</span>{" "}
-          หมายถึง สิทธิ์ทางกฎหมายที่{" "}
-          <span className="font-bold">&ldquo;เจ้าของผลิตภัณฑ์&rdquo;</span> หรือ{" "}
-          <span className="font-bold">&ldquo;ผู้จัดจำหน่ายหลัก&rdquo;</span> อนุญาตให้{" "}
-          <span className="font-bold">&ldquo;ตัวแทนจำหน่ายต่อ&rdquo;</span> นำไปจัดจำหน่ายแก่{" "}
-          <span className="font-bold">&ldquo;ผู้ใช้ปลายทาง&rdquo;</span> เพื่อเข้าใช้{" "}
-          <span className="font-bold">&ldquo;ผลิตภัณฑ์&rdquo;</span> ตามข้อกำหนดและเงื่อนไขที่กำหนดไว้ในข้อตกลงสิทธิ์การใช้งานสำหรับ{" "}
-          <span className="font-bold">&ldquo;ผู้ใช้ปลายทาง&rdquo; (EULA)</span>
+          หมายถึง สิทธิ์ทางกฎหมายที่ &ldquo;เจ้าของผลิตภัณฑ์&rdquo; หรือ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; อนุญาตให้ &ldquo;ตัวแทนจำหน่ายต่อ&rdquo; นำไปจัดจำหน่ายแก่ &ldquo;ผู้ใช้ปลายทาง&rdquo; เพื่อเข้าใช้ &ldquo;ผลิตภัณฑ์&rdquo; ตามข้อกำหนดและเงื่อนไขที่กำหนดไว้ในข้อตกลงสิทธิ์การใช้งานสำหรับ &ldquo;ผู้ใช้ปลายทาง&rdquo; (EULA)
         </li>
       </ul>
 
@@ -91,34 +82,22 @@ export default function DistributorPage1() {
       <ul className="list-none space-y-2 text-justify">
         <li className="pl-4">
           <span className="font-bold">2.1. การแต่งตั้งและบทบาทของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;:</span>
-          <ul className="list-disc pl-6 space-y-1 mt-1">
+          <ul className="list-disc pl-6 space-y-1 mt-1 font-normal">
             <li>
-              <span className="font-bold">&ldquo;ผู้จัดจำหน่ายหลัก&rdquo;</span> ในฐานะผู้ได้รับสิทธิ์อย่างถูกต้องจาก{" "}
-              <span className="font-bold">&ldquo;เจ้าของผลิตภัณฑ์&rdquo;</span> แต่งตั้งตัวแทนจำหน่ายต่อให้เป็น{" "}
-              <span className="font-bold">&ldquo;ตัวแทนจำหน่ายต่อ&rdquo;</span> ประเภทแบบไม่ผูกขาด (Non-exclusive)
+              &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ในฐานะผู้ได้รับสิทธิ์อย่างถูกต้องจาก &ldquo;เจ้าของผลิตภัณฑ์&rdquo; แต่งตั้งตัวแทนจำหน่ายต่อให้เป็น &ldquo;ตัวแทนจำหน่ายต่อ&rdquo; ประเภทแบบไม่ผูกขาด (Non-exclusive)
             </li>
             <li>
-              <span className="font-bold">&ldquo;ผู้จัดจำหน่ายหลัก&rdquo;</span> มีหน้าที่ในการจัดหา จัดส่ง และประสานงานเรื่องการออก{" "}
-              <span className="font-bold">&ldquo;สิทธิ์การใช้งาน&rdquo;</span> ของ{" "}
-              <span className="font-bold">&ldquo;ผลิตภัณฑ์&rdquo;</span> ให้แก่{" "}
-              <span className="font-bold">&ldquo;ตัวแทนจำหน่ายต่อ&rdquo;</span> เพื่อนำไปจำหน่ายต่อให้แก่{" "}
-              <span className="font-bold">&ldquo;ผู้ใช้ปลายทาง&rdquo;</span>
+              &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; มีหน้าที่ในการจัดหา จัดส่ง และประสานงานเรื่องการออก &ldquo;สิทธิ์การใช้งาน&rdquo; ของ &ldquo;ผลิตภัณฑ์&rdquo; ให้แก่ &ldquo;ตัวแทนจำหน่ายต่อ&rdquo; เพื่อนำไปจำหน่ายต่อให้แก่ &ldquo;ผู้ใช้ปลายทาง&rdquo;
             </li>
           </ul>
         </li>
-        <li className="pl-4">
+        <li className="pl-4 font-normal">
           <span className="font-bold">2.2. สิทธิ์การจำหน่ายของ &ldquo;ตัวแทนจำหน่ายต่อ&rdquo;:</span>{" "}
-          <span className="font-bold">&ldquo;ตัวแทนจำหน่ายต่อ&rdquo;</span> สามารถจัดจำหน่าย{" "}
-          <span className="font-bold">&ldquo;สิทธิ์การใช้งาน&rdquo;</span> ของ{" "}
-          <span className="font-bold">&ldquo;ผลิตภัณฑ์&rdquo;</span> ให้กับ{" "}
-          <span className="font-bold">&ldquo;ผู้ใช้ปลายทาง&rdquo;</span> เท่านั้น ไม่สามารถโอนสิทธิ์การใช้งาน หรือแสดงความเป็นเจ้าของในตัว{" "}
-          <span className="font-bold">&ldquo;ผลิตภัณฑ์&rdquo;</span>
+          &ldquo;ตัวแทนจำหน่ายต่อ&rdquo; สามารถจัดจำหน่าย &ldquo;สิทธิ์การใช้งาน&rdquo; ของ &ldquo;ผลิตภัณฑ์&rdquo; ให้กับ &ldquo;ผู้ใช้ปลายทาง&rdquo; เท่านั้น ไม่สามารถโอนสิทธิ์การใช้งาน หรือแสดงความเป็นเจ้าของในตัว &ldquo;ผลิตภัณฑ์&rdquo;
         </li>
-        <li className="pl-4">
+        <li className="pl-4 font-normal">
           <span className="font-bold">2.3. อาณาเขตทางภูมิศาสตร์ (Territory):</span>{" "}
-          <span className="font-bold">&ldquo;ตัวแทนจำหน่ายต่อ&rdquo;</span> มีสิทธิ์ดำเนินกิจกรรมการขาย การส่งเสริมการขาย และทำการตลาด{" "}
-          <span className="font-bold">&ldquo;ผลิตภัณฑ์&rdquo;</span> ได้ภายในพื้นที่{" "}
-          <span className="font-bold">ประเทศไทย เท่านั้น</span>
+          &ldquo;ตัวแทนจำหน่ายต่อ&rdquo; มีสิทธิ์ดำเนินกิจกรรมการขาย การส่งเสริมการขาย และทำการตลาด &ldquo;ผลิตภัณฑ์&rdquo; ได้ภายในพื้นที่ ประเทศไทย เท่านั้น
         </li>
       </ul>
     </div>
