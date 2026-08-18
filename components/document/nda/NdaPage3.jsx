@@ -1,10 +1,10 @@
 export default function NdaPage3() {
   return (
-    <div className="text-[13px] leading-[1.9] text-gray-900 font-normal">
+    <div className="text-[12px] leading-[1.85] text-gray-900 font-normal">
       <h2 className="font-bold mb-2">
         5. ข้อจำกัดเรื่องวิศวกรรมย้อนกลับ (Strict No Reverse Engineering/Decompilation)
       </h2>
-      <p className="mb-6 text-justify">
+      <p className="mb-5 text-justify font-normal">
         ผู้รับข้อมูลตกลงและรับรองว่าจะไม่ทำการ (และจะไม่ยินยอมหรือมอบหมายให้บุคคลภายนอก
         ทำการ) ถอดรหัส (Decompile), ทำวิศวกรรมย้อนกลับ (Reverse Engineer), ถอดประกอบ
         (Disassemble), แปลงรหัส (Translate) หรือพยายามแกะรหัสเพื่อเข้าถึงซอร์ซโค้ด (Source
@@ -14,7 +14,7 @@ export default function NdaPage3() {
       </p>
 
       <h2 className="font-bold mb-2">6. ระยะเวลาของสัญญาและการมีผลต่อเนื่อง (Term and Survival)</h2>
-      <ul className="list-none space-y-1.5 mb-6 text-justify">
+      <ul className="list-none space-y-1.5 mb-5 text-justify font-normal">
         <li className="pl-4">
           6.1. สัญญาฉบับนี้มีผลบังคับใช้นับแต่วันที่ระบุในตอนต้นของสัญญา และจะมีผลบังคับเป็น
           ระยะเวลา 3 ปี นับจากวันทำสัญญา (&ldquo;ระยะเวลาสัญญา&rdquo;)
@@ -35,18 +35,18 @@ export default function NdaPage3() {
       <h2 className="font-bold mb-2">
         7. การจัดการข้อมูลเมื่อสัญญาสิ้นสุด (Return or Destruction of Information)
       </h2>
-      <p className="mb-2 text-justify pl-4">
+      <p className="mb-2 text-justify pl-4 font-normal">
         7.1. เมื่อสัญญานี้สิ้นสุดลง หรือเมื่อได้รับการร้องขอเป็นลายลักษณ์อักษรจากผู้เปิดเผยข้อมูล
         ผู้รับข้อมูลต้องดำเนินการทันทีภายในระยะเวลา 14 วัน ดังนี้:
       </p>
-      <ul className="list-disc pl-12 space-y-1.5 mb-2 text-justify">
+      <ul className="list-disc pl-12 space-y-1.5 mb-2 text-justify font-normal">
         <li>คืนเอกสาร สื่อบันทึกข้อมูล และสำเนาข้อมูลความลับทั้งหมดให้แก่ผู้เปิดเผยข้อมูล หรือ</li>
         <li>
           ทำลายข้อมูลความลับรวมถึงไฟล์อิเล็กทรอนิกส์ สำเนา สรุป หรือเอกสารดัดแปลงที่
           เกี่ยวข้องทั้งหมดอย่างถาวร ไม่สามารถกู้คืนได้
         </li>
       </ul>
-      <p className="mb-6 text-justify pl-4">
+      <p className="mb-5 text-justify pl-4 font-normal">
         7.2. ผู้รับข้อมูลต้องจัดทำหนังสือรับรองเป็นลายลักษณ์อักษร ลงนามโดยกรรมการผู้มีอำนาจ
         เพื่อยืนยันว่าได้ส่งคืนหรือทำลายข้อมูลความลับทั้งหมดเรียบร้อยแล้วส่งมอบให้แก่ผู้เปิดเผย
         ข้อมูล (เว้นแต่ข้อมูลที่จำเป็นต้องจัดเก็บตามข้อกำหนดทางกฎหมาย หรือระบบสำรองข้อมูล
@@ -54,7 +54,7 @@ export default function NdaPage3() {
       </p>
 
       <h2 className="font-bold mb-2">8. การเยียวยาเมื่อผิดสัญญาและค่าเสียหาย (Remedies for Breach)</h2>
-      <ul className="list-none space-y-1.5 text-justify">
+      <ul className="list-none space-y-1.5 text-justify font-normal">
         <li className="pl-4">
           8.1. คู่สัญญาตกลงว่าการเปิดเผยหรือใช้ข้อมูลความลับโดยขัดต่อสัญญานี้ จะก่อให้เกิด
           ความเสียหายอย่างร้ายแรงแก่ผู้เปิดเผยข้อมูล ซึ่งไม่สามารถชดเชยด้วยเยียวยาทางการเงิน
