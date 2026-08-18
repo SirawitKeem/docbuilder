@@ -3,11 +3,11 @@ import puppeteer from "puppeteer";
 export async function POST(request) {
   let browser;
   try {
-    const { values } = await request.json();
+    const { templateId, values } = await request.json();
 
     const encoded = Buffer.from(JSON.stringify(values), "utf-8").toString("base64");
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const printUrl = `${baseUrl}/print/nda?data=${encodeURIComponent(encoded)}`;
+    const printUrl = `${baseUrl}/print/${templateId}?data=${encodeURIComponent(encoded)}`;
 
     browser = await puppeteer.launch({
       headless: "new",
@@ -28,7 +28,7 @@ export async function POST(request) {
       status: 200,
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": 'attachment; filename="NDA.pdf"',
+        "Content-Disposition": 'attachment; filename="document.pdf"',
       },
     });
   } catch (error) {

@@ -1,39 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Undo2, Redo2, Eye, Download, Loader2, MoreHorizontal } from "lucide-react";
-import { useDocumentFields } from "@/context/DocumentFieldsContext";
-import { ndaTemplate, getCompletionStatus } from "@/lib/templates/nda/schema";
+import { ArrowLeft, Undo2, Redo2, Eye, Download, MoreHorizontal, Loader2 } from "lucide-react";
 
-export default function EditorToolbar({ onPreview, onExport, exporting }) {
-  const { values } = useDocumentFields();
-  const status = getCompletionStatus(values);
-
+export default function EditorToolbar({ template, status, onPreview, onExport, exporting }) {
   return (
     <div className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 shrink-0">
-      {/* Left: Back + title */}
       <div className="flex items-center gap-4 min-w-0">
-        <Link
-          href="/"
-          className="p-2 -ml-2 rounded-lg hover:bg-gray-100 text-gray-700 shrink-0"
-        >
+        <Link href="/" className="p-2 -ml-2 rounded-lg hover:bg-gray-100 text-gray-700 shrink-0">
           <ArrowLeft size={20} />
         </Link>
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-gray-900 truncate">
-            {ndaTemplate.fullName}
-          </p>
+          <p className="text-sm font-semibold text-gray-900 truncate">{template.fullName}</p>
           <StatusBadge status={status} />
         </div>
       </div>
 
-      {/* Center: Undo/Redo */}
       <div className="hidden md:flex items-center gap-1">
-        <button
-          disabled
-          className="p-2 rounded-lg text-gray-300 cursor-not-allowed"
-          title="ยังไม่มีประวัติการแก้ไข"
-        >
+        <button disabled className="p-2 rounded-lg text-gray-300 cursor-not-allowed">
           <Undo2 size={18} />
         </button>
         <button disabled className="p-2 rounded-lg text-gray-300 cursor-not-allowed">
@@ -41,7 +25,6 @@ export default function EditorToolbar({ onPreview, onExport, exporting }) {
         </button>
       </div>
 
-      {/* Right: Preview + Export */}
       <div className="flex items-center gap-2 shrink-0">
         <button
           onClick={onPreview}
