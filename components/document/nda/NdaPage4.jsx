@@ -1,8 +1,13 @@
 import Field from "../Field";
 import { ndaTemplate } from "@/lib/templates/nda/schema";
+import { useDocumentFields } from "@/context/DocumentFieldsContext";
 
 export default function NdaPage4() {
   const { disclosingParty } = ndaTemplate;
+  const { values } = useDocumentFields();
+
+  const disclosingName = values.disclosing_signatory_name || disclosingParty.signatoryName;
+  const disclosingPos = values.disclosing_signatory_position || disclosingParty.signatoryPosition;
 
   return (
     <div className="text-[13px] leading-[1.9] text-gray-900 font-normal">
@@ -51,25 +56,17 @@ export default function NdaPage4() {
           <div>
             <p className="font-bold mb-1">ผู้เปิดเผยข้อมูล (Disclosing Party)</p>
             <p className="font-bold">
-              <Field id="disclosing_party_name" placeholder={disclosingParty.name} minWidth={20} />
+              {values.disclosing_party_name || disclosingParty.name}
             </p>
           </div>
 
-          <div className="my-5 text-center">
-            <p className="text-gray-900 mb-1">ลงชื่อ...................................................</p>
-            <p className="text-xs text-gray-500">(ผู้ลงนามฝั่งผู้เปิดเผยข้อมูล)</p>
+          <div className="my-8 text-center text-gray-400 select-none">
+            ...................................................
           </div>
 
           <div>
-            <div className="flex justify-center items-center mb-1">
-              <span className="mr-1">(</span>
-              <Field id="disclosing_signatory_name" placeholder={disclosingParty.signatoryName} minWidth={16} />
-              <span className="ml-1">)</span>
-            </div>
-            <div className="flex justify-center items-center">
-              <span className="mr-1 text-gray-900">ตำแหน่ง</span>
-              <Field id="disclosing_signatory_position" placeholder={disclosingParty.signatoryPosition} minWidth={12} />
-            </div>
+            <p className="font-semibold text-gray-900 mb-0.5">{disclosingName}</p>
+            <p className="text-gray-700 font-normal">{disclosingPos}</p>
           </div>
         </div>
 
@@ -77,14 +74,13 @@ export default function NdaPage4() {
         <div className="text-center flex flex-col justify-between">
           <div>
             <p className="font-bold mb-1">ผู้รับข้อมูล (Receiving Party)</p>
-            <div className="flex justify-center">
-              <Field id="receiving_party_name" placeholder="ชื่อบริษัทผู้รับข้อมูล" minWidth={20} />
+            <div className="flex justify-center mt-1">
+              <Field id="receiving_party_name" placeholder="..................................." minWidth={20} />
             </div>
           </div>
 
-          <div className="my-5 text-center">
-            <p className="text-gray-900 mb-1">ลงชื่อ...................................................</p>
-            <p className="text-xs text-gray-500">(ผู้ลงนามฝั่งผู้รับข้อมูล)</p>
+          <div className="my-8 text-center text-gray-400 select-none">
+            ...................................................
           </div>
 
           <div>
@@ -95,7 +91,7 @@ export default function NdaPage4() {
             </div>
             <div className="flex justify-center items-center">
               <span className="mr-1 text-gray-900">ตำแหน่ง</span>
-              <Field id="receiving_signatory_position" placeholder="เช่น กรรมการผู้จัดการ" minWidth={16} />
+              <Field id="receiving_signatory_position" placeholder="..................................." minWidth={16} />
             </div>
           </div>
         </div>

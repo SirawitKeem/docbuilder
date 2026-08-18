@@ -1,8 +1,13 @@
 import Field from "../Field";
 import { distributorTemplate } from "@/lib/templates/distributor/schema";
+import { useDocumentFields } from "@/context/DocumentFieldsContext";
 
 export default function DistributorPage5() {
   const { distributorParty } = distributorTemplate;
+  const { values } = useDocumentFields();
+
+  const disclosingName = values.disclosing_signatory_name || distributorParty.signatoryName;
+  const disclosingPos = values.disclosing_signatory_position || distributorParty.signatoryPosition;
 
   return (
     <div className="text-[12px] leading-[1.85] text-gray-900 font-normal">
@@ -14,43 +19,50 @@ export default function DistributorPage5() {
       {/* Signature Block - Symmetrical 2 Columns */}
       <div className="grid grid-cols-2 gap-10 mt-8">
         {/* Main Distributor (Crest Zendo) */}
-        <div className="text-center space-y-3">
-          <p className="font-bold">
-            <Field id="distributor_company_name" placeholder={distributorParty.name} minWidth={20} />
-          </p>
-
-          <div className="my-4 text-center">
-            <p className="text-gray-900 mb-1">ลงชื่อ...................................................</p>
-            <p className="text-xs text-gray-500">(ผู้ลงนามฝั่งผู้จัดจำหน่ายหลัก)</p>
+        <div className="text-center flex flex-col justify-between">
+          <div>
+            <p className="font-bold">
+              {values.distributor_company_name || distributorParty.name}
+            </p>
           </div>
 
-          <p className="text-gray-900 font-normal">
-            (&nbsp;<Field id="disclosing_signatory_name" placeholder={distributorParty.signatoryName} minWidth={16} />&nbsp;)
-          </p>
-          <p className="text-gray-900 font-normal">
-            ตำแหน่ง{" "}
-            <Field id="disclosing_signatory_position" placeholder={distributorParty.signatoryPosition} minWidth={12} />
-          </p>
+          <div className="my-8 text-center text-gray-400 select-none">
+            ...................................................
+          </div>
+
+          <div>
+            <p className="text-gray-900 font-normal">
+              ( {disclosingName} )
+            </p>
+            <p className="text-gray-900 font-normal">
+              ตำแหน่ง {disclosingPos}
+            </p>
+          </div>
         </div>
 
         {/* Reseller */}
-        <div className="text-center space-y-3">
-          <p className="font-bold">
-            (&nbsp;<Field id="reseller_name" placeholder="ชื่อบริษัท Reseller" minWidth={20} />&nbsp;)
-          </p>
-
-          <div className="my-4 text-center">
-            <p className="text-gray-900 mb-1">ลงชื่อ...................................................</p>
-            <p className="text-xs text-gray-500">(ผู้ลงนามฝั่ง Reseller)</p>
+        <div className="text-center flex flex-col justify-between">
+          <div>
+            <p className="font-bold">
+              (&nbsp;<Field id="reseller_name" placeholder="ชื่อบริษัท Reseller" minWidth={20} />&nbsp;)
+            </p>
           </div>
 
-          <p className="text-gray-900 font-normal">
-            (&nbsp;<Field id="reseller_signatory_name" placeholder="ชื่อ-นามสกุล" minWidth={16} />&nbsp;)
-          </p>
-          <p className="text-gray-900 font-normal">
-            ตำแหน่ง{" "}
-            <Field id="reseller_signatory_position" placeholder="เช่น กรรมการผู้จัดการ" minWidth={16} />
-          </p>
+          <div className="my-8 text-center text-gray-400 select-none">
+            ...................................................
+          </div>
+
+          <div>
+            <div className="flex justify-center items-center mb-1">
+              <span className="mr-1">(</span>
+              <Field id="reseller_signatory_name" placeholder="ชื่อ-นามสกุล" minWidth={16} />
+              <span className="ml-1">)</span>
+            </div>
+            <div className="flex justify-center items-center">
+              <span className="mr-1 text-gray-900">ตำแหน่ง</span>
+              <Field id="reseller_signatory_position" placeholder="..................................." minWidth={16} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
