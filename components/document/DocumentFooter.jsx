@@ -10,7 +10,7 @@ export default function DocumentFooter({ title, pageNumber, totalPages }) {
           <div
             className="absolute inset-0 bg-[#1B7B51]"
             style={{
-              clipPath: "polygon(0 0, 95% 0, 91% 100%, 0% 100%)",
+              clipPath: "polygon(0 0, 90.8% 0, 90% 100%, 0% 100%)",
             }}
           />
           {/* White Title Text */}
@@ -21,8 +21,8 @@ export default function DocumentFooter({ title, pageNumber, totalPages }) {
           <div
             className="absolute h-full w-4 bg-[#191919]"
             style={{
-              left: "91.5%",
-              clipPath: "polygon(25% 0, 100% 0, 75% 100%, 0% 100%)",
+              left: "91%",
+              clipPath: "polygon(26% 0, 100% 0, 76% 100%, 0% 100%)",
             }}
           />
         </div>

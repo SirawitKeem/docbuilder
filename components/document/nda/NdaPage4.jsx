@@ -82,9 +82,9 @@ export default function NdaPage4() {
         <div className="text-center flex flex-col justify-between">
           <div>
             <p className="font-bold mb-1">ผู้รับข้อมูล (Receiving Party)</p>
-            <div className="flex justify-center mt-1">
+            <p className="font-bold mt-1">
               <Field id="receiving_party_name" placeholder="..................................." minWidth={20} />
-            </div>
+            </p>
           </div>
 
           <div className="my-8 flex justify-center items-center text-center">
