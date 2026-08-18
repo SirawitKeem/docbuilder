@@ -5,7 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   FileText,
-  LayoutTemplate,
+  FileEdit,
+  FilePlus2,
+  FolderOpen,
+  LayoutGrid,
+  Clock,
   Settings,
   LayoutDashboard,
   LogOut,
@@ -15,10 +19,13 @@ import {
 import { cn } from "@/lib/utils";
 
 const navigation = [
-  { name: "แดชบอร์ด", href: "/", icon: LayoutDashboard },
-  { name: "จัดการเอกสาร", href: "/documents", icon: FileText },
-  { name: "เทมเพลตเอกสาร", href: "/templates", icon: LayoutTemplate },
-  { name: "ตั้งค่าระบบ", href: "/settings", icon: Settings },
+  { name: "หน้าหลัก", href: "/", icon: LayoutDashboard },
+  { name: "ตั้งค่าข้อมูล", href: "/profile-data", icon: FileEdit },
+  { name: "สร้างเอกสาร", href: "/create", icon: FilePlus2 },
+  { name: "เอกสารของฉัน", href: "/documents", icon: FolderOpen },
+  { name: "เทมเพลต", href: "/templates", icon: LayoutGrid },
+  { name: "ประวัติการส่ง", href: "/history", icon: Clock },
+  { name: "ตั้งค่า", href: "/settings", icon: Settings },
 ];
 
 export default function Sidebar() {

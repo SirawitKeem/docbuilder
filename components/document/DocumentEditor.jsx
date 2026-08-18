@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DocumentFieldsProvider, useDocumentFields } from "@/context/DocumentFieldsContext";
 import { templateRegistry, getCompletionStatus } from "@/lib/templates/registry";
+import { getFieldProfile } from "@/lib/data/fieldProfile";
 import EditorToolbar from "./EditorToolbar";
 import DocumentCanvas from "./DocumentCanvas";
 import PageControls from "./PageControls";
@@ -146,8 +147,32 @@ function EditorContent({ templateId }) {
 }
 
 export default function DocumentEditor({ templateId }) {
+  const [initialValues, setInitialValues] = useState(null); // null = กำลังโหลด
+
+  useEffect(() => {
+    const { schema } = templateRegistry[templateId];
+    getFieldProfile().then((profile) => {
+      // แมป sharedKey → id ของฟิลด์ในเทมเพลตนี้
+      const prefilled = {};
+      for (const field of schema.fields) {
+        if (field.sharedKey && profile[field.sharedKey]) {
+          prefilled[field.id] = profile[field.sharedKey];
+        }
+      }
+      setInitialValues(prefilled);
+    });
+  }, [templateId]);
+
+  if (initialValues === null) {
+    return (
+      <div className="h-screen flex items-center justify-center text-gray-400 font-medium">
+        กำลังโหลด...
+      </div>
+    );
+  }
+
   return (
-    <DocumentFieldsProvider>
+    <DocumentFieldsProvider initialValues={initialValues}>
       <EditorContent templateId={templateId} />
     </DocumentFieldsProvider>
   );
