@@ -60,8 +60,12 @@ export default function NdaPage4() {
             </p>
           </div>
 
-          <div className="my-8 text-center text-gray-400 select-none">
-            ...................................................
+          <div className="my-8 flex justify-center items-center text-center">
+            <Field
+              id="disclosing_signature_line"
+              placeholder="..................................................."
+              minWidth={24}
+            />
           </div>
 
           <div>
@@ -79,8 +83,12 @@ export default function NdaPage4() {
             </div>
           </div>
 
-          <div className="my-8 text-center text-gray-400 select-none">
-            ...................................................
+          <div className="my-8 flex justify-center items-center text-center">
+            <Field
+              id="receiving_signature_line"
+              placeholder="..................................................."
+              minWidth={24}
+            />
           </div>
 
           <div>
