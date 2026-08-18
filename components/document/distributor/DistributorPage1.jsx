@@ -11,13 +11,13 @@ export default function DistributorPage1() {
         (Distributor and Reseller Master Agreement)
       </p>
 
-      {/* Contract Opening Line */}
-      <p className="mb-4">
+      {/* Contract Opening Line - Centered */}
+      <p className="text-center mb-5">
         สัญญาฉบับนี้ทำขึ้น ณ{" "}
-        <Field id="contract_location" placeholder="กรุงเทพมหานคร" minWidth={12} />{" "}
-        เมื่อวันที่ <Field id="contract_date_day" placeholder="17" minWidth={3} />{" "}
-        เดือน <Field id="contract_date_month" placeholder="สิงหาคม" minWidth={6} />{" "}
-        พ.ศ. <Field id="contract_date_year" placeholder="2569" minWidth={4} />
+        <Field id="contract_location" placeholder="......................................................." minWidth={5} />{" "}
+        เมื่อวันที่ <Field id="contract_date_day" placeholder="........" minWidth={3} />{" "}
+        เดือน <Field id="contract_date_month" placeholder="................" minWidth={6} />{" "}
+        พ.ศ. <Field id="contract_date_year" placeholder="............" minWidth={4} />
       </p>
 
       <p className="mb-2 font-normal">ระหว่าง:</p>
@@ -26,8 +26,7 @@ export default function DistributorPage1() {
       <p className="mb-3 text-justify">
         (1) บริษัท เครสท์ เซนโด จำกัด สำนักงานใหญ่ ตั้งอยู่เลขที่ 8/40 เดอะ
         คอนเนค 37 ซอยช่างอากาศอุทิศ 10 แยก 1-2 แขวงดอนเมือง เขตดอนเมือง
-        กรุงเทพมหานคร 10210 ประเทศไทย ซึ่งต่อไปในสัญญานี้จะเรียกว่า{" "}
-        <span className="font-bold">&ldquo;ผู้จัดจำหน่ายหลัก&rdquo; (Main Distributor)</span>{" "}
+        กรุงเทพมหานคร 10210 ประเทศไทย ซึ่งต่อไปในสัญญานี้จะเรียกว่า &ldquo;ผู้เปิดเผยข้อมูล&rdquo; (Disclosing Party)
         ฝ่ายหนึ่ง และ
       </p>
 
@@ -35,18 +34,16 @@ export default function DistributorPage1() {
       <div className="mb-4 text-justify">
         <p className="mb-1">
           (2) บริษัท/นิติบุคคล{" "}
-          <Field id="reseller_name" placeholder="บริษัท ตัวอย่าง จำกัด" minWidth={20} />
+          <Field id="reseller_name" placeholder="..........................................................................................................................." minWidth={24} />
         </p>
         <p className="mb-1">สำนักงานตั้งอยู่เลขที่</p>
         <Field
           id="reseller_address"
           type="textarea"
-          placeholder="เลขที่ ... แขวง/ตำบล ... เขต/อำเภอ ... จังหวัด ... รหัสไปรษณีย์ ..."
+          placeholder="..................................................................................................................................................................................................."
         />
         <p className="mt-1">
-          (ซึ่งต่อไปในสัญญานี้จะเรียกว่า{" "}
-          <span className="font-bold">&ldquo;Reseller&rdquo; หรือ &ldquo;ตัวแทนจำหน่ายต่อ&rdquo;</span>{" "}
-          ) อีกฝ่ายหนึ่ง
+          (ซึ่งต่อไปในสัญญานี้จะเรียกว่า &ldquo;Reseller&rdquo; หรือ &ldquo;ตัวแทนจำหน่ายต่อ&rdquo;) อีกฝ่ายหนึ่ง
         </p>
       </div>
 
