@@ -217,7 +217,7 @@ export default function EmailScreen({
 
           </div>
 
-          {/* RIGHT COLUMN: Live Document Preview Thumbnail Card & Note (5 Cols) */}
+          {/* RIGHT COLUMN: Live Scaled 100% Identical Document Preview Card */}
           <div className="lg:col-span-5 space-y-6">
             
             {/* Document Thumbnail Card */}
@@ -228,48 +228,62 @@ export default function EmailScreen({
               </div>
 
               {/* PDF Preview Frame Container */}
-              <div className="bg-gray-100/80 border border-gray-200 rounded-xl p-4 flex flex-col items-center relative overflow-hidden">
+              <div className="bg-gray-100/90 border border-gray-200 rounded-xl p-3 flex flex-col items-center relative overflow-hidden">
                 {/* PDF Header Tag */}
-                <div className="w-full flex items-center justify-between pb-3 mb-3 border-b border-gray-200/80 px-1">
+                <div className="w-full flex items-center justify-between pb-2.5 mb-2 border-b border-gray-200 px-1">
                   <div className="flex items-center gap-2 text-xs font-semibold text-gray-800 truncate pr-2">
                     <FileText size={15} className="text-red-500 shrink-0" />
                     <span className="truncate">{fileName}</span>
                   </div>
                   <button
                     onClick={() => setShowFullPreview(true)}
-                    className="p-1 rounded text-gray-400 hover:text-gray-700 hover:bg-gray-200 transition-colors"
-                    title="ขยายขนาด"
+                    className="p-1 rounded text-gray-500 hover:text-gray-900 hover:bg-gray-200 transition-colors"
+                    title="ขยายขนาดเต็มจอ"
                   >
                     <Maximize2 size={15} />
                   </button>
                 </div>
 
-                {/* Scaled Page Preview */}
-                <div className="relative shadow-md rounded overflow-hidden bg-white w-full max-w-[280px] aspect-[1/1.4] flex flex-col justify-between p-4 font-noto-looped text-[8px] leading-tight select-none pointer-events-none">
-                  <DocumentFieldsProvider initialValues={values} defaultReadOnly>
-                    <DocumentHeader logo={schema?.logo} />
-                    <div className="flex-1 my-2 overflow-hidden">
-                      {Page1Component && <Page1Component />}
+                {/* 100% Identical Preview Canvas Scaled Down with CSS Transform */}
+                <div className="w-full overflow-hidden flex justify-center items-start py-1 relative rounded border border-gray-200/80 bg-gray-200/40">
+                  <div
+                    style={{
+                      width: 794,
+                      height: 1123 * 0.36, // 404px height container
+                      transform: "scale(0.36)",
+                      transformOrigin: "top center",
+                    }}
+                    className="pointer-events-none select-none"
+                  >
+                    <div className="bg-white shadow-md" style={{ width: 794, height: 1123 }}>
+                      <div className="px-14 pt-10 pb-6 flex flex-col font-noto-looped h-full box-border text-gray-900 text-left">
+                        <DocumentFieldsProvider initialValues={values} defaultReadOnly>
+                          <DocumentHeader logo={schema?.logo} />
+                          <div className="flex-1 my-4 overflow-hidden">
+                            {Page1Component && <Page1Component />}
+                          </div>
+                          <DocumentFooter
+                            title={schema?.fullName}
+                            pageNumber={1}
+                            totalPages={pageCount}
+                          />
+                        </DocumentFieldsProvider>
+                      </div>
                     </div>
-                    <DocumentFooter
-                      title={schema?.fullName}
-                      pageNumber={1}
-                      totalPages={pageCount}
-                    />
-                  </DocumentFieldsProvider>
+                  </div>
 
-                  {/* Page Pill Counter Overlay */}
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-gray-800/90 text-white text-[10px] font-medium px-3 py-1 rounded-full shadow-md backdrop-blur-2xs">
+                  {/* Page Pill Counter Badge */}
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-gray-900/90 text-white text-[11px] font-semibold px-3.5 py-1 rounded-full shadow-md backdrop-blur-2xs">
                     หน้า 1 / {pageCount}
                   </div>
                 </div>
 
                 {/* PDF Footer Status Bar */}
-                <div className="w-full flex items-center justify-between pt-3 mt-3 border-t border-gray-200/80 px-1 text-xs">
+                <div className="w-full flex items-center justify-between pt-3 mt-2 border-t border-gray-200 px-1 text-xs">
                   <span className="text-gray-500 font-medium">
                     PDF • 245 KB • {pageCount} หน้า
                   </span>
-                  <span className="flex items-center gap-1 text-success-600 font-bold text-[11px] bg-success-100 px-2 py-0.5 rounded-full">
+                  <span className="flex items-center gap-1 text-success-600 font-bold text-[11px] bg-success-100 px-2.5 py-0.5 rounded-full">
                     <CheckCircle2 size={13} />
                     พร้อมส่ง
                   </span>
