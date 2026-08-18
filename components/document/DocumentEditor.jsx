@@ -49,7 +49,7 @@ function EditorContent({ templateId }) {
       const res = await fetch("/api/export-pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ templateId, values }),
+        body: JSON.stringify({ templateId, values, fileName }),
       });
       if (!res.ok) throw new Error("สร้าง PDF ไม่สำเร็จ");
       const blob = await res.blob();
