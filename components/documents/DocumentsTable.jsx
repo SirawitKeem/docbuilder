@@ -62,7 +62,6 @@ export default function DocumentsTable({
 
   return (
     <>
-      {/* ใช้ overflow-visible เพื่อไม่ให้ Dropdown Menu ถูกขอบตารางบังขอบล่าง */}
       <div className="bg-white border border-gray-200 rounded-card shadow-card overflow-visible">
         <table className="w-full text-sm">
           <thead>
@@ -129,7 +128,7 @@ export default function DocumentsTable({
                         <MoreVertical size={16} />
                       </button>
 
-                      {/* Dropdown Menu - ลอยอยู่อย่างอิสระไม่โดนขอบบัง */}
+                      {/* Dropdown Menu */}
                       {openMenuId === doc.id && (
                         <div
                           ref={menuRef}
@@ -167,7 +166,7 @@ export default function DocumentsTable({
         </table>
       </div>
 
-      {/* Pop-Up Modal Preview (อ่านอย่างเดียว แสดงข้อมูลครบถ้วน) */}
+      {/* Pop-Up Modal Preview */}
       {previewDoc && (
         <PreviewModal
           doc={previewDoc}
@@ -186,12 +185,11 @@ function PreviewModal({ doc, onClose }) {
     const { schema } = entry || {};
     if (!schema) return;
 
-    // ดึงค่าตั้งค่ากลางเพิ่มเติมมาเติม fallback หากใน doc.values ยังไม่มี
     getFieldProfile().then((profile) => {
       const merged = { ...doc.values };
       for (const field of schema.fields) {
-        if (!merged[field.id] && field.sharedKey && profile[field.sharedKey]) {
-          merged[field.id] = profile[field.sharedKey];
+        if (field.sharedKey && profile[field.sharedKey]) {
+          merged[field.id] = merged[field.id] || profile[field.sharedKey];
         }
       }
       setModalValues(merged);
@@ -228,7 +226,7 @@ function PreviewModal({ doc, onClose }) {
 
         {/* Modal Body - Readonly Preview Canvas */}
         <div className="flex-1 overflow-auto bg-gray-100 p-6 flex flex-col items-center gap-6">
-          <DocumentFieldsProvider initialValues={modalValues} defaultReadOnly>
+          <DocumentFieldsProvider key={JSON.stringify(modalValues)} initialValues={modalValues} defaultReadOnly>
             {pages.map((PageContent, i) => (
               <div
                 key={i}

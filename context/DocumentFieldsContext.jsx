@@ -1,12 +1,18 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const DocumentFieldsContext = createContext(null);
 
 export function DocumentFieldsProvider({ children, initialValues = {}, defaultReadOnly = false }) {
   const [values, setValues] = useState(initialValues);
   const [readOnly, setReadOnly] = useState(defaultReadOnly);
+
+  useEffect(() => {
+    if (initialValues && Object.keys(initialValues).length > 0) {
+      setValues((prev) => ({ ...initialValues, ...prev }));
+    }
+  }, [initialValues]);
 
   const setField = (id, val) => {
     setValues((prev) => ({ ...prev, [id]: val }));
