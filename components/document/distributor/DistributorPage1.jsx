@@ -11,13 +11,13 @@ export default function DistributorPage1() {
         (Distributor and Reseller Master Agreement)
       </p>
 
-      {/* Contract Opening Line - Centered */}
-      <p className="text-center mb-5">
+      {/* Contract Opening Line - Paragraph Indented */}
+      <p className="indent-12 mb-4 text-justify">
         สัญญาฉบับนี้ทำขึ้น ณ{" "}
-        <Field id="contract_location" placeholder="......................................................." minWidth={5} />{" "}
-        เมื่อวันที่ <Field id="contract_date_day" placeholder="........" minWidth={3} />{" "}
-        เดือน <Field id="contract_date_month" placeholder="................" minWidth={6} />{" "}
-        พ.ศ. <Field id="contract_date_year" placeholder="............" minWidth={4} />
+        <Field id="contract_location" placeholder="...................................................................." minWidth={20} />{" "}
+        เมื่อวันที่ <Field id="contract_date_day" placeholder="........" minWidth={4} />{" "}
+        เดือน <Field id="contract_date_month" placeholder="................" minWidth={8} />{" "}
+        พ.ศ. <Field id="contract_date_year" placeholder="............" minWidth={5} />
       </p>
 
       <p className="mb-2 font-normal">ระหว่าง:</p>
