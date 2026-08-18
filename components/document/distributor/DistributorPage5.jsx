@@ -34,8 +34,8 @@ export default function DistributorPage5() {
             />
           </div>
 
-          <div>
-            <p className="text-gray-900 font-normal">
+          <div className="text-center">
+            <p className="text-gray-900 font-normal mb-1">
               ( {disclosingName} )
             </p>
             <p className="text-gray-900 font-normal">
@@ -60,16 +60,13 @@ export default function DistributorPage5() {
             />
           </div>
 
-          <div>
-            <div className="flex justify-center items-center mb-1">
-              <span className="mr-1">(</span>
-              <Field id="reseller_signatory_name" placeholder="ชื่อ-นามสกุล" minWidth={16} />
-              <span className="ml-1">)</span>
-            </div>
-            <div className="flex justify-center items-center">
-              <span className="mr-1 text-gray-900">ตำแหน่ง</span>
-              <Field id="reseller_signatory_position" placeholder="..................................." minWidth={16} />
-            </div>
+          <div className="text-center">
+            <p className="text-gray-900 font-normal mb-1">
+              (&nbsp;<Field id="reseller_signatory_name" placeholder="ชื่อ-นามสกุล" minWidth={16} />&nbsp;)
+            </p>
+            <p className="text-gray-900 font-normal">
+              ตำแหน่ง&nbsp;<Field id="reseller_signatory_position" placeholder="..................................." minWidth={16} />
+            </p>
           </div>
         </div>
       </div>

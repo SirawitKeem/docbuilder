@@ -68,9 +68,13 @@ export default function NdaPage4() {
             />
           </div>
 
-          <div>
-            <p className="font-semibold text-gray-900 mb-0.5">{disclosingName}</p>
-            <p className="text-gray-700 font-normal">{disclosingPos}</p>
+          <div className="text-center">
+            <p className="font-normal text-gray-900 mb-1">
+              ( {disclosingName} )
+            </p>
+            <p className="text-gray-900 font-normal">
+              ตำแหน่ง {disclosingPos}
+            </p>
           </div>
         </div>
 
@@ -91,16 +95,13 @@ export default function NdaPage4() {
             />
           </div>
 
-          <div>
-            <div className="flex justify-center items-center mb-1">
-              <span className="mr-1">(</span>
-              <Field id="receiving_signatory_name" placeholder="ชื่อ-นามสกุล" minWidth={14} />
-              <span className="ml-1">)</span>
-            </div>
-            <div className="flex justify-center items-center">
-              <span className="mr-1 text-gray-900">ตำแหน่ง</span>
-              <Field id="receiving_signatory_position" placeholder="..................................." minWidth={16} />
-            </div>
+          <div className="text-center">
+            <p className="text-gray-900 font-normal mb-1">
+              (&nbsp;<Field id="receiving_signatory_name" placeholder="ชื่อ-นามสกุล" minWidth={14} />&nbsp;)
+            </p>
+            <p className="text-gray-900 font-normal">
+              ตำแหน่ง&nbsp;<Field id="receiving_signatory_position" placeholder="..................................." minWidth={16} />
+            </p>
           </div>
         </div>
       </div>
