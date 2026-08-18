@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { createDocumentRecord } from "@/lib/data/documents";
+import { documentsRepo } from "@/lib/db/repositories";
 
 async function getAccessToken() {
   const body = new URLSearchParams({
@@ -82,7 +82,7 @@ export async function POST(request) {
     // If Microsoft Graph API credentials are set, use Microsoft Graph
     if (process.env.CLIENT_ID && process.env.CLIENT_SECRET && process.env.TENANT_ID) {
       await sendGraphMail({ to, subject, message, attachmentBase64, attachmentName });
-      await createDocumentRecord({
+      await documentsRepo.create({
         name: attachmentName || "NDA.pdf",
         templateId: "nda",
         templateName: "NDA",
@@ -119,7 +119,7 @@ export async function POST(request) {
         attachments,
       });
 
-      await createDocumentRecord({
+      await documentsRepo.create({
         name: attachmentName || "NDA.pdf",
         templateId: "nda",
         templateName: "NDA",
