@@ -2,17 +2,27 @@ import Field from "../Field";
 
 export default function DistributorPage1() {
   return (
-    <div className="text-[12.5px] leading-[1.85] text-gray-900 font-normal">
-      <p className="mb-4">
-        สัญญาฉบับนี้ทำขึ้น ณ{" "}
-        <Field id="contract_location" placeholder="...................................................................." minWidth={16} />{" "}
-        เมื่อวันที่ <Field id="contract_date_day" placeholder="17" minWidth={3} />{" "}
-        เดือน <Field id="contract_date_month" placeholder="สิงหาคม" minWidth={8} />{" "}
-        พ.ศ. <Field id="contract_date_year" placeholder="2569" minWidth={5} />
+    <div className="text-[12px] leading-[1.85] text-gray-900 font-normal">
+      {/* Document Title */}
+      <h1 className="text-center text-[16px] font-bold mb-1 tracking-tight">
+        สัญญาแต่งตั้งและจัดจำหน่ายซอฟต์แวร์
+      </h1>
+      <p className="text-center text-[12px] font-bold mb-6">
+        (Distributor and Reseller Master Agreement)
       </p>
 
-      <p className="mb-1 font-normal">ระหว่าง:</p>
+      {/* Contract Opening Line */}
+      <p className="mb-4">
+        สัญญาฉบับนี้ทำขึ้น ณ{" "}
+        <Field id="contract_location" placeholder="กรุงเทพมหานคร" minWidth={12} />{" "}
+        เมื่อวันที่ <Field id="contract_date_day" placeholder="17" minWidth={3} />{" "}
+        เดือน <Field id="contract_date_month" placeholder="สิงหาคม" minWidth={6} />{" "}
+        พ.ศ. <Field id="contract_date_year" placeholder="2569" minWidth={4} />
+      </p>
 
+      <p className="mb-2 font-normal">ระหว่าง:</p>
+
+      {/* Party 1 */}
       <p className="mb-3 text-justify">
         (1) บริษัท เครสท์ เซนโด จำกัด สำนักงานใหญ่ ตั้งอยู่เลขที่ 8/40 เดอะ
         คอนเนค 37 ซอยช่างอากาศอุทิศ 10 แยก 1-2 แขวงดอนเมือง เขตดอนเมือง
@@ -21,16 +31,17 @@ export default function DistributorPage1() {
         ฝ่ายหนึ่ง และ
       </p>
 
+      {/* Party 2 */}
       <div className="mb-4 text-justify">
         <p className="mb-1">
           (2) บริษัท/นิติบุคคล{" "}
-          <Field id="reseller_name" placeholder="...................................................................." minWidth={24} />
+          <Field id="reseller_name" placeholder="บริษัท ตัวอย่าง จำกัด" minWidth={20} />
         </p>
         <p className="mb-1">สำนักงานตั้งอยู่เลขที่</p>
         <Field
           id="reseller_address"
           type="textarea"
-          placeholder="...................................................................."
+          placeholder="เลขที่ ... แขวง/ตำบล ... เขต/อำเภอ ... จังหวัด ... รหัสไปรษณีย์ ..."
         />
         <p className="mt-1">
           (ซึ่งต่อไปในสัญญานี้จะเรียกว่า{" "}
@@ -39,6 +50,7 @@ export default function DistributorPage1() {
         </p>
       </div>
 
+      {/* Recital */}
       <p className="mb-5 text-justify">
         คู่สัญญาทั้งสองฝ่ายตกลงเข้าทำสัญญาแต่งตั้งตัวแทนจำหน่ายต่อ เพื่อทำการตลาด
         นำเสนอ และจัดจำหน่ายผลิตภัณฑ์ซอฟต์แวร์ และเครื่องมือทางไอที
