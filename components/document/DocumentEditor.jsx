@@ -65,6 +65,29 @@ function EditorContent({ templateId }) {
     const { blob } = pdfBase64
       ? { blob: await (await fetch(`data:application/pdf;base64,${pdfBase64}`)).blob() }
       : await generatePdf();
+
+    // 1. ลองใช้ File System Access API (เปิดหน้าต่าง "Save As..." ให้เลือกโฟลเดอร์ที่ต้องการเซฟได้เอง)
+    if ("showSaveFilePicker" in window) {
+      try {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: fileName,
+          types: [
+            {
+              description: "PDF Document",
+              accept: { "application/pdf": [".pdf"] },
+            },
+          ],
+        });
+        const writable = await handle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+        return;
+      } catch (err) {
+        if (err.name === "AbortError") return; // ผู้ใช้กด Cancel หน้าต่าง Save As
+      }
+    }
+
+    // 2. Fallback สำหรับเบราว์เซอร์อื่น
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
