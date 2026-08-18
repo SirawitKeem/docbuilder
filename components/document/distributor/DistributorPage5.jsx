@@ -29,7 +29,7 @@ export default function DistributorPage5() {
           <div className="my-8 flex justify-center items-center text-center">
             <Field
               id="disclosing_signature_line"
-              placeholder="..................................................."
+              placeholder="ลายมือชื่อ / การลงนาม (ฝ่ายเรา)"
               minWidth={24}
             />
           </div>
@@ -55,7 +55,7 @@ export default function DistributorPage5() {
           <div className="my-8 flex justify-center items-center text-center">
             <Field
               id="reseller_signature_line"
-              placeholder="..................................................."
+              placeholder="ลายมือชื่อ / การลงนาม (คู่สัญญา)"
               minWidth={24}
             />
           </div>
