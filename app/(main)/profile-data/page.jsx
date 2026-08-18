@@ -64,7 +64,20 @@ export default function ProfileDataPage() {
             {fields.map((f) => (
               <div key={f.id}>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">{f.label}</label>
-                {f.type === "textarea" ? (
+                {f.type === "select" ? (
+                  <select
+                    value={values[f.id] || ""}
+                    onChange={(e) => handleChange(f.id, e.target.value)}
+                    className="w-full h-11 px-3 rounded-lg border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 bg-white"
+                  >
+                    <option value="">-- {f.placeholder} --</option>
+                    {f.options.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                ) : f.type === "textarea" ? (
                   <textarea
                     value={values[f.id] || ""}
                     placeholder={f.placeholder}

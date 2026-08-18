@@ -7,7 +7,7 @@ export default function HeroSection({ userName }) {
     <section className="relative overflow-hidden rounded-card bg-white border border-gray-200 px-8 py-10 mb-8 shadow-card">
       <div className="relative z-10 max-w-lg">
         <h1 className="text-[28px] leading-tight font-bold text-gray-900 mb-2">
-          ยินดีต้อนรับ, {userName} 👋
+          ยินดีต้อนรับ, {userName}
         </h1>
         <p className="text-sm text-gray-500 leading-relaxed mb-6">
           สร้างเอกสารจากเทมเพลตของคุณได้อย่างรวดเร็ว
