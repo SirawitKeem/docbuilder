@@ -100,16 +100,16 @@ export default function DocumentsTable({
         <table className="w-full text-sm table-fixed">
           <thead>
             <tr className="border-b border-gray-200 text-left text-xs text-gray-500 bg-gray-50/50">
-              <th className="w-[34%] px-5 py-3.5 font-medium rounded-tl-card">ชื่อเอกสาร</th>
-              <th className="w-[26%] px-5 py-3.5 font-medium">เทมเพลต</th>
+              <th className={`${showSentTo ? "w-[30%]" : "w-[34%]"} px-5 py-3.5 font-medium rounded-tl-card`}>ชื่อเอกสาร</th>
+              <th className={`${showSentTo ? "w-[20%]" : "w-[26%]"} px-5 py-3.5 font-medium`}>เทมเพลต</th>
               {showSentTo ? (
-                <th className="w-[14%] px-5 py-3.5 font-medium">ส่งไปยัง</th>
+                <th className="w-[22%] px-5 py-3.5 font-medium">ส่งไปยัง</th>
               ) : (
                 <th className="w-[14%] px-5 py-3.5 font-medium">ผู้สร้าง</th>
               )}
               <th className="w-[13%] px-5 py-3.5 font-medium">วันที่สร้าง</th>
-              <th className="w-[8%] px-4 py-3.5 font-medium text-center">สถานะ</th>
-              <th className="w-[5%] px-5 py-3.5 font-medium text-right rounded-tr-card">การดำเนินการ</th>
+              <th className="w-[9%] px-4 py-3.5 font-medium text-center">สถานะ</th>
+              <th className="w-[6%] px-5 py-3.5 font-medium text-right rounded-tr-card">การดำเนินการ</th>
             </tr>
           </thead>
           <tbody>
@@ -144,7 +144,7 @@ export default function DocumentsTable({
                       </span>
                     </td>
                     {showSentTo ? (
-                      <td className="px-5 py-3.5 text-gray-700 truncate" title={doc.sentTo || "-"}>
+                      <td className="px-5 py-3.5 text-gray-700 font-normal truncate" title={doc.sentTo || "-"}>
                         {doc.sentTo || "-"}
                       </td>
                     ) : (

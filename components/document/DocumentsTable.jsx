@@ -84,20 +84,23 @@ export default function DocumentsTable({
         <table className="w-full text-sm table-fixed">
           <thead>
             <tr className="border-b border-gray-200 text-left text-xs text-gray-500 bg-gray-50/50">
-              <th className="w-[34%] px-5 py-3.5 font-medium">ชื่อเอกสาร</th>
-              <th className="w-[26%] px-5 py-3.5 font-medium">เทมเพลต</th>
-              {showSentTo && <th className="w-[14%] px-5 py-3.5 font-medium">ส่งถึง</th>}
-              <th className="w-[14%] px-5 py-3.5 font-medium">ผู้สร้าง</th>
+              <th className={`${showSentTo ? "w-[30%]" : "w-[34%]"} px-5 py-3.5 font-medium`}>ชื่อเอกสาร</th>
+              <th className={`${showSentTo ? "w-[20%]" : "w-[26%]"} px-5 py-3.5 font-medium`}>เทมเพลต</th>
+              {showSentTo ? (
+                <th className="w-[22%] px-5 py-3.5 font-medium">ส่งถึง</th>
+              ) : (
+                <th className="w-[14%] px-5 py-3.5 font-medium">ผู้สร้าง</th>
+              )}
               <th className="w-[13%] px-5 py-3.5 font-medium">วันที่สร้าง</th>
-              <th className="w-[8%] px-4 py-3.5 font-medium text-center">สถานะ</th>
-              <th className="w-[5%] px-5 py-3.5 font-medium text-right">การดำเนินการ</th>
+              <th className="w-[9%] px-4 py-3.5 font-medium text-center">สถานะ</th>
+              <th className="w-[6%] px-5 py-3.5 font-medium text-right">การดำเนินการ</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
                 <td
-                  colSpan={showSentTo ? 7 : 6}
+                  colSpan={showSentTo ? 6 : 6}
                   className="px-5 py-10 text-center text-gray-400"
                 >
                   {query ? "ไม่พบเอกสารที่ค้นหา" : emptyMessage}
@@ -127,12 +130,13 @@ export default function DocumentsTable({
                         {doc.templateName}
                       </span>
                     </td>
-                    {showSentTo && (
-                      <td className="px-5 py-3.5 text-gray-500 truncate" title={doc.sentTo || "—"}>
+                    {showSentTo ? (
+                      <td className="px-5 py-3.5 text-gray-700 font-normal truncate" title={doc.sentTo || "—"}>
                         {doc.sentTo || "—"}
                       </td>
+                    ) : (
+                      <td className="px-5 py-3.5 text-gray-500">{doc.createdBy || "Admin"}</td>
                     )}
-                    <td className="px-5 py-3.5 text-gray-500">{doc.createdBy || "Admin"}</td>
                     <td className="px-5 py-3.5 whitespace-nowrap">
                       <p className="text-gray-900 text-sm font-medium">{dateStr}</p>
                       <p className="text-xs text-gray-500 mt-0.5">{timeStr}</p>
