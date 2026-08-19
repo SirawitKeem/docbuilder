@@ -14,7 +14,7 @@ export default function NdaPage4() {
       <h2 className="font-bold mb-2">
         9. กฎหมายที่ใช้บังคับและเขตอำนาจศาล (Governing Law and Jurisdiction)
       </h2>
-      <ul className="list-none space-y-1.5 mb-5 text-justify font-normal">
+      <ul className="list-none space-y-1.5 mb-5 font-normal">
         <li className="pl-4">9.1. สัญญาฉบับนี้ให้ตีความและบังคับใช้ตามกฎหมายแห่งราชอาณาจักรไทย</li>
         <li className="pl-4">
           9.2. หากเกิดข้อพิพาท ข้อขัดแย้ง หรือการเรียกร้องใดๆ ที่เกิดขึ้นจากหรือเกี่ยวเนื่องกับ
@@ -25,7 +25,7 @@ export default function NdaPage4() {
       </ul>
 
       <h2 className="font-bold mb-2">10. บททั่วไป (General Provisions)</h2>
-      <ul className="list-none space-y-1.5 mb-5 text-justify font-normal">
+      <ul className="list-none space-y-1.5 mb-5 font-normal">
         <li className="pl-4">
           <span className="font-bold">10.1. ไม่มีการโอนสิทธิในทรัพย์สินทางปัญญา:</span>{" "}
           การเปิดเผยข้อมูลความลับตามสัญญานี้ไม่ถือเป็นการโอนสิทธิ์ มอบสิทธิ์ (License) หรือ
@@ -43,7 +43,7 @@ export default function NdaPage4() {
         </li>
       </ul>
 
-      <p className="mb-8 text-justify font-normal">
+      <p className="mb-8 font-normal">
         เพื่อเป็นหลักฐานแห่งการนี้ คู่สัญญาโดยผู้มีอำนาจลงนามได้อ่านและเข้าใจข้อความในสัญญานี้
         โดยละเอียดตลอดแล้ว เห็นว่าถูกต้องตรงตามเจตนา จึงได้ลงลายมือชื่อและประทับตราสำคัญ
         (ถ้ามี) ไว้เป็นสำคัญต่อหน้าพยาน ณ วัน เดือน ปี ที่ระบุไว้ข้างต้น

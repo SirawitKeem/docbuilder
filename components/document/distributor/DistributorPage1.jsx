@@ -23,7 +23,7 @@ export default function DistributorPage1() {
       <p className="mb-2 font-normal">ระหว่าง:</p>
 
       {/* Party 1 */}
-      <p className="mb-3 text-justify">
+      <p className="mb-3">
         (1) บริษัท เครสท์ เซนโด จำกัด สำนักงานใหญ่ ตั้งอยู่เลขที่ 8/40 เดอะ
         คอนเนค 37 ซอยช่างอากาศอุทิศ 10 แยก 1-2 แขวงดอนเมือง เขตดอนเมือง
         กรุงเทพมหานคร 10210 ประเทศไทย ซึ่งต่อไปในสัญญานี้จะเรียกว่า &ldquo;ผู้เปิดเผยข้อมูล&rdquo; (Disclosing Party)
@@ -31,7 +31,7 @@ export default function DistributorPage1() {
       </p>
 
       {/* Party 2 */}
-      <div className="mb-4 text-justify">
+      <div className="mb-4">
         <p className="mb-1">
           (2) บริษัท/นิติบุคคล{" "}
           <Field id="reseller_name" placeholder="..........................................................................................................................." minWidth={24} />
@@ -48,7 +48,7 @@ export default function DistributorPage1() {
       </div>
 
       {/* Recital */}
-      <p className="mb-5 text-justify">
+      <p className="mb-5">
         คู่สัญญาทั้งสองฝ่ายตกลงเข้าทำสัญญาแต่งตั้งตัวแทนจำหน่ายต่อ เพื่อทำการตลาด
         นำเสนอ และจัดจำหน่ายผลิตภัณฑ์ซอฟต์แวร์ และเครื่องมือทางไอที
         (ซึ่งต่อไปนี้เรียกว่า &ldquo;ผลิตภัณฑ์&rdquo;) โดยมีข้อกำหนดและเงื่อนไขดังต่อไปนี้:
@@ -56,7 +56,7 @@ export default function DistributorPage1() {
 
       {/* Section 1 */}
       <h2 className="font-bold mb-2">1. นิยามศัพท์ (Definitions)</h2>
-      <ul className="list-none space-y-2 mb-5 text-justify">
+      <ul className="list-none space-y-2 mb-5">
         <li className="pl-4">
           <span className="font-bold">1.1. &ldquo;เจ้าของผลิตภัณฑ์&rdquo; (Vendor)</span>{" "}
           หมายถึง บุคคล นิติบุคคล หรือผู้พัฒนาซอฟต์แวร์ ซึ่งเป็นผู้ถือครองลิขสิทธิ์ ทรัพย์สินทางปัญญา และสิทธิ์โดยชอบด้วยกฎหมายในตัวผลิตภัณฑ์ซอฟต์แวร์แต่เพียงผู้เดียว (หรือตามสิทธิ์ที่ได้รับอนุญาต)
@@ -79,7 +79,7 @@ export default function DistributorPage1() {
       <h2 className="font-bold mb-2">
         2. ขอบเขตการแต่งตั้งและอาณาเขต (Scope of Appointment & Territory)
       </h2>
-      <ul className="list-none space-y-2 text-justify">
+      <ul className="list-none space-y-2">
         <li className="pl-4">
           <span className="font-bold">2.1. การแต่งตั้งและบทบาทของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;:</span>
           <ul className="list-disc pl-6 space-y-1 mt-1 font-normal">

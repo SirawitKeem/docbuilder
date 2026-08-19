@@ -20,7 +20,7 @@ export default function NdaPage1() {
 
       <p className="mb-2 font-normal">ระหว่าง:</p>
 
-      <p className="mb-3 text-justify">
+      <p className="mb-3">
         (1) บริษัท เครสท์ เซนโด จำกัด สำนักงานใหญ่ ตั้งอยู่เลขที่ 8/40 เดอะ
         คอนเนค 37 ซอยช่างอากาศอุทิศ 10 แยก 1-2 แขวงดอนเมือง เขตดอนเมือง
         กรุงเทพมหานคร 10210 ประเทศไทย ซึ่งต่อไปในสัญญานี้จะเรียกว่า{" "}
@@ -28,7 +28,7 @@ export default function NdaPage1() {
         ฝ่ายหนึ่ง และ
       </p>
 
-      <div className="mb-4 text-justify">
+      <div className="mb-4">
         <p className="mb-1">
           (2) บริษัท/นิติบุคคล{" "}
           <Field id="receiving_party_name" placeholder="บริษัท ตัวอย่าง จำกัด" minWidth={24} />
@@ -51,7 +51,7 @@ export default function NdaPage1() {
         หากหมายถึงฝ่ายใดฝ่ายหนึ่ง)
       </p>
 
-      <p className="mb-5 text-justify font-normal">
+      <p className="mb-5 font-normal">
         โดยที่ ผู้เปิดเผยข้อมูล เป็นผู้ประกอบธุรกิจจัดจำหน่ายและให้บริการด้านซอฟต์แวร์
         ไอทีโซลูชัน และเทคโนโลยีดิจิทัล และมีความประสงค์จะเปิดเผยข้อมูลที่มีลักษณะเป็นความลับ
         ของตนให้แก่ ผู้รับข้อมูล เพื่อวัตถุประสงค์ในการประเมิน ความร่วมมือ หรือการทำธุรกิจร่วมกัน
@@ -62,7 +62,7 @@ export default function NdaPage1() {
       <h2 className="font-bold mb-2">
         1. คำนิยามข้อมูลที่เป็นความลับ (Definition of Confidential Information)
       </h2>
-      <p className="mb-2 text-justify pl-4 font-normal">
+      <p className="mb-2 pl-4 font-normal">
         1.1. &ldquo;ข้อมูลที่เป็นความลับ&rdquo; (Confidential Information) หมายถึง
         ข้อมูล เอกสาร สารสนเทศ เทคโนโลยี และความรู้ความชำนาญ (Know-how) ทั้งหมด
         ไม่ว่าจะอยู่ในรูปแบบใด (ลายลักษณ์อักษร, วาจา, อิเล็กทรอนิกส์, รหัสคอมพิวเตอร์,
@@ -70,7 +70,7 @@ export default function NdaPage1() {
         ทั้งก่อนและหลังวันทำสัญญาฉบับนี้ ซึ่งรวมถึงแต่ไม่จำกัดเพียง:
       </p>
 
-      <ul className="list-disc pl-12 space-y-1.5 text-justify font-normal">
+      <ul className="list-disc pl-12 space-y-1.5 font-normal">
         <li>
           <span className="font-bold">ข้อมูลด้านเทคนิคและซอฟต์แวร์:</span> ซอร์ซโค้ด
           (Source Code), ออบเจกต์โค้ด (Object Code), อัลกอริทึม (Algorithms),
