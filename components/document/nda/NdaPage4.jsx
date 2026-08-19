@@ -10,7 +10,7 @@ export default function NdaPage4() {
   const disclosingPos = values.disclosing_signatory_position || disclosingParty.signatoryPosition;
 
   return (
-    <div className="text-[12px] leading-[1.85] text-gray-900 font-normal">
+    <div className="text-[9.5pt] leading-[1.85] text-gray-900 font-normal">
       <h2 className="font-bold mb-2">
         9. กฎหมายที่ใช้บังคับและเขตอำนาจศาล (Governing Law and Jurisdiction)
       </h2>

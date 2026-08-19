@@ -1,7 +1,7 @@
 export default function PartnerPage2() {
   return (
-    <div className="text-[12px] leading-[1.8] text-gray-900 font-normal">
-      <h2 className="font-bold mb-2 text-[12px]">
+    <div className="text-[9.5pt] leading-[1.8] text-gray-900 font-normal">
+      <h2 className="font-bold mb-2 text-[9.5pt]">
         ข้อ 3. สิทธิ หน้าที่ และความรับผิดชอบของคู่สัญญา (Obligations of the Parties)
       </h2>
       <p className="mb-2 pl-4 font-bold">3.1 หน้าที่และความรับผิดชอบของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;:</p>
@@ -53,7 +53,7 @@ export default function PartnerPage2() {
         </li>
       </ul>
 
-      <h2 className="font-bold mb-2 text-[12px]">
+      <h2 className="font-bold mb-2 text-[9.5pt]">
         ข้อ 4. ลิขสิทธิ์ซอฟต์แวร์ รูปแบบการใช้งาน และการปฏิบัติตามกฎหมาย (Software Licensing & Compliance)
       </h2>
       <ul className="list-none space-y-2 mb-6">
@@ -68,7 +68,7 @@ export default function PartnerPage2() {
         </li>
       </ul>
 
-      <h2 className="font-bold mb-2 text-[12px]">
+      <h2 className="font-bold mb-2 text-[9.5pt]">
         ข้อ 5. การกำหนดราคา ส่วนลด และเงื่อนไขการชำระเงิน (Pricing, Discounts, and Payment Terms)
       </h2>
       <ul className="list-none space-y-2">

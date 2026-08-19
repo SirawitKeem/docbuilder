@@ -1,6 +1,6 @@
 export default function DistributorPage2() {
   return (
-    <div className="text-[12px] leading-[1.85] text-gray-900 font-normal">
+    <div className="text-[9.5pt] leading-[1.85] text-gray-900 font-normal">
       {/* Section 3 */}
       <h2 className="font-bold mb-2">
         3. สิทธิ หน้าที่ และความรับผิดชอบของคู่สัญญา (Obligations of the Parties)

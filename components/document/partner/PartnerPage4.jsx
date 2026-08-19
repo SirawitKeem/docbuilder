@@ -1,7 +1,7 @@
 export default function PartnerPage4() {
   return (
-    <div className="text-[12px] leading-[1.8] text-gray-900 font-normal">
-      <h2 className="font-bold mb-2 text-[12px]">
+    <div className="text-[9.5pt] leading-[1.8] text-gray-900 font-normal">
+      <h2 className="font-bold mb-2 text-[9.5pt]">
         ข้อ 7. การจัดการทรัพย์สินทางปัญญาและการจำกัดความรับผิด (Intellectual Property & Limitation of Liability)
       </h2>
       <div className="space-y-3 pl-4 mb-6">
@@ -13,7 +13,7 @@ export default function PartnerPage4() {
         </p>
       </div>
 
-      <h2 className="font-bold mb-2 text-[12px]">ข้อ 8. การรับประกัน (Warranty)</h2>
+      <h2 className="font-bold mb-2 text-[9.5pt]">ข้อ 8. การรับประกัน (Warranty)</h2>
       <div className="space-y-3 pl-4 mb-6">
         <p>
           <span className="font-bold">8.1 การรับประกันการทำงานของซอฟต์แวร์ (Software Performance Warranty):</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; รับประกันว่า &ldquo;ผลิตภัณฑ์&rdquo; จะทำงานได้ตรงตามคุณลักษณะทางเทคนิค (Specifications) ที่ระบุไว้ในคู่มือ หรือเอกสารข้อกำหนดทางเทคนิคของ &ldquo;เจ้าของผลิตภัณฑ์&rdquo;
@@ -31,7 +31,7 @@ export default function PartnerPage4() {
         </div>
       </div>
 
-      <h2 className="font-bold mb-2 text-[12px]">
+      <h2 className="font-bold mb-2 text-[9.5pt]">
         ข้อ 9. การรักษาความลับข้อมูลและการคุ้มครองข้อมูลส่วนบุคคล (Confidentiality & Data Protection)
       </h2>
       <div className="pl-4">

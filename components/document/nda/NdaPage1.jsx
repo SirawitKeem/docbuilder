@@ -2,11 +2,11 @@ import Field from "../Field";
 
 export default function NdaPage1() {
   return (
-    <div className="text-[12px] leading-[1.85] text-gray-900 font-normal">
+    <div className="text-[9.5pt] leading-[1.85] text-gray-900 font-normal">
       <h1 className="text-center text-[16px] font-bold mb-1 tracking-tight">
         หนังสือสัญญาไม่เปิดเผยข้อมูล
       </h1>
-      <p className="text-center text-[12px] font-bold mb-6">
+      <p className="text-center text-[9.5pt] font-bold mb-6">
         (NON-DISCLOSURE AGREEMENT - NDA)
       </p>
 

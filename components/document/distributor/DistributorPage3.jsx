@@ -1,6 +1,6 @@
 export default function DistributorPage3() {
   return (
-    <div className="text-[12px] leading-[1.85] text-gray-900 font-normal">
+    <div className="text-[9.5pt] leading-[1.85] text-gray-900 font-normal">
       <p className="mb-2 pl-4 font-bold">5.3. เงื่อนไขการส่งใบแจ้งหนี้ เครดิตเทอม และการชำระเงิน:</p>
       <ul className="list-disc pl-10 space-y-2 mb-6 font-normal">
         <li>

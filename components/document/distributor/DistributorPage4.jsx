@@ -1,6 +1,6 @@
 export default function DistributorPage4() {
   return (
-    <div className="text-[12px] leading-[1.85] text-gray-900 font-normal">
+    <div className="text-[9.5pt] leading-[1.85] text-gray-900 font-normal">
       <p className="mb-2 pl-4 font-bold">8.2. ข้อยกเว้นการรับประกันและการเยียวยา:</p>
       <ul className="list-disc pl-10 space-y-2 mb-6 font-normal">
         <li>

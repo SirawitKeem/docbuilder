@@ -1,6 +1,6 @@
 export default function PartnerPage5() {
   return (
-    <div className="text-[12px] leading-[1.8] text-gray-900 font-normal">
+    <div className="text-[9.5pt] leading-[1.8] text-gray-900 font-normal">
       <div className="pl-4 mb-6">
         <ul className="list-disc pl-8 space-y-2 font-normal mb-3">
           <li>
@@ -12,7 +12,7 @@ export default function PartnerPage5() {
         </p>
       </div>
 
-      <h2 className="font-bold mb-2 text-[12px]">
+      <h2 className="font-bold mb-2 text-[9.5pt]">
         ข้อ 10. ระยะเวลาและการบอกเลิกสัญญา (Term and Termination)
       </h2>
       <div className="space-y-3 pl-4 mb-6">
@@ -36,7 +36,7 @@ export default function PartnerPage5() {
         </p>
       </div>
 
-      <h2 className="font-bold mb-2 text-[12px]">
+      <h2 className="font-bold mb-2 text-[9.5pt]">
         ข้อ 11. กฎหมายที่ใช้บังคับและกระบวนการระงับข้อพิพาท (Governing Law & Dispute Resolution)
       </h2>
       <div className="space-y-3 pl-4">

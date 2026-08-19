@@ -1,6 +1,6 @@
 export default function NdaPage2() {
   return (
-    <div className="text-[12px] leading-[1.85] text-gray-900 font-normal">
+    <div className="text-[9.5pt] leading-[1.85] text-gray-900 font-normal">
       <h2 className="font-bold mb-2">
         2. ข้อยกเว้นข้อมูลที่เป็นความลับ (Exclusions from Confidential Information)
       </h2>

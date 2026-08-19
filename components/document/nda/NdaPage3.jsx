@@ -1,6 +1,6 @@
 export default function NdaPage3() {
   return (
-    <div className="text-[12px] leading-[1.85] text-gray-900 font-normal">
+    <div className="text-[9.5pt] leading-[1.85] text-gray-900 font-normal">
       <h2 className="font-bold mb-2">
         5. ข้อจำกัดเรื่องวิศวกรรมย้อนกลับ (Strict No Reverse Engineering/Decompilation)
       </h2>
