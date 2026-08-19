@@ -1,7 +1,12 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { Eye, MoreVertical, Search } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { Eye, MoreVertical, Search, X } from "lucide-react";
+import { templateRegistry } from "@/lib/templates/registry";
+import { getFieldProfile } from "@/lib/data/fieldProfile";
+import { DocumentFieldsProvider } from "@/context/DocumentFieldsContext";
+import DocumentHeader from "@/components/document/DocumentHeader";
+import DocumentFooter from "@/components/document/DocumentFooter";
 
 const statusStyles = {
   sent: "bg-success-100 text-success-600",
@@ -49,6 +54,7 @@ export default function DocumentsTable({
   emptyMessage = "ยังไม่มีเอกสาร",
 }) {
   const [query, setQuery] = useState("");
+  const [previewDoc, setPreviewDoc] = useState(null);
 
   const filtered = useMemo(() => {
     if (!query.trim()) return documents;
@@ -140,7 +146,11 @@ export default function DocumentsTable({
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center justify-end gap-1">
-                        <button className="p-1.5 rounded hover:bg-gray-100 text-gray-500">
+                        <button
+                          onClick={() => setPreviewDoc(doc)}
+                          className="p-1.5 rounded hover:bg-gray-100 text-gray-500 transition-colors"
+                          title="ดูตัวอย่างเอกสาร (Preview)"
+                        >
                           <Eye size={16} />
                         </button>
                         <button className="p-1.5 rounded hover:bg-gray-100 text-gray-500">
@@ -154,6 +164,98 @@ export default function DocumentsTable({
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Pop-Up Modal Preview */}
+      {previewDoc && (
+        <PreviewModal
+          doc={previewDoc}
+          onClose={() => setPreviewDoc(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+function PreviewModal({ doc, onClose }) {
+  const entry = templateRegistry[doc.templateId || "nda"];
+  const [modalValues, setModalValues] = useState(doc.values || {});
+
+  useEffect(() => {
+    const { schema } = entry || {};
+    if (!schema) return;
+
+    getFieldProfile().then((profile) => {
+      const merged = { ...doc.values };
+      for (const field of schema.fields) {
+        if (field.sharedKey && profile[field.sharedKey]) {
+          merged[field.id] = merged[field.id] || profile[field.sharedKey];
+        }
+      }
+      setModalValues(merged);
+    });
+  }, [doc, entry]);
+
+  if (!entry) return null;
+  const { schema, pages } = entry;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        {/* Modal Header */}
+        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gray-50/90">
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="font-bold text-gray-900 text-base">{doc.name}</h3>
+              <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${statusStyles[doc.status] || "bg-gray-100"}`}>
+                {statusLabel[doc.status] || doc.status}
+              </span>
+            </div>
+            <p className="text-xs text-gray-500 mt-0.5">
+              เทมเพลต: {doc.templateName} • สร้างเมื่อ {new Date(doc.createdAt).toLocaleDateString("th-TH")}
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg hover:bg-gray-200 text-gray-500 transition-colors"
+            title="ปิดหน้าต่าง"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Modal Body - Readonly Preview Canvas (Strict 794px A4 dimensions & px-14 pt-10 pb-6 padding for 100% layout parity) */}
+        <div className="flex-1 overflow-auto bg-gray-100 p-8 flex flex-col items-center gap-8">
+          <DocumentFieldsProvider key={JSON.stringify(modalValues)} initialValues={modalValues} defaultReadOnly>
+            {pages.map((PageContent, i) => (
+              <div
+                key={i}
+                className="bg-white shadow-document w-[794px] min-h-[1123px] px-14 pt-10 pb-6 flex flex-col justify-between font-noto-looped text-gray-900 rounded-sm shrink-0"
+              >
+                <DocumentHeader logo={schema.logo} />
+                <div className="flex-1 my-4">
+                  <PageContent />
+                </div>
+                <DocumentFooter
+                  title={schema.fullName}
+                  pageNumber={i + 1}
+                  totalPages={pages.length}
+                />
+              </div>
+            ))}
+          </DocumentFieldsProvider>
+        </div>
+
+        {/* Modal Footer */}
+        <div className="px-6 py-3.5 border-t border-gray-200 flex items-center justify-between bg-gray-50/90">
+          <p className="text-xs text-gray-500">โหมดแสดงตัวอย่างเอกสาร (อ่านอย่างเดียว)</p>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+          >
+            ปิดหน้าต่าง
+          </button>
+        </div>
       </div>
     </div>
   );

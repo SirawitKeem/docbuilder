@@ -258,7 +258,7 @@ function PreviewModal({ doc, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gray-50/90">
           <div>
@@ -281,13 +281,13 @@ function PreviewModal({ doc, onClose }) {
           </button>
         </div>
 
-        {/* Modal Body - Readonly Preview Canvas */}
-        <div className="flex-1 overflow-auto bg-gray-100 p-6 flex flex-col items-center gap-6">
+        {/* Modal Body - Readonly Preview Canvas (Strict 794px A4 dimensions & px-14 pt-10 pb-6 padding for 100% layout parity) */}
+        <div className="flex-1 overflow-auto bg-gray-100 p-8 flex flex-col items-center gap-8">
           <DocumentFieldsProvider key={JSON.stringify(modalValues)} initialValues={modalValues} defaultReadOnly>
             {pages.map((PageContent, i) => (
               <div
                 key={i}
-                className="bg-white shadow-document w-[700px] min-h-[990px] p-12 flex flex-col justify-between font-noto-looped text-gray-900 rounded-sm"
+                className="bg-white shadow-document w-[794px] min-h-[1123px] px-14 pt-10 pb-6 flex flex-col justify-between font-noto-looped text-gray-900 rounded-sm shrink-0"
               >
                 <DocumentHeader logo={schema.logo} />
                 <div className="flex-1 my-4">
