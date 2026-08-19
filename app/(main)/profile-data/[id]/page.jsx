@@ -20,25 +20,22 @@ export default function EditProfileDataPage({ params }) {
 
   if (loading) {
     return (
-      <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
-        <div className="h-64 rounded-2xl bg-gray-100 animate-pulse" />
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">แก้ไขชุดข้อมูล</h1>
+        <div className="h-64 rounded-card bg-gray-100 animate-pulse mt-6" />
       </div>
     );
   }
 
   if (!profile) {
-    return (
-      <div className="p-6 md:p-8 text-gray-400 max-w-7xl mx-auto">
-        ไม่พบชุดข้อมูลนี้ในระบบ
-      </div>
-    );
+    return <div className="text-gray-400">ไม่พบชุดข้อมูลนี้ในระบบ</div>;
   }
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-xl font-bold text-gray-900">แก้ไขชุดข้อมูล: {profile.name}</h1>
-        <p className="text-xs text-gray-500 mt-1">
+    <div>
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">แก้ไขชุดข้อมูล: {profile.name}</h1>
+        <p className="text-sm text-gray-500">
           ปรับแต่งและอัปเดตรายละเอียดของชุดข้อมูลนี้
         </p>
       </div>

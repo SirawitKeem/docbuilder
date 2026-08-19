@@ -9,7 +9,6 @@ import {
   Trash2,
   Building2,
   MoreHorizontal,
-  SlidersHorizontal,
   Check,
 } from "lucide-react";
 import { listFieldProfiles, deleteFieldProfile, updateFieldProfile } from "@/lib/data/fieldProfiles";
@@ -73,8 +72,12 @@ export default function ProfileDataListPage() {
 
   if (profiles === null) {
     return (
-      <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
-        <div className="h-64 rounded-2xl bg-gray-100 animate-pulse" />
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">ตั้งค่าข้อมูล</h1>
+        <p className="text-sm text-gray-500 mb-8">
+          จัดการและบันทึกชุดข้อมูลคู่ค้าเพื่อดึงไปใช้สร้างเอกสารอัตโนมัติ
+        </p>
+        <div className="h-64 rounded-card bg-gray-100 animate-pulse" />
       </div>
     );
   }
@@ -95,25 +98,24 @@ export default function ProfileDataListPage() {
   });
 
   return (
-    <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
-      
-      {/* Page Title Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div>
+      {/* Page Title & Subtitle Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-gray-900">ชุดข้อมูลที่บันทึกไว้</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-gray-900">ตั้งค่าข้อมูล</h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">
               {profiles.length} รายการ
             </span>
           </div>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-sm text-gray-500 mt-1">
             จัดการและบันทึกชุดข้อมูลคู่ค้าเพื่อดึงไปใช้สร้างเอกสารอัตโนมัติ
           </p>
         </div>
       </div>
 
       {/* Main Card Container */}
-      <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-card space-y-5">
+      <div className="bg-white border border-gray-200 rounded-card p-6 shadow-card space-y-5">
         
         {/* Toolbar: Search Input + Create Button */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
@@ -139,7 +141,7 @@ export default function ProfileDataListPage() {
           </Link>
         </div>
 
-        {/* Clean Data Table (No Star Column) */}
+        {/* Clean Data Table */}
         <div className="border border-gray-200/90 rounded-xl overflow-visible bg-white">
           <table className="w-full text-sm text-left">
             <thead>
@@ -287,7 +289,6 @@ export default function ProfileDataListPage() {
         </div>
 
       </div>
-
     </div>
   );
 }
