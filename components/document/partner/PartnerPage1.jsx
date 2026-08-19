@@ -19,14 +19,14 @@ export default function PartnerPage1() {
 
       <p className="mb-0.5 font-normal">ระหว่าง:</p>
 
-      <p className="mb-2 text-justify">
+      <p className="mb-2 text-justify indent-8">
         {distributorParty.name} เลขทะเบียนนิติบุคคล {distributorParty.registrationNumber} สำนักงานใหญ่ ตั้งอยู่เลขที่ 8/40 เดอะ คอนเนค 37 ซอยช่างอากาศอุทิศ 10 แยก 1-2 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210{" "}
         (ซึ่งต่อไปในสัญญานี้จะเรียกว่า &ldquo;Distributor&rdquo; หรือ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;) ฝ่ายหนึ่ง
       </p>
 
       <p className="mb-0.5 font-normal">กับ</p>
 
-      <p className="mb-2.5 text-justify">
+      <p className="mb-2.5 text-justify indent-8">
         <Field id="reseller_name" placeholder="ระบุชื่อบริษัท Reseller" minWidth={24} /> เลขทะเบียนนิติบุคคล{" "}
         <Field id="reseller_registration_number" placeholder="0000000000000" minWidth={16} />{" "}
         สำนักงานใหญ่ ตั้งอยู่เลขที่{" "}
@@ -34,7 +34,7 @@ export default function PartnerPage1() {
         {" "}(ซึ่งต่อไปในสัญญานี้จะเรียกว่า &ldquo;Reseller&rdquo; หรือ &ldquo;ตัวแทนจำหน่าย&rdquo;) อีกฝ่ายหนึ่ง
       </p>
 
-      <p className="mb-3 text-justify">
+      <p className="mb-3 text-justify indent-8">
         คู่สัญญาทั้งสองฝ่ายตกลงเข้าทำสัญญาแต่งตั้งตัวแทนจำหน่าย เพื่อทำการตลาด นำเสนอ และจัดจำหน่ายผลิตภัณฑ์ ซอฟต์แวร์ และเครื่องมือทางไอที (ซึ่งต่อไปนี้เรียกว่า &ldquo;ผลิตภัณฑ์&rdquo;) โดยมีข้อกำหนดและเงื่อนไขดังต่อไปนี้:
       </p>
 
