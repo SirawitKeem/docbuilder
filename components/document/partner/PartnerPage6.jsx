@@ -5,9 +5,9 @@ export default function PartnerPage6() {
   const { distributorParty } = partnerTemplate;
 
   return (
-    <div className="text-[13px] leading-[1.9] text-gray-900 font-normal">
-      <p className="mb-12 text-justify">
-        สัญญานี้ทำขึ้นเป็นสองฉบับมีข้อความถูกต้องตรงกัน คู่สัญญาได้อ่านและเข้าใจข้อความโดยละเอียดตลอดแล้ว จึงได้ลงลายมือชื่อและประทับตรา (ถ้ามี) ไว้เป็นสำคัญต่อหน้าพยาน
+    <div className="text-[12px] leading-[1.8] text-gray-900 font-normal">
+      <p className="mb-12 text-justify indent-8">
+        สัญญานี้ทำขึ้นเป็นสองฉบับมีข้อความถูกต้องตรงกัน คู่สัญญาได้อ่านและเข้าใจข้อความโดยรายละเอียดตลอดแล้ว จึงได้ลงลายมือชื่อและประทับตรา (ถ้ามี) ไว้เป็นสำคัญต่อหน้าพยาน
       </p>
 
       {/* คู่สัญญาหลัก - จัดกึ่งกลางฝั่งตัวเอง */}

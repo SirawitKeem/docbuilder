@@ -47,12 +47,12 @@ export default function Field({ id, placeholder, type = "text", minWidth = 4 }) 
     );
   }
 
-  // คำนวณความกว้างอินพุทให้พอดี ไม่ถูกตัดซ่อนตัวอักษรท้าย (เพิ่มเผื่อ 1.8ch สำหรับ padding ภายใน)
+  // คำนวณความกว้างอินพุทให้พอดีพอดีตัวอักษร ไม่เหลือขอบด้านขวาเยอะเกินไป
   const visualLen = getThaiVisualWidth(value);
   const placeholderLen = getThaiVisualWidth(placeholder);
   const calcWidth = value
-    ? visualLen + 1.8
-    : Math.max(minWidth || 4, placeholderLen + 1.8);
+    ? visualLen + 0.25
+    : Math.max(minWidth || 4, placeholderLen + 0.5);
 
   return (
     <input
@@ -63,7 +63,7 @@ export default function Field({ id, placeholder, type = "text", minWidth = 4 }) 
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
       style={{ width: `${calcWidth}ch` }}
-      className={`inline-block align-baseline max-w-full px-1.5 py-0.5 mx-0.5 rounded border outline-none transition-colors duration-150 text-inherit font-inherit ${stateClasses}`}
+      className={`inline-block align-baseline max-w-full px-1 py-0 mx-0.5 rounded border outline-none transition-colors duration-150 text-inherit font-inherit ${stateClasses}`}
     />
   );
 }
