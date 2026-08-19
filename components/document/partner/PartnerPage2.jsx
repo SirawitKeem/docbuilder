@@ -5,7 +5,7 @@ export default function PartnerPage2() {
         ข้อ 3. สิทธิ หน้าที่ และความรับผิดชอบของคู่สัญญา (Obligations of the Parties)
       </h2>
       <p className="mb-2 pl-4 font-bold">3.1 หน้าที่และความรับผิดชอบของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;:</p>
-      <ul className="list-disc pl-12 space-y-2 mb-4 text-justify">
+      <ul className="list-disc pl-12 space-y-2 mb-4">
         <li>
           <span className="font-bold">การสนับสนุนด้านการขายและสื่อการตลาด:</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;
           มีหน้าที่จัดหาเอกสาร ข้อมูลทางเทคนิค คู่มือการใช้งาน สื่อส่งเสริมการขาย
@@ -37,7 +37,7 @@ export default function PartnerPage2() {
       </ul>
 
       <p className="mb-2 pl-4 font-bold">3.2 หน้าที่และความรับผิดชอบของ &ldquo;ตัวแทนจำหน่าย&rdquo;:</p>
-      <ul className="list-disc pl-12 space-y-2 mb-6 text-justify">
+      <ul className="list-disc pl-12 space-y-2 mb-6">
         <li>
           <span className="font-bold">การทำตลาดและการรักษามาตรฐาน:</span> &ldquo;ตัวแทนจำหน่าย&rdquo;
           ต้องทำการตลาด ถ่ายทอดข้อมูลอย่างถูกต้อง ปฏิบัติตามจรรยาบรรณทางธุรกิจ
@@ -56,7 +56,7 @@ export default function PartnerPage2() {
       <h2 className="font-bold mb-2 text-[12px]">
         ข้อ 4. ลิขสิทธิ์ซอฟต์แวร์ รูปแบบการใช้งาน และการปฏิบัติตามกฎหมาย (Software Licensing & Compliance)
       </h2>
-      <ul className="list-none space-y-2 mb-6 text-justify">
+      <ul className="list-none space-y-2 mb-6">
         <li className="pl-4">
           <span className="font-bold">4.1 การรับประกันสิทธิโดย &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;:</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; รับประกันว่าตนมีสิทธิทางกฎหมายอย่างถูกต้องในการนำเสนอ และจัดจำหน่าย &ldquo;สิทธิการใช้งาน&rdquo; ของ &ldquo;ผลิตภัณฑ์&rdquo; ดังกล่าวให้แก่ &ldquo;ตัวแทนจำหน่าย&rdquo;
         </li>
@@ -71,7 +71,7 @@ export default function PartnerPage2() {
       <h2 className="font-bold mb-2 text-[12px]">
         ข้อ 5. การกำหนดราคา ส่วนลด และเงื่อนไขการชำระเงิน (Pricing, Discounts, and Payment Terms)
       </h2>
-      <ul className="list-none space-y-2 text-justify">
+      <ul className="list-none space-y-2">
         <li className="pl-4">
           <span className="font-bold">5.1 โครงสร้างราคา:</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; จะกำหนด และจัดส่งราคาต้นทุน (Cost Price) สำหรับ &ldquo;ตัวแทนจำหน่าย&rdquo; และระบุราคาแนะนำสำหรับ &ldquo;ผู้ใช้ปลายทาง&rdquo; (MSRP)
         </li>

@@ -4,7 +4,7 @@ export default function PartnerPage4() {
       <h2 className="font-bold mb-2 text-[12px]">
         ข้อ 7. การจัดการทรัพย์สินทางปัญญาและการจำกัดความรับผิด (Intellectual Property & Limitation of Liability)
       </h2>
-      <div className="space-y-3 pl-4 mb-6 text-justify">
+      <div className="space-y-3 pl-4 mb-6">
         <p>
           <span className="font-bold">7.1 การชดใช้ค่าเสียหายจากข้อพิพาทลิขสิทธิ์ (Indemnification):</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; (โดยการสนับสนุนจาก &ldquo;เจ้าของผลิตภัณฑ์&rdquo;) รับประกันว่า &ldquo;ผลิตภัณฑ์&rdquo; ไม่มีการละเมิดทรัพย์สินทางปัญญาของบุคคลภายนอก หาก &ldquo;ตัวแทนจำหน่าย&rdquo; ถูกฟ้องร้องจากบุคคลภายนอกเนื่องจากการใช้งานหรือจำหน่าย &ldquo;ผลิตภัณฑ์&rdquo; อย่างถูกต้องตามสัญญานี้ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; จะร่วมปกป้อง โดย &ldquo;ตัวแทนจำหน่าย&rdquo; ต้องแจ้งให้ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ทราบเป็นลายลักษณ์อักษรทันทีที่ได้รับแจ้งข้อเรียกร้อง
         </p>
@@ -14,7 +14,7 @@ export default function PartnerPage4() {
       </div>
 
       <h2 className="font-bold mb-2 text-[12px]">ข้อ 8. การรับประกัน (Warranty)</h2>
-      <div className="space-y-3 pl-4 mb-6 text-justify">
+      <div className="space-y-3 pl-4 mb-6">
         <p>
           <span className="font-bold">8.1 การรับประกันการทำงานของซอฟต์แวร์ (Software Performance Warranty):</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; รับประกันว่า &ldquo;ผลิตภัณฑ์&rdquo; จะทำงานได้ตรงตามคุณลักษณะทางเทคนิค (Specifications) ที่ระบุไว้ในคู่มือ หรือเอกสารข้อกำหนดทางเทคนิคของ &ldquo;เจ้าของผลิตภัณฑ์&rdquo;
         </p>
@@ -34,7 +34,7 @@ export default function PartnerPage4() {
       <h2 className="font-bold mb-2 text-[12px]">
         ข้อ 9. การรักษาความลับข้อมูลและการคุ้มครองข้อมูลส่วนบุคคล (Confidentiality & Data Protection)
       </h2>
-      <div className="pl-4 text-justify">
+      <div className="pl-4">
         <p className="font-bold mb-1">9.1 การรักษาความลับทางธุรกิจและการใช้ข้อมูล</p>
         <ul className="list-disc pl-8 space-y-2 font-normal">
           <li>

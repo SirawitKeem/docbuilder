@@ -6,7 +6,7 @@ export default function PartnerPage6() {
 
   return (
     <div className="text-[12px] leading-[1.85] text-gray-900 font-normal">
-      <p className="mb-14 text-justify indent-8">
+      <p className="mb-14 indent-8">
         สัญญานี้ทำขึ้นเป็นสองฉบับมีข้อความถูกต้องตรงกัน คู่สัญญาได้อ่านและเข้าใจข้อความโดยรายละเอียดตลอดแล้ว จึงได้ลงลายมือชื่อและประทับตรา (ถ้ามี) ไว้เป็นสำคัญต่อหน้าพยาน
       </p>
 

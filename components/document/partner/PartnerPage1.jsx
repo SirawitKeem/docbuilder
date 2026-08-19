@@ -19,14 +19,14 @@ export default function PartnerPage1() {
 
       <p className="mb-0.5 font-normal">ระหว่าง:</p>
 
-      <p className="mb-2 text-justify indent-8">
+      <p className="mb-2 indent-8">
         {distributorParty.name} เลขทะเบียนนิติบุคคล {distributorParty.registrationNumber} สำนักงานใหญ่ ตั้งอยู่เลขที่ 8/40 เดอะ คอนเนค 37 ซอยช่างอากาศอุทิศ 10 แยก 1-2 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210{" "}
         (ซึ่งต่อไปในสัญญานี้จะเรียกว่า &ldquo;Distributor&rdquo; หรือ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;) ฝ่ายหนึ่ง
       </p>
 
       <p className="mb-0.5 font-normal">กับ</p>
 
-      <p className="mb-2.5 text-justify indent-8">
+      <p className="mb-2.5 indent-8">
         <Field id="reseller_name" placeholder="ระบุชื่อบริษัท Reseller" minWidth={24} /> เลขทะเบียนนิติบุคคล{" "}
         <Field id="reseller_registration_number" placeholder="0000000000000" minWidth={16} />{" "}
         สำนักงานใหญ่ ตั้งอยู่เลขที่{" "}
@@ -34,16 +34,16 @@ export default function PartnerPage1() {
         {" "}(ซึ่งต่อไปในสัญญานี้จะเรียกว่า &ldquo;Reseller&rdquo; หรือ &ldquo;ตัวแทนจำหน่าย&rdquo;) อีกฝ่ายหนึ่ง
       </p>
 
-      <p className="mb-3 text-justify indent-8">
+      <p className="mb-3 indent-8">
         คู่สัญญาทั้งสองฝ่ายตกลงเข้าทำสัญญาแต่งตั้งตัวแทนจำหน่าย เพื่อทำการตลาด นำเสนอ และจัดจำหน่ายผลิตภัณฑ์ ซอฟต์แวร์ และเครื่องมือทางไอที (ซึ่งต่อไปนี้เรียกว่า &ldquo;ผลิตภัณฑ์&rdquo;) โดยมีข้อกำหนดและเงื่อนไขดังต่อไปนี้:
       </p>
 
       <h2 className="font-bold mb-1 text-[12px]">ข้อ 1. นิยามศัพท์ (Definitions)</h2>
-      <p className="mb-1 text-justify">
+      <p className="mb-1">
         ในสัญญานี้ คำหรือข้อความดังต่อไปนี้ให้มีความหมายตามที่กำหนดไว้ เว้นแต่บริบทจะกำหนดเป็นอย่างอื่น:
       </p>
 
-      <ul className="list-none space-y-1 text-justify mb-3">
+      <ul className="list-none space-y-1 mb-3">
         <li className="pl-4">
           <span className="font-bold">1.1 &ldquo;เจ้าของผลิตภัณฑ์&rdquo; (Vendor)</span> หมายถึง บุคคล นิติบุคคล หรือผู้พัฒนาซอฟต์แวร์ ซึ่งเป็นผู้ถือครองลิขสิทธิ์ ทรัพย์สินทางปัญญา และสิทธิ์โดยชอบด้วยกฎหมายในตัวผลิตภัณฑ์ซอฟต์แวร์แต่เพียงผู้เดียว (หรือตามสิทธิ์ที่ได้รับอนุญาต)
         </li>
@@ -63,7 +63,7 @@ export default function PartnerPage1() {
 
       <h2 className="font-bold mb-1 text-[12px]">ข้อ 2. ขอบเขตการแต่งตั้งและอาณาเขต (Scope of Appointment & Territory)</h2>
       <p className="mb-0.5 pl-4 font-bold">2.1 การแต่งตั้งและบทบาทของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;:</p>
-      <ul className="list-disc pl-10 space-y-1 text-justify mb-1.5">
+      <ul className="list-disc pl-10 space-y-1 mb-1.5">
         <li>
           &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ในฐานะผู้ได้รับสิทธิ์อย่างถูกต้องจาก &ldquo;เจ้าของผลิตภัณฑ์&rdquo; แต่งตั้งตัวแทนจำหน่ายให้เป็น &ldquo;ตัวแทนจำหน่าย&rdquo; ประเภทแบบไม่ผูกขาด (Non-exclusive)
         </li>
@@ -71,10 +71,10 @@ export default function PartnerPage1() {
           &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; มีหน้าที่ในการจัดหา จัดส่ง และประสานงานเรื่องการออก &ldquo;สิทธิ์การใช้งาน&rdquo; ของ &ldquo;ผลิตภัณฑ์&rdquo; ให้แก่ &ldquo;ตัวแทนจำหน่าย&rdquo; เพื่อนำไปจำหน่ายให้แก่ &ldquo;ผู้ใช้ปลายทาง&rdquo;
         </li>
       </ul>
-      <p className="text-justify pl-4 mb-1">
+      <p className="pl-4 mb-1">
         <span className="font-bold">2.2 สิทธิ์การจำหน่ายของ &ldquo;ตัวแทนจำหน่าย&rdquo;:</span> &ldquo;ตัวแทนจำหน่าย&rdquo; สามารถจัดจำหน่าย &ldquo;สิทธิ์การใช้งาน&rdquo; ของ &ldquo;ผลิตภัณฑ์&rdquo; ให้กับ &ldquo;ผู้ใช้ปลายทาง&rdquo; เท่านั้น ไม่สามารถโอนสิทธิ์การใช้งาน หรือแสดงความเป็นเจ้าของในตัว &ldquo;ผลิตภัณฑ์&rdquo;
       </p>
-      <p className="text-justify pl-4">
+      <p className="pl-4">
         <span className="font-bold">2.3 อาณาเขตทางภูมิศาสตร์ (Territory):</span> &ldquo;ตัวแทนจำหน่าย&rdquo; มีสิทธิดำเนินกิจกรรมการขาย การส่งเสริมการขาย และทำตลาด &ldquo;ผลิตภัณฑ์&rdquo; ได้ภายในพื้นที่ ประเทศไทย เท่านั้น
       </p>
     </div>

@@ -1,7 +1,7 @@
 export default function PartnerPage3() {
   return (
     <div className="text-[12px] leading-[1.8] text-gray-900 font-normal">
-      <ul className="list-none space-y-3 mb-6 text-justify">
+      <ul className="list-none space-y-3 mb-6">
         <li className="pl-4">
           <p className="font-bold mb-1">
             5.3 เงื่อนไขการส่งใบแจ้งหนี้ กำหนดระยะเวลาชำระเงิน (Credit Term) และการชำระเงิน:
@@ -29,7 +29,7 @@ export default function PartnerPage3() {
         ข้อ 6. การบริการหลังการขายและการสนับสนุนทางเทคนิค (Technical Support and Maintenance & SLA)
       </h2>
 
-      <div className="space-y-3 pl-4 text-justify">
+      <div className="space-y-3 pl-4">
         <p>
           <span className="font-bold">6.1 ระดับการบริการขั้นแรกของ Reseller (Tier 1 Support):</span> &ldquo;ตัวแทนจำหน่าย&rdquo; มีหน้าที่ให้บริการสนับสนุนทางเทคนิคขั้นแรกแก่ &ldquo;ผู้ใช้ปลายทาง&rdquo; เช่น การตอบคำถามทั่วไป การติดตั้งเบื้องต้น และการรับเรื่องปัญหา
         </p>

@@ -1,7 +1,7 @@
 export default function PartnerPage5() {
   return (
     <div className="text-[12px] leading-[1.8] text-gray-900 font-normal">
-      <div className="pl-4 mb-6 text-justify">
+      <div className="pl-4 mb-6">
         <ul className="list-disc pl-8 space-y-2 font-normal mb-3">
           <li>
             &ldquo;ตัวแทนจำหน่าย&rdquo; จะไม่ใช้ข้อมูลหรือโอกาสทางธุรกิจที่ได้รับจาก &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; เพื่อหลีกเลี่ยงหรือข้าม &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ในการทำธุรกรรมกับคู่ค้า ผู้ผลิต หรือบุคคลภายนอกที่เกี่ยวข้องกับธุรกรรมดังกล่าว หรือกระทำการใด ๆ อันมีเจตนาให้ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; สูญเสียสิทธิ ประโยชน์ หรือโอกาสทางธุรกิจที่พึงได้รับตามความร่วมมือระหว่างคู่สัญญา เว้นแต่ได้รับความยินยอมเป็นลายลักษณ์อักษรจาก &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ก่อนดำเนินการดังกล่าว
@@ -15,7 +15,7 @@ export default function PartnerPage5() {
       <h2 className="font-bold mb-2 text-[12px]">
         ข้อ 10. ระยะเวลาและการบอกเลิกสัญญา (Term and Termination)
       </h2>
-      <div className="space-y-3 pl-4 mb-6 text-justify">
+      <div className="space-y-3 pl-4 mb-6">
         <p>
           <span className="font-bold">10.1 ระยะเวลาสัญญา:</span> สัญญานี้มีผลบังคับใช้เป็นระยะเวลา 1 ปี นับตั้งแต่วันที่ลงนาม และจะต่ออายุอัตโนมัติคราวละ 1 (หนึ่ง) ปี เว้นแต่ฝ่ายใดฝ่ายหนึ่งจะแจ้งไม่ต่ออายุเป็นลายลักษณ์อักษรล่วงหน้าอย่างน้อย 30 (สามสิบ) วัน ก่อนสิ้นสุดสัญญา
         </p>
@@ -39,7 +39,7 @@ export default function PartnerPage5() {
       <h2 className="font-bold mb-2 text-[12px]">
         ข้อ 11. กฎหมายที่ใช้บังคับและกระบวนการระงับข้อพิพาท (Governing Law & Dispute Resolution)
       </h2>
-      <div className="space-y-3 pl-4 text-justify">
+      <div className="space-y-3 pl-4">
         <p>
           <span className="font-bold">11.1 กฎหมายที่ใช้บังคับ:</span> สัญญานี้อยู่ภายใต้การบังคับ และตีความตามกฎหมายแห่งราชอาณาจักรไทย
         </p>
