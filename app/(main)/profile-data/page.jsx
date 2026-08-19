@@ -1,186 +1,92 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import {
-  Calendar,
-  Building,
-  Building2,
-  UserCheck,
-  Save,
-  ArrowRight,
-  CheckCircle2,
-  Sparkles,
-} from "lucide-react";
-import { profileFieldDefs } from "@/lib/data/profileFields";
-import { getFieldProfile, saveFieldProfile } from "@/lib/data/fieldProfile";
+import Link from "next/link";
+import { Plus, Pencil, Trash2, User } from "lucide-react";
+import { listFieldProfiles, deleteFieldProfile } from "@/lib/data/fieldProfiles";
 
-const groupIcons = {
-  "วันที่ทำสัญญา": Calendar,
-  "ข้อมูลบริษัทเรา (ผู้จัดจำหน่ายหลัก / ผู้เปิดเผยข้อมูล)": Building,
-  "ข้อมูลคู่สัญญา (Reseller / ผู้รับข้อมูล)": Building2,
-  "ผู้ลงนามคู่สัญญา": UserCheck,
-};
+export default function ProfileDataListPage() {
+  const [profiles, setProfiles] = useState(null);
 
-function groupFields(defs) {
-  const groups = {};
-  for (const f of defs) {
-    if (!groups[f.group]) groups[f.group] = [];
-    groups[f.group].push(f);
-  }
-  return groups;
-}
-
-export default function ProfileDataPage() {
-  const router = useRouter();
-  const [values, setValues] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [saved, setSaved] = useState(false);
+  const load = () => listFieldProfiles().then(setProfiles);
 
   useEffect(() => {
-    getFieldProfile().then((data) => {
-      setValues(data);
-      setLoading(false);
-    });
+    load();
   }, []);
 
-  const handleChange = (id, val) => {
-    setValues((prev) => ({ ...prev, [id]: val }));
-    setSaved(false);
+  const handleDelete = async (id, name) => {
+    if (!confirm(`ลบข้อมูล "${name}" ใช่ไหม?`)) return;
+    await deleteFieldProfile(id);
+    load();
   };
 
-  const handleSave = async () => {
-    await saveFieldProfile(values);
-    setSaved(true);
-  };
-
-  if (loading) {
+  if (profiles === null) {
     return (
-      <div className="max-w-5xl space-y-6">
-        <div className="h-10 w-48 bg-gray-200 rounded animate-pulse" />
-        <div className="h-40 bg-gray-100 rounded-card animate-pulse" />
-        <div className="h-64 bg-gray-100 rounded-card animate-pulse" />
+      <div className="p-8 max-w-4xl mx-auto">
+        <div className="h-64 rounded-card bg-gray-100 animate-pulse" />
       </div>
     );
   }
 
-  const groups = groupFields(profileFieldDefs);
-
   return (
-    <div className="max-w-5xl pb-12">
-      {/* Header Banner */}
-      <div className="mb-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-50 text-primary-600 text-xs font-semibold mb-3 border border-primary-100">
-          <Sparkles size={14} />
-          <span>ระบบเติมข้อมูลอัตโนมัติ (Auto Pre-fill)</span>
-        </div>
-        <h1 className="text-2xl font-bold text-gray-900 tracking-tight mb-1.5">
-          ตั้งค่าข้อมูลกลาง
-        </h1>
-        <p className="text-sm text-gray-500 leading-relaxed">
-          บันทึกข้อมูลบริษัทฝ่ายเรา วันที่ทำสัญญา ข้อมูลบริษัทคู่สัญญา และผู้ลงนามไว้ที่นี่ครั้งเดียว
-          ระบบจะนำไปเติมในทุกเทมเพลตให้อัตโนมัติเมื่อเริ่มสร้างเอกสารใหม่
-        </p>
+    <div className="p-8 max-w-4xl mx-auto">
+      <div className="flex items-center justify-between mb-1">
+        <h1 className="text-2xl font-bold text-gray-900">ตั้งค่าข้อมูล</h1>
       </div>
+      <p className="text-sm text-gray-500 mb-6">
+        สร้างชุดข้อมูลที่ใช้บ่อยไว้หลายชุด (เช่น แยกตามคู่ค้าแต่ละราย) ตอนสร้างเอกสารจะเลือกได้ว่าจะดึงชุดไหนมาเติมให้อัตโนมัติ
+      </p>
 
-      <div className="space-y-6">
-        {Object.entries(groups).map(([groupName, fields]) => {
-          const Icon = groupIcons[groupName] || Building2;
-          const isDateGroup = groupName === "วันที่ทำสัญญา";
-          const isTwoCol = fields.length === 2 || fields.length === 3;
+      <Link
+        href="/profile-data/new"
+        className="inline-flex items-center gap-2 h-11 px-5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 mb-6 transition-colors shadow-2xs"
+      >
+        <Plus size={16} />
+        สร้างข้อมูลใหม่
+      </Link>
 
-          return (
-            <section
-              key={groupName}
-              className="bg-white border border-gray-200 rounded-card p-6 shadow-card transition-shadow hover:shadow-md"
+      {profiles.length === 0 ? (
+        <div className="text-center py-16 border border-dashed border-gray-200 rounded-card text-gray-400 text-sm bg-white">
+          ยังไม่มีชุดข้อมูล — เริ่มสร้างชุดแรกได้เลย
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {profiles.map((p) => (
+            <div
+              key={p.id}
+              className="flex items-center justify-between px-5 py-4 rounded-card border border-gray-200 bg-white hover:border-gray-300 transition-all shadow-2xs"
             >
-              <div className="flex items-center gap-2.5 mb-5 pb-3 border-b border-gray-100">
-                <div className="w-8 h-8 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center">
-                  <Icon size={18} />
+              <div className="flex items-center gap-4 min-w-0">
+                <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center shrink-0">
+                  <User size={18} className="text-primary-600" />
                 </div>
-                <div>
-                  <h2 className="text-base font-bold text-gray-900">{groupName}</h2>
+                <div className="min-w-0">
+                  <p className="text-base font-bold text-gray-900 truncate">{p.name}</p>
+                  <p className="text-xs text-gray-500 truncate mt-0.5">
+                    คู่สัญญา: {p.values?.counterparty_name || p.values?.receiving_party_name || "ยังไม่ได้กรอกชื่อคู่สัญญา"}
+                  </p>
                 </div>
               </div>
-
-              <div
-                className={
-                  isDateGroup
-                    ? "grid grid-cols-1 sm:grid-cols-3 gap-4"
-                    : isTwoCol
-                    ? "grid grid-cols-1 sm:grid-cols-2 gap-4"
-                    : "space-y-4"
-                }
-              >
-                {fields.map((f) => (
-                  <div key={f.id} className={f.type === "textarea" ? "col-span-full" : ""}>
-                    <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                      {f.label}
-                    </label>
-                    {f.type === "select" ? (
-                      <select
-                        value={values[f.id] || ""}
-                        onChange={(e) => handleChange(f.id, e.target.value)}
-                        className="w-full h-11 px-3 rounded-lg border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 bg-white text-gray-900 font-medium transition-all"
-                      >
-                        <option value="">-- {f.placeholder} --</option>
-                        {f.options.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                      </select>
-                    ) : f.type === "textarea" ? (
-                      <textarea
-                        value={values[f.id] || ""}
-                        placeholder={f.placeholder}
-                        onChange={(e) => handleChange(f.id, e.target.value)}
-                        rows={3}
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-gray-200 text-sm text-gray-900 outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 resize-none transition-all"
-                      />
-                    ) : (
-                      <input
-                        type="text"
-                        value={values[f.id] || ""}
-                        placeholder={f.placeholder}
-                        onChange={(e) => handleChange(f.id, e.target.value)}
-                        className="w-full h-11 px-3.5 rounded-lg border border-gray-200 text-sm text-gray-900 outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all"
-                      />
-                    )}
-                  </div>
-                ))}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <Link
+                  href={`/profile-data/${p.id}`}
+                  className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
+                  title="แก้ไขชุดข้อมูล"
+                >
+                  <Pencil size={16} />
+                </Link>
+                <button
+                  onClick={() => handleDelete(p.id, p.name)}
+                  className="p-2 rounded-lg hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors"
+                  title="ลบชุดข้อมูล"
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
-            </section>
-          );
-        })}
-      </div>
-
-      {/* Action Footer */}
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-4 p-4 rounded-card bg-gray-50 border border-gray-200">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handleSave}
-            className="inline-flex items-center gap-2 h-11 px-6 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 transition-colors shadow-sm"
-          >
-            <Save size={18} />
-            <span>บันทึกข้อมูล</span>
-          </button>
-          {saved && (
-            <span className="inline-flex items-center gap-1.5 text-sm text-success-600 font-semibold bg-success-100 px-3 py-1.5 rounded-md">
-              <CheckCircle2 size={16} />
-              บันทึกสำเร็จแล้ว
-            </span>
-          )}
+            </div>
+          ))}
         </div>
-
-        <button
-          onClick={() => router.push("/create")}
-          className="inline-flex items-center gap-2 h-11 px-5 rounded-lg bg-white border border-gray-200 text-gray-700 text-sm font-semibold hover:bg-gray-100 transition-colors shadow-xs"
-        >
-          <span>ไปเลือกเทมเพลต</span>
-          <ArrowRight size={16} />
-        </button>
-      </div>
+      )}
     </div>
   );
 }
