@@ -8,8 +8,9 @@ import {
   Pencil,
   Trash2,
   Building2,
-  Star,
   MoreHorizontal,
+  SlidersHorizontal,
+  Check,
 } from "lucide-react";
 import { listFieldProfiles, deleteFieldProfile, updateFieldProfile } from "@/lib/data/fieldProfiles";
 
@@ -51,22 +52,12 @@ export default function ProfileDataListPage() {
   }, []);
 
   const handleDelete = async (id, name) => {
-    if (!confirm(`ลบข้อมูล "${name}" ใช่ไหม?`)) return;
+    if (!confirm(`คุณต้องการลบชุดข้อมูล "${name}" ใช่หรือไม่?`)) return;
     await deleteFieldProfile(id);
     load();
   };
 
-  const handleToggleStar = async (p) => {
-    await updateFieldProfile(p.id, {
-      name: p.name,
-      values: p.values,
-      isFavorite: !p.isFavorite,
-    });
-    load();
-  };
-
   const handleSetDefault = async (targetProfile) => {
-    // ปลด default อันอื่นออก แล้วตั้งให้targetProfile เป็น default
     for (const p of profiles) {
       if (p.isDefault && p.id !== targetProfile.id) {
         await updateFieldProfile(p.id, { name: p.name, values: p.values, isDefault: false });
@@ -82,13 +73,12 @@ export default function ProfileDataListPage() {
 
   if (profiles === null) {
     return (
-      <div className="p-6 md:p-8 max-w-7xl mx-auto">
+      <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
         <div className="h-64 rounded-2xl bg-gray-100 animate-pulse" />
       </div>
     );
   }
 
-  // Filter profiles based on search query
   const filteredProfiles = profiles.filter((p) => {
     const q = searchQuery.toLowerCase().trim();
     if (!q) return true;
@@ -107,45 +97,53 @@ export default function ProfileDataListPage() {
   return (
     <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
       
-      {/* Outer Card Container */}
-      <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-card space-y-6">
-        
-        {/* Header Bar: Title + Search Box + Create Button */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <h1 className="text-xl font-bold text-gray-900">ชุดข้อมูลที่บันทึกไว้</h1>
-
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            {/* Search Input Box */}
-            <div className="relative flex-1 sm:w-80">
-              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
-                <Search size={17} />
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="ค้นหาชื่อบริษัท หรือผู้ลงนาม"
-                className="w-full h-10 pl-10 pr-4 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all bg-gray-50/50"
-              />
-            </div>
-
-            {/* Create New Profile Button */}
-            <Link
-              href="/profile-data/new"
-              className="inline-flex items-center justify-center gap-2 h-10 px-5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 transition-all shadow-sm shrink-0"
-            >
-              <Plus size={16} />
-              สร้างข้อมูลใหม่
-            </Link>
+      {/* Page Title Header */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-bold text-gray-900">ชุดข้อมูลที่บันทึกไว้</h1>
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">
+              {profiles.length} รายการ
+            </span>
           </div>
+          <p className="text-xs text-gray-500 mt-1">
+            จัดการและบันทึกชุดข้อมูลคู่ค้าเพื่อดึงไปใช้สร้างเอกสารอัตโนมัติ
+          </p>
+        </div>
+      </div>
+
+      {/* Main Card Container */}
+      <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-card space-y-5">
+        
+        {/* Toolbar: Search Input + Create Button */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <div className="relative flex-1 sm:max-w-md">
+            <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
+              <Search size={17} />
+            </div>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="ค้นหาชื่อชุดข้อมูล, บริษัท หรือผู้ลงนาม..."
+              className="w-full h-10 pl-10 pr-4 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all bg-gray-50/50"
+            />
+          </div>
+
+          <Link
+            href="/profile-data/new"
+            className="inline-flex items-center justify-center gap-2 h-10 px-5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 transition-all shadow-sm shrink-0"
+          >
+            <Plus size={16} />
+            สร้างข้อมูลใหม่
+          </Link>
         </div>
 
-        {/* Data Table */}
+        {/* Clean Data Table (No Star Column) */}
         <div className="border border-gray-200/90 rounded-xl overflow-visible bg-white">
           <table className="w-full text-sm text-left">
             <thead>
               <tr className="border-b border-gray-200/90 text-xs font-semibold text-gray-500 bg-gray-50/70">
-                <th className="w-12 px-4 py-3.5 text-center"></th>
                 <th className="px-5 py-3.5">ชื่อชุดข้อมูล</th>
                 <th className="px-5 py-3.5">ผู้ลงนาม</th>
                 <th className="px-5 py-3.5">ตำแหน่ง</th>
@@ -156,7 +154,7 @@ export default function ProfileDataListPage() {
             <tbody>
               {filteredProfiles.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-gray-400 text-sm">
+                  <td colSpan={5} className="px-5 py-12 text-center text-gray-400 text-sm">
                     {searchQuery ? "ไม่พบข้อมูลที่ตรงกับการค้นหา" : "ยังไม่มีชุดข้อมูลที่บันทึกไว้ — เริ่มสร้างชุดแรกได้เลย"}
                   </td>
                 </tr>
@@ -189,21 +187,7 @@ export default function ProfileDataListPage() {
                       key={p.id}
                       className="border-b border-gray-100 last:border-0 hover:bg-gray-50/60 transition-colors"
                     >
-                      {/* Star Button */}
-                      <td className="px-4 py-4 text-center">
-                        <button
-                          onClick={() => handleToggleStar(p)}
-                          className="text-gray-300 hover:text-amber-400 transition-colors"
-                          title={p.isFavorite ? "เลิกติดดาว" : "ติดดาวเป็นรายการโปรด"}
-                        >
-                          <Star
-                            size={18}
-                            className={p.isFavorite ? "fill-amber-400 text-amber-400" : "text-gray-300"}
-                          />
-                        </button>
-                      </td>
-
-                      {/* Company Name & Address */}
+                      {/* Company Name & Address Subtext */}
                       <td className="px-5 py-4">
                         <div className="flex items-start gap-3.5">
                           <div
@@ -219,7 +203,7 @@ export default function ProfileDataListPage() {
                             <div className="flex items-center gap-2">
                               <span className="font-bold text-gray-900 text-sm">{companyName}</span>
                               {p.isDefault && (
-                                <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-primary-50 text-primary-600 border border-primary-100">
+                                <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-primary-50 text-primary-600 border border-primary-100">
                                   ค่าเริ่มต้น
                                 </span>
                               )}
@@ -232,7 +216,7 @@ export default function ProfileDataListPage() {
                       </td>
 
                       {/* Signatory */}
-                      <td className="px-5 py-4 text-gray-800 text-xs font-medium">{signatory}</td>
+                      <td className="px-5 py-4 text-gray-800 text-xs font-semibold">{signatory}</td>
 
                       {/* Position */}
                       <td className="px-5 py-4 text-gray-500 text-xs">{position}</td>
@@ -259,7 +243,7 @@ export default function ProfileDataListPage() {
                               setOpenMenuId(openMenuId === p.id ? null : p.id);
                             }}
                             className="p-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-100 text-gray-600 transition-colors shadow-2xs"
-                            title="เพิ่มเติม"
+                            title="ตัวเลือกเพิ่มเติม"
                           >
                             <MoreHorizontal size={15} />
                           </button>
@@ -277,7 +261,7 @@ export default function ProfileDataListPage() {
                                 }}
                                 className="w-full text-left px-3.5 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
                               >
-                                <Star size={14} className="text-amber-500" />
+                                <Check size={14} className="text-primary-600" />
                                 {p.isDefault ? "ยกเลิกค่าเริ่มต้น" : "ตั้งเป็นค่าเริ่มต้น"}
                               </button>
                               <button

@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2 } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, CheckCircle2 } from "lucide-react";
 import { profileFieldDefs } from "@/lib/data/profileFields";
 import { createFieldProfile, updateFieldProfile } from "@/lib/data/fieldProfiles";
 
@@ -50,22 +51,33 @@ export default function ProfileForm({ profile }) {
   };
 
   return (
-    <div className="max-w-3xl">
-      <div className="bg-white border border-gray-200 rounded-card p-6 mb-6 shadow-card">
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">ชื่อชุดข้อมูล</label>
+    <div className="max-w-3xl space-y-6">
+      {/* Top Back Navigation Link */}
+      <div className="flex items-center gap-3">
+        <Link
+          href="/profile-data"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors bg-white px-3.5 py-2 rounded-lg border border-gray-200 shadow-2xs"
+        >
+          <ArrowLeft size={15} />
+          ย้อนกลับไปหน้าชุดข้อมูล
+        </Link>
+      </div>
+
+      <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-card">
+        <label className="block text-sm font-bold text-gray-900 mb-1.5">ชื่อชุดข้อมูล</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="เช่น บริษัท ตัวอย่าง จำกัด, ลูกค้าประจำ A"
-          className="w-full h-11 px-3.5 rounded-lg border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+          className="w-full h-11 px-3.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 font-medium"
         />
         <p className="text-xs text-gray-400 mt-1.5">ใช้เป็นชื่อสำหรับเลือกตอนสร้างเอกสาร ไม่ปรากฏในเอกสารจริง</p>
       </div>
 
       {Object.entries(groups).map(([groupName, fields]) => (
-        <section key={groupName} className="bg-white border border-gray-200 rounded-card p-6 mb-6 shadow-card">
-          <h2 className="text-base font-semibold text-gray-900 mb-4 border-b border-gray-100 pb-2">{groupName}</h2>
+        <section key={groupName} className="bg-white border border-gray-200 rounded-2xl p-6 shadow-card">
+          <h2 className="text-base font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2.5">{groupName}</h2>
           <div className="space-y-4">
             {fields.map((f) => (
               <div key={f.id}>
@@ -74,7 +86,7 @@ export default function ProfileForm({ profile }) {
                   <select
                     value={values[f.id] || f.options?.[0] || ""}
                     onChange={(e) => handleChange(f.id, e.target.value)}
-                    className="w-full h-11 px-3 rounded-lg border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 bg-white"
+                    className="w-full h-11 px-3 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 bg-white"
                   >
                     {f.options?.map((opt) => (
                       <option key={opt} value={opt}>
@@ -88,7 +100,7 @@ export default function ProfileForm({ profile }) {
                     placeholder={f.placeholder}
                     onChange={(e) => handleChange(f.id, e.target.value)}
                     rows={2}
-                    className="w-full px-3 py-2.5 rounded-lg border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 resize-none"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 resize-none"
                   />
                 ) : (
                   <input
@@ -96,7 +108,7 @@ export default function ProfileForm({ profile }) {
                     value={values[f.id] || ""}
                     placeholder={f.placeholder}
                     onChange={(e) => handleChange(f.id, e.target.value)}
-                    className="w-full h-11 px-3 rounded-lg border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+                    className="w-full h-11 px-3.5 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
                   />
                 )}
               </div>
@@ -105,22 +117,22 @@ export default function ProfileForm({ profile }) {
         </section>
       ))}
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 pt-2">
         <button
           onClick={handleSave}
           disabled={saving}
-          className="h-11 px-6 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 disabled:opacity-60 transition-colors shadow-2xs"
+          className="h-11 px-7 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 disabled:opacity-60 transition-colors shadow-sm"
         >
           {saving ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
         </button>
         <button
           onClick={() => router.push("/profile-data")}
-          className="h-11 px-6 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors"
+          className="h-11 px-6 rounded-xl border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors bg-white"
         >
           ยกเลิก
         </button>
         {saved && (
-          <span className="inline-flex items-center gap-1.5 text-sm text-success-600 font-medium">
+          <span className="inline-flex items-center gap-1.5 text-sm text-success-600 font-bold">
             <CheckCircle2 size={16} />
             บันทึกแล้ว
           </span>

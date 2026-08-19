@@ -5,8 +5,8 @@ import { Plus } from "lucide-react";
 export default function HeroSection({ userName }) {
   return (
     <section
-      className="relative overflow-hidden rounded-2xl bg-white border border-gray-200 px-8 py-10 mb-8 shadow-card bg-cover bg-right bg-no-repeat"
-      style={{ backgroundImage: "url('/Banner-Home.png')" }}
+      className="relative overflow-hidden rounded-2xl bg-white border border-gray-200 px-8 py-10 mb-8 shadow-card bg-contain bg-right bg-no-repeat"
+      style={{ backgroundColor: '#f9fbfd', backgroundImage: "url('/Banner-Home.png')" }}
     >
       <div className="relative z-10 max-w-lg">
         <h1 className="text-[28px] leading-tight font-bold text-gray-900 mb-2">
