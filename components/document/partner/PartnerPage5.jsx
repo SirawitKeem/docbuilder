@@ -1,6 +1,6 @@
 export default function PartnerPage5() {
   return (
-    <div className="text-[13px] leading-[1.9] text-gray-900 font-normal">
+    <div className="text-[12px] leading-[1.8] text-gray-900 font-normal">
       <div className="pl-4 mb-6 text-justify">
         <ul className="list-disc pl-8 space-y-2 font-normal mb-3">
           <li>
@@ -12,7 +12,7 @@ export default function PartnerPage5() {
         </p>
       </div>
 
-      <h2 className="font-bold mb-2">
+      <h2 className="font-bold mb-2 text-[12px]">
         ข้อ 10. ระยะเวลาและการบอกเลิกสัญญา (Term and Termination)
       </h2>
       <div className="space-y-3 pl-4 mb-6 text-justify">
@@ -32,11 +32,11 @@ export default function PartnerPage5() {
           <span className="font-bold">10.3 การบอกเลิกสัญญาโดยไม่มีเหตุผล (Termination for Convenience):</span> คู่สัญญาฝ่ายใดฝ่ายหนึ่งสามารถบอกเลิกสัญญานี้ได้โดยแจ้งเป็นลายลักษณ์อักษรให้อีกฝ่ายทราบล่วงหน้าไม่น้อยกว่า 60 (หกสิบ) วัน สำหรับการลงทะเบียนสิทธิ์ในข้อตกลงทางการค้า (Deal Registration) ไว้แล้วก่อนวันสิ้นสุดสัญญา จะยังคงได้รับการคุ้มครองสิทธิ์และส่วนลดตามเดิมจนกว่าข้อตกลงนั้นจะจบลง
         </p>
         <p>
-          <span className="font-bold">10.4 ภาระผูกพันหลังสิ้นสุดสัญญา:</span> เมื่อสัญญาสิ้นสุดลง &ldquo;ตัวแทนจำหน่าย&rdquo; ยังคงต้องชำระค่าสินค้าหรือบริการที่ค้างชำระทั้งหมด และ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ยังคงต้องดูแลจัดการ &ldquo;สิทธิ์การใช้งาน&rdquo; ของ &ldquo;ผู้ใช้ปลายทาง&rdquo; ที่สั่งซื้อไปก่อนวันสิ้นสุดสัญญา ให้ได้รับการให้บริการจนครบกำหนดอายุ &ldquo;สิทธิ์การใช้งาน&rdquo; นั้น ๆ
+          <span className="font-bold">10.4 ภาระผูกพันหลังสิ้นสุดสัญญา:</span> เมื่อสัญญาสินสุดลง &ldquo;ตัวแทนจำหน่าย&rdquo; ยังคงต้องชำระค่าสินค้าหรือบริการที่ค้างชำระทั้งหมด และ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ยังคงต้องดูแลจัดการ &ldquo;สิทธิ์การใช้งาน&rdquo; ของ &ldquo;ผู้ใช้ปลายทาง&rdquo; ที่สั่งซื้อไปก่อนวันสิ้นสุดสัญญา ให้ได้รับการให้บริการจนครบกำหนดอายุ &ldquo;สิทธิ์การใช้งาน&rdquo; นั้น ๆ
         </p>
       </div>
 
-      <h2 className="font-bold mb-2">
+      <h2 className="font-bold mb-2 text-[12px]">
         ข้อ 11. กฎหมายที่ใช้บังคับและกระบวนการระงับข้อพิพาท (Governing Law & Dispute Resolution)
       </h2>
       <div className="space-y-3 pl-4 text-justify">

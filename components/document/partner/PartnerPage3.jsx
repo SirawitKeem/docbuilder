@@ -1,6 +1,6 @@
 export default function PartnerPage3() {
   return (
-    <div className="text-[13px] leading-[1.9] text-gray-900 font-normal">
+    <div className="text-[12px] leading-[1.8] text-gray-900 font-normal">
       <ul className="list-none space-y-3 mb-6 text-justify">
         <li className="pl-4">
           <p className="font-bold mb-1">
@@ -25,7 +25,7 @@ export default function PartnerPage3() {
         </li>
       </ul>
 
-      <h2 className="font-bold mb-2">
+      <h2 className="font-bold mb-2 text-[12px]">
         ข้อ 6. การบริการหลังการขายและการสนับสนุนทางเทคนิค (Technical Support and Maintenance & SLA)
       </h2>
 

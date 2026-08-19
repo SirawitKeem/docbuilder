@@ -1,7 +1,7 @@
 export default function PartnerPage4() {
   return (
-    <div className="text-[13px] leading-[1.9] text-gray-900 font-normal">
-      <h2 className="font-bold mb-2">
+    <div className="text-[12px] leading-[1.8] text-gray-900 font-normal">
+      <h2 className="font-bold mb-2 text-[12px]">
         ข้อ 7. การจัดการทรัพย์สินทางปัญญาและการจำกัดความรับผิด (Intellectual Property & Limitation of Liability)
       </h2>
       <div className="space-y-3 pl-4 mb-6 text-justify">
@@ -13,7 +13,7 @@ export default function PartnerPage4() {
         </p>
       </div>
 
-      <h2 className="font-bold mb-2">ข้อ 8. การรับประกัน (Warranty)</h2>
+      <h2 className="font-bold mb-2 text-[12px]">ข้อ 8. การรับประกัน (Warranty)</h2>
       <div className="space-y-3 pl-4 mb-6 text-justify">
         <p>
           <span className="font-bold">8.1 การรับประกันการทำงานของซอฟต์แวร์ (Software Performance Warranty):</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; รับประกันว่า &ldquo;ผลิตภัณฑ์&rdquo; จะทำงานได้ตรงตามคุณลักษณะทางเทคนิค (Specifications) ที่ระบุไว้ในคู่มือ หรือเอกสารข้อกำหนดทางเทคนิคของ &ldquo;เจ้าของผลิตภัณฑ์&rdquo;
@@ -31,14 +31,14 @@ export default function PartnerPage4() {
         </div>
       </div>
 
-      <h2 className="font-bold mb-2">
+      <h2 className="font-bold mb-2 text-[12px]">
         ข้อ 9. การรักษาความลับข้อมูลและการคุ้มครองข้อมูลส่วนบุคคล (Confidentiality & Data Protection)
       </h2>
       <div className="pl-4 text-justify">
         <p className="font-bold mb-1">9.1 การรักษาความลับทางธุรกิจและการใช้ข้อมูล</p>
         <ul className="list-disc pl-8 space-y-2 font-normal">
           <li>
-            คู่สัญญาแต่ละฝ่ายตกลงจะรักษาข้อมูลอันเป็นความลับ ข้อมูลทางการเงิน โครงสร้างราคา ข้อมูลทางเทคนิค รายชื่อ &ldquo;ผู้ใช้ปลายทาง&rdquo; และแผนการตลาดของอีกฝ่ายไว้เป็นความลับอย่างเคร่งครัด และจะไม่เปิดเผยแก่บุคคลภายนอกโดยไม่ได้รับอนุญาตเป็นลายลักษณ์อักษร ตลอดระยะเวลาสัญญา และเป็นเวลา 2 (สอง) ปี หลังจากสัญญาสิ้นสุดลง
+            คู่สัญญาแต่ละฝ่ายตกลงจะรักษาข้อมูลอันเป็นความลับ ข้อมูลทางการเงิน โครงสร้างราคา ข้อมูลทางเทคนิค รายชื่อ &ldquo;ผู้ใช้ปลายทาง&rdquo; และแผนการตลาดของอีกฝ่ายไว้เป็นความลับอย่างเคร่งครัด และจะไม่เปิดเผยแก่บุคคลภายนอกโดยไม่ได้รับอนุญาตเป็นลายลักษณ์อักษร ตลอดระยะเวลาสัญญา และเป็นเวลา 2 (สอง) ปี หลังจากสัญญาสินสุดลง
           </li>
           <li>
             &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ตกลงจะไม่นำข้อมูล &ldquo;ผู้ใช้ปลายทาง&rdquo; ข้อมูลการเสนอราคา หรือข้อมูลการทำรายการของ &ldquo;ตัวแทนจำหน่าย&rdquo; ไปใช้ในการติดต่อขายตรง หรือทำธุรกิจแข่งกับ &ldquo;ตัวแทนจำหน่าย&rdquo; และไม่กระทำการใด ๆ อันเป็นการแสวงหาประโยชน์โดยมิชอบจากข้อมูลดังกล่าว ซึ่งส่งผลให้ &ldquo;ตัวแทนจำหน่าย&rdquo; เสียประโยชน์ทางธุรกิจ

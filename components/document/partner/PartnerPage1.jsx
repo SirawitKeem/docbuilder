@@ -5,7 +5,7 @@ export default function PartnerPage1() {
   const { distributorParty } = partnerTemplate;
 
   return (
-    <div className="text-[12.5px] leading-[1.7] text-gray-900 font-normal">
+    <div className="text-[12px] leading-[1.75] text-gray-900 font-normal">
       <h1 className="text-center text-[14px] font-bold mb-0.5">
         สัญญาแต่งตั้งพันธมิตรตัวแทนจำหน่าย
       </h1>
@@ -38,7 +38,7 @@ export default function PartnerPage1() {
         คู่สัญญาทั้งสองฝ่ายตกลงเข้าทำสัญญาแต่งตั้งตัวแทนจำหน่าย เพื่อทำการตลาด นำเสนอ และจัดจำหน่ายผลิตภัณฑ์ ซอฟต์แวร์ และเครื่องมือทางไอที (ซึ่งต่อไปนี้เรียกว่า &ldquo;ผลิตภัณฑ์&rdquo;) โดยมีข้อกำหนดและเงื่อนไขดังต่อไปนี้:
       </p>
 
-      <h2 className="font-bold mb-1">ข้อ 1. นิยามศัพท์ (Definitions)</h2>
+      <h2 className="font-bold mb-1 text-[12px]">ข้อ 1. นิยามศัพท์ (Definitions)</h2>
       <p className="mb-1 text-justify">
         ในสัญญานี้ คำหรือข้อความดังต่อไปนี้ให้มีความหมายตามที่กำหนดไว้ เว้นแต่บริบทจะกำหนดเป็นอย่างอื่น:
       </p>
@@ -61,7 +61,7 @@ export default function PartnerPage1() {
         </li>
       </ul>
 
-      <h2 className="font-bold mb-1">ข้อ 2. ขอบเขตการแต่งตั้งและอาณาเขต (Scope of Appointment & Territory)</h2>
+      <h2 className="font-bold mb-1 text-[12px]">ข้อ 2. ขอบเขตการแต่งตั้งและอาณาเขต (Scope of Appointment & Territory)</h2>
       <p className="mb-0.5 pl-4 font-bold">2.1 การแต่งตั้งและบทบาทของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;:</p>
       <ul className="list-disc pl-10 space-y-1 text-justify mb-1.5">
         <li>
