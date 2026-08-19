@@ -40,7 +40,7 @@ export default function ProfileSelectGate({ templateId }) {
   const menuRef = useRef(null);
 
   const template = templateRegistry[templateId]?.schema;
-  const templateName = template?.fullName || "เอกสาร";
+  const shortTemplateTitle = template?.name || "เอกสาร";
 
   const load = () =>
     listFieldProfiles().then((data) => {
@@ -79,7 +79,7 @@ export default function ProfileSelectGate({ templateId }) {
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900 mb-1">เลือกชุดข้อมูลที่จะใช้</h1>
           <p className="text-sm text-gray-500">
-            เทมเพลต: <span className="font-semibold text-gray-800">{templateName}</span>
+            เทมเพลต: <span className="font-semibold text-gray-800">{shortTemplateTitle}</span>
           </p>
         </div>
         <div className="h-64 rounded-card bg-gray-100 animate-pulse" />
@@ -115,16 +115,11 @@ export default function ProfileSelectGate({ templateId }) {
         </Link>
       </div>
 
-      {/* Header Title Section with Prominent Template Badge */}
-      <div className="mb-8 space-y-1.5">
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-bold text-gray-900">เลือกชุดข้อมูลที่จะใช้</h1>
-          <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary-50 text-primary-700 border border-primary-100">
-            {templateName}
-          </span>
-        </div>
+      {/* Header Title Section */}
+      <div className="mb-8 space-y-1">
+        <h1 className="text-2xl font-bold text-gray-900">เลือกชุดข้อมูลที่จะใช้</h1>
         <p className="text-sm text-gray-500">
-          เลือกชุดข้อมูลที่บันทึกไว้เพื่อดึงไปเติมในเอกสาร <strong className="text-gray-700 font-semibold">{templateName}</strong> โดยอัตโนมัติ
+          เลือกชุดข้อมูลที่บันทึกไว้เพื่อดึงไปเติมในเอกสาร <strong className="text-gray-700 font-semibold">{shortTemplateTitle}</strong> โดยอัตโนมัติ
         </p>
       </div>
 
