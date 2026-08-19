@@ -5,18 +5,13 @@ import Link from "next/link";
 import {
   ArrowLeft,
   Building2,
-  Calendar,
-  CheckCircle,
-  ChevronRight,
   FileText,
-  Filter,
-  MoreVertical,
-  Pencil,
   Plus,
-  PlusCircle,
   Search,
+  Pencil,
   Trash2,
-  AlertCircle,
+  MoreHorizontal,
+  ChevronRight,
 } from "lucide-react";
 import { listFieldProfiles, deleteFieldProfile } from "@/lib/data/fieldProfiles";
 import { templateRegistry } from "@/lib/templates/registry";
@@ -40,7 +35,6 @@ function formatThaiDateTime(isoString) {
 export default function ProfileSelectGate({ templateId }) {
   const [profiles, setProfiles] = useState(null);
   const [selectedId, setSelectedId] = useState(undefined); // undefined = ยังไม่เลือก
-  const [activeProfileId, setActiveProfileId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [openMenuId, setOpenMenuId] = useState(null);
   const menuRef = useRef(null);
@@ -51,9 +45,6 @@ export default function ProfileSelectGate({ templateId }) {
   const load = () =>
     listFieldProfiles().then((data) => {
       setProfiles(data);
-      if (data && data.length > 0 && activeProfileId === null) {
-        setActiveProfileId(data[0].id);
-      }
     });
 
   useEffect(() => {
@@ -86,11 +77,9 @@ export default function ProfileSelectGate({ templateId }) {
     return (
       <div>
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">
-            เลือกชุดข้อมูลที่ต้องการนำมาใช้งาน
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">เลือกชุดข้อมูลที่จะใช้</h1>
           <p className="text-sm text-gray-500">
-            เลือกชุดข้อมูลเพื่อดึงรายละเอียดไปเติมในเอกสาร {templateName} โดยอัตโนมัติ
+            เทมเพลต: <span className="font-semibold text-gray-800">{templateName}</span>
           </p>
         </div>
         <div className="h-64 rounded-card bg-gray-100 animate-pulse" />
@@ -114,224 +103,210 @@ export default function ProfileSelectGate({ templateId }) {
   });
 
   return (
-    <div className="space-y-6">
-      {/* Top Navigation Back Link */}
-      <div>
+    <div>
+      {/* Short & Clean Top Navigation Back Link */}
+      <div className="mb-4">
         <Link
           href="/create"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors bg-white px-3.5 py-2 rounded-xl border border-gray-200 shadow-2xs"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors"
         >
           <ArrowLeft size={15} />
-          ย้อนกลับไปเลือกเทมเพลต ({templateName})
+          ย้อนกลับ
         </Link>
       </div>
 
-      {/* Header Title Section */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">
-          เลือกชุดข้อมูลที่ต้องการนำมาใช้งาน
-        </h1>
+      {/* Header Title Section with Prominent Template Badge */}
+      <div className="mb-8 space-y-1.5">
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="text-2xl font-bold text-gray-900">เลือกชุดข้อมูลที่จะใช้</h1>
+          <span className="px-3 py-1 rounded-full text-xs font-bold bg-primary-50 text-primary-700 border border-primary-100">
+            {templateName}
+          </span>
+        </div>
         <p className="text-sm text-gray-500">
-          เลือกชุดข้อมูลที่ต้องการเพื่อดึงข้อมูลไปเติมในเอกสารโดยอัตโนมัติ หรือเลือกสร้างชุดข้อมูลใหม่หากยังไม่มีข้อมูลที่ต้องการ
+          เลือกชุดข้อมูลที่บันทึกไว้เพื่อดึงไปเติมในเอกสาร <strong className="text-gray-700 font-semibold">{templateName}</strong> โดยอัตโนมัติ
         </p>
       </div>
 
-      {/* Main Card Container */}
+      {/* Main Container Card - Matches Profile Data UI 100% */}
       <div className="bg-white border border-gray-200 rounded-card p-6 shadow-card space-y-5">
         
-        {/* Toolbar: Search Input + Filter + Create Button */}
+        {/* Toolbar: Search Input + Create Profile Button */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
           <div className="relative flex-1 sm:max-w-md">
             <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
-              <Search size={18} />
+              <Search size={17} />
             </div>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="ค้นหาชื่อชุดข้อมูล, บริษัท หรือผู้ดูแล..."
+              placeholder="ค้นหาชื่อชุดข้อมูล, บริษัท หรือผู้ลงนาม..."
               className="w-full h-10 pl-10 pr-4 rounded-xl border border-gray-200 bg-gray-50/50 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all"
             />
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
-            <button className="h-10 px-4 rounded-xl border border-gray-200 bg-white text-xs font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors shadow-2xs">
-              <Filter size={15} className="text-gray-500" />
-              ตัวกรอง
-            </button>
-            <Link
-              href="/profile-data/new"
-              className="h-10 px-5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 flex items-center gap-2 transition-colors shadow-sm shrink-0"
-            >
-              <Plus size={16} />
-              สร้างชุดข้อมูลใหม่
-            </Link>
-          </div>
+          <Link
+            href="/profile-data/new"
+            target="_blank"
+            className="inline-flex items-center justify-center gap-2 h-10 px-5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 transition-all shadow-sm shrink-0"
+          >
+            <Plus size={16} />
+            สร้างข้อมูลใหม่
+          </Link>
         </div>
 
-        {/* Profile Card List */}
-        <div className="space-y-3">
-          {filteredProfiles.length === 0 ? (
-            <div className="text-center py-12 border border-dashed border-gray-200 rounded-2xl bg-white text-gray-400 text-sm p-6 space-y-2">
-              <p>{searchQuery ? "ไม่พบชุดข้อมูลที่ตรงกับการค้นหา" : "ยังไม่มีชุดข้อมูลที่บันทึกไว้"}</p>
-              <Link
-                href="/profile-data/new"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-primary-600 hover:underline"
-              >
-                <Plus size={14} />
-                สร้างชุดข้อมูลแรกเลย
-              </Link>
-            </div>
-          ) : (
-            filteredProfiles.map((p) => {
-              const isSelected = activeProfileId === p.id;
-              const companyName = p.name || p.values?.our_company_name || p.values?.counterparty_name || "ชุดข้อมูลไม่มีชื่อ";
-              const counterparty = (
-                p.values?.counterparty_name ||
-                p.values?.receiving_party_name ||
-                p.values?.reseller_name ||
-                p.values?.our_company_name ||
-                "-"
-              );
-              const isComplete = p.values && Object.keys(p.values).length >= 2;
+        {/* Profiles Table / Card List */}
+        <div className="border border-gray-200/90 rounded-xl overflow-visible bg-white">
+          <table className="w-full text-sm text-left">
+            <thead>
+              <tr className="border-b border-gray-200/90 text-xs font-semibold text-gray-500 bg-gray-50/70">
+                <th className="px-5 py-3.5">ชื่อชุดข้อมูล</th>
+                <th className="px-5 py-3.5">ผู้ลงนาม</th>
+                <th className="px-5 py-3.5">ตำแหน่ง</th>
+                <th className="px-5 py-3.5">อัปเดตล่าสุด</th>
+                <th className="px-5 py-3.5 text-right w-36">การกระทำ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredProfiles.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-5 py-12 text-center text-gray-400 text-sm">
+                    {searchQuery ? "ไม่พบข้อมูลที่ตรงกับการค้นหา" : "ยังไม่มีชุดข้อมูลที่บันทึกไว้ — เริ่มสร้างชุดแรกได้เลย"}
+                  </td>
+                </tr>
+              ) : (
+                filteredProfiles.map((p) => {
+                  const companyName = p.name || p.values?.our_company_name || p.values?.counterparty_name || "บริษัท ไม่ระบุชื่อ";
+                  const address = (
+                    p.values?.our_company_address ||
+                    p.values?.counterparty_address ||
+                    p.values?.receiving_party_address ||
+                    "ไม่ได้ระบุที่อยู่"
+                  );
+                  const signatory = (
+                    p.values?.our_signatory_name ||
+                    p.values?.disclosing_signatory_name ||
+                    p.values?.counterparty_signatory_name ||
+                    p.values?.receiving_signatory_name ||
+                    "-"
+                  );
+                  const position = (
+                    p.values?.our_signatory_position ||
+                    p.values?.disclosing_signatory_position ||
+                    p.values?.counterparty_signatory_position ||
+                    p.values?.receiving_signatory_position ||
+                    "-"
+                  );
 
-              return (
-                <div
-                  key={p.id}
-                  onClick={() => setActiveProfileId(p.id)}
-                  className={`w-full flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl border transition-all cursor-pointer bg-white relative ${
-                    isSelected
-                      ? "border-primary-500 ring-2 ring-primary-100 shadow-card"
-                      : "border-gray-200 hover:border-gray-300 shadow-2xs"
-                  }`}
-                >
-                  <div className="flex items-start gap-4 min-w-0 pr-4">
-                    {/* Radio Circle Button */}
-                    <div className="mt-1 shrink-0">
-                      {isSelected ? (
-                        <div className="w-5 h-5 rounded-full bg-primary-600 text-white flex items-center justify-center">
-                          <span className="w-2 h-2 rounded-full bg-white" />
-                        </div>
-                      ) : (
-                        <div className="w-5 h-5 rounded-full border-2 border-gray-300 bg-white" />
-                      )}
-                    </div>
-
-                    {/* Company Avatar Icon */}
-                    <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
-                      <Building2 size={22} />
-                    </div>
-
-                    {/* Profile Meta Details */}
-                    <div className="min-w-0 space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-gray-900 text-base truncate">
-                          {companyName}
-                        </span>
-                      </div>
-
-                      <p className="text-xs text-gray-500 truncate">
-                        ผู้ดูแล: <span className="text-gray-700 font-medium">{counterparty}</span>
-                      </p>
-
-                      <div className="flex items-center gap-4 text-xs text-gray-400 pt-0.5">
-                        <span className="flex items-center gap-1">
-                          <Calendar size={13} className="text-gray-400" />
-                          อัปเดตล่าสุด {formatThaiDateTime(p.updatedAt || p.createdAt)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Status Badge & Select Button */}
-                  <div className="flex items-center justify-between sm:justify-end gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 border-gray-100 mt-3 sm:mt-0 shrink-0">
-                    {/* Status Badge */}
-                    {isComplete ? (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                        <CheckCircle size={13} className="text-emerald-600" />
-                        ข้อมูลครบถ้วน
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                        <AlertCircle size={13} className="text-amber-600" />
-                        ข้อมูลไม่ครบถ้วน
-                      </span>
-                    )}
-
-                    {/* Action Select Button */}
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedId(p.id);
-                      }}
-                      className="px-4 py-2 rounded-xl bg-white border border-primary-500 text-primary-600 text-xs font-bold hover:bg-primary-600 hover:text-white transition-all shadow-2xs"
+                  return (
+                    <tr
+                      key={p.id}
+                      className="border-b border-gray-100 last:border-0 hover:bg-gray-50/60 transition-colors"
                     >
-                      เลือกชุดนี้
-                    </button>
-
-                    {/* More Options Dots Menu */}
-                    <div className="relative">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpenMenuId(openMenuId === p.id ? null : p.id);
-                        }}
-                        className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
-                      >
-                        <MoreVertical size={18} />
-                      </button>
-
-                      {openMenuId === p.id && (
-                        <div
-                          ref={menuRef}
-                          className="absolute right-0 top-9 w-36 bg-white rounded-xl shadow-xl border border-gray-200 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100 text-left"
-                        >
-                          <Link
-                            href={`/profile-data/${p.id}`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="w-full text-left px-3.5 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
-                          >
-                            <Pencil size={14} className="text-gray-500" />
-                            แก้ไขข้อมูล
-                          </Link>
-                          <button
-                            onClick={(e) => handleDelete(e, p.id, p.name)}
-                            className="w-full text-left px-3.5 py-2 text-xs font-medium text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
-                          >
-                            <Trash2 size={14} className="text-red-500" />
-                            ลบชุดข้อมูล
-                          </button>
+                      {/* Company Name & Address */}
+                      <td className="px-5 py-4">
+                        <div className="flex items-start gap-3.5">
+                          <div className="w-10 h-10 rounded-xl bg-gray-100 text-gray-500 flex items-center justify-center shrink-0 mt-0.5">
+                            <Building2 size={20} />
+                          </div>
+                          <div>
+                            <span className="font-bold text-gray-900 text-sm block">{companyName}</span>
+                            <p className="text-xs text-gray-400 mt-1 max-w-lg leading-relaxed line-clamp-2">
+                              {address}
+                            </p>
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          )}
+                      </td>
+
+                      {/* Signatory */}
+                      <td className="px-5 py-4 text-gray-800 text-xs font-semibold">{signatory}</td>
+
+                      {/* Position */}
+                      <td className="px-5 py-4 text-gray-500 text-xs">{position}</td>
+
+                      {/* Last Updated */}
+                      <td className="px-5 py-4 text-gray-500 text-xs font-mono">
+                        {formatThaiDateTime(p.updatedAt || p.createdAt)}
+                      </td>
+
+                      {/* Actions */}
+                      <td className="px-5 py-4 text-right relative">
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => setSelectedId(p.id)}
+                            className="px-3.5 py-1.5 rounded-lg bg-primary-600 text-white text-xs font-bold hover:bg-primary-500 transition-colors shadow-2xs shrink-0"
+                          >
+                            เลือกใช้งาน
+                          </button>
+
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setOpenMenuId(openMenuId === p.id ? null : p.id);
+                            }}
+                            className="p-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-100 text-gray-600 transition-colors shadow-2xs"
+                            title="ตัวเลือกเพิ่มเติม"
+                          >
+                            <MoreHorizontal size={15} />
+                          </button>
+
+                          {/* Dropdown Menu */}
+                          {openMenuId === p.id && (
+                            <div
+                              ref={menuRef}
+                              className="absolute right-5 top-11 w-36 bg-white rounded-xl shadow-xl border border-gray-200 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100 text-left"
+                            >
+                              <Link
+                                href={`/profile-data/${p.id}`}
+                                target="_blank"
+                                onClick={() => setOpenMenuId(null)}
+                                className="w-full text-left px-3.5 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
+                              >
+                                <Pencil size={14} className="text-gray-500" />
+                                แก้ไขข้อมูล
+                              </Link>
+                              <button
+                                onClick={(e) => handleDelete(e, p.id, p.name)}
+                                className="w-full text-left px-3.5 py-2 text-xs font-medium text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
+                              >
+                                <Trash2 size={14} className="text-red-500" />
+                                ลบชุดข้อมูล
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
         </div>
 
-        {/* Bottom Card for Blank Document */}
+        {/* Blank Document Choice Card */}
         <div
           onClick={() => setSelectedId(null)}
-          className="w-full flex items-center justify-between p-5 rounded-2xl border border-blue-200 bg-white hover:bg-blue-50/50 hover:border-blue-300 transition-all cursor-pointer group shadow-2xs"
+          className="w-full flex items-center justify-between p-4 rounded-xl border border-dashed border-gray-300 bg-gray-50/50 hover:bg-gray-100/70 hover:border-gray-400 transition-all cursor-pointer group"
         >
-          <div className="flex items-center gap-4 min-w-0 pr-4">
-            <div className="w-11 h-11 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-              <PlusCircle size={22} />
+          <div className="flex items-center gap-3.5 min-w-0 pr-4">
+            <div className="w-10 h-10 rounded-xl bg-gray-200 text-gray-600 flex items-center justify-center shrink-0">
+              <FileText size={20} />
             </div>
             <div className="min-w-0">
-              <p className="font-bold text-gray-900 text-base group-hover:text-blue-700 transition-colors">
-                เริ่มจากเอกสารเปล่า (ไม่ใช้ข้อมูลที่ตั้งไว้)
+              <p className="font-bold text-gray-900 text-sm group-hover:text-gray-800">
+                เริ่มจากเอกสารเปล่า (ไม่ใช้ข้อมูลที่บันทึกไว้)
               </p>
-              <p className="text-xs text-gray-500 mt-0.5 truncate">
-                กรอกข้อมูลพื้นฐานของบริษัท หรือเริ่มจากเอกสารเปล่าโดยไม่ดึงข้อมูลจากชุดตั้งค่า
+              <p className="text-xs text-gray-400 mt-0.5 truncate">
+                กรอกข้อมูลสัญญาใหม่ทั้งหมดด้วยตัวเองตั้งแต่ต้น
               </p>
             </div>
           </div>
 
-          <div className="w-9 h-9 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-            <ChevronRight size={18} />
+          <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-xs font-semibold group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-all shadow-2xs">
+            <span>เลือกเอกสารเปล่า</span>
+            <ChevronRight size={15} />
           </div>
         </div>
 
