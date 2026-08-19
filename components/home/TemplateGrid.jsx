@@ -21,7 +21,7 @@ export default function TemplateGrid() {
         </Link>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {templates.map((t) => (
+        {templates.slice(0, 4).map((t) => (
           <TemplateCard key={t.id} template={t} />
         ))}
       </div>
