@@ -1,0 +1,108 @@
+import Field from "../Field";
+import { partnerTemplate } from "@/lib/templates/partner/schema";
+
+export default function PartnerPage1() {
+  const { distributorParty } = partnerTemplate;
+
+  return (
+    <div className="text-[13px] leading-[1.9] text-gray-900 font-normal">
+      <h1 className="text-center text-lg font-bold mb-1">
+        สัญญาแต่งตั้งพันธมิตรตัวแทนจำหน่าย
+      </h1>
+      <p className="text-center font-semibold mb-6">(Partner Agreement)</p>
+
+      <p className="mb-4">
+        สัญญาฉบับนี้ทำขึ้น ณ วันที่ <Field id="contract_date_day" placeholder="17" minWidth={3} />{" "}
+        เดือน <Field id="contract_date_month" placeholder="สิงหาคม" minWidth={8} />{" "}
+        พ.ศ. <Field id="contract_date_year" placeholder="2569" minWidth={5} />
+      </p>
+
+      <p className="mb-2">ระหว่าง:</p>
+
+      <p className="mb-4 text-justify">
+        {distributorParty.name} เลขทะเบียนนิติบุคคล {distributorParty.registrationNumber}{" "}
+        {distributorParty.address}{" "}
+        (ซึ่งต่อไปในสัญญานี้จะเรียกว่า{" "}
+        <span className="font-semibold">&ldquo;Distributor&rdquo; หรือ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;</span>) ฝ่ายหนึ่ง
+      </p>
+
+      <p className="mb-2">กับ</p>
+
+      <p className="mb-6 text-justify">
+        <Field id="reseller_name" placeholder="ระบุชื่อบริษัท Reseller" minWidth={24} /> เลขทะเบียนนิติบุคคล{" "}
+        <Field id="reseller_registration_number" placeholder="0000000000000" minWidth={16} />{" "}
+        สำนักงานใหญ่ตั้งอยู่เลขที่{" "}
+        <Field id="reseller_address" type="textarea" placeholder="ระบุที่อยู่" />
+        {" "}(ซึ่งต่อไปในสัญญานี้จะเรียกว่า{" "}
+        <span className="font-semibold">&ldquo;Reseller&rdquo; หรือ &ldquo;ตัวแทนจำหน่าย&rdquo;</span>) อีกฝ่ายหนึ่ง
+      </p>
+
+      <p className="mb-6 text-justify">
+        คู่สัญญาทั้งสองฝ่ายตกลงเข้าทำสัญญาแต่งตั้งตัวแทนจำหน่าย เพื่อทำการตลาด นำเสนอ
+        และจัดจำหน่ายผลิตภัณฑ์ซอฟต์แวร์ และเครื่องมือทางไอที (ซึ่งต่อไปนี้เรียกว่า
+        &ldquo;ผลิตภัณฑ์&rdquo;) โดยมีข้อกำหนดและเงื่อนไขดังต่อไปนี้:
+      </p>
+
+      <h2 className="font-bold mb-2">ข้อ 1. นิยามศัพท์ (Definitions)</h2>
+      <p className="mb-2 text-justify">
+        ในสัญญานี้ คำหรือข้อความต่อไปนี้ให้มีความหมายตามที่กำหนดไว้ เว้นแต่บริบทจะกำหนดเป็นอย่างอื่น:
+      </p>
+
+      <ul className="list-none space-y-2 text-justify">
+        <li className="pl-4">
+          1.1 &ldquo;เจ้าของผลิตภัณฑ์&rdquo; (Vendor) หมายถึง บุคคล นิติบุคคล หรือผู้พัฒนาซอฟต์แวร์
+          ซึ่งเป็นผู้ถือครองลิขสิทธิ์ ทรัพย์สินทางปัญญา และสิทธิ์โดยชอบด้วยกฎหมายในตัวผลิตภัณฑ์
+          ซอฟต์แวร์แต่เพียงผู้เดียว (หรือตามสิทธิ์ที่ได้รับอนุญาต)
+        </li>
+        <li className="pl-4">
+          1.2 &ldquo;ผู้ใช้ปลายทาง&rdquo; (End User) หมายถึง บุคคล นิติบุคคล หรือองค์กรที่เป็นผู้ซื้อ
+          ได้รับสิทธิ์ หรือจัดหาผลิตภัณฑ์ซอฟต์แวร์ไปเพื่อวัตถุประสงค์ในการใช้งานจริงภายในองค์กร
+          ของตนเอง ไม่ใช่เพื่อวัตถุประสงค์ในการนำไปจำหน่ายหรือให้เช่าช่วง
+        </li>
+        <li className="pl-4">
+          1.3 &ldquo;ผลิตภัณฑ์&rdquo; (Product) หมายถึง ซอฟต์แวร์ ระบบปฏิบัติการ หรือเครื่องมือทางไอที
+          รวมถึง &ldquo;สิทธิ์การใช้งาน&rdquo; เอกสารคู่มือ การอัปเดต และแพตช์แก้ไขความปลอดภัย ซึ่ง
+          &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ได้รับสิทธิ์จัดจำหน่ายจาก &ldquo;เจ้าของผลิตภัณฑ์&rdquo;
+        </li>
+        <li className="pl-4">
+          1.4 &ldquo;สิทธิ์การใช้งาน&rdquo; (License/Subscription) หมายถึง สิทธิ์ทางกฎหมายที่
+          &ldquo;เจ้าของผลิตภัณฑ์&rdquo; หรือ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; อนุญาตให้
+          &ldquo;ตัวแทนจำหน่าย&rdquo; นำไปจัดจำหน่ายแก่ &ldquo;ผู้ใช้ปลายทาง&rdquo; เพื่อเข้าใช้
+          &ldquo;ผลิตภัณฑ์&rdquo; ตามข้อกำหนดและเงื่อนไขที่กำหนดไว้ในข้อตกลงสิทธิ์การใช้งานสำหรับ
+          &ldquo;ผู้ใช้ปลายทาง&rdquo; (EULA)
+        </li>
+        <li className="pl-4">
+          1.5 &ldquo;การลงทะเบียนสิทธิ์ในข้อตกลงทางการค้า&rdquo; (Deal Registration) หมายถึง
+          กระบวนการที่ &ldquo;ตัวแทนจำหน่าย&rdquo; แจ้งข้อมูลรายละเอียดของ &ldquo;ผู้ใช้ปลายทาง&rdquo;
+          ขอบเขตงาน หรือโอกาสทางการค้า ผ่านระบบหรือช่องทางที่ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;
+          กำหนดไว้ เพื่อขอรับสิทธิ์ในการเสนอขายและสิทธิประโยชน์อื่นใดตามเงื่อนไขของสัญญานั้น ๆ
+        </li>
+      </ul>
+
+      <h2 className="font-bold mb-2 mt-4">ข้อ 2. ขอบเขตการแต่งตั้งและอาณาเขต (Scope of Appointment & Territory)</h2>
+      <p className="mb-2 pl-4 font-medium">2.1 การแต่งตั้งและบทบาทของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;:</p>
+      <ul className="list-disc pl-12 space-y-2 text-justify">
+        <li>
+          &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ในฐานะผู้ได้รับสิทธิ์อย่างถูกต้องจาก
+          &ldquo;เจ้าของผลิตภัณฑ์&rdquo; แต่งตั้งตัวแทนจำหน่ายให้เป็น &ldquo;ตัวแทนจำหน่าย&rdquo;
+          ประเภทแบบไม่ผูกขาด (Non-exclusive)
+        </li>
+        <li>
+          &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; มีหน้าที่ในการจัดหา จัดส่ง และประสานงานเรื่องการออก
+          &ldquo;สิทธิ์การใช้งาน&rdquo; ของ &ldquo;ผลิตภัณฑ์&rdquo; ให้แก่ &ldquo;ตัวแทนจำหน่าย&rdquo;
+          เพื่อนำไปจำหน่ายให้แก่ &ldquo;ผู้ใช้ปลายทาง&rdquo;
+        </li>
+      </ul>
+      <p className="mt-2 text-justify pl-4">
+        2.2 สิทธิ์การจำหน่ายของ &ldquo;ตัวแทนจำหน่าย&rdquo;: &ldquo;ตัวแทนจำหน่าย&rdquo; สามารถ
+        จัดจำหน่าย &ldquo;สิทธิ์การใช้งาน&rdquo; ของ &ldquo;ผลิตภัณฑ์&rdquo; ให้กับ
+        &ldquo;ผู้ใช้ปลายทาง&rdquo; เท่านั้น ไม่สามารถโอนสิทธิ์การใช้งาน หรือแสดงความเป็นเจ้าของในตัว
+        &ldquo;ผลิตภัณฑ์&rdquo;
+      </p>
+      <p className="mt-2 text-justify pl-4">
+        2.3 อาณาเขตทางภูมิศาสตร์ (Territory): &ldquo;ตัวแทนจำหน่าย&rdquo; มีสิทธิดำเนินกิจกรรมการขาย
+        การส่งเสริมการขาย และทำตลาด &ldquo;ผลิตภัณฑ์&rdquo; ได้ภายในพื้นที่ ประเทศไทย เท่านั้น
+      </p>
+    </div>
+  );
+}
