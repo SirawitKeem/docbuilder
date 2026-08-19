@@ -1,5 +1,5 @@
-import DocumentEditor from "@/components/document/DocumentEditor";
+import ProfileSelectGate from "@/components/document/ProfileSelectGate";
 
 export default function DistributorEditorPage() {
-  return <DocumentEditor templateId="distributor" />;
+  return <ProfileSelectGate templateId="distributor" />;
 }

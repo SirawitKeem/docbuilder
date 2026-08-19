@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DocumentFieldsProvider, useDocumentFields } from "@/context/DocumentFieldsContext";
 import { templateRegistry, getCompletionStatus } from "@/lib/templates/registry";
-import { getFieldProfile } from "@/lib/data/fieldProfile";
+import { getFieldProfile } from "@/lib/data/fieldProfiles";
 import EditorToolbar from "./EditorToolbar";
 import DocumentCanvas from "./DocumentCanvas";
 import PageControls from "./PageControls";
@@ -184,26 +184,35 @@ function EditorContent({ templateId }) {
   );
 }
 
-export default function DocumentEditor({ templateId }) {
+export default function DocumentEditor({ templateId, profileId }) {
   const [initialValues, setInitialValues] = useState(null); // null = กำลังโหลด
 
   useEffect(() => {
     const { schema } = templateRegistry[templateId];
-    getFieldProfile().then((profile) => {
-      // แมป sharedKey → id ของฟิลด์ในเทมเพลตนี้
+
+    async function load() {
+      if (!profileId) {
+        setInitialValues({});
+        return;
+      }
+      const profile = await getFieldProfile(profileId);
       const prefilled = {};
-      for (const field of schema.fields) {
-        if (field.sharedKey && profile[field.sharedKey]) {
-          prefilled[field.id] = profile[field.sharedKey];
+      if (profile?.values) {
+        for (const field of schema.fields) {
+          if (field.sharedKey && profile.values[field.sharedKey]) {
+            prefilled[field.id] = profile.values[field.sharedKey];
+          }
         }
       }
       setInitialValues(prefilled);
-    });
-  }, [templateId]);
+    }
+
+    load();
+  }, [templateId, profileId]);
 
   if (initialValues === null) {
     return (
-      <div className="h-screen flex items-center justify-center text-gray-400 font-medium">
+      <div className="h-screen flex items-center justify-center text-gray-400 font-medium text-sm">
         กำลังโหลด...
       </div>
     );

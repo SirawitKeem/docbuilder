@@ -1,5 +1,5 @@
-import DocumentEditor from "@/components/document/DocumentEditor";
+import ProfileSelectGate from "@/components/document/ProfileSelectGate";
 
 export default function NdaEditorPage() {
-  return <DocumentEditor templateId="nda" />;
+  return <ProfileSelectGate templateId="nda" />;
 }
