@@ -6,10 +6,10 @@ export default function PartnerPage1() {
 
   return (
     <div className="text-[12.5px] leading-[1.7] text-gray-900 font-normal">
-      <h1 className="text-center text-base font-bold mb-0.5">
+      <h1 className="text-center text-[14px] font-bold mb-0.5">
         สัญญาแต่งตั้งพันธมิตรตัวแทนจำหน่าย
       </h1>
-      <p className="text-center font-normal text-xs mb-3">(Partner Agreement)</p>
+      <p className="text-center font-normal text-[12px] mb-3">(Partner Agreement)</p>
 
       <p className="mb-2">
         สัญญาฉบับนี้ทำขึ้น ณ วันที่ <Field id="contract_date_day" placeholder="17" minWidth={3} />{" "}
