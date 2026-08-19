@@ -13,14 +13,14 @@ export default function PartnerPage6() {
       {/* คู่สัญญาหลัก - จัดกึ่งกลางฝั่งตัวเอง พร้อมเพิ่มระยะเซ็นชื่อ */}
       <div className="grid grid-cols-2 gap-10 mb-20">
         <div className="text-center">
-          <p className="font-bold mb-16">{distributorParty.name}</p>
+          <p className="font-bold mb-20">{distributorParty.name}</p>
           <p className="mb-3">ลงชื่อ ......................................................</p>
           <p className="mb-3">( {distributorParty.signatoryName} )</p>
           <p>ตำแหน่ง: {distributorParty.signatoryPosition}</p>
         </div>
 
         <div className="text-center">
-          <p className="font-bold mb-16">
+          <p className="font-bold mb-20">
             <Field id="reseller_name" placeholder="ระบุชื่อบริษัท Reseller" minWidth={20} />
           </p>
           <p className="mb-3">ลงชื่อ ......................................................</p>

@@ -33,6 +33,16 @@ function getContractFullName(doc) {
   return doc.templateName || "หนังสือสัญญา";
 }
 
+function formatDateTime(dateString) {
+  if (!dateString) return { dateStr: "-", timeStr: "" };
+  const d = new Date(dateString);
+  if (isNaN(d.getTime())) return { dateStr: dateString, timeStr: "" };
+
+  const dateStr = d.toLocaleDateString("th-TH");
+  const timeStr = d.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }) + " น.";
+  return { dateStr, timeStr };
+}
+
 export default function DocumentsTable({
   documents,
   showSentTo = false,
@@ -68,11 +78,11 @@ export default function DocumentsTable({
         <table className="w-full text-sm table-fixed">
           <thead>
             <tr className="border-b border-gray-200 text-left text-xs text-gray-500 bg-gray-50/50">
-              <th className="w-[36%] px-5 py-3.5 font-medium">ชื่อเอกสาร</th>
+              <th className="w-[34%] px-5 py-3.5 font-medium">ชื่อเอกสาร</th>
               <th className="w-[26%] px-5 py-3.5 font-medium">เทมเพลต</th>
               {showSentTo && <th className="w-[14%] px-5 py-3.5 font-medium">ส่งถึง</th>}
               <th className="w-[14%] px-5 py-3.5 font-medium">ผู้สร้าง</th>
-              <th className="w-[11%] px-5 py-3.5 font-medium">วันที่สร้าง</th>
+              <th className="w-[13%] px-5 py-3.5 font-medium">วันที่สร้าง</th>
               <th className="w-[8%] px-4 py-3.5 font-medium text-center">สถานะ</th>
               <th className="w-[5%] px-5 py-3.5 font-medium text-right">การดำเนินการ</th>
             </tr>
@@ -88,54 +98,59 @@ export default function DocumentsTable({
                 </td>
               </tr>
             ) : (
-              filtered.map((doc) => (
-                <tr key={doc.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors">
-                  <td className="px-5 py-3.5">
-                    <div className="flex items-center gap-3">
-                      <PdfIcon className="w-8 h-9 shrink-0" />
-                      <div className="min-w-0 flex-1">
-                        <p className="font-medium text-gray-900 text-sm leading-snug truncate" title={doc.name}>
-                          {doc.name}
-                        </p>
-                        <p className="text-xs text-gray-500 mt-0.5 truncate">
-                          {getContractFullName(doc)}
-                        </p>
+              filtered.map((doc) => {
+                const { dateStr, timeStr } = formatDateTime(doc.createdAt);
+
+                return (
+                  <tr key={doc.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors">
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center gap-3">
+                        <PdfIcon className="w-8 h-9 shrink-0" />
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-gray-900 text-sm leading-snug truncate" title={doc.name}>
+                            {doc.name}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-0.5 truncate">
+                            {getContractFullName(doc)}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-5 py-3.5 text-gray-500">
-                    <span className="line-clamp-1 text-xs leading-relaxed" title={doc.templateName}>
-                      {doc.templateName}
-                    </span>
-                  </td>
-                  {showSentTo && (
-                    <td className="px-5 py-3.5 text-gray-500 truncate" title={doc.sentTo || "—"}>
-                      {doc.sentTo || "—"}
                     </td>
-                  )}
-                  <td className="px-5 py-3.5 text-gray-500">{doc.createdBy || "Admin"}</td>
-                  <td className="px-5 py-3.5 text-gray-500 whitespace-nowrap">
-                    {new Date(doc.createdAt).toLocaleDateString("th-TH")}
-                  </td>
-                  <td className="px-4 py-3.5 text-center">
-                    <span
-                      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${statusStyles[doc.status]}`}
-                    >
-                      {statusLabel[doc.status]}
-                    </span>
-                  </td>
-                  <td className="px-5 py-3.5">
-                    <div className="flex items-center justify-end gap-1">
-                      <button className="p-1.5 rounded hover:bg-gray-100 text-gray-500">
-                        <Eye size={16} />
-                      </button>
-                      <button className="p-1.5 rounded hover:bg-gray-100 text-gray-500">
-                        <MoreVertical size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
+                    <td className="px-5 py-3.5 text-gray-500">
+                      <span className="line-clamp-1 text-xs leading-relaxed" title={doc.templateName}>
+                        {doc.templateName}
+                      </span>
+                    </td>
+                    {showSentTo && (
+                      <td className="px-5 py-3.5 text-gray-500 truncate" title={doc.sentTo || "—"}>
+                        {doc.sentTo || "—"}
+                      </td>
+                    )}
+                    <td className="px-5 py-3.5 text-gray-500">{doc.createdBy || "Admin"}</td>
+                    <td className="px-5 py-3.5 whitespace-nowrap">
+                      <p className="text-gray-900 text-sm font-medium">{dateStr}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">{timeStr}</p>
+                    </td>
+                    <td className="px-4 py-3.5 text-center">
+                      <span
+                        className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${statusStyles[doc.status]}`}
+                      >
+                        {statusLabel[doc.status]}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center justify-end gap-1">
+                        <button className="p-1.5 rounded hover:bg-gray-100 text-gray-500">
+                          <Eye size={16} />
+                        </button>
+                        <button className="p-1.5 rounded hover:bg-gray-100 text-gray-500">
+                          <MoreVertical size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
