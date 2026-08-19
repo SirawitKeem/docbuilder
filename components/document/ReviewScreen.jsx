@@ -12,7 +12,7 @@ export default function ReviewScreen({ template, pages, status, onExport, onSend
   const { setReadOnly } = useDocumentFields();
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
+    <div className="flex flex-col h-screen bg-gray-100 font-noto-looped">
       <div className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 shrink-0">
         <div className="flex items-center gap-4">
           <button onClick={() => setReadOnly(false)} className="p-2 -ml-2 rounded-lg hover:bg-gray-100 text-gray-700">
@@ -23,7 +23,7 @@ export default function ReviewScreen({ template, pages, status, onExport, onSend
       </div>
 
       <div className="flex-1 overflow-auto">
-        <div className="max-w-3xl mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto px-4 py-8">
           <div className={`rounded-card px-5 py-4 mb-6 flex items-center gap-3 ${status.isComplete ? "bg-success-100" : "bg-gray-100"}`}>
             <span className={`w-2 h-2 rounded-full ${status.isComplete ? "bg-success-600" : "bg-gray-400"}`} />
             <div>
@@ -55,12 +55,19 @@ export default function ReviewScreen({ template, pages, status, onExport, onSend
             </button>
           </div>
 
-          <div className="space-y-8 pb-12">
+          <div className="space-y-8 pb-12 flex flex-col items-center">
             {pages.map((PageContent, i) => (
-              <div key={i} className="bg-white shadow-document mx-auto" style={{ width: A4_WIDTH, minHeight: A4_HEIGHT }}>
-                <div className="px-16 pt-12 pb-8 flex flex-col" style={{ minHeight: A4_HEIGHT }}>
+              <div
+                key={i}
+                className="bg-white shadow-document font-noto-looped shrink-0 text-gray-900 overflow-hidden"
+                style={{ width: A4_WIDTH, height: A4_HEIGHT, minHeight: A4_HEIGHT }}
+              >
+                <div
+                  className="px-14 pt-10 pb-6 flex flex-col overflow-hidden text-left"
+                  style={{ height: A4_HEIGHT, boxSizing: "border-box" }}
+                >
                   <DocumentHeader logo={template.logo} />
-                  <div className="flex-1">
+                  <div className="flex-1 min-h-0 overflow-hidden">
                     <PageContent />
                   </div>
                   <DocumentFooter title={template.fullName} pageNumber={i + 1} totalPages={pages.length} />

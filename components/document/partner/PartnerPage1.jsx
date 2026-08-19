@@ -20,8 +20,7 @@ export default function PartnerPage1() {
       <p className="mb-2">ระหว่าง:</p>
 
       <p className="mb-4 text-justify">
-        {distributorParty.name} เลขทะเบียนนิติบุคคล {distributorParty.registrationNumber}{" "}
-        {distributorParty.address}{" "}
+        {distributorParty.name} เลขทะเบียนนิติบุคคล {distributorParty.registrationNumber} สำนักงานใหญ่ ตั้งอยู่เลขที่ 8/40 เดอะ คอนเนค 37 ซอยช่างอากาศอุทิศ 10 แยก 1-2 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210{" "}
         (ซึ่งต่อไปในสัญญานี้จะเรียกว่า{" "}
         <span className="font-semibold">&ldquo;Distributor&rdquo; หรือ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;</span>) ฝ่ายหนึ่ง
       </p>
@@ -31,16 +30,14 @@ export default function PartnerPage1() {
       <p className="mb-6 text-justify">
         <Field id="reseller_name" placeholder="ระบุชื่อบริษัท Reseller" minWidth={24} /> เลขทะเบียนนิติบุคคล{" "}
         <Field id="reseller_registration_number" placeholder="0000000000000" minWidth={16} />{" "}
-        สำนักงานใหญ่ตั้งอยู่เลขที่{" "}
+        สำนักงานใหญ่ ตั้งอยู่เลขที่{" "}
         <Field id="reseller_address" type="textarea" placeholder="ระบุที่อยู่" />
         {" "}(ซึ่งต่อไปในสัญญานี้จะเรียกว่า{" "}
         <span className="font-semibold">&ldquo;Reseller&rdquo; หรือ &ldquo;ตัวแทนจำหน่าย&rdquo;</span>) อีกฝ่ายหนึ่ง
       </p>
 
       <p className="mb-6 text-justify">
-        คู่สัญญาทั้งสองฝ่ายตกลงเข้าทำสัญญาแต่งตั้งตัวแทนจำหน่าย เพื่อทำการตลาด นำเสนอ
-        และจัดจำหน่ายผลิตภัณฑ์ซอฟต์แวร์ และเครื่องมือทางไอที (ซึ่งต่อไปนี้เรียกว่า
-        &ldquo;ผลิตภัณฑ์&rdquo;) โดยมีข้อกำหนดและเงื่อนไขดังต่อไปนี้:
+        คู่สัญญาทั้งสองฝ่ายตกลงเข้าทำสัญญาแต่งตั้งตัวแทนจำหน่าย เพื่อทำการตลาด นำเสนอ และจัดจำหน่ายผลิตภัณฑ์ ซอฟต์แวร์ และเครื่องมือทางไอที (ซึ่งต่อไปนี้เรียกว่า &ldquo;ผลิตภัณฑ์&rdquo;) โดยมีข้อกำหนดและเงื่อนไขดังต่อไปนี้:
       </p>
 
       <h2 className="font-bold mb-2">ข้อ 1. นิยามศัพท์ (Definitions)</h2>

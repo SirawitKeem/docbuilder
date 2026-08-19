@@ -38,7 +38,7 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ["Inter", "Noto Sans Thai", "system-ui", "sans-serif"],
+        sans: ["var(--font-noto-thai-looped)", "Noto Sans Thai Looped", "var(--font-inter)", "sans-serif"],
         "noto-looped": ["var(--font-noto-thai-looped)", "Noto Sans Thai Looped", "sans-serif"],
       },
       borderRadius: {
@@ -52,7 +52,7 @@ module.exports = {
         document: "0 4px 16px rgba(15, 23, 42, 0.08)",
       },
       spacing: {
-        // ใช้ scale เดิมของ Tailwind อยู่แล้ว (4,8,12,16,24,32...) ตรงกับ Design System พอดี
+        // ใช้ scale เดิมของ Tailwind อยู่แล้ว
       },
       width: {
         sidebar: "232px",
