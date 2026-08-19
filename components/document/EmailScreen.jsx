@@ -244,22 +244,31 @@ export default function EmailScreen({
                   </button>
                 </div>
 
-                {/* 100% Identical Preview Canvas Scaled Down with CSS Transform */}
-                <div className="w-full overflow-hidden flex justify-center items-start py-1 relative rounded border border-gray-200/80 bg-gray-200/40">
+                {/* 100% Exact Scaled Preview Container (A4 Aspect Ratio: 794x1123) */}
+                <div className="w-full flex justify-center py-1 relative">
                   <div
+                    className="relative rounded border border-gray-300 shadow-sm overflow-hidden bg-white"
                     style={{
-                      width: 794,
-                      height: 1123 * 0.36, // 404px height container
-                      transform: "scale(0.36)",
-                      transformOrigin: "top center",
+                      width: 794 * 0.36,
+                      height: 1123 * 0.36,
                     }}
-                    className="pointer-events-none select-none"
                   >
-                    <div className="bg-white shadow-md" style={{ width: 794, height: 1123 }}>
-                      <div className="px-14 pt-10 pb-6 flex flex-col font-noto-looped h-full box-border text-gray-900 text-left">
+                    <div
+                      style={{
+                        width: 794,
+                        height: 1123,
+                        transform: "scale(0.36)",
+                        transformOrigin: "top left",
+                      }}
+                      className="pointer-events-none select-none text-left"
+                    >
+                      <div
+                        className="px-14 pt-10 pb-6 flex flex-col font-noto-looped h-full box-border text-gray-900 bg-white"
+                        style={{ width: 794, height: 1123 }}
+                      >
                         <DocumentFieldsProvider initialValues={values} defaultReadOnly>
                           <DocumentHeader logo={schema?.logo} />
-                          <div className="flex-1 my-4 overflow-hidden">
+                          <div className="flex-1 my-3 overflow-hidden">
                             {Page1Component && <Page1Component />}
                           </div>
                           <DocumentFooter
@@ -309,44 +318,56 @@ export default function EmailScreen({
 
       {/* Full Document View Modal */}
       {showFullPreview && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gray-50/90">
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-white z-10 shadow-2xs">
               <div>
                 <h3 className="font-bold text-gray-900 text-base">{fileName}</h3>
-                <p className="text-xs text-gray-500 mt-0.5">ตัวอย่างเอกสารก่อนส่งอีเมล</p>
+                <p className="text-xs text-gray-500 mt-0.5">ตัวอย่างเอกสารแบบเต็ม ({pageCount} หน้า)</p>
               </div>
               <button
                 onClick={() => setShowFullPreview(false)}
-                className="p-2 rounded-lg hover:bg-gray-200 text-gray-500 transition-colors"
+                className="p-2 rounded-xl hover:bg-gray-100 text-gray-500 transition-colors"
               >
                 <X size={20} />
               </button>
             </div>
-            <div className="flex-1 overflow-auto bg-gray-100 p-6 flex flex-col items-center gap-6">
+
+            {/* Full Document Pages Scroll Area - Render at exact A4 794px x 1123px */}
+            <div className="flex-1 overflow-auto bg-gray-200/90 p-8 flex flex-col items-center gap-8">
               <DocumentFieldsProvider initialValues={values} defaultReadOnly>
                 {pages.map((PageContent, i) => (
                   <div
                     key={i}
-                    className="bg-white shadow-document w-[700px] min-h-[990px] p-12 flex flex-col justify-between font-noto-looped text-gray-900 rounded-sm"
+                    className="bg-white shadow-xl rounded-sm shrink-0 font-noto-looped text-gray-900"
+                    style={{ width: 794, minHeight: 1123, height: 1123 }}
                   >
-                    <DocumentHeader logo={schema?.logo} />
-                    <div className="flex-1 my-4">
-                      <PageContent />
+                    <div
+                      className="px-14 pt-10 pb-6 flex flex-col h-full box-border text-left"
+                      style={{ height: 1123 }}
+                    >
+                      <DocumentHeader logo={schema?.logo} />
+                      <div className="flex-1 my-3 overflow-hidden">
+                        <PageContent />
+                      </div>
+                      <DocumentFooter
+                        title={schema?.fullName}
+                        pageNumber={i + 1}
+                        totalPages={pages.length}
+                      />
                     </div>
-                    <DocumentFooter
-                      title={schema?.fullName}
-                      pageNumber={i + 1}
-                      totalPages={pages.length}
-                    />
                   </div>
                 ))}
               </DocumentFieldsProvider>
             </div>
-            <div className="px-6 py-3.5 border-t border-gray-200 flex items-center justify-end bg-gray-50/90">
+
+            <div className="px-6 py-3.5 border-t border-gray-200 flex items-center justify-between bg-white z-10">
+              <span className="text-xs text-gray-500 font-medium">
+                ทั้งหมด {pageCount} หน้า • ขนาด 794 × 1123px (A4)
+              </span>
               <button
                 onClick={() => setShowFullPreview(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+                className="px-5 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-100 rounded-xl border border-gray-200 transition-colors bg-white shadow-2xs"
               >
                 ปิดหน้าต่าง
               </button>
