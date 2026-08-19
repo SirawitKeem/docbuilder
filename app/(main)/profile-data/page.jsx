@@ -84,20 +84,11 @@ export default function ProfileDataListPage() {
 
   return (
     <div>
-      {/* Page Title & Subtitle Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-gray-900">ตั้งค่าข้อมูล</h1>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">
-              {profiles.length} รายการ
-            </span>
-          </div>
-          <p className="text-sm text-gray-500 mt-1">
-            จัดการและบันทึกชุดข้อมูลคู่ค้าเพื่อดึงไปใช้สร้างเอกสารอัตโนมัติ
-          </p>
-        </div>
-      </div>
+      {/* Page Title & Subtitle Header - Standardized with all main pages */}
+      <h1 className="text-2xl font-bold text-gray-900 mb-1">ตั้งค่าข้อมูล</h1>
+      <p className="text-sm text-gray-500 mb-8">
+        จัดการและบันทึกชุดข้อมูลคู่ค้าเพื่อดึงไปใช้สร้างเอกสารอัตโนมัติ
+      </p>
 
       {/* Main Card Container */}
       <div className="bg-white border border-gray-200 rounded-card p-6 shadow-card space-y-5">
@@ -113,7 +104,7 @@ export default function ProfileDataListPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="ค้นหาชื่อชุดข้อมูล, บริษัท หรือผู้ลงนาม..."
-              className="w-full h-10 pl-10 pr-4 rounded-xl border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all bg-gray-50/50"
+              className="w-full h-10 pl-10 pr-4 rounded-xl border border-gray-200 bg-gray-50/50 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all"
             />
           </div>
 
