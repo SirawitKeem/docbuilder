@@ -9,9 +9,8 @@ import {
   Trash2,
   Building2,
   MoreHorizontal,
-  Check,
 } from "lucide-react";
-import { listFieldProfiles, deleteFieldProfile, updateFieldProfile } from "@/lib/data/fieldProfiles";
+import { listFieldProfiles, deleteFieldProfile } from "@/lib/data/fieldProfiles";
 
 function formatThaiDateTime(isoString) {
   if (!isoString) return "-";
@@ -53,20 +52,6 @@ export default function ProfileDataListPage() {
   const handleDelete = async (id, name) => {
     if (!confirm(`คุณต้องการลบชุดข้อมูล "${name}" ใช่หรือไม่?`)) return;
     await deleteFieldProfile(id);
-    load();
-  };
-
-  const handleSetDefault = async (targetProfile) => {
-    for (const p of profiles) {
-      if (p.isDefault && p.id !== targetProfile.id) {
-        await updateFieldProfile(p.id, { name: p.name, values: p.values, isDefault: false });
-      }
-    }
-    await updateFieldProfile(targetProfile.id, {
-      name: targetProfile.name,
-      values: targetProfile.values,
-      isDefault: !targetProfile.isDefault,
-    });
     load();
   };
 
@@ -192,24 +177,11 @@ export default function ProfileDataListPage() {
                       {/* Company Name & Address Subtext */}
                       <td className="px-5 py-4">
                         <div className="flex items-start gap-3.5">
-                          <div
-                            className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
-                              p.isDefault
-                                ? "bg-primary-100 text-primary-600"
-                                : "bg-gray-100 text-gray-500"
-                            }`}
-                          >
+                          <div className="w-10 h-10 rounded-xl bg-gray-100 text-gray-500 flex items-center justify-center shrink-0 mt-0.5">
                             <Building2 size={20} />
                           </div>
                           <div>
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold text-gray-900 text-sm">{companyName}</span>
-                              {p.isDefault && (
-                                <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-primary-50 text-primary-600 border border-primary-100">
-                                  ค่าเริ่มต้น
-                                </span>
-                              )}
-                            </div>
+                            <span className="font-bold text-gray-900 text-sm block">{companyName}</span>
                             <p className="text-xs text-gray-400 mt-1 max-w-lg leading-relaxed line-clamp-2">
                               {address}
                             </p>
@@ -254,18 +226,16 @@ export default function ProfileDataListPage() {
                           {openMenuId === p.id && (
                             <div
                               ref={menuRef}
-                              className="absolute right-5 top-11 w-44 bg-white rounded-xl shadow-xl border border-gray-200 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100 text-left"
+                              className="absolute right-5 top-11 w-36 bg-white rounded-xl shadow-xl border border-gray-200 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100 text-left"
                             >
-                              <button
-                                onClick={() => {
-                                  setOpenMenuId(null);
-                                  handleSetDefault(p);
-                                }}
+                              <Link
+                                href={`/profile-data/${p.id}`}
+                                onClick={() => setOpenMenuId(null)}
                                 className="w-full text-left px-3.5 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
                               >
-                                <Check size={14} className="text-primary-600" />
-                                {p.isDefault ? "ยกเลิกค่าเริ่มต้น" : "ตั้งเป็นค่าเริ่มต้น"}
-                              </button>
+                                <Pencil size={14} className="text-gray-500" />
+                                แก้ไขข้อมูล
+                              </Link>
                               <button
                                 onClick={() => {
                                   setOpenMenuId(null);
