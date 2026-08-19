@@ -10,17 +10,17 @@ export default function PartnerPage6() {
         สัญญานี้ทำขึ้นเป็นสองฉบับมีข้อความถูกต้องตรงกัน คู่สัญญาได้อ่านและเข้าใจข้อความโดยละเอียดตลอดแล้ว จึงได้ลงลายมือชื่อและประทับตรา (ถ้ามี) ไว้เป็นสำคัญต่อหน้าพยาน
       </p>
 
-      {/* คู่สัญญาหลัก */}
-      <div className="grid grid-cols-2 gap-10 mb-16">
-        <div>
-          <p className="font-bold mb-12">{distributorParty.name}</p>
+      {/* คู่สัญญาหลัก - จัดกึ่งกลางฝั่งตัวเอง */}
+      <div className="grid grid-cols-2 gap-10 mb-14">
+        <div className="text-center">
+          <p className="font-bold mb-10">{distributorParty.name}</p>
           <p className="mb-2">ลงชื่อ ......................................................</p>
           <p className="mb-2">( {distributorParty.signatoryName} )</p>
           <p>ตำแหน่ง: {distributorParty.signatoryPosition}</p>
         </div>
 
-        <div>
-          <p className="font-bold mb-12">
+        <div className="text-center">
+          <p className="font-bold mb-10">
             <Field id="reseller_name" placeholder="ระบุชื่อบริษัท Reseller" minWidth={20} />
           </p>
           <p className="mb-2">ลงชื่อ ......................................................</p>
@@ -34,14 +34,14 @@ export default function PartnerPage6() {
         </div>
       </div>
 
-      {/* พยาน — เว้นว่างไว้เซ็นมือจริง */}
+      {/* พยาน — จัดกึ่งกลางฝั่งตัวเอง */}
       <div className="grid grid-cols-2 gap-10">
-        <div>
+        <div className="text-center">
           <p className="mb-2">ลงชื่อ ...................................................... พยาน</p>
           <p className="mb-2">( ...................................................... )</p>
           <p>ตำแหน่ง: ........................................</p>
         </div>
-        <div>
+        <div className="text-center">
           <p className="mb-2">ลงชื่อ ...................................................... พยาน</p>
           <p className="mb-2">( ...................................................... )</p>
           <p>ตำแหน่ง: ........................................</p>
