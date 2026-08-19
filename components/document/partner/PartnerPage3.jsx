@@ -1,12 +1,12 @@
 export default function PartnerPage3() {
   return (
-    <div className="text-[9.5pt] leading-[1.8] text-gray-900 font-normal">
-      <ul className="list-none space-y-3 mb-6">
+    <div className="document-body">
+      <ul className="list-none space-y-2">
         <li className="pl-4">
           <p className="font-bold mb-1">
             5.3 เงื่อนไขการส่งใบแจ้งหนี้ กำหนดระยะเวลาชำระเงิน (Credit Term) และการชำระเงิน:
           </p>
-          <ul className="list-disc pl-8 space-y-1.5 font-normal">
+          <ul className="list-disc pl-8 space-y-1 font-normal">
             <li>
               &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; จะออกใบแจ้งหนี้เมื่อได้รับใบสั่งซื้อ (Purchase Order) และดำเนินการออก &ldquo;สิทธิการใช้งาน&rdquo; เรียบร้อยแล้ว โดยกำหนดระยะเวลาชำระเงิน (Credit Term) ภายใน 30 (สามสิบ) วัน นับแต่วันที่ออกใบแจ้งหนี้ให้กับ &ldquo;ตัวแทนจำหน่าย&rdquo;
             </li>
@@ -25,11 +25,9 @@ export default function PartnerPage3() {
         </li>
       </ul>
 
-      <h2 className="font-bold mb-2 text-[9.5pt]">
-        ข้อ 6. การบริการหลังการขายและการสนับสนุนทางเทคนิค (Technical Support and Maintenance & SLA)
-      </h2>
+      <h2>ข้อ 6. การบริการหลังการขายและการสนับสนุนทางเทคนิค (Technical Support and Maintenance & SLA)</h2>
 
-      <div className="space-y-3 pl-4">
+      <div className="space-y-2 pl-4">
         <p>
           <span className="font-bold">6.1 ระดับการบริการขั้นแรกของ Reseller (Tier 1 Support):</span> &ldquo;ตัวแทนจำหน่าย&rdquo; มีหน้าที่ให้บริการสนับสนุนทางเทคนิคขั้นแรกแก่ &ldquo;ผู้ใช้ปลายทาง&rdquo; เช่น การตอบคำถามทั่วไป การติดตั้งเบื้องต้น และการรับเรื่องปัญหา
         </p>
@@ -38,7 +36,7 @@ export default function PartnerPage3() {
           <p className="mb-1">
             <span className="font-bold">6.2 ระดับการบริการของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; และการส่งต่อปัญหา (Tier 2/3 Escalation Path & SLA):</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; มีหน้าที่ให้บริการสนับสนุนทางเทคนิคระดับสูง (Tier 2 Support) แก่ &ldquo;ตัวแทนจำหน่าย&rdquo; ในกรณีที่เกิดปัญหาขัดข้องเกินกว่าขีดความสามารถของ Tier 1 โดยมีเงื่อนไขการให้บริการดังต่อไปนี้:
           </p>
-          <ul className="list-disc pl-8 space-y-2 font-normal mt-1.5">
+          <ul className="list-disc pl-8 space-y-1 font-normal mt-1">
             <li>
               <span className="font-bold">การอ้างอิงมาตรฐานการให้บริการ (Back-to-Back SLA):</span> ระยะเวลาในการตอบสนอง (Response Time) การประเมินระดับความรุนแรงของปัญหา (Severity Level) และระยะเวลาในการแก้ไขปัญหา จะอ้างอิงและสอดคล้องกับข้อตกลงระดับการให้บริการ (SLA) ของ &ldquo;เจ้าของผลิตภัณฑ์&rdquo; (Vendor) ใน &ldquo;ผลิตภัณฑ์&rdquo; แต่ละประเภท
             </li>

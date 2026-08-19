@@ -1,9 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Undo2, Redo2, Eye, Download, MoreHorizontal, Loader2 } from "lucide-react";
+import { ArrowLeft, Undo2, Redo2, Eye, Download, Save, MoreHorizontal, Loader2, Check } from "lucide-react";
 
-export default function EditorToolbar({ template, status, onPreview, onExport, exporting }) {
+export default function EditorToolbar({
+  template,
+  status,
+  onPreview,
+  onExport,
+  exporting,
+  onSave,
+  isSaving,
+  savedAt,
+}) {
   return (
     <div className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 shrink-0">
       <div className="flex items-center gap-4 min-w-0">
@@ -12,7 +21,15 @@ export default function EditorToolbar({ template, status, onPreview, onExport, e
         </Link>
         <div className="min-w-0">
           <p className="text-sm font-semibold text-gray-900 truncate">{template.fullName}</p>
-          <StatusBadge status={status} />
+          <div className="flex items-center gap-3">
+            <StatusBadge status={status} />
+            {savedAt && (
+              <span className="text-[11px] text-gray-400 font-normal hidden sm:inline-flex items-center gap-1">
+                <Check size={12} className="text-success-600" />
+                บันทึกเมื่อ {savedAt}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
@@ -26,21 +43,36 @@ export default function EditorToolbar({ template, status, onPreview, onExport, e
       </div>
 
       <div className="flex items-center gap-2 shrink-0">
+        {/* ปุ่ม บันทึกเอกสาร (Save Document) */}
+        <button
+          onClick={onSave}
+          disabled={isSaving}
+          className="flex items-center gap-2 h-10 px-4 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-60"
+          title="บันทึกเอกสารนี้ไว้ในคลัง 'เอกสารของฉัน'"
+        >
+          {isSaving ? <Loader2 size={16} className="animate-spin text-primary-600" /> : <Save size={16} className="text-gray-600" />}
+          <span className="hidden sm:inline">{isSaving ? "กำลังบันทึก..." : "บันทึกเอกสาร"}</span>
+        </button>
+
+        {/* ปุ่ม Preview */}
         <button
           onClick={onPreview}
-          className="flex items-center gap-2 h-10 px-4 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50"
+          className="flex items-center gap-2 h-10 px-4 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors"
         >
           <Eye size={16} />
           <span className="hidden sm:inline">Preview</span>
         </button>
+
+        {/* ปุ่ม Export PDF */}
         <button
           onClick={onExport}
           disabled={exporting}
-          className="flex items-center gap-2 h-10 px-4 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 disabled:opacity-60"
+          className="flex items-center gap-2 h-10 px-4 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 transition-colors disabled:opacity-60"
         >
           {exporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
           <span className="hidden sm:inline">{exporting ? "กำลังสร้าง..." : "Export PDF"}</span>
         </button>
+
         <button className="p-2 rounded-lg text-gray-500 hover:bg-gray-100">
           <MoreHorizontal size={18} />
         </button>

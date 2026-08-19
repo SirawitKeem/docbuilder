@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { CheckCircle2 } from "lucide-react";
 import { DocumentFieldsProvider, useDocumentFields } from "@/context/DocumentFieldsContext";
 import { templateRegistry, getCompletionStatus } from "@/lib/templates/registry";
 import { getFieldProfile } from "@/lib/data/fieldProfiles";
@@ -29,7 +30,7 @@ async function blobToBase64(blob) {
   });
 }
 
-function EditorContent({ templateId }) {
+function EditorContent({ templateId, initialDocId }) {
   const router = useRouter();
   const { schema, pages } = templateRegistry[templateId];
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,10 +39,48 @@ function EditorContent({ templateId }) {
   const [pdfBase64, setPdfBase64] = useState(null);
   const [generating, setGenerating] = useState(false);
   const [sentTo, setSentTo] = useState("");
+  const [activeDocId, setActiveDocId] = useState(initialDocId || null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [savedAt, setSavedAt] = useState(null);
+  const [showToast, setShowToast] = useState(null);
   const { readOnly, setReadOnly, values } = useDocumentFields();
 
   const fileName = fileNameFor(schema.name.replace(/\s+/g, ""));
   const status = getCompletionStatus(values, templateId);
+
+  // ปุ่ม บันทึกเอกสาร (Save Document) - บันทึกลง "เอกสารของฉัน" เฉพาะเมื่อคลิกปุ่มนี้เท่านั้น
+  const handleSaveDocument = async () => {
+    setIsSaving(true);
+    try {
+      const res = await fetch("/api/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...(activeDocId ? { id: activeDocId } : {}),
+          name: fileName,
+          templateId,
+          templateName: schema.fullName,
+          values,
+          status: "draft",
+        }),
+      });
+
+      if (!res.ok) throw new Error("บันทึกไม่สำเร็จ");
+      const record = await res.json();
+      if (record?.id) {
+        setActiveDocId(record.id);
+      }
+      const timeStr = new Date().toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }) + " น.";
+      setSavedAt(timeStr);
+      setShowToast("บันทึกเอกสารลง 'เอกสารของฉัน' เรียบร้อยแล้ว");
+      setTimeout(() => setShowToast(null), 3000);
+    } catch (err) {
+      console.error("Save document error:", err);
+      alert("เกิดข้อผิดพลาดในการบันทึกเอกสาร");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const generatePdf = async () => {
     setGenerating(true);
@@ -65,18 +104,6 @@ function EditorContent({ templateId }) {
     const { blob } = pdfBase64
       ? { blob: await (await fetch(`data:application/pdf;base64,${pdfBase64}`)).blob() }
       : await generatePdf();
-
-    // บันทึก Record เอกสารลงระบบ
-    fetch("/api/documents", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: fileName,
-        templateId,
-        templateName: schema.fullName,
-        values,
-      }),
-    }).catch(() => {});
 
     // 1. ลองใช้ File System Access API (เปิดหน้าต่าง "Save As...")
     if ("showSaveFilePicker" in window) {
@@ -151,13 +178,24 @@ function EditorContent({ templateId }) {
   const PageContent = pages[currentPage - 1];
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen relative">
+      {/* Toast แจ้งเตือนเมื่อกดบันทึกสำเร็จ */}
+      {showToast && (
+        <div className="fixed top-20 right-6 z-50 bg-gray-900 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-top-3 duration-200">
+          <CheckCircle2 size={16} className="text-success-600" />
+          <span>{showToast}</span>
+        </div>
+      )}
+
       <EditorToolbar
         template={schema}
         status={status}
         onPreview={() => setReadOnly(true)}
         onExport={handleDownload}
         exporting={generating}
+        onSave={handleSaveDocument}
+        isSaving={isSaving}
+        savedAt={savedAt}
       />
       <div className="flex-1 min-h-0 flex">
         <DocumentCanvas
@@ -184,43 +222,62 @@ function EditorContent({ templateId }) {
   );
 }
 
-export default function DocumentEditor({ templateId, profileId }) {
+export default function DocumentEditor({ templateId, profileId, docId }) {
   const [initialValues, setInitialValues] = useState(null); // null = กำลังโหลด
+  const [loadedDocId, setLoadedDocId] = useState(docId || null);
 
   useEffect(() => {
     const { schema } = templateRegistry[templateId];
 
     async function load() {
-      if (!profileId) {
-        setInitialValues({});
-        return;
-      }
-      const profile = await getFieldProfile(profileId);
-      const prefilled = {};
-      if (profile?.values) {
-        for (const field of schema.fields) {
-          if (field.sharedKey && profile.values[field.sharedKey]) {
-            prefilled[field.id] = profile.values[field.sharedKey];
+      // 1. หากเป็นการเปิดแก้ไขเอกสารเดิมที่เคยบันทึกไว้ (มี docId)
+      if (docId) {
+        try {
+          const res = await fetch(`/api/documents?id=${docId}`);
+          if (res.ok) {
+            const doc = await res.json();
+            setInitialValues(doc.values || {});
+            setLoadedDocId(doc.id);
+            return;
           }
+        } catch (err) {
+          console.error("Load document error:", err);
         }
       }
-      setInitialValues(prefilled);
+
+      // 2. หากเป็นการเลือกใช้ Profile Data
+      if (profileId) {
+        const profile = await getFieldProfile(profileId);
+        const prefilled = {};
+        if (profile?.values) {
+          for (const field of schema.fields) {
+            if (field.sharedKey && profile.values[field.sharedKey]) {
+              prefilled[field.id] = profile.values[field.sharedKey];
+            }
+          }
+        }
+        setInitialValues(prefilled);
+        return;
+      }
+
+      // 3. เริ่มจากเอกสารเปล่า
+      setInitialValues({});
     }
 
     load();
-  }, [templateId, profileId]);
+  }, [templateId, profileId, docId]);
 
   if (initialValues === null) {
     return (
       <div className="h-screen flex items-center justify-center text-gray-400 font-medium text-sm">
-        กำลังโหลด...
+        กำลังโหลดเอกสาร...
       </div>
     );
   }
 
   return (
     <DocumentFieldsProvider initialValues={initialValues}>
-      <EditorContent templateId={templateId} />
+      <EditorContent templateId={templateId} initialDocId={loadedDocId} />
     </DocumentFieldsProvider>
   );
 }

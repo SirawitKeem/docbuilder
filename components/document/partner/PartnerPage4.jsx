@@ -1,10 +1,8 @@
 export default function PartnerPage4() {
   return (
-    <div className="text-[9.5pt] leading-[1.8] text-gray-900 font-normal">
-      <h2 className="font-bold mb-2 text-[9.5pt]">
-        ข้อ 7. การจัดการทรัพย์สินทางปัญญาและการจำกัดความรับผิด (Intellectual Property & Limitation of Liability)
-      </h2>
-      <div className="space-y-3 pl-4 mb-6">
+    <div className="document-body">
+      <h2>ข้อ 7. การจัดการทรัพย์สินทางปัญญาและการจำกัดความรับผิด (Intellectual Property & Limitation of Liability)</h2>
+      <div className="space-y-2 pl-4">
         <p>
           <span className="font-bold">7.1 การชดใช้ค่าเสียหายจากข้อพิพาทลิขสิทธิ์ (Indemnification):</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; (โดยการสนับสนุนจาก &ldquo;เจ้าของผลิตภัณฑ์&rdquo;) รับประกันว่า &ldquo;ผลิตภัณฑ์&rdquo; ไม่มีการละเมิดทรัพย์สินทางปัญญาของบุคคลภายนอก หาก &ldquo;ตัวแทนจำหน่าย&rdquo; ถูกฟ้องร้องจากบุคคลภายนอกเนื่องจากการใช้งานหรือจำหน่าย &ldquo;ผลิตภัณฑ์&rdquo; อย่างถูกต้องตามสัญญานี้ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; จะร่วมปกป้อง โดย &ldquo;ตัวแทนจำหน่าย&rdquo; ต้องแจ้งให้ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ทราบเป็นลายลักษณ์อักษรทันทีที่ได้รับแจ้งข้อเรียกร้อง
         </p>
@@ -13,14 +11,14 @@ export default function PartnerPage4() {
         </p>
       </div>
 
-      <h2 className="font-bold mb-2 text-[9.5pt]">ข้อ 8. การรับประกัน (Warranty)</h2>
-      <div className="space-y-3 pl-4 mb-6">
+      <h2>ข้อ 8. การรับประกัน (Warranty)</h2>
+      <div className="space-y-2 pl-4">
         <p>
           <span className="font-bold">8.1 การรับประกันการทำงานของซอฟต์แวร์ (Software Performance Warranty):</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; รับประกันว่า &ldquo;ผลิตภัณฑ์&rdquo; จะทำงานได้ตรงตามคุณลักษณะทางเทคนิค (Specifications) ที่ระบุไว้ในคู่มือ หรือเอกสารข้อกำหนดทางเทคนิคของ &ldquo;เจ้าของผลิตภัณฑ์&rdquo;
         </p>
         <div>
-          <p className="font-bold mb-1">8.2 ข้อยกเว้นการรับประกันและการเยียวยา:</p>
-          <ul className="list-disc pl-8 space-y-1.5 font-normal">
+          <p className="font-bold mb-0.5">8.2 ข้อยกเว้นการรับประกันและการเยียวยา:</p>
+          <ul className="list-disc pl-8 space-y-1 font-normal">
             <li>
               การรับประกันจะไม่ครอบคลุมถึงความเสียหายที่เกิดจากการดัดแปลงแก้ไขซอฟต์แวร์โดยไม่ได้รับอนุญาต การนำไปใช้ร่วมกับฮาร์ดแวร์หรือซอฟต์แวร์ที่ไม่รองรับ หรือความผิดพลาดจากการใช้งานที่ไม่เป็นไปตามคู่มือ
             </li>
@@ -31,12 +29,10 @@ export default function PartnerPage4() {
         </div>
       </div>
 
-      <h2 className="font-bold mb-2 text-[9.5pt]">
-        ข้อ 9. การรักษาความลับข้อมูลและการคุ้มครองข้อมูลส่วนบุคคล (Confidentiality & Data Protection)
-      </h2>
+      <h2>ข้อ 9. การรักษาความลับข้อมูลและการคุ้มครองข้อมูลส่วนบุคคล (Confidentiality & Data Protection)</h2>
       <div className="pl-4">
-        <p className="font-bold mb-1">9.1 การรักษาความลับทางธุรกิจและการใช้ข้อมูล</p>
-        <ul className="list-disc pl-8 space-y-2 font-normal">
+        <p className="font-bold mb-0.5">9.1 การรักษาความลับทางธุรกิจและการใช้ข้อมูล</p>
+        <ul className="list-disc pl-8 space-y-1 font-normal">
           <li>
             คู่สัญญาแต่ละฝ่ายตกลงจะรักษาข้อมูลอันเป็นความลับ ข้อมูลทางการเงิน โครงสร้างราคา ข้อมูลทางเทคนิค รายชื่อ &ldquo;ผู้ใช้ปลายทาง&rdquo; และแผนการตลาดของอีกฝ่ายไว้เป็นความลับอย่างเคร่งครัด และจะไม่เปิดเผยแก่บุคคลภายนอกโดยไม่ได้รับอนุญาตเป็นลายลักษณ์อักษร ตลอดระยะเวลาสัญญา และเป็นเวลา 2 (สอง) ปี หลังจากสัญญาสินสุดลง
           </li>

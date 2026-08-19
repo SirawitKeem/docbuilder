@@ -1,8 +1,8 @@
 export default function PartnerPage5() {
   return (
-    <div className="text-[9.5pt] leading-[1.8] text-gray-900 font-normal">
-      <div className="pl-4 mb-6">
-        <ul className="list-disc pl-8 space-y-2 font-normal mb-3">
+    <div className="document-body">
+      <div className="pl-4 mb-4">
+        <ul className="list-disc pl-8 space-y-1 font-normal mb-2">
           <li>
             &ldquo;ตัวแทนจำหน่าย&rdquo; จะไม่ใช้ข้อมูลหรือโอกาสทางธุรกิจที่ได้รับจาก &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; เพื่อหลีกเลี่ยงหรือข้าม &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ในการทำธุรกรรมกับคู่ค้า ผู้ผลิต หรือบุคคลภายนอกที่เกี่ยวข้องกับธุรกรรมดังกล่าว หรือกระทำการใด ๆ อันมีเจตนาให้ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; สูญเสียสิทธิ ประโยชน์ หรือโอกาสทางธุรกิจที่พึงได้รับตามความร่วมมือระหว่างคู่สัญญา เว้นแต่ได้รับความยินยอมเป็นลายลักษณ์อักษรจาก &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ก่อนดำเนินการดังกล่าว
           </li>
@@ -12,17 +12,15 @@ export default function PartnerPage5() {
         </p>
       </div>
 
-      <h2 className="font-bold mb-2 text-[9.5pt]">
-        ข้อ 10. ระยะเวลาและการบอกเลิกสัญญา (Term and Termination)
-      </h2>
-      <div className="space-y-3 pl-4 mb-6">
+      <h2>ข้อ 10. ระยะเวลาและการบอกเลิกสัญญา (Term and Termination)</h2>
+      <div className="space-y-2 pl-4">
         <p>
           <span className="font-bold">10.1 ระยะเวลาสัญญา:</span> สัญญานี้มีผลบังคับใช้เป็นระยะเวลา 1 ปี นับตั้งแต่วันที่ลงนาม และจะต่ออายุอัตโนมัติคราวละ 1 (หนึ่ง) ปี เว้นแต่ฝ่ายใดฝ่ายหนึ่งจะแจ้งไม่ต่ออายุเป็นลายลักษณ์อักษรล่วงหน้าอย่างน้อย 30 (สามสิบ) วัน ก่อนสิ้นสุดสัญญา
         </p>
         <div>
-          <p className="font-bold mb-1">10.2 การบอกเลิกสัญญาแบบมีเหตุผล (Termination for Cause):</p>
-          <p className="mb-1">คู่สัญญาฝ่ายใดฝ่ายหนึ่งมีสิทธิบอกเลิกสัญญาได้ทันที หากอีกฝ่าย:</p>
-          <ul className="list-disc pl-8 space-y-1 font-normal">
+          <p className="font-bold mb-0.5">10.2 การบอกเลิกสัญญาแบบมีเหตุผล (Termination for Cause):</p>
+          <p className="mb-0.5">คู่สัญญาฝ่ายใดฝ่ายหนึ่งมีสิทธิบอกเลิกสัญญาได้ทันที หากอีกฝ่าย:</p>
+          <ul className="list-disc pl-8 space-y-0.5 font-normal">
             <li>ประพฤติผิดสัญญาข้อหนึ่งข้อใดและไม่แก้ไขภายใน 30 (สามสิบ) วัน นับแต่วันได้รับแจ้งเป็นลายลักษณ์อักษร</li>
             <li>ตกเป็นผู้มีหนี้สินล้นพ้นตัว ล้มละลาย เลิกบริษัท หรือเข้าสู่กระบวนการฟื้นฟูกิจการ</li>
             <li>กระทำผิดกฎหมายอย่างร้ายแรง เช่น กฎหมายต่อต้านการทุจริต กฎหมายคุ้มครองข้อมูลส่วนบุคคล หรือกฎหมายละเมิดลิขสิทธิ์</li>
@@ -36,10 +34,8 @@ export default function PartnerPage5() {
         </p>
       </div>
 
-      <h2 className="font-bold mb-2 text-[9.5pt]">
-        ข้อ 11. กฎหมายที่ใช้บังคับและกระบวนการระงับข้อพิพาท (Governing Law & Dispute Resolution)
-      </h2>
-      <div className="space-y-3 pl-4">
+      <h2>ข้อ 11. กฎหมายที่ใช้บังคับและกระบวนการระงับข้อพิพาท (Governing Law & Dispute Resolution)</h2>
+      <div className="space-y-1.5 pl-4">
         <p>
           <span className="font-bold">11.1 กฎหมายที่ใช้บังคับ:</span> สัญญานี้อยู่ภายใต้การบังคับ และตีความตามกฎหมายแห่งราชอาณาจักรไทย
         </p>

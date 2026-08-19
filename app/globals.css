@@ -4,3 +4,42 @@
 body {
   -webkit-font-smoothing: antialiased;
 }
+
+/* 
+ * Centralized Document Typography & Spacing Controller 
+ * กำหนดสไตล์ ขนาดตัวอักษร และระยะห่างของเอกสารทั้งหมดในจุดเดียว 
+ */
+.document-body {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #111827;
+  font-weight: 400;
+  text-align: justify;
+}
+
+.document-body h1 {
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2px;
+}
+
+.document-body h2 {
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  text-align: left;
+}
+
+.document-body p {
+  margin-bottom: 6px;
+}
+
+.document-body ul {
+  margin-bottom: 8px;
+}
+
+.document-body li {
+  margin-bottom: 3px;
+}

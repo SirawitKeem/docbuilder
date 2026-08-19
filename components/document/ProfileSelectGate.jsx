@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   Building2,
@@ -32,7 +33,10 @@ function formatThaiDateTime(isoString) {
   return `${day} ${month} ${year}, ${hours}:${minutes} น.`;
 }
 
-export default function ProfileSelectGate({ templateId }) {
+function ProfileSelectGateContent({ templateId }) {
+  const searchParams = useSearchParams();
+  const docIdFromUrl = searchParams.get("id") || searchParams.get("docId");
+
   const [profiles, setProfiles] = useState(null);
   const [selectedId, setSelectedId] = useState(undefined); // undefined = ยังไม่เลือก
   const [searchQuery, setSearchQuery] = useState("");
@@ -67,6 +71,11 @@ export default function ProfileSelectGate({ templateId }) {
     await deleteFieldProfile(id);
     load();
   };
+
+  // หากเป็นการเปิดเอกสารเดิมด้วย ID จาก URL ให้ข้ามไปหน้า Editor ทันที
+  if (docIdFromUrl) {
+    return <DocumentEditor templateId={templateId} docId={docIdFromUrl} />;
+  }
 
   // เลือกแล้ว (รวมถึงเลือก "เอกสารเปล่า" ที่ selectedId = null) → เข้าตัว editor จริง
   if (selectedId !== undefined) {
@@ -307,5 +316,19 @@ export default function ProfileSelectGate({ templateId }) {
 
       </div>
     </div>
+  );
+}
+
+export default function ProfileSelectGate(props) {
+  return (
+    <Suspense
+      fallback={
+        <div className="h-64 flex items-center justify-center text-gray-400 font-medium text-sm">
+          กำลังโหลด...
+        </div>
+      }
+    >
+      <ProfileSelectGateContent {...props} />
+    </Suspense>
   );
 }

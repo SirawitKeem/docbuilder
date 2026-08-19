@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Eye, MoreVertical, Edit3, Trash2, X } from "lucide-react";
+import { Eye, MoreVertical, MoreHorizontal, Edit3, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { templateRegistry } from "@/lib/templates/registry";
-import { getFieldProfile } from "@/lib/data/fieldProfile";
+import { getFieldProfile } from "@/lib/data/fieldProfiles";
 import { DocumentFieldsProvider } from "@/context/DocumentFieldsContext";
 import DocumentHeader from "@/components/document/DocumentHeader";
 import DocumentFooter from "@/components/document/DocumentFooter";
@@ -181,7 +181,7 @@ export default function DocumentsTable({
                           className="p-1.5 rounded hover:bg-gray-100 text-gray-600 transition-colors"
                           title="การดำเนินการเพิ่มเติม"
                         >
-                          <MoreVertical size={16} />
+                          <MoreHorizontal size={16} />
                         </button>
 
                         {/* Dropdown Menu */}
@@ -193,7 +193,7 @@ export default function DocumentsTable({
                             <button
                               onClick={() => {
                                 setOpenMenuId(null);
-                                router.push(`/create/${doc.templateId || "nda"}`);
+                                router.push(`/create/${doc.templateId || "nda"}?id=${doc.id}`);
                               }}
                               className="w-full text-left px-3.5 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
                             >
@@ -290,7 +290,7 @@ function PreviewModal({ doc, onClose }) {
                 className="bg-white shadow-document w-[794px] min-h-[1123px] px-14 pt-10 pb-6 flex flex-col justify-between font-noto-looped text-gray-900 rounded-sm shrink-0"
               >
                 <DocumentHeader logo={schema.logo} />
-                <div className="flex-1 my-4">
+                <div className="flex-1 min-h-0 overflow-hidden text-left">
                   <PageContent />
                 </div>
                 <DocumentFooter
