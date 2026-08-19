@@ -6,7 +6,6 @@ import {
   ArrowLeft,
   Building2,
   Calendar,
-  CheckCircle2,
   CheckCircle,
   ChevronRight,
   FileText,
@@ -49,12 +48,13 @@ export default function ProfileSelectGate({ templateId }) {
   const template = templateRegistry[templateId]?.schema;
   const templateName = template?.fullName || "เอกสาร";
 
-  const load = () => listFieldProfiles().then((data) => {
-    setProfiles(data);
-    if (data && data.length > 0 && activeProfileId === null) {
-      setActiveProfileId(data[0].id);
-    }
-  });
+  const load = () =>
+    listFieldProfiles().then((data) => {
+      setProfiles(data);
+      if (data && data.length > 0 && activeProfileId === null) {
+        setActiveProfileId(data[0].id);
+      }
+    });
 
   useEffect(() => {
     load();
@@ -84,11 +84,16 @@ export default function ProfileSelectGate({ templateId }) {
 
   if (profiles === null) {
     return (
-      <div className="min-h-screen bg-gray-50/70 flex items-center justify-center">
-        <div className="flex items-center gap-3 text-gray-500 font-medium text-sm">
-          <div className="w-5 h-5 border-2 border-primary-600 border-t-transparent rounded-full animate-spin" />
-          กำลังโหลดชุดข้อมูล...
+      <div>
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">
+            เลือกชุดข้อมูลที่ต้องการนำมาใช้งาน
+          </h1>
+          <p className="text-sm text-gray-500">
+            เลือกชุดข้อมูลเพื่อดึงรายละเอียดไปเติมในเอกสาร {templateName} โดยอัตโนมัติ
+          </p>
         </div>
+        <div className="h-64 rounded-card bg-gray-100 animate-pulse" />
       </div>
     );
   }
@@ -109,33 +114,34 @@ export default function ProfileSelectGate({ templateId }) {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50/60 py-8 px-4 sm:px-6 md:px-8">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <div className="space-y-6">
+      {/* Top Navigation Back Link */}
+      <div>
+        <Link
+          href="/create"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors bg-white px-3.5 py-2 rounded-xl border border-gray-200 shadow-2xs"
+        >
+          <ArrowLeft size={15} />
+          ย้อนกลับไปเลือกเทมเพลต ({templateName})
+        </Link>
+      </div>
+
+      {/* Header Title Section */}
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">
+          เลือกชุดข้อมูลที่ต้องการนำมาใช้งาน
+        </h1>
+        <p className="text-sm text-gray-500">
+          เลือกชุดข้อมูลที่ต้องการเพื่อดึงข้อมูลไปเติมในเอกสารโดยอัตโนมัติ หรือเลือกสร้างชุดข้อมูลใหม่หากยังไม่มีข้อมูลที่ต้องการ
+        </p>
+      </div>
+
+      {/* Main Card Container */}
+      <div className="bg-white border border-gray-200 rounded-card p-6 shadow-card space-y-5">
         
-        {/* Top Back Navigation Link */}
-        <div>
-          <Link
-            href="/create"
-            className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors bg-white px-3.5 py-2 rounded-xl border border-gray-200 shadow-2xs"
-          >
-            <ArrowLeft size={15} />
-            ย้อนกลับไปเลือกเทมเพลต ({templateName})
-          </Link>
-        </div>
-
-        {/* Header Title Section */}
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold text-gray-900">
-            เลือกชุดข้อมูลที่ต้องการนำมาใช้งาน
-          </h1>
-          <p className="text-sm text-gray-500">
-            เลือกชุดข้อมูลที่ต้องการเพื่อดึงข้อมูลไปเติมในเอกสารโดยอัตโนมัติ หรือเลือกสร้างชุดข้อมูลใหม่หากยังไม่มีข้อมูลที่ต้องการ
-          </p>
-        </div>
-
         {/* Toolbar: Search Input + Filter + Create Button */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-          <div className="relative flex-1">
+          <div className="relative flex-1 sm:max-w-md">
             <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
               <Search size={18} />
             </div>
@@ -144,18 +150,18 @@ export default function ProfileSelectGate({ templateId }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="ค้นหาชื่อชุดข้อมูล, บริษัท หรือผู้ดูแล..."
-              className="w-full h-11 pl-10 pr-4 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all shadow-2xs"
+              className="w-full h-10 pl-10 pr-4 rounded-xl border border-gray-200 bg-gray-50/50 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all"
             />
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <button className="h-11 px-4 rounded-xl border border-gray-200 bg-white text-xs font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors shadow-2xs">
+            <button className="h-10 px-4 rounded-xl border border-gray-200 bg-white text-xs font-semibold text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors shadow-2xs">
               <Filter size={15} className="text-gray-500" />
               ตัวกรอง
             </button>
             <Link
               href="/profile-data/new"
-              className="h-11 px-5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 flex items-center gap-2 transition-colors shadow-sm shrink-0"
+              className="h-10 px-5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 flex items-center gap-2 transition-colors shadow-sm shrink-0"
             >
               <Plus size={16} />
               สร้างชุดข้อมูลใหม่
@@ -177,7 +183,7 @@ export default function ProfileSelectGate({ templateId }) {
               </Link>
             </div>
           ) : (
-            filteredProfiles.map((p, idx) => {
+            filteredProfiles.map((p) => {
               const isSelected = activeProfileId === p.id;
               const companyName = p.name || p.values?.our_company_name || p.values?.counterparty_name || "ชุดข้อมูลไม่มีชื่อ";
               const counterparty = (
@@ -187,7 +193,7 @@ export default function ProfileSelectGate({ templateId }) {
                 p.values?.our_company_name ||
                 "-"
               );
-              const isComplete = p.values && Object.keys(p.values).length >= 3;
+              const isComplete = p.values && Object.keys(p.values).length >= 2;
 
               return (
                 <div
@@ -200,11 +206,11 @@ export default function ProfileSelectGate({ templateId }) {
                   }`}
                 >
                   <div className="flex items-start gap-4 min-w-0 pr-4">
-                    {/* Radio Button Circle */}
+                    {/* Radio Circle Button */}
                     <div className="mt-1 shrink-0">
                       {isSelected ? (
                         <div className="w-5 h-5 rounded-full bg-primary-600 text-white flex items-center justify-center">
-                          <CheckCircle2 size={20} className="fill-primary-600 text-white" />
+                          <span className="w-2 h-2 rounded-full bg-white" />
                         </div>
                       ) : (
                         <div className="w-5 h-5 rounded-full border-2 border-gray-300 bg-white" />
@@ -212,15 +218,7 @@ export default function ProfileSelectGate({ templateId }) {
                     </div>
 
                     {/* Company Avatar Icon */}
-                    <div
-                      className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
-                        idx % 3 === 0
-                          ? "bg-blue-50 text-blue-600"
-                          : idx % 3 === 1
-                          ? "bg-purple-50 text-purple-600"
-                          : "bg-amber-50 text-amber-600"
-                      }`}
-                    >
+                    <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
                       <Building2 size={22} />
                     </div>
 
@@ -230,25 +228,16 @@ export default function ProfileSelectGate({ templateId }) {
                         <span className="font-bold text-gray-900 text-base truncate">
                           {companyName}
                         </span>
-                        {p.isDefault && (
-                          <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-primary-50 text-primary-600 border border-primary-100">
-                            ค่าเริ่มต้น
-                          </span>
-                        )}
                       </div>
 
                       <p className="text-xs text-gray-500 truncate">
                         ผู้ดูแล: <span className="text-gray-700 font-medium">{counterparty}</span>
                       </p>
 
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-400 pt-0.5">
+                      <div className="flex items-center gap-4 text-xs text-gray-400 pt-0.5">
                         <span className="flex items-center gap-1">
                           <Calendar size={13} className="text-gray-400" />
                           อัปเดตล่าสุด {formatThaiDateTime(p.updatedAt || p.createdAt)}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <FileText size={13} className="text-gray-400" />
-                          ใช้สร้างไปแล้ว {12 - idx * 4} ฉบับ
                         </span>
                       </div>
                     </div>
@@ -280,7 +269,7 @@ export default function ProfileSelectGate({ templateId }) {
                       เลือกชุดนี้
                     </button>
 
-                    {/* More Option Dots Menu */}
+                    {/* More Options Dots Menu */}
                     <div className="relative">
                       <button
                         onClick={(e) => {
@@ -322,7 +311,7 @@ export default function ProfileSelectGate({ templateId }) {
           )}
         </div>
 
-        {/* Bottom Card for Blank Document or New Profile */}
+        {/* Bottom Card for Blank Document */}
         <div
           onClick={() => setSelectedId(null)}
           className="w-full flex items-center justify-between p-5 rounded-2xl border border-blue-200 bg-white hover:bg-blue-50/50 hover:border-blue-300 transition-all cursor-pointer group shadow-2xs"
