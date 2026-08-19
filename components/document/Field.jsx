@@ -21,7 +21,7 @@ export default function Field({ id, placeholder, type = "text", minWidth = 4 }) 
       return <span className="inline-block border-b border-gray-400 min-w-[3ch] px-1">&nbsp;</span>;
     }
     return type === "textarea" ? (
-      <span className="inline whitespace-pre-line">{value}</span>
+      <span className="whitespace-pre-line">{value}</span>
     ) : (
       <span>{value}</span>
     );
@@ -41,8 +41,8 @@ export default function Field({ id, placeholder, type = "text", minWidth = 4 }) 
         onChange={(e) => setValue(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
-        rows={2}
-        className={`block w-full max-w-full my-1 px-2.5 py-1.5 rounded border outline-none transition-colors duration-150 resize-none text-inherit font-inherit leading-inherit ${stateClasses}`}
+        rows={1}
+        className={`inline-block w-full max-w-full my-0.5 px-2 py-0.5 rounded border outline-none transition-colors duration-150 resize-y text-inherit font-inherit leading-normal ${stateClasses}`}
       />
     );
   }
