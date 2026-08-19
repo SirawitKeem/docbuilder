@@ -65,16 +65,16 @@ export default function DocumentsTable({
       </div>
 
       <div className="bg-white border border-gray-200 rounded-card overflow-hidden shadow-card">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm table-fixed">
           <thead>
             <tr className="border-b border-gray-200 text-left text-xs text-gray-500 bg-gray-50/50">
-              <th className="px-5 py-3.5 font-medium">ชื่อเอกสาร</th>
-              <th className="px-5 py-3.5 font-medium">เทมเพลต</th>
-              {showSentTo && <th className="px-5 py-3.5 font-medium">ส่งถึง</th>}
-              <th className="px-5 py-3.5 font-medium">ผู้สร้าง</th>
-              <th className="px-5 py-3.5 font-medium">วันที่สร้าง</th>
-              <th className="px-5 py-3.5 font-medium">สถานะ</th>
-              <th className="px-5 py-3.5 font-medium text-right">การดำเนินการ</th>
+              <th className="w-[36%] px-5 py-3.5 font-medium">ชื่อเอกสาร</th>
+              <th className="w-[26%] px-5 py-3.5 font-medium">เทมเพลต</th>
+              {showSentTo && <th className="w-[14%] px-5 py-3.5 font-medium">ส่งถึง</th>}
+              <th className="w-[14%] px-5 py-3.5 font-medium">ผู้สร้าง</th>
+              <th className="w-[11%] px-5 py-3.5 font-medium">วันที่สร้าง</th>
+              <th className="w-[8%] px-4 py-3.5 font-medium text-center">สถานะ</th>
+              <th className="w-[5%] px-5 py-3.5 font-medium text-right">การดำเนินการ</th>
             </tr>
           </thead>
           <tbody>
@@ -93,23 +93,33 @@ export default function DocumentsTable({
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <PdfIcon className="w-8 h-9 shrink-0" />
-                      <div>
-                        <p className="font-bold text-gray-900 text-sm leading-snug">{doc.name}</p>
-                        <p className="text-xs text-gray-500 mt-0.5">{getContractFullName(doc)}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-gray-900 text-sm leading-snug truncate" title={doc.name}>
+                          {doc.name}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-0.5 truncate">
+                          {getContractFullName(doc)}
+                        </p>
                       </div>
                     </div>
                   </td>
-                  <td className="px-5 py-3.5 text-gray-500">{doc.templateName}</td>
+                  <td className="px-5 py-3.5 text-gray-500">
+                    <span className="line-clamp-1 text-xs leading-relaxed" title={doc.templateName}>
+                      {doc.templateName}
+                    </span>
+                  </td>
                   {showSentTo && (
-                    <td className="px-5 py-3.5 text-gray-500">{doc.sentTo || "—"}</td>
+                    <td className="px-5 py-3.5 text-gray-500 truncate" title={doc.sentTo || "—"}>
+                      {doc.sentTo || "—"}
+                    </td>
                   )}
                   <td className="px-5 py-3.5 text-gray-500">{doc.createdBy || "Admin"}</td>
-                  <td className="px-5 py-3.5 text-gray-500">
+                  <td className="px-5 py-3.5 text-gray-500 whitespace-nowrap">
                     {new Date(doc.createdAt).toLocaleDateString("th-TH")}
                   </td>
-                  <td className="px-5 py-3.5">
+                  <td className="px-4 py-3.5 text-center">
                     <span
-                      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium ${statusStyles[doc.status]}`}
+                      className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${statusStyles[doc.status]}`}
                     >
                       {statusLabel[doc.status]}
                     </span>

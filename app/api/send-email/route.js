@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { documentsRepo } from "@/lib/db/repositories";
+import { documentsRepo, sentHistoryRepo } from "@/lib/db/repositories";
 
 async function getAccessToken() {
   const body = new URLSearchParams({
@@ -79,16 +79,19 @@ export async function POST(request) {
       );
     }
 
+    const docPayload = {
+      name: attachmentName || "NDA.pdf",
+      templateId: templateId || "nda",
+      templateName: templateName || "NDA",
+      sentTo: to,
+      values: values || {},
+    };
+
     // If Microsoft Graph API credentials are set, use Microsoft Graph
     if (process.env.CLIENT_ID && process.env.CLIENT_SECRET && process.env.TENANT_ID) {
       await sendGraphMail({ to, subject, message, attachmentBase64, attachmentName });
-      await documentsRepo.create({
-        name: attachmentName || "NDA.pdf",
-        templateId: templateId || "nda",
-        templateName: templateName || "NDA",
-        sentTo: to,
-        values: values || {},
-      });
+      await documentsRepo.create(docPayload);
+      await sentHistoryRepo.create(docPayload);
       return Response.json({ success: true, provider: "Microsoft Graph" });
     }
 
@@ -120,13 +123,8 @@ export async function POST(request) {
         attachments,
       });
 
-      await documentsRepo.create({
-        name: attachmentName || "NDA.pdf",
-        templateId: templateId || "nda",
-        templateName: templateName || "NDA",
-        sentTo: to,
-        values: values || {},
-      });
+      await documentsRepo.create(docPayload);
+      await sentHistoryRepo.create(docPayload);
 
       return Response.json({ success: true, provider: "Nodemailer (Gmail)" });
     }
