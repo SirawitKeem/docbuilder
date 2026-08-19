@@ -50,29 +50,29 @@ export default function PartnerPage1() {
 
       <ul className="list-none space-y-2 text-justify">
         <li className="pl-4">
-          1.1 &ldquo;เจ้าของผลิตภัณฑ์&rdquo; (Vendor) หมายถึง บุคคล นิติบุคคล หรือผู้พัฒนาซอฟต์แวร์
+          <span className="font-bold">1.1 &ldquo;เจ้าของผลิตภัณฑ์&rdquo; (Vendor):</span> หมายถึง บุคคล นิติบุคคล หรือผู้พัฒนาซอฟต์แวร์
           ซึ่งเป็นผู้ถือครองลิขสิทธิ์ ทรัพย์สินทางปัญญา และสิทธิ์โดยชอบด้วยกฎหมายในตัวผลิตภัณฑ์
           ซอฟต์แวร์แต่เพียงผู้เดียว (หรือตามสิทธิ์ที่ได้รับอนุญาต)
         </li>
         <li className="pl-4">
-          1.2 &ldquo;ผู้ใช้ปลายทาง&rdquo; (End User) หมายถึง บุคคล นิติบุคคล หรือองค์กรที่เป็นผู้ซื้อ
+          <span className="font-bold">1.2 &ldquo;ผู้ใช้ปลายทาง&rdquo; (End User):</span> หมายถึง บุคคล นิติบุคคล หรือองค์กรที่เป็นผู้ซื้อ
           ได้รับสิทธิ์ หรือจัดหาผลิตภัณฑ์ซอฟต์แวร์ไปเพื่อวัตถุประสงค์ในการใช้งานจริงภายในองค์กร
           ของตนเอง ไม่ใช่เพื่อวัตถุประสงค์ในการนำไปจำหน่ายหรือให้เช่าช่วง
         </li>
         <li className="pl-4">
-          1.3 &ldquo;ผลิตภัณฑ์&rdquo; (Product) หมายถึง ซอฟต์แวร์ ระบบปฏิบัติการ หรือเครื่องมือทางไอที
+          <span className="font-bold">1.3 &ldquo;ผลิตภัณฑ์&rdquo; (Product):</span> หมายถึง ซอฟต์แวร์ ระบบปฏิบัติการ หรือเครื่องมือทางไอที
           รวมถึง &ldquo;สิทธิ์การใช้งาน&rdquo; เอกสารคู่มือ การอัปเดต และแพตช์แก้ไขความปลอดภัย ซึ่ง
           &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ได้รับสิทธิ์จัดจำหน่ายจาก &ldquo;เจ้าของผลิตภัณฑ์&rdquo;
         </li>
         <li className="pl-4">
-          1.4 &ldquo;สิทธิ์การใช้งาน&rdquo; (License/Subscription) หมายถึง สิทธิ์ทางกฎหมายที่
+          <span className="font-bold">1.4 &ldquo;สิทธิ์การใช้งาน&rdquo; (License/Subscription):</span> หมายถึง สิทธิ์ทางกฎหมายที่
           &ldquo;เจ้าของผลิตภัณฑ์&rdquo; หรือ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; อนุญาตให้
           &ldquo;ตัวแทนจำหน่าย&rdquo; นำไปจัดจำหน่ายแก่ &ldquo;ผู้ใช้ปลายทาง&rdquo; เพื่อเข้าใช้
           &ldquo;ผลิตภัณฑ์&rdquo; ตามข้อกำหนดและเงื่อนไขที่กำหนดไว้ในข้อตกลงสิทธิ์การใช้งานสำหรับ
           &ldquo;ผู้ใช้ปลายทาง&rdquo; (EULA)
         </li>
         <li className="pl-4">
-          1.5 &ldquo;การลงทะเบียนสิทธิ์ในข้อตกลงทางการค้า&rdquo; (Deal Registration) หมายถึง
+          <span className="font-bold">1.5 &ldquo;การลงทะเบียนสิทธิ์ในข้อตกลงทางการค้า&rdquo; (Deal Registration):</span> หมายถึง
           กระบวนการที่ &ldquo;ตัวแทนจำหน่าย&rdquo; แจ้งข้อมูลรายละเอียดของ &ldquo;ผู้ใช้ปลายทาง&rdquo;
           ขอบเขตงาน หรือโอกาสทางการค้า ผ่านระบบหรือช่องทางที่ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;
           กำหนดไว้ เพื่อขอรับสิทธิ์ในการเสนอขายและสิทธิประโยชน์อื่นใดตามเงื่อนไขของสัญญานั้น ๆ
@@ -80,7 +80,7 @@ export default function PartnerPage1() {
       </ul>
 
       <h2 className="font-bold mb-2 mt-4">ข้อ 2. ขอบเขตการแต่งตั้งและอาณาเขต (Scope of Appointment & Territory)</h2>
-      <p className="mb-2 pl-4 font-medium">2.1 การแต่งตั้งและบทบาทของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;:</p>
+      <p className="mb-2 pl-4 font-bold">2.1 การแต่งตั้งและบทบาทของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;:</p>
       <ul className="list-disc pl-12 space-y-2 text-justify">
         <li>
           &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ในฐานะผู้ได้รับสิทธิ์อย่างถูกต้องจาก
@@ -94,13 +94,13 @@ export default function PartnerPage1() {
         </li>
       </ul>
       <p className="mt-2 text-justify pl-4">
-        2.2 สิทธิ์การจำหน่ายของ &ldquo;ตัวแทนจำหน่าย&rdquo;: &ldquo;ตัวแทนจำหน่าย&rdquo; สามารถ
+        <span className="font-bold">2.2 สิทธิ์การจำหน่ายของ &ldquo;ตัวแทนจำหน่าย&rdquo;:</span> &ldquo;ตัวแทนจำหน่าย&rdquo; สามารถ
         จัดจำหน่าย &ldquo;สิทธิ์การใช้งาน&rdquo; ของ &ldquo;ผลิตภัณฑ์&rdquo; ให้กับ
         &ldquo;ผู้ใช้ปลายทาง&rdquo; เท่านั้น ไม่สามารถโอนสิทธิ์การใช้งาน หรือแสดงความเป็นเจ้าของในตัว
         &ldquo;ผลิตภัณฑ์&rdquo;
       </p>
       <p className="mt-2 text-justify pl-4">
-        2.3 อาณาเขตทางภูมิศาสตร์ (Territory): &ldquo;ตัวแทนจำหน่าย&rdquo; มีสิทธิดำเนินกิจกรรมการขาย
+        <span className="font-bold">2.3 อาณาเขตทางภูมิศาสตร์ (Territory):</span> &ldquo;ตัวแทนจำหน่าย&rdquo; มีสิทธิดำเนินกิจกรรมการขาย
         การส่งเสริมการขาย และทำตลาด &ldquo;ผลิตภัณฑ์&rdquo; ได้ภายในพื้นที่ ประเทศไทย เท่านั้น
       </p>
     </div>
