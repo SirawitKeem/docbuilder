@@ -7,25 +7,25 @@ export default function PartnerPage1() {
   return (
     <div className="document-body">
       <h1>สัญญาแต่งตั้งพันธมิตรตัวแทนจำหน่าย</h1>
-      <p className="subtitle text-center text-[16px]">(Partner Agreement)</p>
+      <p className="subtitle text-center text-[16px] mb-4">(Partner Agreement)</p>
 
-      <p>
+      <p style={{ marginBottom: "6px" }}>
         สัญญาฉบับนี้ทำขึ้น ณ วันที่ <Field id="contract_date_day" placeholder="17" minWidth={3} />{" "}
         เดือน <Field id="contract_date_month" placeholder="สิงหาคม" minWidth={8} />{" "}
         พ.ศ. <Field id="contract_date_year" placeholder="2569" minWidth={5} />
       </p>
 
-      <p className="font-normal">ระหว่าง:</p>
+      <p className="font-normal" style={{ marginTop: "6px", marginBottom: "6px" }}>ระหว่าง:</p>
 
-      <p className="indent-8">
+      <p className="indent-8" style={{ marginBottom: "6px" }}>
         {distributorParty.name} เลขทะเบียนนิติบุคคล {distributorParty.registrationNumber} สำนักงานใหญ่ ตั้งอยู่เลขที่ 8/40 เดอะ คอนเนค 37 ซอยช่างอากาศอุทิศ 10 แยก 1-2 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210
         <br />
         (ซึ่งต่อไปในสัญญานี้จะเรียกว่า &ldquo;Distributor&rdquo; หรือ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;) ฝ่ายหนึ่ง
       </p>
 
-      <p className="font-normal">กับ</p>
+      <p className="font-normal" style={{ marginTop: "6px", marginBottom: "0px" }}>กับ</p>
 
-      <p className="indent-8">
+      <p className="indent-8" style={{ marginBottom: "6px" }}>
         <Field id="reseller_name" placeholder="ระบุชื่อบริษัท Reseller" minWidth={24} /> เลขทะเบียนนิติบุคคล{" "}
         <Field id="reseller_registration_number" placeholder="0000000000000" minWidth={16} />{" "}
         สำนักงานใหญ่ ตั้งอยู่เลขที่{" "}
@@ -34,7 +34,7 @@ export default function PartnerPage1() {
         (ซึ่งต่อไปในสัญญานี้จะเรียกว่า &ldquo;Reseller&rdquo; หรือ &ldquo;ตัวแทนจำหน่าย&rdquo;) อีกฝ่ายหนึ่ง
       </p>
 
-      <p className="indent-8">
+      <p className="indent-8" style={{ marginTop: "12px", marginBottom: "14px" }}>
         คู่สัญญาทั้งสองฝ่ายตกลงเข้าทำสัญญาแต่งตั้งตัวแทนจำหน่าย เพื่อทำการตลาด นำเสนอ และจัดจำหน่ายผลิตภัณฑ์ ซอฟต์แวร์ และเครื่องมือทางไอที (ซึ่งต่อไปนี้เรียกว่า &ldquo;ผลิตภัณฑ์&rdquo;) โดยมีข้อกำหนดและเงื่อนไขดังต่อไปนี้:
       </p>
 

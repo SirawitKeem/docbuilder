@@ -41,7 +41,7 @@ export default function PartnerPage5() {
       </p>
 
       {/* คู่สัญญาหลัก */}
-      <div className="grid grid-cols-2 gap-10" style={{ marginBottom: "50px" }}>
+      <div className="grid grid-cols-2 gap-10" style={{ marginBottom: "65px" }}>
         <div className="text-center">
           <p className="font-bold" style={{ marginBottom: "65px" }}>
             {distributorParty.name}
