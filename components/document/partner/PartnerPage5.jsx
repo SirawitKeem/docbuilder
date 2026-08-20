@@ -5,8 +5,12 @@ export default function PartnerPage5() {
   const { distributorParty } = partnerTemplate;
 
   return (
-    <div className="document-body">
-      <div className="space-y-1.5 pl-4 pt-1">
+    <div className="document-body pt-3">
+      <h2>ข้อ 10. ระยะเวลาและการบอกเลิกสัญญา (Term and Termination)</h2>
+      <div className="space-y-1.5 pl-4">
+        <p>
+          <span className="font-bold">10.1 ระยะเวลาสัญญา:</span> สัญญานี้มีผลบังคับใช้เป็นระยะเวลา 1 ปี นับตั้งแต่วันที่ลงนาม และจะต่ออายุอัตโนมัติคราวละ 1 (หนึ่ง) ปี เว้นแต่ฝ่ายใดฝ่ายหนึ่งจะแจ้งไม่ต่ออายุเป็นลายลักษณ์อักษรล่วงหน้าอย่างน้อย 30 (สามสิบ) วัน ก่อนสิ้นสุดสัญญา
+        </p>
         <div>
           <p className="font-bold mb-0.5">10.2 การบอกเลิกสัญญาแบบมีเหตุผล (Termination for Cause):</p>
           <p className="mb-0.5">คู่สัญญาฝ่ายใดฝ่ายหนึ่งมีสิทธิบอกเลิกสัญญาได้ทันที หากอีกฝ่าย:</p>
@@ -34,14 +38,14 @@ export default function PartnerPage5() {
         </p>
       </div>
 
-      <p className="indent-8" style={{ marginBottom: "55px" }}>
+      <p className="indent-8" style={{ marginBottom: "28px" }}>
         สัญญานี้ทำขึ้นเป็นสองฉบับมีข้อความถูกต้องตรงกัน คู่สัญญาได้อ่านและเข้าใจข้อความโดยรายละเอียดตลอดแล้ว
         <br />
         จึงได้ลงลายมือชื่อและประทับตรา (ถ้ามี) ไว้เป็นสำคัญต่อหน้าพยาน
       </p>
 
       {/* คู่สัญญาหลัก */}
-      <div className="grid grid-cols-2 gap-10" style={{ marginBottom: "65px" }}>
+      <div className="grid grid-cols-2 gap-10" style={{ marginBottom: "50px" }}>
         <div className="text-center">
           <p className="font-bold" style={{ marginBottom: "65px" }}>
             {distributorParty.name}

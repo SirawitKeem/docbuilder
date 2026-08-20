@@ -1,6 +1,6 @@
 export default function PartnerPage3() {
   return (
-    <div className="document-body">
+    <div className="document-body pt-3">
       <ul className="list-none space-y-2">
         <li className="pl-4">
           <p className="font-bold mb-1">
@@ -51,13 +51,6 @@ export default function PartnerPage3() {
 
         <p>
           <span className="font-bold">6.3 การต่ออายุสัญญาบริการ (Renewals):</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; มีหน้าที่แจ้งเตือนรอบการต่ออายุ &ldquo;สิทธิการใช้งาน&rdquo; รายปีล่วงหน้าแก่ &ldquo;ตัวแทนจำหน่าย&rdquo; ไม่น้อยกว่า 60 (หกสิบ) วัน ก่อนวันหมดอายุ เพื่อให้ &ldquo;ตัวแทนจำหน่าย&rdquo; นำไปติดตามการต่ออายุสัญญาบำรุงรักษาซอฟต์แวร์รายปี (Software Maintenance Renewal) ของ &ldquo;ผู้ใช้ปลายทาง&rdquo;
-        </p>
-      </div>
-
-      <h2>ข้อ 7. การจัดการทรัพย์สินทางปัญญาและการจำกัดความรับผิด (Intellectual Property & Limitation of Liability)</h2>
-      <div className="space-y-1.5 pl-4">
-        <p>
-          <span className="font-bold">7.1 การชดใช้ค่าเสียหายจากข้อพิพาทลิขสิทธิ์ (Indemnification):</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; (โดยการสนับสนุนจาก &ldquo;เจ้าของผลิตภัณฑ์&rdquo;) รับประกันว่า &ldquo;ผลิตภัณฑ์&rdquo; ไม่มีการละเมิดทรัพย์สินทางปัญญาของบุคคลภายนอก หาก &ldquo;ตัวแทนจำหน่าย&rdquo; ถูกฟ้องร้องจากบุคคลภายนอกเนื่องจากการใช้งานหรือจำหน่าย &ldquo;ผลิตภัณฑ์&rdquo; อย่างถูกต้องตามสัญญานี้ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; จะร่วมปกป้อง โดย &ldquo;ตัวแทนจำหน่าย&rdquo; ต้องแจ้งให้ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ทราบเป็นลายลักษณ์อักษรทันทีที่ได้รับแจ้งข้อเรียกร้อง
         </p>
       </div>
     </div>

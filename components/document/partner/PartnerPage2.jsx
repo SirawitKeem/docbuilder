@@ -1,6 +1,6 @@
 export default function PartnerPage2() {
   return (
-    <div className="document-body">
+    <div className="document-body pt-3">
       <h2>ข้อ 3. สิทธิ หน้าที่ และความรับผิดชอบของคู่สัญญา (Obligations of the Parties)</h2>
       <p className="pl-4 font-bold">3.1 หน้าที่และความรับผิดชอบของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;:</p>
       <ul className="list-disc pl-10 space-y-1.5">
