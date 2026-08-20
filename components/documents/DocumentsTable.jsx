@@ -59,6 +59,7 @@ export default function DocumentsTable({
   showSentTo = false,
   emptyMessage = "ยังไม่มีเอกสารในระบบ",
   deleteApiUrl = "/api/documents",
+  allowEdit = true,
   onRefresh,
 }) {
   const router = useRouter();
@@ -172,7 +173,7 @@ export default function DocumentsTable({
                           <Eye size={16} />
                         </button>
 
-                        {/* ปุ่ม จุด 3 จุด -> เปิด Action Menu (แก้ไข / ลบ) */}
+                        {/* ปุ่ม จุด 3 จุด -> เปิด Action Menu */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -190,16 +191,18 @@ export default function DocumentsTable({
                             ref={menuRef}
                             className="absolute right-5 top-11 w-36 bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50 animate-in fade-in zoom-in-95 duration-100"
                           >
-                            <button
-                              onClick={() => {
-                                setOpenMenuId(null);
-                                router.push(`/create/${doc.templateId || "nda"}?id=${doc.id}`);
-                              }}
-                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
-                            >
-                              <Edit3 size={14} className="text-gray-500" />
-                              แก้ไขเอกสาร
-                            </button>
+                            {allowEdit && (
+                              <button
+                                onClick={() => {
+                                  setOpenMenuId(null);
+                                  router.push(`/create/${doc.templateId || "nda"}?id=${doc.id}`);
+                                }}
+                                className="w-full text-left px-3.5 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
+                              >
+                                <Edit3 size={14} className="text-gray-500" />
+                                แก้ไขเอกสาร
+                              </button>
+                            )}
                             <button
                               onClick={() => {
                                 setOpenMenuId(null);

@@ -10,64 +10,54 @@ export default function DistributorPage5() {
   const disclosingPos = values.disclosing_signatory_position || distributorParty.signatoryPosition;
 
   return (
-    <div className="text-[9.5pt] leading-[1.85] text-gray-900 font-normal">
-      <p className="mb-12 indent-8">
+    <div className="document-body pt-3">
+      <p className="indent-8" style={{ marginBottom: "28px" }}>
         สัญญานี้ทำขึ้นเป็นสองฉบับมีข้อความถูกต้องตรงกัน คู่สัญญาได้อ่านและเข้าใจข้อความโดยรายละเอียดตลอดแล้ว
+        <br />
         จึงได้ลงลายมือชื่อและประทับตรา (ถ้ามี) ไว้เป็นสำคัญต่อหน้าพยาน
       </p>
 
       {/* Signature Block - Symmetrical 2 Columns */}
-      <div className="grid grid-cols-2 gap-10 mt-8">
+      <div className="grid grid-cols-2 gap-10" style={{ marginBottom: "50px" }}>
         {/* Main Distributor (Crest Zendo) */}
-        <div className="text-center flex flex-col justify-between">
-          <div>
-            <p className="font-bold">
-              {values.distributor_company_name || distributorParty.name}
-            </p>
-          </div>
-
-          <div className="my-8 flex justify-center items-center text-center">
-            <Field
-              id="disclosing_signature_line"
-              placeholder="ลายมือชื่อ / การลงนาม (ฝ่ายเรา)"
-              minWidth={24}
-            />
-          </div>
-
-          <div className="text-center">
-            <p className="text-gray-900 font-normal mb-1">
-              ( {disclosingName} )
-            </p>
-            <p className="text-gray-900 font-normal">
-              ตำแหน่ง {disclosingPos}
-            </p>
-          </div>
+        <div className="text-center">
+          <p className="font-bold mb-1">ผู้จัดจำหน่ายหลัก (Distributor)</p>
+          <p className="font-bold" style={{ marginBottom: "65px" }}>
+            {values.distributor_company_name || distributorParty.name}
+          </p>
+          <p className="mb-3">ลงชื่อ ......................................................</p>
+          <p className="mb-3">( {disclosingName} )</p>
+          <p>ตำแหน่ง: {disclosingPos}</p>
         </div>
 
         {/* Reseller */}
-        <div className="text-center flex flex-col justify-between">
-          <div>
-            <p className="font-bold">
-              (&nbsp;<Field id="reseller_name" placeholder="ชื่อบริษัท Reseller" minWidth={20} />&nbsp;)
-            </p>
-          </div>
+        <div className="text-center">
+          <p className="font-bold mb-1">ตัวแทนจำหน่ายต่อ (Reseller)</p>
+          <p className="font-bold" style={{ marginBottom: "65px" }}>
+            <Field id="reseller_name" placeholder="ระบุชื่อบริษัท Reseller" minWidth={20} />
+          </p>
+          <p className="mb-3">ลงชื่อ ......................................................</p>
+          <p className="mb-3">
+            (&nbsp;<Field id="reseller_signatory_name" placeholder="ชื่อ-นามสกุล" minWidth={16} />&nbsp;)
+          </p>
+          <p>
+            ตำแหน่ง:{" "}
+            <Field id="reseller_signatory_position" placeholder="เช่น กรรมการผู้จัดการ" minWidth={16} />
+          </p>
+        </div>
+      </div>
 
-          <div className="my-8 flex justify-center items-center text-center">
-            <Field
-              id="reseller_signature_line"
-              placeholder="ลายมือชื่อ / การลงนาม (คู่สัญญา)"
-              minWidth={24}
-            />
-          </div>
-
-          <div className="text-center">
-            <p className="text-gray-900 font-normal mb-1">
-              (&nbsp;<Field id="reseller_signatory_name" placeholder="ชื่อ-นามสกุล" minWidth={16} />&nbsp;)
-            </p>
-            <p className="text-gray-900 font-normal">
-              ตำแหน่ง&nbsp;<Field id="reseller_signatory_position" placeholder="..................................." minWidth={16} />
-            </p>
-          </div>
+      {/* พยาน */}
+      <div className="grid grid-cols-2 gap-10">
+        <div className="text-center">
+          <p className="mb-3">ลงชื่อ ...................................................... พยาน</p>
+          <p className="mb-3">( ...................................................... )</p>
+          <p>ตำแหน่ง: ........................................</p>
+        </div>
+        <div className="text-center">
+          <p className="mb-3">ลงชื่อ ...................................................... พยาน</p>
+          <p className="mb-3">( ...................................................... )</p>
+          <p>ตำแหน่ง: ........................................</p>
         </div>
       </div>
     </div>

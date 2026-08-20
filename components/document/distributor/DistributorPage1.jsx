@@ -2,61 +2,50 @@ import Field from "../Field";
 
 export default function DistributorPage1() {
   return (
-    <div className="text-[9.5pt] leading-[1.85] text-gray-900 font-normal">
-      {/* Document Title */}
-      <h1 className="text-center text-[16px] font-bold mb-1 tracking-tight">
-        สัญญาแต่งตั้งและจัดจำหน่ายซอฟต์แวร์
-      </h1>
-      <p className="text-center text-[9.5pt] font-bold mb-6">
-        (Distributor and Reseller Master Agreement)
-      </p>
+    <div className="document-body">
+      <h1>สัญญาแต่งตั้งและจัดจำหน่ายซอฟต์แวร์</h1>
+      <p className="subtitle text-center text-[16px] mb-2">(Distributor and Reseller Master Agreement)</p>
 
-      {/* Contract Opening Line - Centered */}
-      <p className="text-center mb-5">
+      <p style={{ marginBottom: "5px" }}>
         สัญญาฉบับนี้ทำขึ้น ณ{" "}
-        <Field id="contract_location" placeholder="...................................................................." minWidth={16} />{" "}
-        เมื่อวันที่ <Field id="contract_date_day" placeholder="........" minWidth={4} />{" "}
-        เดือน <Field id="contract_date_month" placeholder="................" minWidth={8} />{" "}
-        พ.ศ. <Field id="contract_date_year" placeholder="............" minWidth={5} />
+        <Field id="contract_location" placeholder="กรุงเทพมหานคร" minWidth={14} />{" "}
+        เมื่อวันที่ <Field id="contract_date_day" placeholder="17" minWidth={3} />{" "}
+        เดือน <Field id="contract_date_month" placeholder="สิงหาคม" minWidth={8} />{" "}
+        พ.ศ. <Field id="contract_date_year" placeholder="2569" minWidth={5} />
       </p>
 
-      <p className="mb-2 font-normal">ระหว่าง:</p>
+      <p className="font-normal" style={{ marginTop: "4px", marginBottom: "4px" }}>ระหว่าง:</p>
 
-      {/* Party 1 */}
-      <p className="mb-3">
+      <p className="indent-8" style={{ marginBottom: "4px" }}>
         (1) บริษัท เครสท์ เซนโด จำกัด สำนักงานใหญ่ ตั้งอยู่เลขที่ 8/40 เดอะ
         คอนเนค 37 ซอยช่างอากาศอุทิศ 10 แยก 1-2 แขวงดอนเมือง เขตดอนเมือง
-        กรุงเทพมหานคร 10210 ประเทศไทย ซึ่งต่อไปในสัญญานี้จะเรียกว่า &ldquo;ผู้เปิดเผยข้อมูล&rdquo; (Disclosing Party)
-        ฝ่ายหนึ่ง และ
+        กรุงเทพมหานคร 10210 ประเทศไทย ซึ่งต่อไปในสัญญานี้จะเรียกว่า &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; (Distributor)
+        ฝ่ายหนึ่ง
       </p>
 
-      {/* Party 2 */}
-      <div className="mb-4">
-        <p className="mb-1">
-          (2) บริษัท/นิติบุคคล{" "}
-          <Field id="reseller_name" placeholder="..........................................................................................................................." minWidth={24} />
-        </p>
-        <p className="mb-1">สำนักงานตั้งอยู่เลขที่</p>
+      <p className="font-normal" style={{ marginTop: "4px", marginBottom: "4px" }}>กับ</p>
+
+      <p className="indent-8" style={{ marginBottom: "4px" }}>
+        (2) บริษัท/นิติบุคคล{" "}
+        <Field id="reseller_name" placeholder="ระบุชื่อบริษัท Reseller" minWidth={24} />{" "}
+        สำนักงานใหญ่ ตั้งอยู่เลขที่{" "}
         <Field
           id="reseller_address"
           type="textarea"
-          placeholder="..................................................................................................................................................................................................."
+          placeholder="เลขที่ ... แขวง/ตำบล ... เขต/อำเภอ ... จังหวัด ... รหัสไปรษณีย์ ..."
         />
-        <p className="mt-1">
-          (ซึ่งต่อไปในสัญญานี้จะเรียกว่า &ldquo;Reseller&rdquo; หรือ &ldquo;ตัวแทนจำหน่ายต่อ&rdquo;) อีกฝ่ายหนึ่ง
-        </p>
-      </div>
+        <br />
+        (ซึ่งต่อไปในสัญญานี้จะเรียกว่า &ldquo;Reseller&rdquo; หรือ &ldquo;ตัวแทนจำหน่ายต่อ&rdquo;) อีกฝ่ายหนึ่ง
+      </p>
 
-      {/* Recital */}
-      <p className="mb-5">
+      <p className="indent-8" style={{ marginTop: "6px", marginBottom: "8px" }}>
         คู่สัญญาทั้งสองฝ่ายตกลงเข้าทำสัญญาแต่งตั้งตัวแทนจำหน่ายต่อ เพื่อทำการตลาด
         นำเสนอ และจัดจำหน่ายผลิตภัณฑ์ซอฟต์แวร์ และเครื่องมือทางไอที
         (ซึ่งต่อไปนี้เรียกว่า &ldquo;ผลิตภัณฑ์&rdquo;) โดยมีข้อกำหนดและเงื่อนไขดังต่อไปนี้:
       </p>
 
-      {/* Section 1 */}
-      <h2 className="font-bold mb-2">1. นิยามศัพท์ (Definitions)</h2>
-      <ul className="list-none space-y-2 mb-5">
+      <h2>1. นิยามศัพท์ (Definitions)</h2>
+      <ul className="list-none space-y-0.5">
         <li className="pl-4">
           <span className="font-bold">1.1. &ldquo;เจ้าของผลิตภัณฑ์&rdquo; (Vendor)</span>{" "}
           หมายถึง บุคคล นิติบุคคล หรือผู้พัฒนาซอฟต์แวร์ ซึ่งเป็นผู้ถือครองลิขสิทธิ์ ทรัพย์สินทางปัญญา และสิทธิ์โดยชอบด้วยกฎหมายในตัวผลิตภัณฑ์ซอฟต์แวร์แต่เพียงผู้เดียว (หรือตามสิทธิ์ที่ได้รับอนุญาต)
@@ -75,14 +64,11 @@ export default function DistributorPage1() {
         </li>
       </ul>
 
-      {/* Section 2 */}
-      <h2 className="font-bold mb-2">
-        2. ขอบเขตการแต่งตั้งและอาณาเขต (Scope of Appointment & Territory)
-      </h2>
-      <ul className="list-none space-y-2">
+      <h2>2. ขอบเขตการแต่งตั้งและอาณาเขต (Scope of Appointment & Territory)</h2>
+      <ul className="list-none space-y-0.5">
         <li className="pl-4">
           <span className="font-bold">2.1. การแต่งตั้งและบทบาทของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;:</span>
-          <ul className="list-disc pl-6 space-y-1 mt-1 font-normal">
+          <ul className="list-disc pl-6 space-y-0.5 mt-0.5 font-normal">
             <li>
               &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ในฐานะผู้ได้รับสิทธิ์อย่างถูกต้องจาก &ldquo;เจ้าของผลิตภัณฑ์&rdquo; แต่งตั้งตัวแทนจำหน่ายต่อให้เป็น &ldquo;ตัวแทนจำหน่ายต่อ&rdquo; ประเภทแบบไม่ผูกขาด (Non-exclusive)
             </li>

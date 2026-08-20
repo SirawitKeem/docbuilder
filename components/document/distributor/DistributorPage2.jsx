@@ -1,15 +1,12 @@
 export default function DistributorPage2() {
   return (
-    <div className="text-[9.5pt] leading-[1.85] text-gray-900 font-normal">
-      {/* Section 3 */}
-      <h2 className="font-bold mb-2">
-        3. สิทธิ หน้าที่ และความรับผิดชอบของคู่สัญญา (Obligations of the Parties)
-      </h2>
+    <div className="document-body pt-3">
+      <h2>3. สิทธิ หน้าที่ และความรับผิดชอบของคู่สัญญา (Obligations of the Parties)</h2>
 
-      <p className="mb-2 pl-4 font-bold">
+      <p className="pl-4 font-bold">
         3.1. หน้าที่และความรับผิดชอบของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;:
       </p>
-      <ul className="list-disc pl-10 space-y-2 mb-4 font-normal">
+      <ul className="list-disc pl-10 space-y-1.5 mb-2 font-normal">
         <li>
           <span className="font-bold">การสนับสนุนด้านการขายและสื่อการตลาด:</span>{" "}
           &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; มีหน้าที่จัดหาเอกสาร ข้อมูลทางเทคนิค คู่มือการใช้งาน สื่อส่งเสริมการขาย และรายละเอียดราคาที่เป็นปัจจุบันให้แก่ &ldquo;ตัวแทนจำหน่ายต่อ&rdquo;
@@ -30,10 +27,10 @@ export default function DistributorPage2() {
         </li>
       </ul>
 
-      <p className="mb-2 pl-4 font-bold">
+      <p className="pl-4 font-bold">
         3.2. หน้าที่และความรับผิดชอบของ &ldquo;ตัวแทนจำหน่ายต่อ&rdquo;:
       </p>
-      <ul className="list-disc pl-10 space-y-2 mb-6 font-normal">
+      <ul className="list-disc pl-10 space-y-1.5 font-normal">
         <li>
           <span className="font-bold">การทำตลาดและการรักษามาตรฐาน:</span>{" "}
           &ldquo;ตัวแทนจำหน่ายต่อ&rdquo; ต้องทำการตลาด ถ่ายทอดข้อมูลอย่างถูกต้อง ปฏิบัติตามจรรยาบรรณทางธุรกิจ และรักษาสภาพแวดล้อมทางธุรกิจเพื่อส่งเสริมภาพลักษณ์ของ &ldquo;ผลิตภัณฑ์&rdquo; และ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;
@@ -44,11 +41,8 @@ export default function DistributorPage2() {
         </li>
       </ul>
 
-      {/* Section 4 */}
-      <h2 className="font-bold mb-2">
-        4. ลิขสิทธิ์ซอฟต์แวร์ รูปแบบการใช้งาน และการปฏิบัติตามกฎหมาย (Software Licensing & Compliance)
-      </h2>
-      <ul className="list-none space-y-2 mb-6 font-normal">
+      <h2>4. ลิขสิทธิ์ซอฟต์แวร์ รูปแบบการใช้งาน และการปฏิบัติตามกฎหมาย (Software Licensing & Compliance)</h2>
+      <ul className="list-none space-y-1.5 font-normal">
         <li className="pl-4">
           <span className="font-bold">4.1. การรับประกันสิทธิ์โดย &ldquo;ผู้จัดจำหน่ายหลัก&rdquo;:</span>{" "}
           &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; รับประกันว่าตนมีสิทธิ์ทางกฎหมายอย่างถูกต้องในการนำเสนอ และจัดจำหน่าย &ldquo;สิทธิ์การใช้งาน&rdquo; &ldquo;ผลิตภัณฑ์&rdquo; ดังกล่าวให้แก่ &ldquo;ตัวแทนจำหน่ายต่อ&rdquo;
@@ -63,11 +57,8 @@ export default function DistributorPage2() {
         </li>
       </ul>
 
-      {/* Section 5 */}
-      <h2 className="font-bold mb-2">
-        5. การกำหนดราคา ส่วนลด และเงื่อนไขการชำระเงิน (Pricing, Discounts, and Payment Terms)
-      </h2>
-      <ul className="list-none space-y-2 font-normal">
+      <h2>5. การกำหนดราคา ส่วนลด และเงื่อนไขการชำระเงิน (Pricing, Discounts, and Payment Terms)</h2>
+      <ul className="list-none space-y-1.5 font-normal">
         <li className="pl-4">
           <span className="font-bold">5.1. โครงสร้างราคา:</span>{" "}
           &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; จะกำหนด และจัดส่งราคาต้นทุน (Cost Price) สำหรับ &ldquo;ตัวแทนจำหน่ายต่อ&rdquo; และระบุราคาแนะนำสำหรับ &ldquo;ผู้ใช้ปลายทาง&rdquo; (MSRP)

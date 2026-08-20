@@ -1,14 +1,12 @@
 export default function NdaPage2() {
   return (
-    <div className="text-[9.5pt] leading-[1.85] text-gray-900 font-normal">
-      <h2 className="font-bold mb-2">
-        2. ข้อยกเว้นข้อมูลที่เป็นความลับ (Exclusions from Confidential Information)
-      </h2>
-      <p className="mb-2 font-normal">
+    <div className="document-body pt-3">
+      <h2>2. ข้อยกเว้นข้อมูลที่เป็นความลับ (Exclusions from Confidential Information)</h2>
+      <p className="pl-4">
         ข้อมูลความลับตามข้อ 1 ให้ไม่รวมถึงข้อมูลใดๆ ที่ผู้รับข้อมูลสามารถพิสูจน์ได้ด้วย
         หลักฐานเป็นลายลักษณ์อักษรว่า:
       </p>
-      <ul className="list-none space-y-1.5 mb-5 font-normal">
+      <ul className="list-none space-y-1 mb-4">
         <li className="pl-4">
           2.1. เป็นข้อมูลที่ตกเป็นของสาธารณะหรือเปิดเผยทั่วไปอยู่แล้วก่อน หรือในเวลาที่เปิดเผย
           โดยไม่ได้เกิดจากการกระทำผิดสัญญาหรือการละเมิดของผู้รับข้อมูล หรือบุคคลในสังกัด
@@ -32,12 +30,12 @@ export default function NdaPage2() {
         </li>
       </ul>
 
-      <h2 className="font-bold mb-2">3. วัตถุประสงค์ในการเปิดเผยข้อมูล (Purpose of Disclosure)</h2>
-      <p className="mb-2 pl-4 font-normal">
+      <h2>3. วัตถุประสงค์ในการเปิดเผยข้อมูล (Purpose of Disclosure)</h2>
+      <p className="pl-4">
         3.1. ผู้เปิดเผยข้อมูลเปิดเผยข้อมูลความลับแก่ผู้รับข้อมูล เพื่อวัตถุประสงค์เฉพาะเจาะจง
         ดังต่อไปนี้เท่านั้น (&ldquo;วัตถุประสงค์&rdquo;):
       </p>
-      <ul className="list-disc pl-12 space-y-1.5 mb-4 font-normal">
+      <ul className="list-disc pl-10 space-y-1 mb-2 font-normal">
         <li>
           เพื่อการประเมินความเป็นไปได้ในการเข้าทำสัญญาความร่วมมือทางธุรกิจ การเป็นพันธมิตร
           (Partner), ผู้จัดจำหน่าย (Distributor) หรือตัวแทนจำหน่าย (Reseller)
@@ -52,17 +50,17 @@ export default function NdaPage2() {
         </li>
         <li>เพื่อสนับสนุนการขาย หรือการให้บริการที่เกี่ยวข้องกับข้อมูลนั้น</li>
       </ul>
-      <p className="mb-5 pl-4 font-normal">
+      <p className="pl-4">
         3.2. ผู้รับข้อมูลตกลงอย่างเคร่งครัดว่าจะไม่นำข้อมูลความลับไปใช้เพื่อวัตถุประสงค์อื่นใด
         นอกเหนือจากที่ระบุในข้อ 3.1 โดยเฉพาะอย่างยิ่ง ห้ามนำไปใช้เพื่อประโยชน์ทางการค้าของ
         ตนเองหรือบุคคลภายนอก หรือนำไปใช้ในลักษณะที่เป็นแข่งขันกับผู้เปิดเผยข้อมูล
       </p>
 
-      <h2 className="font-bold mb-2">4. หน้าที่และความรับผิดชอบของผู้รับข้อมูล (Obligations of Receiving Party)</h2>
-      <p className="mb-2 font-normal">
+      <h2>4. หน้าที่และความรับผิดชอบของผู้รับข้อมูล (Obligations of Receiving Party)</h2>
+      <p className="pl-4 font-bold">
         ผู้รับข้อมูลตกลงและรับรองที่จะปฏิบัติตามหน้าที่ดังต่อไปนี้:
       </p>
-      <ul className="list-none space-y-1.5 font-normal">
+      <ul className="list-none space-y-1 font-normal">
         <li className="pl-4">
           <span className="font-bold">4.1. การเก็บรักษาความลับ:</span> ต้องระมัดระวังและ
           รักษาข้อมูลความลับด้วยมาตรฐานความปลอดภัยที่ไม่น้อยกว่าระดับที่ตนใช้รักษาข้อมูล

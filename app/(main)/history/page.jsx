@@ -37,6 +37,7 @@ export default function HistoryPage() {
           documents={documents}
           deleteApiUrl="/api/sent-history"
           showSentTo
+          allowEdit={false}
           emptyMessage="ยังไม่มีประวัติการส่งเอกสาร"
           onRefresh={fetchHistory}
         />

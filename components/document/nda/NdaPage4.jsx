@@ -10,11 +10,9 @@ export default function NdaPage4() {
   const disclosingPos = values.disclosing_signatory_position || disclosingParty.signatoryPosition;
 
   return (
-    <div className="text-[9.5pt] leading-[1.85] text-gray-900 font-normal">
-      <h2 className="font-bold mb-2">
-        9. กฎหมายที่ใช้บังคับและเขตอำนาจศาล (Governing Law and Jurisdiction)
-      </h2>
-      <ul className="list-none space-y-1.5 mb-5 font-normal">
+    <div className="document-body pt-3">
+      <h2>9. กฎหมายที่ใช้บังคับและเขตอำนาจศาล (Governing Law and Jurisdiction)</h2>
+      <ul className="list-none space-y-1">
         <li className="pl-4">9.1. สัญญาฉบับนี้ให้ตีความและบังคับใช้ตามกฎหมายแห่งราชอาณาจักรไทย</li>
         <li className="pl-4">
           9.2. หากเกิดข้อพิพาท ข้อขัดแย้ง หรือการเรียกร้องใดๆ ที่เกิดขึ้นจากหรือเกี่ยวเนื่องกับ
@@ -24,8 +22,8 @@ export default function NdaPage4() {
         </li>
       </ul>
 
-      <h2 className="font-bold mb-2">10. บททั่วไป (General Provisions)</h2>
-      <ul className="list-none space-y-1.5 mb-5 font-normal">
+      <h2>10. บททั่วไป (General Provisions)</h2>
+      <ul className="list-none space-y-1" style={{ marginBottom: "12px" }}>
         <li className="pl-4">
           <span className="font-bold">10.1. ไม่มีการโอนสิทธิในทรัพย์สินทางปัญญา:</span>{" "}
           การเปิดเผยข้อมูลความลับตามสัญญานี้ไม่ถือเป็นการโอนสิทธิ์ มอบสิทธิ์ (License) หรือ
@@ -43,66 +41,39 @@ export default function NdaPage4() {
         </li>
       </ul>
 
-      <p className="mb-8 font-normal">
+      <p className="indent-8" style={{ marginBottom: "28px" }}>
         เพื่อเป็นหลักฐานแห่งการนี้ คู่สัญญาโดยผู้มีอำนาจลงนามได้อ่านและเข้าใจข้อความในสัญญานี้
         โดยละเอียดตลอดแล้ว เห็นว่าถูกต้องตรงตามเจตนา จึงได้ลงลายมือชื่อและประทับตราสำคัญ
         (ถ้ามี) ไว้เป็นสำคัญต่อหน้าพยาน ณ วัน เดือน ปี ที่ระบุไว้ข้างต้น
       </p>
 
-      {/* Signature Block */}
-      <div className="grid grid-cols-2 gap-8 mt-6">
+      {/* Signature Block - Symmetrical 2 Columns */}
+      <div className="grid grid-cols-2 gap-10" style={{ marginBottom: "50px" }}>
         {/* ฝั่งซ้าย: ผู้เปิดเผยข้อมูล (Disclosing Party) */}
-        <div className="text-center flex flex-col justify-between">
-          <div>
-            <p className="font-bold mb-1">ผู้เปิดเผยข้อมูล (Disclosing Party)</p>
-            <p className="font-bold">
-              {values.disclosing_party_name || disclosingParty.name}
-            </p>
-          </div>
-
-          <div className="my-8 flex justify-center items-center text-center">
-            <Field
-              id="disclosing_signature_line"
-              placeholder="ลายมือชื่อ / การลงนาม (ฝ่ายเรา)"
-              minWidth={24}
-            />
-          </div>
-
-          <div className="text-center">
-            <p className="font-normal text-gray-900 mb-1">
-              ( {disclosingName} )
-            </p>
-            <p className="text-gray-900 font-normal">
-              ตำแหน่ง {disclosingPos}
-            </p>
-          </div>
+        <div className="text-center">
+          <p className="font-bold mb-1">ผู้เปิดเผยข้อมูล (Disclosing Party)</p>
+          <p className="font-bold" style={{ marginBottom: "65px" }}>
+            {values.disclosing_party_name || disclosingParty.name}
+          </p>
+          <p className="mb-3">ลงชื่อ ......................................................</p>
+          <p className="mb-3">( {disclosingName} )</p>
+          <p>ตำแหน่ง: {disclosingPos}</p>
         </div>
 
         {/* ฝั่งขวา: ผู้รับข้อมูล (Receiving Party) */}
-        <div className="text-center flex flex-col justify-between">
-          <div>
-            <p className="font-bold mb-1">ผู้รับข้อมูล (Receiving Party)</p>
-            <p className="font-bold mt-1">
-              <Field id="receiving_party_name" placeholder="..................................." minWidth={20} />
-            </p>
-          </div>
-
-          <div className="my-8 flex justify-center items-center text-center">
-            <Field
-              id="receiving_signature_line"
-              placeholder="ลายมือชื่อ / การลงนาม (คู่สัญญา)"
-              minWidth={24}
-            />
-          </div>
-
-          <div className="text-center">
-            <p className="text-gray-900 font-normal mb-1">
-              (&nbsp;<Field id="receiving_signatory_name" placeholder="ชื่อ-นามสกุล" minWidth={14} />&nbsp;)
-            </p>
-            <p className="text-gray-900 font-normal">
-              ตำแหน่ง&nbsp;<Field id="receiving_signatory_position" placeholder="..................................." minWidth={16} />
-            </p>
-          </div>
+        <div className="text-center">
+          <p className="font-bold mb-1">ผู้รับข้อมูล (Receiving Party)</p>
+          <p className="font-bold" style={{ marginBottom: "65px" }}>
+            <Field id="receiving_party_name" placeholder="ระบุชื่อบริษัท ผู้รับข้อมูล" minWidth={20} />
+          </p>
+          <p className="mb-3">ลงชื่อ ......................................................</p>
+          <p className="mb-3">
+            (&nbsp;<Field id="receiving_signatory_name" placeholder="ชื่อ-นามสกุล" minWidth={16} />&nbsp;)
+          </p>
+          <p>
+            ตำแหน่ง:{" "}
+            <Field id="receiving_signatory_position" placeholder="เช่น กรรมการผู้จัดการ" minWidth={16} />
+          </p>
         </div>
       </div>
     </div>
