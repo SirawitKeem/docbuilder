@@ -15,10 +15,11 @@ body {
   color: #111827;
   font-weight: 400;
   text-align: justify;
+  text-justify: inter-character;
 }
 
 .document-body h1 {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
   text-align: center;
   margin-bottom: 2px;
@@ -26,7 +27,7 @@ body {
 
 .document-body h2 {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 400;
   margin-top: 10px;
   margin-bottom: 4px;
   text-align: left;

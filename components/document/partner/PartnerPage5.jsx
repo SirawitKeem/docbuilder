@@ -2,7 +2,7 @@ export default function PartnerPage5() {
   return (
     <div className="document-body">
       <div className="pl-4 mb-4">
-        <ul className="list-disc pl-8 space-y-1 font-normal mb-2">
+        <ul className="list-disc pl-8 space-y-1.5 font-normal mb-2">
           <li>
             &ldquo;ตัวแทนจำหน่าย&rdquo; จะไม่ใช้ข้อมูลหรือโอกาสทางธุรกิจที่ได้รับจาก &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; เพื่อหลีกเลี่ยงหรือข้าม &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ในการทำธุรกรรมกับคู่ค้า ผู้ผลิต หรือบุคคลภายนอกที่เกี่ยวข้องกับธุรกรรมดังกล่าว หรือกระทำการใด ๆ อันมีเจตนาให้ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; สูญเสียสิทธิ ประโยชน์ หรือโอกาสทางธุรกิจที่พึงได้รับตามความร่วมมือระหว่างคู่สัญญา เว้นแต่ได้รับความยินยอมเป็นลายลักษณ์อักษรจาก &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ก่อนดำเนินการดังกล่าว
           </li>
