@@ -27,7 +27,7 @@ body {
 
 .document-body h2 {
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 700;
   margin-top: 10px;
   margin-bottom: 4px;
   text-align: left;
@@ -43,4 +43,8 @@ body {
 
 .document-body li {
   margin-bottom: 3px;
+}
+
+.document-body p.subtitle {
+  margin-bottom: 22px;
 }

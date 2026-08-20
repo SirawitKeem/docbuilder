@@ -27,16 +27,16 @@ export default function PartnerPage3() {
 
       <h2>ข้อ 6. การบริการหลังการขายและการสนับสนุนทางเทคนิค (Technical Support and Maintenance & SLA)</h2>
 
-      <div className="space-y-2 pl-4">
+      <div className="space-y-1.5 pl-4">
         <p>
           <span className="font-bold">6.1 ระดับการบริการขั้นแรกของ Reseller (Tier 1 Support):</span> &ldquo;ตัวแทนจำหน่าย&rdquo; มีหน้าที่ให้บริการสนับสนุนทางเทคนิคขั้นแรกแก่ &ldquo;ผู้ใช้ปลายทาง&rdquo; เช่น การตอบคำถามทั่วไป การติดตั้งเบื้องต้น และการรับเรื่องปัญหา
         </p>
 
         <div>
-          <p className="mb-1">
+          <p className="mb-0.5">
             <span className="font-bold">6.2 ระดับการบริการของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; และการส่งต่อปัญหา (Tier 2/3 Escalation Path & SLA):</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; มีหน้าที่ให้บริการสนับสนุนทางเทคนิคระดับสูง (Tier 2 Support) แก่ &ldquo;ตัวแทนจำหน่าย&rdquo; ในกรณีที่เกิดปัญหาขัดข้องเกินกว่าขีดความสามารถของ Tier 1 โดยมีเงื่อนไขการให้บริการดังต่อไปนี้:
           </p>
-          <ul className="list-disc pl-8 space-y-1 font-normal mt-1">
+          <ul className="list-disc pl-8 space-y-0.5 font-normal mt-0.5">
             <li>
               <span className="font-bold">การอ้างอิงมาตรฐานการให้บริการ (Back-to-Back SLA):</span> ระยะเวลาในการตอบสนอง (Response Time) การประเมินระดับความรุนแรงของปัญหา (Severity Level) และระยะเวลาในการแก้ไขปัญหา จะอ้างอิงและสอดคล้องกับข้อตกลงระดับการให้บริการ (SLA) ของ &ldquo;เจ้าของผลิตภัณฑ์&rdquo; (Vendor) ใน &ldquo;ผลิตภัณฑ์&rdquo; แต่ละประเภท
             </li>
@@ -51,6 +51,13 @@ export default function PartnerPage3() {
 
         <p>
           <span className="font-bold">6.3 การต่ออายุสัญญาบริการ (Renewals):</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; มีหน้าที่แจ้งเตือนรอบการต่ออายุ &ldquo;สิทธิการใช้งาน&rdquo; รายปีล่วงหน้าแก่ &ldquo;ตัวแทนจำหน่าย&rdquo; ไม่น้อยกว่า 60 (หกสิบ) วัน ก่อนวันหมดอายุ เพื่อให้ &ldquo;ตัวแทนจำหน่าย&rdquo; นำไปติดตามการต่ออายุสัญญาบำรุงรักษาซอฟต์แวร์รายปี (Software Maintenance Renewal) ของ &ldquo;ผู้ใช้ปลายทาง&rdquo;
+        </p>
+      </div>
+
+      <h2>ข้อ 7. การจัดการทรัพย์สินทางปัญญาและการจำกัดความรับผิด (Intellectual Property & Limitation of Liability)</h2>
+      <div className="space-y-1.5 pl-4">
+        <p>
+          <span className="font-bold">7.1 การชดใช้ค่าเสียหายจากข้อพิพาทลิขสิทธิ์ (Indemnification):</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; (โดยการสนับสนุนจาก &ldquo;เจ้าของผลิตภัณฑ์&rdquo;) รับประกันว่า &ldquo;ผลิตภัณฑ์&rdquo; ไม่มีการละเมิดทรัพย์สินทางปัญญาของบุคคลภายนอก หาก &ldquo;ตัวแทนจำหน่าย&rdquo; ถูกฟ้องร้องจากบุคคลภายนอกเนื่องจากการใช้งานหรือจำหน่าย &ldquo;ผลิตภัณฑ์&rdquo; อย่างถูกต้องตามสัญญานี้ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; จะร่วมปกป้อง โดย &ldquo;ตัวแทนจำหน่าย&rdquo; ต้องแจ้งให้ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ทราบเป็นลายลักษณ์อักษรทันทีที่ได้รับแจ้งข้อเรียกร้อง
         </p>
       </div>
     </div>
