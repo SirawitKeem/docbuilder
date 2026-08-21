@@ -19,14 +19,14 @@ export default function SuccessScreen({ fileName, sentTo, onCreateNew }) {
       <div className="flex items-center gap-3">
         <button
           onClick={onCreateNew}
-          className="flex items-center gap-2 h-11 px-5 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500"
+          className="flex items-center gap-2 h-11 px-5 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-sm font-semibold hover:opacity-95 transition-opacity"
         >
           <FilePlus2 size={16} />
           สร้างเอกสารใหม่
         </button>
         <Link
           href="/"
-          className="flex items-center gap-2 h-11 px-5 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50"
+          className="flex items-center gap-2 h-11 px-5 rounded-[10px] border border-[#E4E4E8] text-[#22162B] text-sm font-medium hover:bg-[#F6F6FA] transition-colors bg-white"
         >
           <Clock size={16} />
           กลับหน้าหลัก

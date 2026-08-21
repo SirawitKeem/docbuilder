@@ -200,15 +200,15 @@ export default function EmailScreen({
             )}
 
             {/* Bottom Alert Banner & Send Button */}
-            <div className="pt-4 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-primary-50/80 text-primary-700 border border-primary-100 text-xs flex-1">
-                <ShieldCheck size={18} className="shrink-0" />
+            <div className="pt-4 border-t border-[#E4E4E8] flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-2 p-3 rounded-[10px] bg-[#F5F1FF] text-[#5C33CC] border border-[#E1D3FF] text-xs flex-1">
+                <ShieldCheck size={18} className="shrink-0 text-[#7C4DFF]" />
                 <span>โปรดตรวจสอบอีเมลผู้รับและรายละเอียดให้ถูกต้องก่อนส่ง</span>
               </div>
               <button
                 onClick={handleSend}
                 disabled={sending || !activeAttachment}
-                className="w-full sm:w-auto px-7 h-11 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm shrink-0 transition-all"
+                className="w-full sm:w-auto px-7 h-11 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-sm font-semibold hover:opacity-95 disabled:opacity-50 flex items-center justify-center gap-2 shrink-0 transition-opacity"
               >
                 {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                 {sending ? "กำลังส่ง..." : "ส่งอีเมล"}

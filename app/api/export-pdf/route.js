@@ -3,9 +3,10 @@ import puppeteer from "puppeteer";
 export async function POST(request) {
   let browser;
   try {
-    const { templateId, values, fileName } = await request.json();
+    const { templateId, values, quotationData, fileName } = await request.json();
 
-    const encoded = Buffer.from(JSON.stringify(values), "utf-8").toString("base64");
+    const payload = quotationData || values || {};
+    const encoded = Buffer.from(JSON.stringify(payload), "utf-8").toString("base64");
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
     const printUrl = `${baseUrl}/print/${templateId}?data=${encodeURIComponent(encoded)}`;
 
@@ -16,27 +17,28 @@ export async function POST(request) {
 
     const page = await browser.newPage();
 
-    // 1. ปิด CSS Animation / Transition เพื่อให้จับภาพ State สมบูรณ์ทันที
+    // 1. Disable animations and transitions for instant clean capture
     await page.evaluateOnNewDocument(() => {
       const style = document.createElement("style");
       style.innerHTML = "* { animation: none !important; transition: none !important; }";
       document.head.appendChild(style);
     });
 
-    // 2. เปิด URL และรอเครือข่าย + Selector โหลดเสร็จสิ้น
+    // 2. Open print route and wait for network & selector ready
     await page.goto(printUrl, { waitUntil: "networkidle0" });
     await page.waitForSelector(".print-page", { timeout: 10000 });
 
-    // 3. สั่งสร้าง PDF A4 ไร้ขอบ พร้อมพื้นหลังสีตรงตามหน้าจอ
+    // 3. Generate 1:1 A4 PDF matching onscreen cards with zero margin offset
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
       margin: { top: 0, bottom: 0, left: 0, right: 0 },
+      displayHeaderFooter: false,
     });
 
     await browser.close();
 
-    const downloadFileName = fileName || "document.pdf";
+    const downloadFileName = fileName || `${payload.quotationNo || "document"}.pdf`;
 
     return new Response(pdfBuffer, {
       status: 200,

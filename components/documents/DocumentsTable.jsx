@@ -4,15 +4,15 @@ import { useState, useEffect, useRef } from "react";
 import { Eye, MoreVertical, MoreHorizontal, Edit3, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { templateRegistry } from "@/lib/templates/registry";
-import { getFieldProfile } from "@/lib/data/fieldProfiles";
+import { getFieldProfile } from "@/lib/data/fieldProfile";
 import { DocumentFieldsProvider } from "@/context/DocumentFieldsContext";
 import DocumentHeader from "@/components/document/DocumentHeader";
 import DocumentFooter from "@/components/document/DocumentFooter";
 
 const statusStyles = {
-  sent: "bg-success-100 text-success-600",
-  draft: "bg-primary-100 text-primary-600",
-  cancelled: "bg-gray-100 text-gray-500",
+  sent: "bg-[#DDEEE2] text-[#17682F]",
+  draft: "bg-[#F5F1FF] text-[#5C33CC]",
+  cancelled: "bg-[#F9DFD5] text-[#A73300]",
 };
 
 const statusLabel = {
@@ -97,11 +97,11 @@ export default function DocumentsTable({
 
   return (
     <>
-      <div className="bg-white border border-gray-200 rounded-card shadow-card overflow-visible">
+      <div className="bg-white border border-[#E4E4E8] rounded-[10px] shadow-card overflow-hidden">
         <table className="w-full text-sm table-fixed">
           <thead>
-            <tr className="border-b border-gray-200 text-left text-xs text-gray-500 bg-gray-50/50">
-              <th className={`${showSentTo ? "w-[30%]" : "w-[34%]"} px-5 py-3.5 font-medium rounded-tl-card`}>ชื่อเอกสาร</th>
+            <tr className="border-b border-[#E4E4E8] text-left text-xs text-[#646469] bg-[#F9F9FB]">
+              <th className={`${showSentTo ? "w-[30%]" : "w-[34%]"} px-5 py-3.5 font-medium`}>ชื่อเอกสาร</th>
               <th className={`${showSentTo ? "w-[20%]" : "w-[26%]"} px-5 py-3.5 font-medium`}>เทมเพลต</th>
               {showSentTo ? (
                 <th className="w-[22%] px-5 py-3.5 font-medium">ส่งไปยัง</th>
@@ -110,7 +110,7 @@ export default function DocumentsTable({
               )}
               <th className="w-[13%] px-5 py-3.5 font-medium">วันที่สร้าง</th>
               <th className="w-[9%] px-4 py-3.5 font-medium text-center">สถานะ</th>
-              <th className="w-[6%] px-5 py-3.5 font-medium text-right rounded-tr-card">การดำเนินการ</th>
+              <th className="w-[6%] px-5 py-3.5 font-medium text-right">การดำเนินการ</th>
             </tr>
           </thead>
           <tbody>
@@ -245,11 +245,15 @@ function PreviewModal({ doc, onClose }) {
     const { schema } = entry || {};
     if (!schema) return;
 
-    getFieldProfile().then((profile) => {
+    getFieldProfile(doc.profileId).then((profile) => {
       const merged = { ...doc.values };
-      for (const field of schema.fields) {
-        if (field.sharedKey && profile[field.sharedKey]) {
-          merged[field.id] = merged[field.id] || profile[field.sharedKey];
+      const profileValues = profile?.values || profile || {};
+
+      if (Array.isArray(schema.fields)) {
+        for (const field of schema.fields) {
+          if (field.sharedKey && profileValues[field.sharedKey]) {
+            merged[field.id] = merged[field.id] || profileValues[field.sharedKey];
+          }
         }
       }
       setModalValues(merged);
@@ -284,7 +288,7 @@ function PreviewModal({ doc, onClose }) {
           </button>
         </div>
 
-        {/* Modal Body - Readonly Preview Canvas (Strict 794px A4 dimensions & px-14 pt-10 pb-6 padding for 100% layout parity) */}
+        {/* Modal Body - Readonly Preview Canvas */}
         <div className="flex-1 overflow-auto bg-gray-100 p-8 flex flex-col items-center gap-8">
           <DocumentFieldsProvider key={JSON.stringify(modalValues)} initialValues={modalValues} defaultReadOnly>
             {pages.map((PageContent, i) => (

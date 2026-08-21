@@ -26,12 +26,21 @@ function PrintContent() {
   const entry = templateRegistry[templateId];
 
   if (!entry) return <p>ไม่พบเทมเพลต: {templateId}</p>;
-  const { schema, pages } = entry;
+  const { schema, pages, DocumentComponent } = entry;
+
+  if (schema?.type === "quotation" || DocumentComponent) {
+    const QuotationComp = DocumentComponent;
+    return (
+      <div id="print-root" className="print-page border-0 p-0 m-0 w-[794px] min-h-[1123px] bg-white">
+        <QuotationComp quotation={values} />
+      </div>
+    );
+  }
 
   return (
     <DocumentFieldsProvider initialValues={values} defaultReadOnly>
       <div id="print-root">
-        {pages.map((PageContent, i) => (
+        {(pages || []).map((PageContent, i) => (
           <div key={i} className="print-page font-noto-looped">
             <DocumentHeader logo={schema.logo} />
             <div className="print-page-body">

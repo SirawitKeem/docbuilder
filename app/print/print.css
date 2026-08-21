@@ -36,3 +36,11 @@ html, body {
   min-height: 0;
   overflow: hidden;
 }
+
+/* กฎเพิ่มสำหรับ quotation-type โดยเฉพาะ */
+@media print {
+  .line-item-block,
+  .group-block {
+    break-inside: avoid;
+  }
+}

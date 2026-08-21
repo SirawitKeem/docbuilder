@@ -189,11 +189,14 @@ function PreviewModal({ doc, onClose }) {
     const { schema } = entry || {};
     if (!schema) return;
 
-    getFieldProfile().then((profile) => {
+    getFieldProfile(doc.profileId).then((profile) => {
       const merged = { ...doc.values };
-      for (const field of schema.fields) {
-        if (field.sharedKey && profile[field.sharedKey]) {
-          merged[field.id] = merged[field.id] || profile[field.sharedKey];
+      const profileValues = profile?.values || profile || {};
+      if (Array.isArray(schema.fields)) {
+        for (const field of schema.fields) {
+          if (field.sharedKey && profileValues[field.sharedKey]) {
+            merged[field.id] = merged[field.id] || profileValues[field.sharedKey];
+          }
         }
       }
       setModalValues(merged);
@@ -228,7 +231,7 @@ function PreviewModal({ doc, onClose }) {
           </button>
         </div>
 
-        {/* Modal Body - Readonly Preview Canvas (Strict 794px A4 dimensions & px-14 pt-10 pb-6 padding for 100% layout parity) */}
+        {/* Modal Body - Readonly Preview Canvas */}
         <div className="flex-1 overflow-auto bg-gray-100 p-8 flex flex-col items-center gap-8">
           <DocumentFieldsProvider key={JSON.stringify(modalValues)} initialValues={modalValues} defaultReadOnly>
             {pages.map((PageContent, i) => (

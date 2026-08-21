@@ -13,10 +13,14 @@ import {
   Trash2,
   MoreHorizontal,
   ChevronRight,
+  CheckCircle2,
+  AlertCircle,
 } from "lucide-react";
 import { listFieldProfiles, deleteFieldProfile } from "@/lib/data/fieldProfiles";
 import { templateRegistry } from "@/lib/templates/registry";
+import { checkCompatibility, getRelevantTemplates, getTemplateAllKeys } from "@/lib/profiles/compatibility";
 import DocumentEditor from "./DocumentEditor";
+import QuotationEditor from "./quotation/QuotationEditor";
 
 function formatThaiDateTime(isoString) {
   if (!isoString) return "-";
@@ -43,17 +47,20 @@ function ProfileSelectGateContent({ templateId }) {
   const [openMenuId, setOpenMenuId] = useState(null);
   const menuRef = useRef(null);
 
-  const template = templateRegistry[templateId]?.schema;
-  const shortTemplateTitle = template?.name || "เอกสาร";
+  const entry = templateRegistry[templateId];
+  const template = entry?.schema;
+  const shortTemplateTitle = template?.name || template?.fullName || "เอกสาร";
+  const isQuotation = template?.type === "quotation" || templateId === "quotation";
 
-  const load = () =>
+  const load = () => {
     listFieldProfiles().then((data) => {
       setProfiles(data);
     });
+  };
 
   useEffect(() => {
     load();
-  }, []);
+  }, [templateId]);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -74,11 +81,17 @@ function ProfileSelectGateContent({ templateId }) {
 
   // หากเป็นการเปิดเอกสารเดิมด้วย ID จาก URL ให้ข้ามไปหน้า Editor ทันที
   if (docIdFromUrl) {
+    if (isQuotation) {
+      return <QuotationEditor docId={docIdFromUrl} />;
+    }
     return <DocumentEditor templateId={templateId} docId={docIdFromUrl} />;
   }
 
   // เลือกแล้ว (รวมถึงเลือก "เอกสารเปล่า" ที่ selectedId = null) → เข้าตัว editor จริง
   if (selectedId !== undefined) {
+    if (isQuotation) {
+      return <QuotationEditor profileId={selectedId} />;
+    }
     return <DocumentEditor templateId={templateId} profileId={selectedId} />;
   }
 
@@ -96,16 +109,32 @@ function ProfileSelectGateContent({ templateId }) {
     );
   }
 
+  // กรองเฉพาะชุดข้อมูลที่ใช้งานร่วมกับ templateId นี้ได้จริง
+  const templateKeys = getTemplateAllKeys(templateId);
+
   const filteredProfiles = profiles.filter((p) => {
+    const values = p.values || {};
+    const relevant = getRelevantTemplates(values);
+    
+    // ตรวจสอบว่าชุดข้อมูลนี้เกี่ยวข้องหรือใช้งานกับเทมเพลตนี้ได้ไหม
+    const isRelevantToThisTemplate = relevant.some((r) => r.templateId === templateId);
+    const hasAnyMatchingField = templateKeys.some((k) => values[k]?.trim?.());
+
+    // หากไม่ใช่ชุดข้อมูลที่ใช้กับเทมเพลตนี้ ให้กรองออก
+    if (!isRelevantToThisTemplate && !hasAnyMatchingField) {
+      return false;
+    }
+
     const q = searchQuery.toLowerCase().trim();
     if (!q) return true;
     const name = (p.name || "").toLowerCase();
-    const counterparty = (p.values?.counterparty_name || p.values?.receiving_party_name || "").toLowerCase();
+    const counterparty = (values.counterparty_name || values.bill_to_company || values.receiving_party_name || "").toLowerCase();
     const signatory = (
-      p.values?.our_signatory_name ||
-      p.values?.disclosing_signatory_name ||
-      p.values?.counterparty_signatory_name ||
-      p.values?.receiving_signatory_name ||
+      values.our_signatory_name ||
+      values.disclosing_signatory_name ||
+      values.counterparty_signatory_name ||
+      values.attn_name ||
+      values.am_name ||
       ""
     ).toLowerCase();
     return name.includes(q) || counterparty.includes(q) || signatory.includes(q);
@@ -113,27 +142,27 @@ function ProfileSelectGateContent({ templateId }) {
 
   return (
     <div>
-      {/* Short & Clean Top Navigation Back Link */}
+      {/* Navigation Back */}
       <div className="mb-4">
         <Link
           href="/create"
           className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors"
         >
           <ArrowLeft size={15} />
-          ย้อนกลับ
+          ย้อนกลับไปเลือกเทมเพลต
         </Link>
       </div>
 
       {/* Header Title Section */}
       <div className="mb-8 space-y-1">
-        <h1 className="text-2xl font-bold text-gray-900">เลือกชุดข้อมูลที่จะใช้</h1>
-        <p className="text-sm text-gray-500">
-          เลือกชุดข้อมูลที่บันทึกไว้เพื่อดึงไปเติมในเอกสาร <strong className="text-gray-700 font-semibold">{shortTemplateTitle}</strong> โดยอัตโนมัติ
+        <h1 className="text-2xl font-bold text-[#22162B]">เลือกชุดข้อมูลที่จะใช้</h1>
+        <p className="text-sm text-[#646469]">
+          แสดงเฉพาะชุดข้อมูลที่สามารถใช้งานร่วมกับ <strong className="text-[#7C4DFF] font-bold">{shortTemplateTitle}</strong> โดยอัตโนมัติ
         </p>
       </div>
 
-      {/* Main Container Card - Matches Profile Data UI 100% */}
-      <div className="bg-white border border-gray-200 rounded-card p-6 shadow-card space-y-5">
+      {/* Main Container Card */}
+      <div className="bg-white border border-[#E4E4E8] rounded-[16px] p-6 shadow-card space-y-5">
         
         {/* Toolbar: Search Input + Create Profile Button */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
@@ -145,18 +174,18 @@ function ProfileSelectGateContent({ templateId }) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="ค้นหาชื่อชุดข้อมูล, บริษัท หรือผู้ลงนาม..."
-              className="w-full h-10 pl-10 pr-4 rounded-xl border border-gray-200 bg-gray-50/50 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all"
+              placeholder={`ค้นหาชุดข้อมูลสำหรับ ${shortTemplateTitle}...`}
+              className="w-full h-10 pl-10 pr-4 rounded-[10px] border border-[#E4E4E8] bg-gray-50/50 text-sm outline-none focus:border-[#7C4DFF] focus:ring-2 focus:ring-[#F5F1FF] transition-all"
             />
           </div>
 
           <Link
             href="/profile-data/new"
             target="_blank"
-            className="inline-flex items-center justify-center gap-2 h-10 px-5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 transition-all shadow-sm shrink-0"
+            className="inline-flex items-center justify-center gap-2 h-10 px-5 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-sm font-semibold hover:opacity-95 transition-opacity shrink-0"
           >
             <Plus size={16} />
-            สร้างข้อมูลใหม่
+            สร้างชุดข้อมูลใหม่
           </Link>
         </div>
 
@@ -166,8 +195,7 @@ function ProfileSelectGateContent({ templateId }) {
             <thead>
               <tr className="border-b border-gray-200/90 text-xs font-semibold text-gray-500 bg-gray-50/70">
                 <th className="px-5 py-3.5">ชื่อชุดข้อมูล</th>
-                <th className="px-5 py-3.5">ผู้ลงนาม</th>
-                <th className="px-5 py-3.5">ตำแหน่ง</th>
+                <th className="px-5 py-3.5">สถานะสำหรับ {shortTemplateTitle}</th>
                 <th className="px-5 py-3.5">อัปเดตล่าสุด</th>
                 <th className="px-5 py-3.5 text-right w-36">การกระทำ</th>
               </tr>
@@ -175,33 +203,23 @@ function ProfileSelectGateContent({ templateId }) {
             <tbody>
               {filteredProfiles.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-5 py-12 text-center text-gray-400 text-sm">
-                    {searchQuery ? "ไม่พบข้อมูลที่ตรงกับการค้นหา" : "ยังไม่มีชุดข้อมูลที่บันทึกไว้ — เริ่มสร้างชุดแรกได้เลย"}
+                  <td colSpan={4} className="px-5 py-12 text-center text-gray-400 text-sm">
+                    {searchQuery
+                      ? "ไม่พบชุดข้อมูลที่ตรงกับการค้นหา"
+                      : `ยังไม่มีชุดข้อมูลที่บันทึกไว้สำหรับ ${shortTemplateTitle} — สามารถเริ่มสร้างชุดแรกหรือเลือกเอกสารเปล่าได้เลย`}
                   </td>
                 </tr>
               ) : (
                 filteredProfiles.map((p) => {
-                  const companyName = p.name || p.values?.our_company_name || p.values?.counterparty_name || "บริษัท ไม่ระบุชื่อ";
+                  const companyName = p.name || p.values?.bill_to_company || p.values?.our_company_name || p.values?.counterparty_name || "บริษัท ไม่ระบุชื่อ";
                   const address = (
+                    p.values?.end_user ||
                     p.values?.our_company_address ||
                     p.values?.counterparty_address ||
-                    p.values?.receiving_party_address ||
-                    "ไม่ได้ระบุที่อยู่"
+                    "ไม่ได้ระบุรายละเอียด"
                   );
-                  const signatory = (
-                    p.values?.our_signatory_name ||
-                    p.values?.disclosing_signatory_name ||
-                    p.values?.counterparty_signatory_name ||
-                    p.values?.receiving_signatory_name ||
-                    "-"
-                  );
-                  const position = (
-                    p.values?.our_signatory_position ||
-                    p.values?.disclosing_signatory_position ||
-                    p.values?.counterparty_signatory_position ||
-                    p.values?.receiving_signatory_position ||
-                    "-"
-                  );
+
+                  const compat = checkCompatibility(p.values || {}, templateId);
 
                   return (
                     <tr
@@ -211,7 +229,7 @@ function ProfileSelectGateContent({ templateId }) {
                       {/* Company Name & Address */}
                       <td className="px-5 py-4">
                         <div className="flex items-start gap-3.5">
-                          <div className="w-10 h-10 rounded-xl bg-gray-100 text-gray-500 flex items-center justify-center shrink-0 mt-0.5">
+                          <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center shrink-0 mt-0.5">
                             <Building2 size={20} />
                           </div>
                           <div>
@@ -223,11 +241,18 @@ function ProfileSelectGateContent({ templateId }) {
                         </div>
                       </td>
 
-                      {/* Signatory */}
-                      <td className="px-5 py-4 text-gray-800 text-xs font-semibold">{signatory}</td>
-
-                      {/* Position */}
-                      <td className="px-5 py-4 text-gray-500 text-xs">{position}</td>
+                      {/* Compatibility status */}
+                      <td className="px-5 py-4 text-xs font-medium">
+                        {compat.isComplete ? (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-semibold">
+                            <CheckCircle2 size={13} /> ข้อมูลครบสมบูรณ์
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 font-semibold">
+                            <AlertCircle size={13} /> ขาด {compat.missing.length} ฟิลด์ที่จำเป็น
+                          </span>
+                        )}
+                      </td>
 
                       {/* Last Updated */}
                       <td className="px-5 py-4 text-gray-500 text-xs font-mono">
@@ -239,7 +264,7 @@ function ProfileSelectGateContent({ templateId }) {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => setSelectedId(p.id)}
-                            className="px-3.5 py-1.5 rounded-lg bg-primary-600 text-white text-xs font-bold hover:bg-primary-500 transition-colors shadow-2xs shrink-0"
+                            className="px-3.5 py-1.5 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-xs font-semibold hover:opacity-95 transition-opacity shrink-0"
                           >
                             เลือกใช้งาน
                           </button>
@@ -249,7 +274,7 @@ function ProfileSelectGateContent({ templateId }) {
                               e.stopPropagation();
                               setOpenMenuId(openMenuId === p.id ? null : p.id);
                             }}
-                            className="p-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-100 text-gray-600 transition-colors shadow-2xs"
+                            className="p-1.5 rounded-[10px] border border-[#E4E4E8] bg-white hover:bg-[#F6F6FA] text-gray-600 transition-colors"
                             title="ตัวเลือกเพิ่มเติม"
                           >
                             <MoreHorizontal size={15} />
@@ -292,23 +317,23 @@ function ProfileSelectGateContent({ templateId }) {
         {/* Blank Document Choice Card */}
         <div
           onClick={() => setSelectedId(null)}
-          className="w-full flex items-center justify-between p-4 rounded-xl border border-dashed border-gray-300 bg-gray-50/50 hover:bg-gray-100/70 hover:border-gray-400 transition-all cursor-pointer group"
+          className="w-full flex items-center justify-between p-4 rounded-[16px] border border-dashed border-[#E4E4E8] bg-gray-50/50 hover:bg-[#F6F6FA] transition-all cursor-pointer group"
         >
           <div className="flex items-center gap-3.5 min-w-0 pr-4">
-            <div className="w-10 h-10 rounded-xl bg-gray-200 text-gray-600 flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-[10px] bg-gray-200 text-gray-600 flex items-center justify-center shrink-0">
               <FileText size={20} />
             </div>
             <div className="min-w-0">
-              <p className="font-bold text-gray-900 text-sm group-hover:text-gray-800">
+              <p className="font-bold text-[#22162B] text-sm group-hover:text-[#7C4DFF] transition-colors">
                 เริ่มจากเอกสารเปล่า (ไม่ใช้ข้อมูลที่บันทึกไว้)
               </p>
-              <p className="text-xs text-gray-400 mt-0.5 truncate">
-                กรอกข้อมูลสัญญาใหม่ทั้งหมดด้วยตัวเองตั้งแต่ต้น
+              <p className="text-xs text-[#646469] mt-0.5 truncate">
+                กรอกข้อมูลใหม่ทั้งหมดด้วยตัวเองตั้งแต่ต้น
               </p>
             </div>
           </div>
 
-          <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-xs font-semibold group-hover:bg-primary-600 group-hover:text-white group-hover:border-primary-600 transition-all shadow-2xs">
+          <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[10px] bg-white border border-[#E4E4E8] text-[#22162B] text-xs font-semibold group-hover:bg-[#7C4DFF] group-hover:text-white group-hover:border-[#7C4DFF] transition-all">
             <span>เลือกเอกสารเปล่า</span>
             <ChevronRight size={15} />
           </div>

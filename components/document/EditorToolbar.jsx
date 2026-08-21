@@ -47,17 +47,17 @@ export default function EditorToolbar({
         <button
           onClick={onSave}
           disabled={isSaving}
-          className="flex items-center gap-2 h-10 px-4 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-60"
+          className="flex items-center gap-2 h-10 px-4 rounded-[10px] border border-[#E4E4E8] text-[#22162B] text-sm font-medium hover:bg-[#F6F6FA] transition-colors disabled:opacity-60"
           title="บันทึกเอกสารนี้ไว้ในคลัง 'เอกสารของฉัน'"
         >
-          {isSaving ? <Loader2 size={16} className="animate-spin text-primary-600" /> : <Save size={16} className="text-gray-600" />}
+          {isSaving ? <Loader2 size={16} className="animate-spin text-[#7C4DFF]" /> : <Save size={16} className="text-[#646469]" />}
           <span className="hidden sm:inline">{isSaving ? "กำลังบันทึก..." : "บันทึกเอกสาร"}</span>
         </button>
 
         {/* ปุ่ม Preview */}
         <button
           onClick={onPreview}
-          className="flex items-center gap-2 h-10 px-4 rounded-lg border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors"
+          className="flex items-center gap-2 h-10 px-4 rounded-[10px] border border-[#E4E4E8] text-[#22162B] text-sm font-medium hover:bg-[#F6F6FA] transition-colors"
         >
           <Eye size={16} />
           <span className="hidden sm:inline">Preview</span>
@@ -67,13 +67,13 @@ export default function EditorToolbar({
         <button
           onClick={onExport}
           disabled={exporting}
-          className="flex items-center gap-2 h-10 px-4 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 transition-colors disabled:opacity-60"
+          className="flex items-center gap-2 h-10 px-4 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-sm font-semibold hover:opacity-95 transition-opacity disabled:opacity-60"
         >
           {exporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
           <span className="hidden sm:inline">{exporting ? "กำลังสร้าง..." : "Export PDF"}</span>
         </button>
 
-        <button className="p-2 rounded-lg text-gray-500 hover:bg-gray-100">
+        <button className="p-2 rounded-[10px] text-[#646469] hover:bg-[#F6F6FA]">
           <MoreHorizontal size={18} />
         </button>
       </div>
@@ -84,15 +84,15 @@ export default function EditorToolbar({
 function StatusBadge({ status }) {
   if (status.isComplete) {
     return (
-      <span className="inline-flex items-center gap-1 text-xs font-medium text-success-600">
-        <span className="w-1.5 h-1.5 rounded-full bg-success-600" />
+      <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#17682F]">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#239742]" />
         กรอกข้อมูลครบแล้ว
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 text-xs font-medium text-gray-500">
-      <span className="w-1.5 h-1.5 rounded-full bg-gray-300" />
+    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#646469]">
+      <span className="w-1.5 h-1.5 rounded-full bg-[#B2AFBC]" />
       กรอกแล้ว {status.filled}/{status.total}
     </span>
   );

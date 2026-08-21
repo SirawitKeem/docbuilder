@@ -81,7 +81,7 @@ export default function SettingsPage() {
         </p>
       </section>
 
-      <button className="h-11 px-6 rounded-lg bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500">
+      <button className="h-11 px-6 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-sm font-semibold hover:opacity-95 transition-opacity">
         บันทึกการเปลี่ยนแปลง
       </button>
     </div>

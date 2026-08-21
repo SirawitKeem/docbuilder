@@ -5,21 +5,21 @@ import { Plus } from "lucide-react";
 export default function HeroSection({ userName }) {
   return (
     <section
-      className="relative overflow-hidden rounded-2xl bg-white border border-gray-200 px-8 py-10 mb-8 shadow-card bg-contain bg-right bg-no-repeat"
-      style={{ backgroundColor: '#f9fbfd', backgroundImage: "url('/Banner-Home.png')" }}
+      className="relative overflow-hidden rounded-[16px] bg-white border border-[#E4E4E8] px-8 py-10 mb-8 shadow-card bg-contain bg-right bg-no-repeat"
+      style={{ backgroundColor: '#FFFFFF', backgroundImage: "url('/Banner-Home.png')" }}
     >
       <div className="relative z-10 max-w-lg">
-        <h1 className="text-[28px] leading-tight font-bold text-gray-900 mb-2">
+        <h1 className="text-[28px] leading-tight font-semibold text-[#22162B] mb-2">
           ยินดีต้อนรับ, {userName}
         </h1>
-        <p className="text-sm text-gray-600 leading-relaxed mb-6 font-medium">
+        <p className="text-sm text-[#646469] leading-relaxed mb-6 font-medium">
           สร้างเอกสารจากเทมเพลตของคุณได้อย่างรวดเร็ว
           <br />
           กรอกข้อมูล ตรวจสอบ และส่งออกหรือส่งให้ผู้รับได้ทันที
         </p>
         <Link
           href="/create"
-          className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-500 transition-all shadow-sm"
+          className="inline-flex items-center gap-2 h-11 px-5 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-sm font-semibold hover:opacity-95 transition-opacity"
         >
           <Plus size={18} strokeWidth={2.5} />
           สร้างเอกสารใหม่
