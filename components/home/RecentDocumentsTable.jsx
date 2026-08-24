@@ -15,8 +15,8 @@ export default function RecentDocumentsTable() {
   return (
     <section>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-900">เอกสารล่าสุด</h2>
-        <Link href="/documents" className="text-sm text-primary-600 font-medium">
+        <h2 className="text-lg font-semibold text-foreground">เอกสารล่าสุด</h2>
+        <Link href="/documents" className="text-sm text-primary hover:text-primary/80 font-medium transition-colors">
           ดูทั้งหมด →
         </Link>
       </div>

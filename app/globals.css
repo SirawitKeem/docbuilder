@@ -1,80 +1,124 @@
 @import "tailwindcss";
-@config "../tailwind.config.js";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-surface: hsl(var(--surface));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-border: hsl(var(--border));
+  --color-success: hsl(var(--success));
+  --color-warning: hsl(var(--warning));
+  --color-destructive: hsl(var(--destructive));
+
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --font-sans: var(--font-inter), var(--font-noto-thai), "Inter", "Noto Sans Thai", sans-serif;
+}
 
 :root {
-  --primary: #7C4DFF;
-  --primary-hover: #6A3FE0;
-  --primary-text: #5C33CC;
+  /* Light Mode Base Tokens */
+  --background: 240 20% 98%;        /* #F6F6FA */
+  --surface: 0 0% 100%;             /* #FFFFFF Pure White Surface */
+  --foreground: 240 10% 12%;        /* #22162B Dark Copy */
+  --muted: 240 10% 96%;             /* #F6F6FA */
+  --muted-foreground: 240 5% 45%;   /* #646469 Muted Copy */
+  --border: 240 7% 90%;             /* #E4E4E8 Hairline Borders */
 
-  --button-gradient-top: #9F1EF4;
-  --button-gradient-bottom: #4F03BC;
-  --button-border: #5B03A7;
+  /* Primary Accent = Deep Purple (#7C4DFF) */
+  --primary: 256 100% 65%;          /* #7C4DFF */
+  --primary-foreground: 0 0% 100%;
 
-  --background: #F6F6FA;
-  --surface: #FFFFFF;
-  --surface-muted: #F6F6FA;
-  --control-muted: #F9F9FB;
+  /* Accent Gradient Top = #9F1EF4 */
+  --accent: 275 92% 54%;
+  --accent-foreground: 0 0% 100%;
 
-  --color-black: #22162B;
-  --color-dark-grey: #646469;
-  --color-silver: #C5C2D1;
-  --color-light-grey: #E4E4E8;
-  --border-color: #E4E4E8;
+  /* Status Tokens */
+  --success: 137 57% 35%;
+  --warning: 38 100% 45%;
+  --destructive: 0 72% 51%;
 
-  --text-primary: #22162B;
-  --text-secondary: #646469;
-  --text-muted: #B2AFBC;
+  /* Sidebar Light Tokens */
+  --sidebar-background: 0 0% 100%;  /* #FFFFFF */
+  --sidebar-foreground: 240 10% 12%;
+  --sidebar-primary: 256 100% 65%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 256 100% 97%;   /* #F5F1FF */
+  --sidebar-accent-foreground: 256 100% 65%; /* #7C4DFF */
+  --sidebar-border: 240 7% 90%;
+  --sidebar-ring: 256 100% 65%;
+}
 
-  --success: #239742;
-  --danger: #E14400;
-  --warning: #FFB819;
-  --info: #1C60E7;
+.dark {
+  /* Dark Mode Tokens */
+  --background: 240 10% 8%;         /* #121215 Deep Canvas */
+  --surface: 240 8% 13%;            /* #1E1E24 Dark Surface */
+  --foreground: 240 5% 96%;         /* #F3F3F5 Bright White Text */
+  --muted: 240 8% 18%;             /* #282830 Dark Muted */
+  --muted-foreground: 240 5% 65%;   /* #A1A1AA Dark Muted Copy */
+  --border: 240 8% 20%;             /* #32323A Dark Hairline Borders */
 
-  /* System UI Font: Inter */
-  --font-system: var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-sans: var(--font-system);
+  --primary: 256 100% 70%;
+  --primary-foreground: 0 0% 100%;
 
-  --radius-card: 16px;
-  --radius-button: 10px;
-  --radius-input: 10px;
-  --radius-panel: 20px;
-  --radius-badge: 999px;
-  --radius-avatar: 50%;
+  --accent: 275 80% 70%;
+  --accent-foreground: 0 0% 100%;
+
+  --success: 142 65% 50%;
+  --warning: 38 85% 55%;
+  --destructive: 0 65% 58%;
+
+  /* Sidebar Dark Tokens */
+  --sidebar-background: 240 10% 10%;
+  --sidebar-foreground: 240 5% 90%;
+  --sidebar-primary: 256 100% 70%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 256 40% 22%;
+  --sidebar-accent-foreground: 256 100% 85%;
+  --sidebar-border: 240 8% 20%;
+  --sidebar-ring: 256 100% 70%;
 }
 
 body {
   -webkit-font-smoothing: antialiased;
-  background-color: var(--background);
-  color: var(--text-primary);
-  font-family: var(--font-system);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-sans);
 }
 
-/* System Font Scope */
-.font-system {
-  font-family: var(--font-system) !important;
+/* Hide Next.js DevTools floating circle in development mode */
+[data-nextjs-toast],
+[data-nextjs-dialog-overlay],
+nextjs-portal {
+  display: none !important;
 }
 
-/* Document Template-Specific Font Scopes (Isolated per template) */
+/* Document Template-Specific Font Scopes (Isolated per template for PDF export parity) */
 .template-quotation,
 .quotation-document-wrapper {
-  font-family: var(--font-noto-thai-looped), "Noto Sans Thai Looped", "Inter", sans-serif !important;
+  font-family: var(--font-noto-thai-looped), "Noto Sans Thai Looped", sans-serif !important;
 }
 
-.template-nda {
-  font-family: var(--font-noto-thai), "Noto Sans Thai", sans-serif !important;
-}
-
-.template-partner {
-  font-family: var(--font-noto-thai), "Noto Sans Thai", sans-serif !important;
-}
-
+.template-nda,
+.template-partner,
 .template-distributor {
   font-family: var(--font-noto-thai), "Noto Sans Thai", sans-serif !important;
 }
 
-/* 
- * Centralized Document Typography & Spacing Controller 
- */
+/* Centralized Document Typography */
 .document-body {
   font-size: 13px;
   line-height: 1.7;

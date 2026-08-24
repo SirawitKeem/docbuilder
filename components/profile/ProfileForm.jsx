@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useMemo, useEffect, Suspense } from "react";
+import { useState, useMemo, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle2, Plus, X, ArrowLeft } from "lucide-react";
-import { fieldRegistry, categoryLabels, coreFieldKeys } from "@/lib/profiles/fieldRegistry";
+import { CheckCircle2, ArrowLeft, Check, Sparkles } from "lucide-react";
+import { fieldRegistry, categoryLabels } from "@/lib/profiles/fieldRegistry";
 import { getAllTemplateSchemas, getTemplateAllKeys, getRelevantTemplates } from "@/lib/profiles/compatibility";
 import { createFieldProfile, updateFieldProfile } from "@/lib/data/fieldProfiles";
 
@@ -16,30 +16,50 @@ function ProfileFormContent({ profile }) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  // เทมเพลตที่เปิดใช้งานฟิลด์ในฟอร์มนี้
-  const [activeTemplateIds, setActiveTemplateIds] = useState(() => {
+  const allTemplates = getAllTemplateSchemas();
+
+  // เลือกเทมเพลตที่จะใช้ชุดข้อมูลนี้ (เริ่มต้นเป็น [] ให้ User เลือกเองทั้งหมด)
+  const [selectedTemplateIds, setSelectedTemplateIds] = useState(() => {
     if (profile?.values) {
-      return getRelevantTemplates(profile.values).map((r) => r.templateId);
+      const relevant = getRelevantTemplates(profile.values).map((r) => r.templateId);
+      return relevant.length > 0 ? relevant : [];
     }
     return [];
   });
 
-  const allTemplates = getAllTemplateSchemas();
-  const availableToAdd = allTemplates.filter((t) => !activeTemplateIds.includes(t.id));
+  const toggleTemplateSelect = (id) => {
+    setSelectedTemplateIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
 
-  // field ที่ควรแสดงในฟอร์ม = core + ฟิลด์ของเทมเพลตที่เปิดใช้ + field ที่มีค่าอยู่แล้ว
+  const selectAllTemplates = () => {
+    setSelectedTemplateIds(allTemplates.map((t) => t.id));
+  };
+
+  const clearAllTemplates = () => {
+    setSelectedTemplateIds([]);
+  };
+
+  // แสดงเฉพาะ field ที่เทมเพลตที่เลือกใช้งานจริงเท่านั้น
   const visibleKeys = useMemo(() => {
-    const keys = new Set(coreFieldKeys);
-    activeTemplateIds.forEach((id) => {
+    if (selectedTemplateIds.length === 0) return [];
+    const keys = new Set();
+
+    selectedTemplateIds.forEach((id) => {
       const templateKeys = getTemplateAllKeys(id);
       templateKeys.forEach((k) => keys.add(k));
     });
+
+    // รักษาฟิลด์ที่มีค่าบันทึกอยู่แล้วในโปรไฟล์เดิม
     Object.entries(values).forEach(([k, v]) => {
       if (v) keys.add(k);
     });
-    return [...keys].filter((k) => fieldRegistry[k]);
-  }, [activeTemplateIds, values]);
 
+    return [...keys].filter((k) => fieldRegistry[k]);
+  }, [selectedTemplateIds, values]);
+
+  // Group fields by category
   const grouped = useMemo(() => {
     const groups = {};
     visibleKeys.forEach((key) => {
@@ -60,6 +80,10 @@ function ProfileFormContent({ profile }) {
       alert("กรุณาตั้งชื่อชุดข้อมูลเพื่อให้จำง่ายตอนเลือกใช้");
       return;
     }
+    if (selectedTemplateIds.length === 0 && Object.keys(values).length === 0) {
+      alert("กรุณาเลือกเทมเพลตอย่างน้อย 1 เทมเพลตเพื่อกรอกข้อมูล");
+      return;
+    }
     setSaving(true);
     try {
       if (profile) await updateFieldProfile(profile.id, { name, values });
@@ -77,114 +101,125 @@ function ProfileFormContent({ profile }) {
       <div>
         <Link
           href="/profile-data"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors bg-white px-3.5 py-2 rounded-xl border border-gray-200 shadow-2xs"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors bg-surface px-3.5 py-2 rounded-xl border border-border shadow-2xs"
         >
           <ArrowLeft size={15} />
           ย้อนกลับไปหน้าชุดข้อมูล
         </Link>
       </div>
 
-      {/* ONE Unified White Container Card wrapping profile name, form fields, and template chips */}
-      <div className="bg-white border border-gray-200 rounded-card p-6 shadow-card space-y-6">
+      {/* Main Form Container Card */}
+      <div className="bg-surface border border-border rounded-2xl p-6 shadow-xs space-y-6">
         
         {/* 1. Profile Name Input Field */}
-        <div className="space-y-1.5 pb-5 border-b border-[#E4E4E8]">
-          <label className="block text-sm font-bold text-[#22162B]">ชื่อชุดข้อมูล</label>
+        <div className="space-y-1.5 pb-5 border-b border-border">
+          <label className="block text-sm font-bold text-foreground">ชื่อชุดข้อมูล</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="เช่น บริษัท ตัวอย่าง จำกัด, ลูกค้าประจำ A"
-            className="w-full h-11 px-3.5 rounded-[10px] border border-[#E4E4E8] text-sm outline-none focus:border-[#7C4DFF] focus:ring-2 focus:ring-[#F5F1FF] font-medium"
+            className="w-full h-10 px-3.5 rounded-xl border border-border bg-muted/20 text-sm text-foreground outline-none focus:border-primary focus:bg-surface font-medium transition-all"
           />
-          <p className="text-xs text-[#646469]">ใช้เป็นชื่อสำหรับเลือกตอนสร้างเอกสาร ไม่ปรากฏในเอกสารจริง</p>
+          <p className="text-xs text-muted-foreground">ใช้เป็นชื่อสำหรับเลือกตอนสร้างเอกสาร ไม่ปรากฏในเอกสารจริง</p>
         </div>
 
-        {/* 2. Dynamic Form Fields grouped by Category inside the same card */}
-        {Object.entries(grouped).map(([category, keys]) => (
-          <div key={category} className="space-y-4 pt-1">
-            <h2 className="text-base font-bold text-[#22162B] pb-2 border-b border-[#E4E4E8]">
-              {categoryLabels[category] || category}
-            </h2>
-            <div className="space-y-4">
-              {keys.map((key) => {
-                const def = fieldRegistry[key];
-                return (
-                  <div key={key}>
-                    <label className="block text-sm font-medium text-[#22162B] mb-1.5">{def.label}</label>
-                    {def.type === "textarea" ? (
-                      <textarea
-                        value={values[key] || ""}
-                        placeholder={def.placeholder}
-                        onChange={(e) => handleChange(key, e.target.value)}
-                        rows={2}
-                        className="w-full px-3.5 py-2.5 rounded-[10px] border border-[#E4E4E8] text-sm outline-none focus:border-[#7C4DFF] focus:ring-2 focus:ring-[#F5F1FF] resize-none"
-                      />
-                    ) : (
-                      <input
-                        type="text"
-                        value={values[key] || ""}
-                        placeholder={def.placeholder}
-                        onChange={(e) => handleChange(key, e.target.value)}
-                        className="w-full h-11 px-3.5 rounded-[10px] border border-[#E4E4E8] text-sm outline-none focus:border-[#7C4DFF] focus:ring-2 focus:ring-[#F5F1FF]"
-                      />
-                    )}
-                  </div>
-                );
-              })}
+        {/* 2. Template Selector Chips (เริ่มต้นไม่เลือก ให้ User เลือกเอง) */}
+        <div className="space-y-2.5 pb-5 border-b border-border">
+          <div className="flex items-center justify-between">
+            <label className="block text-sm font-bold text-foreground flex items-center gap-1.5">
+              <span>เลือกเทมเพลตที่จะนำชุดข้อมูลนี้ไปใช้</span>
+              <Sparkles size={14} className="text-primary" />
+            </label>
+            <div className="flex items-center gap-3">
+              {selectedTemplateIds.length > 0 && (
+                <button
+                  type="button"
+                  onClick={clearAllTemplates}
+                  className="text-xs font-semibold text-muted-foreground hover:text-foreground"
+                >
+                  ยกเลิกการเลือก
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={selectAllTemplates}
+                className="text-xs font-semibold text-primary hover:underline"
+              >
+                เลือกทั้งหมด
+              </button>
             </div>
           </div>
-        ))}
+          <p className="text-xs text-muted-foreground">
+            คลิกเลือกเทมเพลตที่คุณต้องการ — แบบฟอร์มจะแสดงเฉพาะฟิลด์ข้อมูลที่เทมเพลตนั้นๆ ต้องนำไปใช้
+          </p>
 
-        {/* 3. Add Template Specific Fields Chips (inside the same white card) */}
-        <div className="pt-4 border-t border-dashed border-[#E4E4E8] space-y-3">
-          <h2 className="text-sm font-bold text-[#22162B]">เพิ่มข้อมูลเฉพาะสำหรับเทมเพลต</h2>
-          
-          {/* Active template chips */}
-          {activeTemplateIds.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {activeTemplateIds.map((id) => {
-                const t = allTemplates.find((x) => x.id === id);
-                return (
-                  <span
-                    key={id}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#F5F1FF] text-[#7C4DFF] text-xs font-semibold border border-[#E1D3FF] shadow-2xs"
-                  >
-                    {t?.name || id}
-                    <button
-                      type="button"
-                      onClick={() => setActiveTemplateIds((prev) => prev.filter((x) => x !== id))}
-                      className="hover:text-red-600 ml-0.5"
-                      title="ปิดการแสดงฟิลด์นี้"
-                    >
-                      <X size={13} />
-                    </button>
-                  </span>
-                );
-              })}
-            </div>
-          )}
-
-          {/* Available to add buttons */}
-          {availableToAdd.length > 0 && (
-            <div className="flex flex-wrap gap-2 pt-1">
-              {availableToAdd.map((t) => (
+          <div className="flex flex-wrap gap-2 pt-1">
+            {allTemplates.map((t) => {
+              const isSelected = selectedTemplateIds.includes(t.id);
+              return (
                 <button
                   key={t.id}
                   type="button"
-                  onClick={() => setActiveTemplateIds((prev) => [...prev, t.id])}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-[#E4E4E8] text-[#646469] text-xs font-semibold hover:border-[#7C4DFF] hover:text-[#7C4DFF] hover:bg-[#F5F1FF]/50 transition-colors shadow-2xs"
+                  onClick={() => toggleTemplateSelect(t.id)}
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                    isSelected
+                      ? "bg-primary/10 text-primary border-primary/30 shadow-2xs"
+                      : "bg-surface text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
+                  }`}
                 >
-                  <Plus size={13} /> {t.name}
+                  {isSelected && <Check size={13} className="text-primary" />}
+                  <span>{t.name}</span>
                 </button>
-              ))}
-            </div>
-          )}
-
-          <p className="text-xs text-[#646469]">
-            เลือกเทมเพลตที่ชุดข้อมูลนี้จะนำไปใช้ — ระบบจะโชว์เฉพาะ field ที่เทมเพลตนั้นต้องการเพิ่มมาให้กรอก
-          </p>
+              );
+            })}
+          </div>
         </div>
+
+        {/* 3. Dynamic Form Fields grouped by Category */}
+        {visibleKeys.length === 0 ? (
+          <div className="p-10 text-center border border-dashed border-border rounded-xl bg-muted/20 text-muted-foreground text-xs space-y-1">
+            <p className="font-semibold text-foreground">💡 ยังไม่ได้เลือกเทมเพลต</p>
+            <p>กรุณาคลิกเลือกเทมเพลตด้านบนเพื่อแสดงฟิลด์ข้อมูลที่ต้องกรอก</p>
+          </div>
+        ) : (
+          Object.entries(grouped).map(([category, keys]) => (
+            <div key={category} className="space-y-4 pt-1">
+              <h2 className="text-sm font-bold text-foreground pb-2 border-b border-border uppercase tracking-wider text-muted-foreground">
+                {categoryLabels[category] || category}
+              </h2>
+              <div className="space-y-4">
+                {keys.map((key) => {
+                  const def = fieldRegistry[key];
+                  return (
+                    <div key={key}>
+                      <label className="block text-xs font-semibold text-foreground mb-1.5">
+                        {def.label}
+                      </label>
+                      {def.type === "textarea" ? (
+                        <textarea
+                          value={values[key] || ""}
+                          placeholder={def.placeholder}
+                          onChange={(e) => handleChange(key, e.target.value)}
+                          rows={2}
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-muted/20 text-xs text-foreground outline-none focus:border-primary focus:bg-surface resize-none transition-all"
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          value={values[key] || ""}
+                          placeholder={def.placeholder}
+                          onChange={(e) => handleChange(key, e.target.value)}
+                          className="w-full h-10 px-3.5 rounded-xl border border-border bg-muted/20 text-xs text-foreground outline-none focus:border-primary focus:bg-surface transition-all"
+                        />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))
+        )}
 
       </div>
 
@@ -193,20 +228,20 @@ function ProfileFormContent({ profile }) {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="h-11 px-7 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-sm font-semibold hover:opacity-95 disabled:opacity-60 transition-opacity"
+          className="h-10 px-6 rounded-xl bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-xs font-semibold hover:opacity-95 disabled:opacity-60 transition-opacity shadow-sm"
         >
-          {saving ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
+          {saving ? "กำลังบันทึก..." : "บันทึกชุดข้อมูล"}
         </button>
         <button
           onClick={() => router.push("/profile-data")}
-          className="h-11 px-6 rounded-[10px] border border-[#E4E4E8] text-[#22162B] text-sm font-medium hover:bg-[#F6F6FA] transition-colors bg-white"
+          className="h-10 px-5 rounded-xl border border-border text-foreground text-xs font-medium hover:bg-muted transition-colors bg-surface"
         >
           ยกเลิก
         </button>
         {saved && (
-          <span className="inline-flex items-center gap-1.5 text-sm text-[#17682F] font-bold">
-            <CheckCircle2 size={16} className="text-[#239742]" />
-            บันทึกแล้ว
+          <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600 font-bold">
+            <CheckCircle2 size={15} />
+            บันทึกเรียบร้อยแล้ว
           </span>
         )}
       </div>
@@ -216,7 +251,7 @@ function ProfileFormContent({ profile }) {
 
 export default function ProfileForm(props) {
   return (
-    <Suspense fallback={<div className="h-32 flex items-center justify-center text-gray-400">กำลังโหลด...</div>}>
+    <Suspense fallback={<div className="h-32 flex items-center justify-center text-muted-foreground text-xs">กำลังโหลด...</div>}>
       <ProfileFormContent {...props} />
     </Suspense>
   );

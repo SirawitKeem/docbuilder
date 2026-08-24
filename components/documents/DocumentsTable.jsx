@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Eye, MoreVertical, MoreHorizontal, Edit3, Trash2, X } from "lucide-react";
+import { Eye, MoreHorizontal, Edit3, Trash2, X, Download } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { templateRegistry } from "@/lib/templates/registry";
 import { getFieldProfile } from "@/lib/data/fieldProfile";
@@ -11,12 +11,14 @@ import DocumentFooter from "@/components/document/DocumentFooter";
 
 const statusStyles = {
   sent: "bg-[#DDEEE2] text-[#17682F]",
-  draft: "bg-[#F5F1FF] text-[#5C33CC]",
+  issued: "bg-[#E1F0FF] text-[#0066CC]",
+  draft: "bg-[#FFF2CE] text-[#725000]",
   cancelled: "bg-[#F9DFD5] text-[#A73300]",
 };
 
 const statusLabel = {
   sent: "ส่งแล้ว",
+  issued: "ออกเอกสารแล้ว",
   draft: "ร่าง",
   cancelled: "ยกเลิก",
 };
@@ -64,11 +66,16 @@ export default function DocumentsTable({
 }) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState(null);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+  const [selectedIds, setSelectedIds] = useState([]);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [previewDoc, setPreviewDoc] = useState(null);
+  
+  // Custom Delete Confirmation Modal State (null | { type: 'single', id, docName } | { type: 'bulk', count })
+  const [deleteModalState, setDeleteModalState] = useState(null);
+
   const menuRef = useRef(null);
 
-  // ปิด Dropdown เมนูเมื่อคลิกนอกเมนู
   useEffect(() => {
     function handleClickOutside(e) {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -79,11 +86,53 @@ export default function DocumentsTable({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleDelete = async (id) => {
-    if (!confirm("คุณต้องการลบรายการนี้ใช่หรือไม่?")) return;
+  // Clear selections when documents change
+  useEffect(() => {
+    setSelectedIds((prev) => prev.filter((id) => documents.some((d) => d.id === id)));
+  }, [documents]);
+
+  const allVisibleIds = documents.map((d) => d.id);
+  const isAllSelected = allVisibleIds.length > 0 && allVisibleIds.every((id) => selectedIds.includes(id));
+
+  const toggleSelectAll = () => {
+    if (isAllSelected) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(allVisibleIds);
+    }
+  };
+
+  const toggleSelectRow = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
+
+  // Trigger Confirmation Modal for Single Delete
+  const requestSingleDelete = (doc) => {
+    setDeleteModalState({
+      type: "single",
+      id: doc.id,
+      docName: doc.name || "เอกสารนี้",
+    });
+  };
+
+  // Trigger Confirmation Modal for Bulk Delete
+  const requestBulkDelete = () => {
+    if (selectedIds.length === 0) return;
+    setDeleteModalState({
+      type: "bulk",
+      count: selectedIds.length,
+    });
+  };
+
+  // Execute Single Delete after Pop-up confirmation
+  const confirmSingleDelete = async (id) => {
     setDeletingId(id);
+    setDeleteModalState(null);
     try {
       await fetch(`${deleteApiUrl}?id=${id}`, { method: "DELETE" });
+      setSelectedIds((prev) => prev.filter((x) => x !== id));
       if (onRefresh) {
         onRefresh();
       } else {
@@ -95,101 +144,180 @@ export default function DocumentsTable({
     }
   };
 
+  // Execute Bulk Delete after Pop-up confirmation
+  const confirmBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    setIsBulkDeleting(true);
+    setDeleteModalState(null);
+    try {
+      await Promise.all(
+        selectedIds.map((id) => fetch(`${deleteApiUrl}?id=${id}`, { method: "DELETE" }))
+      );
+      setSelectedIds([]);
+      if (onRefresh) {
+        onRefresh();
+      } else {
+        router.refresh();
+        window.location.reload();
+      }
+    } catch (err) {
+      console.error("Bulk delete error:", err);
+      alert("เกิดข้อผิดพลาดในการลบรายการที่เลือก");
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  };
+
+  const handlePrintOrExport = (doc) => {
+    window.open(`/print/${doc.templateId || "nda"}?id=${doc.id}`, "_blank");
+  };
+
   return (
     <>
-      <div className="bg-white border border-[#E4E4E8] rounded-[10px] shadow-card overflow-hidden">
+      {/* Floating Bulk Action Bar */}
+      {selectedIds.length > 0 && (
+        <div className="mb-3 p-3 bg-primary/10 border border-primary/20 rounded-xl flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2 duration-150">
+          <div className="flex items-center gap-2 text-xs font-bold text-foreground">
+            <span className="w-2 h-2 rounded-full bg-primary" />
+            <span>เลือกอยู่ {selectedIds.length} รายการ</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setSelectedIds([])}
+              className="px-3 py-1.5 rounded-lg border border-border bg-surface text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+            >
+              ยกเลิกการเลือก
+            </button>
+            <button
+              onClick={requestBulkDelete}
+              disabled={isBulkDeleting}
+              className="px-4 py-1.5 rounded-xl bg-[#FF3B30] text-white text-xs font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity flex items-center gap-1.5 shadow-2xs"
+            >
+              <Trash2 size={14} className="text-white" />
+              <span className="text-white">{isBulkDeleting ? "กำลังลบ..." : `ลบรายการที่เลือก (${selectedIds.length})`}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Main Table Container */}
+      <div className="bg-surface border border-border rounded-2xl shadow-xs overflow-hidden transition-colors">
         <table className="w-full text-sm table-fixed">
           <thead>
-            <tr className="border-b border-[#E4E4E8] text-left text-xs text-[#646469] bg-[#F9F9FB]">
-              <th className={`${showSentTo ? "w-[30%]" : "w-[34%]"} px-5 py-3.5 font-medium`}>ชื่อเอกสาร</th>
-              <th className={`${showSentTo ? "w-[20%]" : "w-[26%]"} px-5 py-3.5 font-medium`}>เทมเพลต</th>
+            <tr className="border-b border-border text-left text-xs font-semibold text-muted-foreground bg-muted/50">
+              {/* Checkbox Column */}
+              <th className="w-[5%] px-4 py-3.5 text-center">
+                <input
+                  type="checkbox"
+                  checked={isAllSelected}
+                  onChange={toggleSelectAll}
+                  className="w-4 h-4 rounded border-border text-primary focus:ring-primary cursor-pointer accent-primary"
+                  title={isAllSelected ? "ยกเลิกเลือกทั้งหมด" : "เลือกทั้งหมด"}
+                />
+              </th>
+              <th className={`${showSentTo ? "w-[26%]" : "w-[30%]"} px-4 py-3.5`}>ชื่อเอกสาร</th>
+              <th className={`${showSentTo ? "w-[19%]" : "w-[23%]"} px-4 py-3.5`}>เทมเพลต</th>
               {showSentTo ? (
-                <th className="w-[22%] px-5 py-3.5 font-medium">ส่งไปยัง</th>
+                <th className="w-[19%] px-4 py-3.5">ส่งไปยัง</th>
               ) : (
-                <th className="w-[14%] px-5 py-3.5 font-medium">ผู้สร้าง</th>
+                <th className="w-[13%] px-4 py-3.5">ผู้สร้าง</th>
               )}
-              <th className="w-[13%] px-5 py-3.5 font-medium">วันที่สร้าง</th>
-              <th className="w-[9%] px-4 py-3.5 font-medium text-center">สถานะ</th>
-              <th className="w-[6%] px-5 py-3.5 font-medium text-right">การดำเนินการ</th>
+              <th className="w-[14%] px-4 py-3.5">วันที่สร้าง</th>
+              <th className="w-[10%] px-2 py-3.5 text-center">สถานะ</th>
+              <th className="w-[10%] px-4 py-3.5 text-right whitespace-nowrap">การดำเนินการ</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-border">
             {documents.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-5 py-12 text-center text-gray-400">
+                <td colSpan={7} className="px-5 py-12 text-center text-muted-foreground">
                   {emptyMessage}
                 </td>
               </tr>
             ) : (
               documents.map((doc) => {
                 const { dateStr, timeStr } = formatDateTime(doc.createdAt);
+                const isSelected = selectedIds.includes(doc.id);
 
                 return (
-                  <tr key={doc.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors">
-                    <td className="px-5 py-3.5">
+                  <tr
+                    key={doc.id}
+                    className={`transition-colors ${
+                      isSelected ? "bg-primary/5 hover:bg-primary/10" : "hover:bg-muted/40"
+                    }`}
+                  >
+                    {/* Checkbox Row Cell */}
+                    <td className="px-4 py-3.5 text-center">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleSelectRow(doc.id)}
+                        className="w-4 h-4 rounded border-border text-primary focus:ring-primary cursor-pointer accent-primary"
+                      />
+                    </td>
+
+                    <td className="px-4 py-3.5">
                       <div className="flex items-center gap-3">
                         <PdfIcon className="w-8 h-9 shrink-0" />
                         <div className="min-w-0 flex-1">
-                          <p className="font-medium text-gray-900 text-sm leading-snug truncate" title={doc.name}>
+                          <p className="font-semibold text-foreground text-sm leading-snug truncate" title={doc.name}>
                             {doc.name}
                           </p>
-                          <p className="text-xs text-gray-500 mt-0.5 truncate">
+                          <p className="text-xs text-muted-foreground mt-0.5 truncate">
                             {getContractFullName(doc)}
                           </p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-gray-500">
+                    <td className="px-4 py-3.5 text-muted-foreground">
                       <span className="line-clamp-1 text-xs leading-relaxed" title={doc.templateName}>
                         {doc.templateName}
                       </span>
                     </td>
                     {showSentTo ? (
-                      <td className="px-5 py-3.5 text-gray-700 font-normal truncate" title={doc.sentTo || "-"}>
+                      <td className="px-4 py-3.5 text-foreground font-normal truncate" title={doc.sentTo || "-"}>
                         {doc.sentTo || "-"}
                       </td>
                     ) : (
-                      <td className="px-5 py-3.5 text-gray-500">{doc.createdBy || "Admin"}</td>
+                      <td className="px-4 py-3.5 text-muted-foreground">{doc.createdBy || "Admin"}</td>
                     )}
-                    <td className="px-5 py-3.5 whitespace-nowrap">
-                      <p className="text-gray-900 text-sm font-medium">{dateStr}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">{timeStr}</p>
+                    <td className="px-4 py-3.5 whitespace-nowrap">
+                      <p className="text-foreground text-sm font-medium">{dateStr}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{timeStr}</p>
                     </td>
-                    <td className="px-4 py-3.5 text-center">
+                    <td className="px-2 py-3.5 text-center whitespace-nowrap">
                       <span
-                        className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${statusStyles[doc.status] || "bg-gray-100 text-gray-600"}`}
+                        className={`inline-block px-3 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap ${statusStyles[doc.status] || "bg-muted text-muted-foreground"}`}
                       >
                         {statusLabel[doc.status] || doc.status}
                       </span>
                     </td>
-                    <td className="px-5 py-3.5 relative">
+                    <td className="px-4 py-3.5 relative whitespace-nowrap">
                       <div className="flex items-center justify-end gap-1.5">
-                        {/* ปุ่ม Eye -> เปิด Pop-Up Preview แบบอ่านอย่างเดียว */}
                         <button
                           onClick={() => setPreviewDoc(doc)}
-                          className="p-1.5 rounded hover:bg-gray-100 text-gray-600 transition-colors"
+                          className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
                           title="ดูตัวอย่างเอกสาร (Preview)"
                         >
                           <Eye size={16} />
                         </button>
 
-                        {/* ปุ่ม จุด 3 จุด -> เปิด Action Menu */}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             setOpenMenuId(openMenuId === doc.id ? null : doc.id);
                           }}
-                          className="p-1.5 rounded hover:bg-gray-100 text-gray-600 transition-colors"
+                          className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
                           title="การดำเนินการเพิ่มเติม"
                         >
                           <MoreHorizontal size={16} />
                         </button>
 
-                        {/* Dropdown Menu */}
                         {openMenuId === doc.id && (
                           <div
                             ref={menuRef}
-                            className="absolute right-5 top-11 w-36 bg-white rounded-lg shadow-xl border border-gray-200 py-1 z-50 animate-in fade-in zoom-in-95 duration-100"
+                            className="absolute right-5 top-11 w-40 bg-surface text-foreground rounded-xl shadow-xl border border-border py-1 z-50 animate-in fade-in zoom-in-95 duration-100 opacity-100"
                           >
                             {allowEdit && (
                               <button
@@ -197,21 +325,31 @@ export default function DocumentsTable({
                                   setOpenMenuId(null);
                                   router.push(`/create/${doc.templateId || "nda"}?id=${doc.id}`);
                                 }}
-                                className="w-full text-left px-3.5 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
+                                className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2 transition-colors"
                               >
-                                <Edit3 size={14} className="text-gray-500" />
+                                <Edit3 size={14} className="text-muted-foreground" />
                                 แก้ไขเอกสาร
                               </button>
                             )}
                             <button
                               onClick={() => {
                                 setOpenMenuId(null);
-                                handleDelete(doc.id);
+                                handlePrintOrExport(doc);
+                              }}
+                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2 transition-colors"
+                            >
+                              <Download size={14} className="text-muted-foreground" />
+                              Export PDF / พิมพ์
+                            </button>
+                            <button
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                requestSingleDelete(doc);
                               }}
                               disabled={deletingId === doc.id}
-                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors disabled:opacity-40"
+                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-destructive hover:bg-destructive/10 flex items-center gap-2 transition-colors disabled:opacity-40"
                             >
-                              <Trash2 size={14} className="text-red-500" />
+                              <Trash2 size={14} className="text-destructive" />
                               ลบเอกสาร
                             </button>
                           </div>
@@ -225,6 +363,70 @@ export default function DocumentsTable({
           </tbody>
         </table>
       </div>
+
+      {/* 1-to-1 Match Pop-Up Confirmation Delete Modal UI */}
+      {deleteModalState && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-surface border border-border rounded-[24px] shadow-2xl w-full max-w-sm p-6 flex flex-col items-center text-center space-y-4 animate-in fade-in zoom-in-95 duration-150 relative overflow-hidden">
+            
+            {/* Trash Can Illustration with Sparkles */}
+            <div className="relative flex flex-col items-center justify-center pt-2">
+              <div className="relative w-24 h-20 flex items-center justify-center">
+                {/* Decorative Sparkles */}
+                <span className="absolute top-0 left-1 text-[#FF3B30] text-sm font-bold animate-pulse">+</span>
+                <span className="absolute top-3 right-2 text-[#FF3B30] text-xs font-bold">+</span>
+                <span className="absolute bottom-5 left-0 text-[#FF3B30] text-xs font-bold">+</span>
+                <span className="absolute top-8 right-0 w-2 h-2 rounded-full bg-[#FF3B30]/60" />
+                <span className="absolute bottom-3 right-4 w-1.5 h-1.5 rounded-full bg-[#FF3B30]/70" />
+                
+                {/* Trash Icon Badge */}
+                <div className="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center text-[#FF3B30]">
+                  <Trash2 size={36} className="text-[#FF3B30] stroke-[2.2]" />
+                </div>
+              </div>
+              
+              {/* Soft Oval Shadow Ground */}
+              <div className="w-24 h-2 bg-red-500/20 rounded-full blur-[2px] mt-1" />
+            </div>
+
+            {/* Title & Description */}
+            <div className="space-y-1.5">
+              <h3 className="text-lg font-bold text-foreground tracking-tight">
+                {deleteModalState.type === "bulk"
+                  ? `ต้องการลบเอกสาร ${deleteModalState.count} รายการหรือไม่?`
+                  : "ต้องการลบเอกสารหรือไม่?"}
+              </h3>
+              <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
+                {deleteModalState.type === "bulk"
+                  ? `เอกสารที่เลือกทั้งหมด ${deleteModalState.count} รายการจะถูกลบออกจากระบบอย่างถาวร และไม่สามารถกู้คืนกลับมาได้`
+                  : `เอกสาร "${deleteModalState.docName}" จะถูกลบออกจากระบบอย่างถาวร และไม่สามารถกู้คืนกลับมาได้`}
+              </p>
+            </div>
+
+            {/* 2-Column Action Buttons matching reference image */}
+            <div className="grid grid-cols-2 gap-3 pt-3 w-full">
+              <button
+                onClick={() => setDeleteModalState(null)}
+                className="w-full h-11 rounded-2xl border border-[#FF3B30] text-[#FF3B30] bg-surface hover:bg-[#FF3B30]/10 text-sm font-bold transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  if (deleteModalState.type === "bulk") {
+                    confirmBulkDelete();
+                  } else {
+                    confirmSingleDelete(deleteModalState.id);
+                  }
+                }}
+                className="w-full h-11 rounded-2xl bg-[#FF3B30] hover:bg-[#E03126] text-white text-sm font-bold transition-colors shadow-xs flex items-center justify-center cursor-pointer"
+              >
+                <span className="text-white font-bold">Delete</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Pop-Up Modal Preview */}
       {previewDoc && (
@@ -265,23 +467,23 @@ function PreviewModal({ doc, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div className="bg-surface rounded-xl shadow-2xl w-full max-w-5xl max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150 border border-border">
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-gray-50/90">
+        <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-muted/30">
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-bold text-gray-900 text-base">{doc.name}</h3>
-              <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${statusStyles[doc.status] || "bg-gray-100"}`}>
+              <h3 className="font-bold text-foreground text-base">{doc.name}</h3>
+              <span className={`px-3 py-0.5 rounded-full text-xs font-semibold ${statusStyles[doc.status] || "bg-muted text-muted-foreground"}`}>
                 {statusLabel[doc.status] || doc.status}
               </span>
             </div>
-            <p className="text-xs text-gray-500 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               เทมเพลต: {doc.templateName} • สร้างเมื่อ {new Date(doc.createdAt).toLocaleDateString("th-TH")}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-lg hover:bg-gray-200 text-gray-500 transition-colors"
+            className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
             title="ปิดหน้าต่าง"
           >
             <X size={20} />
@@ -289,12 +491,12 @@ function PreviewModal({ doc, onClose }) {
         </div>
 
         {/* Modal Body - Readonly Preview Canvas */}
-        <div className="flex-1 overflow-auto bg-gray-100 p-8 flex flex-col items-center gap-8">
+        <div className="flex-1 overflow-auto bg-muted p-8 flex flex-col items-center gap-8">
           <DocumentFieldsProvider key={JSON.stringify(modalValues)} initialValues={modalValues} defaultReadOnly>
             {pages.map((PageContent, i) => (
               <div
                 key={i}
-                className="bg-white shadow-document w-[794px] min-h-[1123px] px-14 pt-10 pb-6 flex flex-col justify-between font-noto-looped text-gray-900 rounded-sm shrink-0"
+                className="bg-[#FFFFFF] shadow-document w-[794px] min-h-[1123px] px-14 pt-10 pb-6 flex flex-col justify-between font-noto-looped text-gray-900 rounded-sm shrink-0"
               >
                 <DocumentHeader logo={schema.logo} />
                 <div className="flex-1 min-h-0 overflow-hidden text-left">
@@ -311,11 +513,11 @@ function PreviewModal({ doc, onClose }) {
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-3.5 border-t border-gray-200 flex items-center justify-between bg-gray-50/90">
-          <p className="text-xs text-gray-500">โหมดแสดงตัวอย่างเอกสาร (อ่านอย่างเดียว)</p>
+        <div className="px-6 py-3.5 border-t border-border flex items-center justify-between bg-muted/30">
+          <p className="text-xs text-muted-foreground">โหมดแสดงตัวอย่างเอกสาร (อ่านอย่างเดียว)</p>
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 rounded-lg transition-colors"
+            className="px-4 py-2 text-sm font-medium text-foreground hover:bg-muted rounded-lg transition-colors"
           >
             ปิดหน้าต่าง
           </button>

@@ -15,8 +15,8 @@ export default function TemplateGrid() {
   return (
     <section className="mb-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-gray-900">เริ่มต้นสร้างเอกสาร</h2>
-        <Link href="/templates" className="text-sm text-primary-600 font-medium hover:text-primary-700">
+        <h2 className="text-lg font-semibold text-foreground">เริ่มต้นสร้างเอกสาร</h2>
+        <Link href="/templates" className="text-sm text-primary hover:text-primary/80 font-medium transition-colors">
           ดูเทมเพลตทั้งหมด →
         </Link>
       </div>

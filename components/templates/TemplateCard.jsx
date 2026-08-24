@@ -1,35 +1,30 @@
 import Link from "next/link";
 import { FileText, Lock, ArrowRight } from "lucide-react";
 
-const colorMap = {
-  gray: "bg-[#F3F3F5] text-[#646469] border border-[#E4E4E8]",
-  emerald: "bg-[#DDEEE2] text-[#17682F]",
-  primary: "bg-[#F5F1FF] text-[#7C4DFF]",
-  success: "bg-[#DDEEE2] text-[#17682F]",
-  purple: "bg-[#F5F1FF] text-[#7C4DFF]",
-  warning: "bg-[#FFF2CE] text-[#725000]",
-};
-
 export default function TemplateCard({ template, variant = "compact" }) {
-  const iconClasses = colorMap[template.color] || colorMap.gray;
-
   const cardInner = (
-    <div className="bg-white border border-[#E4E4E8] rounded-[16px] shadow-card p-5 h-full flex flex-col">
-      <div className={`w-10 h-10 rounded-[10px] flex items-center justify-center mb-3 ${iconClasses}`}>
+    <div className="bg-surface border border-border rounded-2xl shadow-xs p-5 h-full flex flex-col transition-all duration-200 group-hover:-translate-y-0.5 group-hover:border-primary/50">
+      {/* Icon Box */}
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-primary/10 text-primary mb-3">
         <FileText size={20} />
       </div>
-      <p className="font-semibold text-[#22162B] text-[15px]">{template.name}</p>
-      <p className="text-xs text-[#646469] mb-1">{template.fullName}</p>
+
+      <p className="font-bold text-foreground text-[15px] group-hover:text-primary transition-colors">
+        {template.name}
+      </p>
+      <p className="text-xs text-muted-foreground mb-1 font-medium">{template.fullName}</p>
+
       {variant === "full" && (
-        <p className="text-xs text-[#646469] mb-4">{template.description}</p>
+        <p className="text-xs text-muted-foreground mb-4 leading-relaxed">{template.description}</p>
       )}
+
       <div className={variant === "full" ? "mt-auto pt-3" : "mt-auto pt-2"}>
         {template.available ? (
-          <span className="inline-flex items-center gap-1 text-sm font-medium text-[#7C4DFF]">
-            สร้างเอกสาร <ArrowRight size={14} />
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary group-hover:translate-x-0.5 transition-transform">
+            สร้างเอกสาร <ArrowRight size={13} />
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-[#B2AFBC]">
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground">
             <Lock size={12} />
             เร็วๆ นี้
           </span>
@@ -43,7 +38,7 @@ export default function TemplateCard({ template, variant = "compact" }) {
   }
 
   return (
-    <Link href={template.href} className="block hover:-translate-y-0.5 transition-transform">
+    <Link href={template.href} className="block group">
       {cardInner}
     </Link>
   );

@@ -21,10 +21,10 @@ import { getRelevantTemplates } from "@/lib/profiles/compatibility";
 import { getTemplates } from "@/lib/data/templates";
 
 const badgeColorMap = {
-  quotation: "bg-gray-100 text-gray-700 border-gray-200",
-  nda: "bg-blue-50 text-blue-700 border-blue-200/80",
-  distributor: "bg-teal-50 text-teal-700 border-teal-200/80",
-  partner: "bg-purple-50 text-purple-700 border-purple-200/80",
+  quotation: "bg-muted text-foreground border-border",
+  nda: "bg-primary/10 text-primary border-primary/20",
+  distributor: "bg-teal-500/10 text-teal-600 border-teal-500/20",
+  partner: "bg-purple-500/10 text-purple-600 border-purple-500/20",
 };
 
 function formatThaiDateTime(isoString) {
@@ -51,7 +51,7 @@ export default function ProfileDataListPage() {
   const [selectedTemplateFilter, setSelectedTemplateFilter] = useState("all");
   const [selectedStatusFilter, setSelectedStatusFilter] = useState("all");
 
-  // Selection & Detail Panel State (Starts NULL by default!)
+  // Selection & Detail Panel State
   const [selectedProfileId, setSelectedProfileId] = useState(null);
   const [openMenuId, setOpenMenuId] = useState(null);
   const menuRef = useRef(null);
@@ -68,7 +68,6 @@ export default function ProfileDataListPage() {
   useEffect(() => {
     load();
     getTemplates().then((data) => {
-      // Filter ONLY available/active templates
       setAllTemplatesList((data || []).filter((t) => t.available !== false));
     });
   }, []);
@@ -95,11 +94,11 @@ export default function ProfileDataListPage() {
   if (profiles === null) {
     return (
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">ตั้งค่าข้อมูลกลาง</h1>
-        <p className="text-sm text-gray-500 mb-8">
-          จัดการข้อมูลที่ใช้ร่วมกันสำหรับเทมเพลตต่าง ๆ เพื่อดึงไปเติมในเอกสารโดยอัตโนมัติ (เป็นข้อมูลอ้างอิง ไม่ใช่ข้อมูลในเอกสาร)
+        <h1 className="text-2xl font-bold text-foreground mb-1">ตั้งค่าข้อมูลกลาง</h1>
+        <p className="text-xs sm:text-sm text-muted-foreground mb-6">
+          จัดการข้อมูลที่ใช้ร่วมกันสำหรับเทมเพลตต่าง ๆ เพื่อดึงไปเติมในเอกสารโดยอัตโนมัติ
         </p>
-        <div className="h-64 rounded-card bg-gray-100 animate-pulse" />
+        <div className="h-64 rounded-2xl bg-muted animate-pulse" />
       </div>
     );
   }
@@ -109,20 +108,17 @@ export default function ProfileDataListPage() {
     const q = searchQuery.toLowerCase().trim();
     const values = p.values || {};
     
-    // Search Query Filter
     const companyName = (p.name || values.counterparty_name || values.bill_to_company || values.our_company_name || "").toLowerCase();
     const address = (values.counterparty_address || values.our_company_address || "").toLowerCase();
     const contact = (values.counterparty_signatory_name || values.attn_name || values.our_signatory_name || "").toLowerCase();
 
     const matchesSearch = !q || companyName.includes(q) || address.includes(q) || contact.includes(q);
 
-    // Template Filter
     const relevantTemplates = getRelevantTemplates(values);
     const matchesTemplate =
       selectedTemplateFilter === "all" ||
       relevantTemplates.some((r) => r.templateId === selectedTemplateFilter);
 
-    // Status Filter
     const isComplete = relevantTemplates.length > 0 && relevantTemplates.some((r) => r.isComplete);
     const matchesStatus =
       selectedStatusFilter === "all" ||
@@ -132,7 +128,6 @@ export default function ProfileDataListPage() {
     return matchesSearch && matchesTemplate && matchesStatus;
   });
 
-  // Dynamic Pagination Calculations based on REAL filtered data count
   const totalItems = filteredProfiles.length;
   const totalPages = Math.ceil(totalItems / pageSize) || 1;
   const validCurrentPage = Math.min(currentPage, totalPages);
@@ -140,8 +135,6 @@ export default function ProfileDataListPage() {
   const paginatedProfiles = filteredProfiles.slice(startIndex, startIndex + pageSize);
 
   const selectedProfile = profiles.find((p) => p.id === selectedProfileId);
-
-  // Selected Profile Real Dynamic Values
   const selectedValues = selectedProfile?.values || {};
   const selectedCompanyName = selectedProfile?.name || selectedValues.counterparty_name || selectedValues.bill_to_company || selectedValues.our_company_name || "บริษัท ไม่ระบุชื่อ";
   const selectedTaxId = selectedValues.counterparty_registration_number || selectedValues.tax_id || "-";
@@ -157,25 +150,23 @@ export default function ProfileDataListPage() {
 
   return (
     <div>
-      {/* 1. Page Header (Exact layout parity with /documents) */}
-      <h1 className="text-2xl font-bold text-gray-900 mb-1">ตั้งค่าข้อมูลกลาง</h1>
-      <p className="text-sm text-gray-500 mb-8">
-        จัดการข้อมูลที่ใช้ร่วมกันสำหรับเทมเพลตต่าง ๆ เพื่อดึงไปเติมในเอกสารโดยอัตโนมัติ (เป็นข้อมูลอ้างอิง ไม่ใช่ข้อมูลในเอกสาร)
+      {/* Page Header */}
+      <h1 className="text-2xl font-bold text-foreground mb-1">ตั้งค่าข้อมูลกลาง</h1>
+      <p className="text-xs sm:text-sm text-muted-foreground mb-6">
+        จัดการข้อมูลที่ใช้ร่วมกันสำหรับเทมเพลตต่าง ๆ เพื่อดึงไปเติมในเอกสารโดยอัตโนมัติ
       </p>
 
-      {/* 2. Main Section: Wrapped in Unified White Container */}
+      {/* Main Section */}
       <div className="flex flex-col lg:flex-row items-start gap-6">
         {/* Left Column Container */}
-        <div className="flex-1 w-full bg-white border border-gray-200 rounded-card shadow-card p-6 space-y-5 overflow-visible">
+        <div className="flex-1 w-full bg-surface border border-border rounded-2xl shadow-xs p-5 space-y-4">
           
-          {/* Toolbar inside white container */}
-          <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 pb-2 border-b border-gray-100">
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 flex-1">
+          {/* Filter & Toolbar Header */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pb-3 border-b border-border">
+            <div className="flex flex-wrap items-center gap-2.5 flex-1">
               {/* Search Input */}
-              <div className="relative flex-1 sm:max-w-md">
-                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400">
-                  <Search size={16} />
-                </div>
+              <div className="relative flex-1 min-w-[200px] max-w-sm">
+                <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input
                   type="text"
                   value={searchQuery}
@@ -183,62 +174,57 @@ export default function ProfileDataListPage() {
                     setSearchQuery(e.target.value);
                     setCurrentPage(1);
                   }}
-                  placeholder="ค้นหาชุดข้อมูล, บริษัท, ผู้ติดต่อ..."
-                  className="w-full h-10 pl-9 pr-4 rounded-xl border border-gray-200 bg-gray-50/50 text-xs text-gray-900 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
+                  placeholder="ค้นหาชื่อบริษัท, ผู้ติดต่อ..."
+                  className="w-full h-9 pl-9 pr-3 rounded-xl border border-border bg-muted/30 text-xs text-foreground outline-none focus:border-primary focus:bg-surface transition-all"
                 />
               </div>
 
-              {/* Filter Template Dropdown */}
-              <div className="relative">
-                <select
-                  value={selectedTemplateFilter}
-                  onChange={(e) => {
-                    setSelectedTemplateFilter(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="h-10 pl-3 pr-8 rounded-xl border border-gray-200 bg-white text-xs font-semibold text-gray-700 outline-none focus:border-blue-500 appearance-none cursor-pointer"
-                >
-                  <option value="all">ทุกเทมเพลต</option>
-                  {allTemplatesList.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.name}
-                    </option>
-                  ))}
-                </select>
-                <Filter size={13} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-              </div>
+              {/* Template Filter Select */}
+              <select
+                value={selectedTemplateFilter}
+                onChange={(e) => {
+                  setSelectedTemplateFilter(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="h-9 px-3 rounded-xl border border-border bg-surface text-xs font-medium text-foreground outline-none cursor-pointer"
+              >
+                <option value="all">ทุกเทมเพลต</option>
+                {allTemplatesList.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                  </option>
+                ))}
+              </select>
 
-              {/* Filter Status Dropdown */}
-              <div className="relative">
-                <select
-                  value={selectedStatusFilter}
-                  onChange={(e) => {
-                    setSelectedStatusFilter(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="h-10 pl-3 pr-8 rounded-xl border border-gray-200 bg-white text-xs font-semibold text-gray-700 outline-none focus:border-blue-500 appearance-none cursor-pointer"
-                >
-                  <option value="all">สถานะ: ทั้งหมด</option>
-                  <option value="complete">ข้อมูลครบถ้วน</option>
-                  <option value="incomplete">ข้อมูลไม่ครบ</option>
-                </select>
-              </div>
+              {/* Status Filter Select */}
+              <select
+                value={selectedStatusFilter}
+                onChange={(e) => {
+                  setSelectedStatusFilter(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="h-9 px-3 rounded-xl border border-border bg-surface text-xs font-medium text-foreground outline-none cursor-pointer"
+              >
+                <option value="all">สถานะ: ทั้งหมด</option>
+                <option value="complete">ข้อมูลครบถ้วน</option>
+                <option value="incomplete">ข้อมูลไม่ครบ</option>
+              </select>
             </div>
 
-            {/* Create Button */}
+            {/* Create New Profile Button */}
             <Link
               href="/profile-data/new"
-              className="inline-flex items-center justify-center gap-1.5 h-10 px-5 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-xs font-bold hover:opacity-95 transition-opacity shrink-0"
+              className="inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-xl bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-xs font-semibold hover:opacity-95 transition-opacity shrink-0"
             >
-              <Plus size={16} />
+              <Plus size={15} />
               สร้างชุดข้อมูลใหม่
             </Link>
           </div>
 
-          {/* Data Row Cards List */}
-          <div className="space-y-3">
+          {/* Clean Data List */}
+          <div className="space-y-2.5">
             {paginatedProfiles.length === 0 ? (
-              <div className="p-12 text-center border border-dashed border-gray-200 rounded-2xl bg-gray-50/50 text-gray-400 text-xs">
+              <div className="p-10 text-center border border-dashed border-border rounded-xl bg-muted/20 text-muted-foreground text-xs">
                 {searchQuery ? "ไม่พบข้อมูลที่ตรงกับเงื่อนไขการค้นหา" : "ยังไม่มีชุดข้อมูล — กดปุ่มสร้างชุดข้อมูลใหม่ด้านบน"}
               </div>
             ) : (
@@ -248,7 +234,6 @@ export default function ProfileDataListPage() {
                 const companyName = p.name || values.counterparty_name || values.our_company_name || "บริษัท ไม่ระบุชื่อ";
                 const address = values.counterparty_address || values.our_company_address || "ไม่ได้ระบุที่อยู่";
                 const formattedDate = formatThaiDateTime(p.updatedAt || p.createdAt);
-
                 const relevant = getRelevantTemplates(values);
                 const isComplete = relevant.length > 0 && relevant.some((r) => r.isComplete);
 
@@ -256,91 +241,54 @@ export default function ProfileDataListPage() {
                   <div
                     key={p.id}
                     onClick={() => setSelectedProfileId(p.id)}
-                    className={`p-4 rounded-[16px] border transition-all cursor-pointer bg-white relative ${
+                    className={`p-4 rounded-xl border transition-all cursor-pointer bg-surface relative ${
                       isSelected
-                        ? "border-[#7C4DFF] bg-[#F5F1FF]/20 shadow-xs ring-1 ring-[#E1D3FF]"
-                        : "border-[#E4E4E8] hover:border-gray-300 hover:bg-gray-50/40"
+                        ? "border-primary bg-primary/5 shadow-2xs"
+                        : "border-border hover:border-primary/40 hover:bg-muted/30"
                     }`}
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      {/* Checkbox & Building Icon & Profile Info */}
-                      <div className="flex items-start gap-3.5 min-w-0 flex-1">
-                        {/* Checkbox Circle */}
-                        <div className="pt-1 shrink-0">
-                          <input
-                            type="radio"
-                            name="profile-select"
-                            checked={isSelected}
-                            onChange={() => setSelectedProfileId(p.id)}
-                            className="w-4 h-4 text-[#7C4DFF] border-gray-300 focus:ring-[#7C4DFF] cursor-pointer"
-                          />
-                        </div>
-
-                        {/* Icon Box */}
-                        <div className="w-10 h-10 rounded-[10px] bg-[#F5F1FF] border border-[#E1D3FF] text-[#7C4DFF] flex items-center justify-center shrink-0">
+                    <div className="flex items-center justify-between gap-4">
+                      {/* Left Company Details */}
+                      <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                        <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
                           <Building2 size={20} />
                         </div>
 
-                        {/* Company Name & Status & Tags */}
-                        <div className="min-w-0 flex-1 space-y-1.5">
+                        <div className="min-w-0 flex-1 space-y-1">
                           <div className="flex items-center gap-2.5 flex-wrap">
-                            <h3 className="font-bold text-[#22162B] text-sm leading-snug">{companyName}</h3>
-                            
-                            {/* Status Badge */}
+                            <h3 className="font-bold text-foreground text-sm leading-snug">{companyName}</h3>
                             {isComplete ? (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#DDEEE2] text-[#17682F] text-[11px] font-semibold">
+                              <span className="px-2.5 py-0.5 rounded-full bg-[#DDEEE2] text-[#17682F] text-[11px] font-semibold">
                                 ข้อมูลครบถ้วน
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#FFF2CE] text-[#725000] text-[11px] font-semibold">
+                              <span className="px-2.5 py-0.5 rounded-full bg-[#FFF2CE] text-[#725000] text-[11px] font-semibold">
                                 ข้อมูลไม่ครบ
                               </span>
                             )}
                           </div>
 
-                          {/* Template Tags with distinct colors per template */}
-                          <div className="flex items-center gap-1.5 flex-wrap text-xs text-[#646469]">
-                            <span className="text-gray-400 font-medium">ใช้กับ {relevant.length} เทมเพลต</span>
-                            {relevant.slice(0, 3).map((r, idx) => {
-                              const badgeStyle = badgeColorMap[r.templateId] || "bg-gray-100 text-gray-700 border-gray-200";
-                              return (
-                                <span
-                                  key={idx}
-                                  className={`px-2 py-0.5 rounded-md border text-[11px] font-semibold ${badgeStyle}`}
-                                >
-                                  {r.schema.name}
-                                </span>
-                              );
-                            })}
-                            {relevant.length > 3 && (
-                              <span className="px-1.5 py-0.5 rounded-md bg-gray-100 text-gray-600 text-[10px] font-bold">
-                                +{relevant.length - 3}
-                              </span>
-                            )}
-                          </div>
-
-                          {/* Address with MapPin Icon */}
-                          <div className="flex items-center gap-1.5 text-xs text-[#646469] truncate max-w-2xl">
-                            <MapPin size={14} className="text-gray-400 shrink-0" />
-                            <span className="truncate">{address}</span>
-                          </div>
-
-                          {/* Metadata Footer with Calendar Icon */}
-                          <div className="flex items-center gap-1.5 text-[11px] text-gray-400 pt-0.5">
-                            <Calendar size={13} className="text-gray-400 shrink-0" />
-                            <span>อัปเดตล่าสุด: <strong className="font-mono text-gray-500">{formattedDate}</strong></span>
+                          <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
+                            <span className="flex items-center gap-1 truncate max-w-md">
+                              <MapPin size={13} className="shrink-0" />
+                              <span className="truncate">{address}</span>
+                            </span>
+                            <span className="flex items-center gap-1 shrink-0 text-[11px]">
+                              <Calendar size={12} className="shrink-0" />
+                              <span>{formattedDate}</span>
+                            </span>
                           </div>
                         </div>
                       </div>
 
-                      {/* Right Row Actions */}
-                      <div className="flex items-center gap-2 shrink-0 pt-1">
+                      {/* Right Action Buttons */}
+                      <div className="flex items-center gap-2 shrink-0">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedProfileId(p.id);
                           }}
-                          className="px-3.5 py-1.5 rounded-[10px] border border-[#E4E4E8] bg-white hover:bg-[#F6F6FA] text-[#7C4DFF] font-semibold text-xs transition-colors"
+                          className="px-3 py-1.5 rounded-lg border border-border bg-surface hover:bg-muted text-primary font-semibold text-xs transition-colors"
                         >
                           ดูรายละเอียด
                         </button>
@@ -351,7 +299,7 @@ export default function ProfileDataListPage() {
                               e.stopPropagation();
                               setOpenMenuId(openMenuId === p.id ? null : p.id);
                             }}
-                            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+                            className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                           >
                             <MoreVertical size={16} />
                           </button>
@@ -359,14 +307,14 @@ export default function ProfileDataListPage() {
                           {openMenuId === p.id && (
                             <div
                               ref={menuRef}
-                              className="absolute right-0 top-9 w-36 bg-white rounded-xl shadow-xl border border-gray-200 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100 text-left"
+                              className="absolute right-0 top-9 w-36 bg-surface text-foreground rounded-xl shadow-xl border border-border py-1 z-50 animate-in fade-in zoom-in-95 duration-100 text-left"
                             >
                               <Link
                                 href={`/profile-data/${p.id}`}
                                 onClick={(e) => e.stopPropagation()}
-                                className="w-full text-left px-3.5 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 flex items-center gap-2 transition-colors"
+                                className="w-full text-left px-3 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2 transition-colors"
                               >
-                                <Pencil size={14} className="text-gray-500" />
+                                <Pencil size={14} className="text-muted-foreground" />
                                 แก้ไขข้อมูล
                               </Link>
                               <button
@@ -375,9 +323,9 @@ export default function ProfileDataListPage() {
                                   setOpenMenuId(null);
                                   handleDelete(p.id, p.name);
                                 }}
-                                className="w-full text-left px-3.5 py-2 text-xs font-medium text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"
+                                className="w-full text-left px-3 py-2 text-xs font-medium text-destructive hover:bg-destructive/10 flex items-center gap-2 transition-colors"
                               >
-                                <Trash2 size={14} className="text-red-500" />
+                                <Trash2 size={14} className="text-destructive" />
                                 ลบชุดข้อมูล
                               </button>
                             </div>
@@ -391,30 +339,29 @@ export default function ProfileDataListPage() {
             )}
           </div>
 
-          {/* DYNAMIC Pagination */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 text-xs text-gray-500 border-t border-gray-100">
+          {/* Pagination */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 text-xs text-muted-foreground border-t border-border">
             <div>
-              แสดง <strong className="font-semibold text-gray-800">{totalItems > 0 ? startIndex + 1 : 0} - {Math.min(startIndex + pageSize, totalItems)}</strong> จาก <strong className="font-semibold text-gray-800">{totalItems}</strong> รายการ
+              แสดง <strong className="font-semibold text-foreground">{totalItems > 0 ? startIndex + 1 : 0} - {Math.min(startIndex + pageSize, totalItems)}</strong> จาก <strong className="font-semibold text-foreground">{totalItems}</strong> รายการ
             </div>
 
-            <div className="flex items-center gap-4">
-              {/* Dynamic Page Controls */}
+            <div className="flex items-center gap-3">
               <div className="flex items-center gap-1">
                 <button
                   disabled={validCurrentPage <= 1}
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 disabled:opacity-40"
+                  className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-muted disabled:opacity-40"
                 >
-                  <ChevronLeft size={15} />
+                  <ChevronLeft size={14} />
                 </button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
                   <button
                     key={pageNum}
                     onClick={() => setCurrentPage(pageNum)}
-                    className={`w-8 h-8 rounded-[10px] text-xs font-semibold transition-colors ${
+                    className={`w-8 h-8 rounded-lg text-xs font-semibold transition-colors ${
                       validCurrentPage === pageNum
                         ? "bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white shadow-2xs"
-                        : "border border-[#E4E4E8] hover:bg-[#F6F6FA] text-[#646469]"
+                        : "border border-border hover:bg-muted text-muted-foreground"
                     }`}
                   >
                     {pageNum}
@@ -423,20 +370,19 @@ export default function ProfileDataListPage() {
                 <button
                   disabled={validCurrentPage >= totalPages}
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  className="w-8 h-8 rounded-[10px] border border-[#E4E4E8] flex items-center justify-center hover:bg-[#F6F6FA] disabled:opacity-40"
+                  className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-muted disabled:opacity-40"
                 >
-                  <ChevronRight size={15} />
+                  <ChevronRight size={14} />
                 </button>
               </div>
 
-              {/* Page Size Select */}
               <select
                 value={pageSize}
                 onChange={(e) => {
                   setPageSize(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="h-8 px-2 rounded-[10px] border border-[#E4E4E8] bg-white text-xs text-[#646469] outline-none"
+                className="h-8 px-2 rounded-lg border border-border bg-surface text-xs text-muted-foreground outline-none"
               >
                 <option value={5}>5 / หน้า</option>
                 <option value={10}>10 / หน้า</option>
@@ -446,15 +392,15 @@ export default function ProfileDataListPage() {
           </div>
         </div>
 
-        {/* Right Column: Dynamic Detail Panel Drawer */}
+        {/* Right Detail Panel Drawer */}
         {selectedProfile && (
-          <div className="w-full lg:w-[420px] bg-white border border-[#E4E4E8] rounded-[16px] shadow-card p-5 space-y-5 shrink-0 animate-in fade-in slide-in-from-right-4 duration-200">
+          <div className="w-full lg:w-[400px] bg-surface border border-border rounded-2xl shadow-xs p-5 space-y-4 shrink-0 animate-in fade-in slide-in-from-right-4 duration-200">
             {/* Panel Header */}
-            <div className="flex items-start justify-between pb-3 border-b border-[#E4E4E8]">
+            <div className="flex items-start justify-between pb-3 border-b border-border">
               <div>
-                <h2 className="text-base font-bold text-[#22162B]">รายละเอียดชุดข้อมูล</h2>
+                <h2 className="text-base font-bold text-foreground">รายละเอียดชุดข้อมูล</h2>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="font-bold text-sm text-[#22162B]">{selectedCompanyName}</span>
+                  <span className="font-bold text-sm text-foreground">{selectedCompanyName}</span>
                   {selectedIsComplete ? (
                     <span className="px-2 py-0.5 rounded-full bg-[#DDEEE2] text-[#17682F] text-[10px] font-semibold">
                       ข้อมูลครบถ้วน
@@ -465,13 +411,10 @@ export default function ProfileDataListPage() {
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-[#646469] mt-0.5">
-                  ใช้กับ {selectedRelevantTemplates.length} เทมเพลต
-                </p>
               </div>
               <button
                 onClick={() => setSelectedProfileId(null)}
-                className="p-1 rounded-[10px] hover:bg-[#F6F6FA] text-gray-400 hover:text-gray-600 transition-colors"
+                className="p-1 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
                 title="ปิดหน้าต่าง"
               >
                 <X size={18} />
@@ -479,89 +422,54 @@ export default function ProfileDataListPage() {
             </div>
 
             {/* Section 1: ข้อมูลพื้นฐาน */}
-            <div className="space-y-2.5 text-xs border-b border-[#E4E4E8] pb-4">
-              <h3 className="font-bold text-xs tracking-wide text-[#646469]">ข้อมูลพื้นฐาน</h3>
+            <div className="space-y-2 text-xs border-b border-border pb-3">
+              <h3 className="font-bold text-xs tracking-wide text-muted-foreground">ข้อมูลพื้นฐาน</h3>
               <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-[#646469]">ชื่อบริษัท</span>
-                <span className="font-semibold text-[#22162B]">{selectedCompanyName}</span>
+                <span className="text-muted-foreground">ชื่อบริษัท</span>
+                <span className="font-semibold text-foreground">{selectedCompanyName}</span>
               </div>
               <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-[#646469]">เลขประจำตัวผู้เสียภาษี</span>
-                <span className="font-mono text-[#22162B]">{selectedTaxId}</span>
+                <span className="text-muted-foreground">เลขประจำตัวผู้เสียภาษี</span>
+                <span className="font-mono text-foreground">{selectedTaxId}</span>
               </div>
               <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-[#646469]">ประเภทธุรกิจ</span>
-                <span className="text-[#22162B]">{selectedBusinessType}</span>
+                <span className="text-muted-foreground">ที่อยู่</span>
+                <span className="text-foreground leading-relaxed">{selectedAddress}</span>
               </div>
               <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-[#646469]">ที่อยู่</span>
-                <span className="text-[#22162B] leading-relaxed">{selectedAddress}</span>
+                <span className="text-muted-foreground">เบอร์โทรศัพท์</span>
+                <span className="text-foreground">{selectedPhone}</span>
               </div>
               <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-[#646469]">เบอร์โทรศัพท์</span>
-                <span className="text-[#22162B]">{selectedPhone}</span>
-              </div>
-              <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-[#646469]">อีเมล</span>
-                <span className="text-[#7C4DFF]">{selectedEmail}</span>
-              </div>
-              <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-[#646469]">เว็บไซต์</span>
-                <span className="text-[#7C4DFF]">{selectedWebsite}</span>
+                <span className="text-muted-foreground">อีเมล</span>
+                <span className="text-primary">{selectedEmail}</span>
               </div>
             </div>
 
             {/* Section 2: ข้อมูลผู้ติดต่อหลัก */}
-            <div className="space-y-2.5 text-xs border-b border-[#E4E4E8] pb-4">
-              <h3 className="font-bold text-xs tracking-wide text-[#646469]">ข้อมูลผู้ติดต่อหลัก</h3>
+            <div className="space-y-2 text-xs border-b border-border pb-3">
+              <h3 className="font-bold text-xs tracking-wide text-muted-foreground">ข้อมูลผู้ติดต่อหลัก</h3>
               <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-[#646469]">ชื่อ-สกุล</span>
-                <span className="font-semibold text-[#22162B]">{selectedContactName}</span>
+                <span className="text-muted-foreground">ชื่อ-สกุล</span>
+                <span className="font-semibold text-foreground">{selectedContactName}</span>
               </div>
               <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-[#646469]">ตำแหน่ง</span>
-                <span className="text-[#22162B]">{selectedPosition}</span>
-              </div>
-              <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-[#646469]">เบอร์โทรศัพท์</span>
-                <span className="text-[#22162B]">{selectedPhone}</span>
-              </div>
-              <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-[#646469]">อีเมล</span>
-                <span className="text-[#7C4DFF]">{selectedEmail}</span>
+                <span className="text-muted-foreground">ตำแหน่ง</span>
+                <span className="text-foreground">{selectedPosition}</span>
               </div>
             </div>
 
-            {/* Section 3: ประวัติการใช้งาน */}
-            <div className="space-y-2.5 text-xs pb-2">
-              <h3 className="font-bold text-xs tracking-wide text-[#646469]">ประวัติการใช้งาน</h3>
-              <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-[#646469]">สร้างเมื่อ</span>
-                <span className="font-mono text-[#646469]">{formatThaiDateTime(selectedProfile.createdAt)}</span>
-              </div>
-              <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-[#646469]">อัปเดตล่าสุด</span>
-                <span className="font-mono text-[#646469]">{formatThaiDateTime(selectedProfile.updatedAt || selectedProfile.createdAt)}</span>
-              </div>
-              <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-[#646469]">อัปเดตโดย</span>
-                <span className="text-[#22162B]">
-                  {selectedProfile.values?.our_signatory_name || "นายศรายุทธ โกสิยารักษ์"}
-                </span>
-              </div>
-            </div>
-
-            {/* Panel Fixed Footer Buttons */}
-            <div className="pt-3 border-t border-[#E4E4E8] flex items-center justify-between gap-3">
+            {/* Panel Buttons */}
+            <div className="pt-2 flex items-center justify-between gap-3">
               <button
                 onClick={() => handleDelete(selectedProfile.id, selectedProfile.name)}
-                className="px-4 py-2 rounded-[10px] border border-red-200 text-red-600 hover:bg-red-50 font-semibold text-xs transition-colors"
+                className="px-3.5 py-1.5 rounded-lg border border-destructive/30 text-destructive hover:bg-destructive/10 font-semibold text-xs transition-colors"
               >
                 ลบชุดข้อมูล
               </button>
               <Link
                 href={`/profile-data/${selectedProfile.id}`}
-                className="px-5 py-2 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white font-semibold text-xs hover:opacity-95 transition-opacity inline-flex items-center gap-1.5"
+                className="px-4 py-1.5 rounded-lg bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white font-semibold text-xs hover:opacity-95 transition-opacity inline-flex items-center gap-1.5"
               >
                 <Pencil size={14} />
                 แก้ไขข้อมูล
