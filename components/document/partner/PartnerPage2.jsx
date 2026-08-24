@@ -67,7 +67,7 @@ export default function PartnerPage2() {
       <h2>ข้อ 5. การกำหนดราคา ส่วนลด และเงื่อนไขการชำระเงิน (Pricing, Discounts, and Payment Terms)</h2>
       <ul className="list-none space-y-1.5">
         <li className="pl-4">
-          <span className="font-bold">5.1 โครงสร้างราคา:</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; จะกำหนด และจัดส่งราคาต้นทุน (Cost Price) สำหรับ &ldquo;ตัวแทนจำหน่าย&rdquo; และระบุราคาแนะนำสำหรับ &ldquo;ผู้ใช้ปลายทาง&rdquo; (MSRP)
+          <span className="font-bold">5.1 โครงสร้างราคา:</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; จะกำหนด และจัดส่งราคาต้นทุน (Cost Price) สำหรับ &ldquo;ตัวแทนจำหน่าย&rdquo; และระบุราคาแนะนำสำหรับ &ldquo;ผู้ใช้ปลายทาง&rdquo; (End User Price)
         </li>
         <li className="pl-4">
           <span className="font-bold">5.2 ส่วนลดพิเศษ (Special Discounts):</span> การอนุมัติส่วนลดพิเศษให้อยู่ในวิจารณญาณของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; โดย &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; จะแจ้งยืนยันเป็นลายลักษณ์อักษร (หรือผ่านระบบอิเล็กทรอนิกส์) พร้อมกำหนดระยะเวลาความคุ้มครองของราคานั้น ๆ (Price Validity Period)

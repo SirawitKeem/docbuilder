@@ -1,17 +1,17 @@
 export default function PartnerPage3() {
   return (
-    <div className="document-body pt-3">
-      <ul className="list-none space-y-2">
-        <li className="pl-4">
-          <p className="font-bold mb-1">
+    <div className="document-body pt-2 text-[12px] leading-snug">
+      <ul className="list-none space-y-1 mb-2">
+        <li className="pl-3">
+          <p className="font-bold mb-0.5">
             5.3 เงื่อนไขการส่งใบแจ้งหนี้ กำหนดระยะเวลาชำระเงิน (Credit Term) และการชำระเงิน:
           </p>
-          <ul className="list-disc pl-8 space-y-1 font-normal">
+          <ul className="list-disc pl-6 space-y-0.5 font-normal text-[11.5px]">
             <li>
               &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; จะออกใบแจ้งหนี้เมื่อได้รับใบสั่งซื้อ (Purchase Order) และดำเนินการออก &ldquo;สิทธิการใช้งาน&rdquo; เรียบร้อยแล้ว โดยกำหนดระยะเวลาชำระเงิน (Credit Term) ภายใน 30 (สามสิบ) วัน นับแต่วันที่ออกใบแจ้งหนี้ให้กับ &ldquo;ตัวแทนจำหน่าย&rdquo;
             </li>
             <li>
-              หาก &ldquo;ตัวแทนจำหน่าย&rdquo; ชำระเงินล่าช้ากว่ากำหนดต้องเสียดอกเบี้ยปรับในอัตราร้อยละ 1.5 (หนึ่งจุดห้า) ต่อเดือนของยอดเงินที่ค้างชำระ และ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; มีสิทธิชะลอการออกสิทธิการใช้งานใหม่จนกว่าจะได้รับชำระหนี้ค้างชำระครบถ้วน
+              หาก &ldquo;ตัวแทนจำหน่าย&rdquo; ชำระเงินล่าช้ากว่ากำหนดต้องเสียดอกเบี้ยปรับในอัตราร้อยละ 1.5 (หนึ่งจุดห้า) ต่อเดือน ของยอดเงินที่ค้างชำระ และ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; มีสิทธิชะลอการออกสิทธิการใช้งานใหม่จนกว่าจะได้รับชำระหนี้ค้างชำระครบถ้วน
             </li>
             <li>
               สกุลเงินที่ใช้ในการชำระเงินคือ บาทไทย
@@ -19,24 +19,53 @@ export default function PartnerPage3() {
           </ul>
         </li>
 
-        <li className="pl-4">
+        <li className="pl-3">
           <span className="font-bold">5.4 เงื่อนไขอัตราแลกเปลี่ยน (Exchange Rate Condition):</span>{" "}
           เนื่องจากต้นทุนของ &ldquo;ผลิตภัณฑ์&rdquo; บางรายการอาจอ้างอิงจากสกุลเงินต่างประเทศ (เช่น ดอลลาร์สหรัฐ) การคำนวณราคาเป็นสกุลเงินบาทไทยจะอ้างอิงอัตรา แลกเปลี่ยน ณ วันที่ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ออกใบเสนอราคา (Quotation) ทั้งนี้ อัตราแลกเปลี่ยนและราคาดังกล่าวจะถูกตรึงไว้ (Lock Rate) เป็นระยะเวลาไม่เกิน 30 (สามสิบ) วัน นับแต่วันที่ออกใบเสนอราคา หาก &ldquo;ตัวแทนจำหน่าย&rdquo; ออกใบสั่งซื้อ (PO) พ้นจากกำหนดระยะเวลาดังกล่าว &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ขอสงวนสิทธิ์ในการปรับปรุงราคาให้สอดคล้องกับอัตราแลกเปลี่ยนปัจจุบัน
         </li>
       </ul>
 
-      <h2>ข้อ 6. การบริการหลังการขายและการสนับสนุนทางเทคนิค (Technical Support and Maintenance & SLA)</h2>
+      <h2 className="mt-2 mb-1">ข้อ 6. การบริการหลังการขายและการสนับสนุนทางเทคนิค (Technical Support and Maintenance & SLA)</h2>
 
-      <div className="space-y-1.5 pl-4">
-        <p>
-          <span className="font-bold">6.1 ระดับการบริการขั้นแรกของ Reseller (Tier 1 Support):</span> &ldquo;ตัวแทนจำหน่าย&rdquo; มีหน้าที่ให้บริการสนับสนุนทางเทคนิคขั้นแรกแก่ &ldquo;ผู้ใช้ปลายทาง&rdquo; เช่น การตอบคำถามทั่วไป การติดตั้งเบื้องต้น และการรับเรื่องปัญหา
-        </p>
+      <div className="space-y-1.5 pl-3 text-[11.5px]">
+        <div>
+          <p className="font-bold mb-0.5">
+            6.1 ระดับการบริการขั้นแรกของ Reseller (Tier 1 Support):
+          </p>
+          <p className="mb-0.5 text-[11.5px]">
+            หน้าที่ในการให้บริการสนับสนุนทางเทคนิคขั้นแรกแก่ &ldquo;ผู้ใช้ปลายทาง&rdquo; จะถูกกำหนดตามความพร้อมและรูปแบบการทำธุรกิจของ &ldquo;ตัวแทนจำหน่าย&rdquo; โดยแบ่งออกเป็น 2 กรณี ดังต่อไปนี้
+          </p>
+          <div className="pl-3 space-y-1 text-[11px]">
+            <div>
+              <p className="font-bold text-gray-900">• กรณีที่ 1: กรณีที่ &ldquo;ตัวแทนจำหน่าย&rdquo; มีความพร้อมในการให้บริการ Tier 1</p>
+              <ul className="list-disc pl-5 space-y-0.5 font-normal text-gray-700">
+                <li>
+                  &ldquo;ตัวแทนจำหน่าย&rdquo; มีหน้าที่ให้บริการสนับสนุนทางเทคนิคขั้นแรกแก่ &ldquo;ผู้ใช้ปลายทาง&rdquo; เช่น การตอบคำถามทั่วไป การติดตั้ง/การตั้งค่าระบบเบื้องต้น การรับเรื่องปัญหา และการวิเคราะห์รวบ รวมข้อมูลปัญหา (Log Files หรือ ภาพหน้าจอ)
+                </li>
+                <li>
+                  หาก &ldquo;ตัวแทนจำหน่าย&rdquo; ได้ดำเนินการตรวจสอบและพยายามแก้ไขปัญหาเบื้องต้นตามคู่มือมาตรฐานอย่างครบถ้วนแล้วแต่ยังไม่สามารถแก้ไขได้ ทั้งนี้ &ldquo;ตัวแทนจำหน่าย&rdquo; มีสิทธิส่งต่อปัญหา (Escalate) ให้แก่ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ได้ทันที พร้อมนำส่งข้อมูลเบื้องต้นที่รวบรวมไว้
+                </li>
+              </ul>
+            </div>
+            <div>
+              <p className="font-bold text-gray-900">• กรณีที่ 2: กรณีที่ &ldquo;ตัวแทนจำหน่าย&rdquo; ไม่มีบุคลากรสำหรับการให้บริการ Tier 1</p>
+              <ul className="list-disc pl-5 space-y-0.5 font-normal text-gray-700">
+                <li>
+                  &ldquo;ตัวแทนจำหน่าย&rdquo; จะทำหน้าที่เพียงรับแจ้งเรื่องจากลูกค้าปลายทาง และประสานงานส่งต่อ (Pass-through) มายังทีมงานของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; ทันที เพื่อเข้าดำเนินการช่วยเหลือลูกค้าปลายทางโดยตรง
+                </li>
+                <li>
+                  อาจมีข้อกำหนดเรื่องการเลือกซื้อแพ็กเกจการบำรุงรักษา (Maintenance Package / SLA Package) หรือค่าบริการเพิ่มเติม (Professional Services) ซึ่งจะถูกระบุรายละเอียดไว้ในใบเสนอราคา หรือเอกสารแนบท้ายของแต่ละโครงการ
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
 
         <div>
           <p className="mb-0.5">
             <span className="font-bold">6.2 ระดับการบริการของ &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; และการส่งต่อปัญหา (Tier 2/3 Escalation Path & SLA):</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; มีหน้าที่ให้บริการสนับสนุนทางเทคนิคระดับสูง (Tier 2 Support) แก่ &ldquo;ตัวแทนจำหน่าย&rdquo; ในกรณีที่เกิดปัญหาขัดข้องเกินกว่าขีดความสามารถของ Tier 1 โดยมีเงื่อนไขการให้บริการดังต่อไปนี้:
           </p>
-          <ul className="list-disc pl-8 space-y-0.5 font-normal mt-0.5">
+          <ul className="list-disc pl-6 space-y-0.5 font-normal text-[11px]">
             <li>
               <span className="font-bold">การอ้างอิงมาตรฐานการให้บริการ (Back-to-Back SLA):</span> ระยะเวลาในการตอบสนอง (Response Time) การประเมินระดับความรุนแรงของปัญหา (Severity Level) และระยะเวลาในการแก้ไขปัญหา จะอ้างอิงและสอดคล้องกับข้อตกลงระดับการให้บริการ (SLA) ของ &ldquo;เจ้าของผลิตภัณฑ์&rdquo; (Vendor) ใน &ldquo;ผลิตภัณฑ์&rdquo; แต่ละประเภท
             </li>
@@ -49,7 +78,7 @@ export default function PartnerPage3() {
           </ul>
         </div>
 
-        <p>
+        <p className="mt-1">
           <span className="font-bold">6.3 การต่ออายุสัญญาบริการ (Renewals):</span> &ldquo;ผู้จัดจำหน่ายหลัก&rdquo; มีหน้าที่แจ้งเตือนรอบการต่ออายุ &ldquo;สิทธิการใช้งาน&rdquo; รายปีล่วงหน้าแก่ &ldquo;ตัวแทนจำหน่าย&rdquo; ไม่น้อยกว่า 60 (หกสิบ) วัน ก่อนวันหมดอายุ เพื่อให้ &ldquo;ตัวแทนจำหน่าย&rdquo; นำไปติดตามการต่ออายุสัญญาบำรุงรักษาซอฟต์แวร์รายปี (Software Maintenance Renewal) ของ &ldquo;ผู้ใช้ปลายทาง&rdquo;
         </p>
       </div>

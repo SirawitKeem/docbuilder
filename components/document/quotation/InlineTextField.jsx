@@ -11,6 +11,7 @@ export default function InlineTextField({
   type = "text",
   numeric = false,
   multiline = false,
+  style = {},
 }) {
   const [focused, setFocused] = useState(false);
   const isEmpty = value === undefined || value === null || value === "";
@@ -18,7 +19,10 @@ export default function InlineTextField({
   if (readOnly) {
     if (isEmpty) return null;
     return (
-      <span className={`inline-block ${multiline ? "whitespace-pre-line" : "truncate"} ${className}`}>
+      <span
+        style={{ textRendering: "optimizeLegibility", ...style }}
+        className={`inline-block ${multiline ? "whitespace-pre-line" : "truncate"} ${className}`}
+      >
         {value}
       </span>
     );
@@ -37,6 +41,12 @@ export default function InlineTextField({
         onChange={(e) => onChange?.(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
+        style={{
+          textRendering: "optimizeLegibility",
+          WebkitAppearance: "none",
+          appearance: "none",
+          ...style,
+        }}
         className={`px-1 py-0 rounded outline-none transition-colors duration-150 resize-none w-full max-w-full ${baseStateClasses} ${className}`}
       />
     );
@@ -50,6 +60,12 @@ export default function InlineTextField({
       onChange={(e) => onChange?.(numeric ? (e.target.value === "" ? "" : Number(e.target.value)) : e.target.value)}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
+      style={{
+        textRendering: "optimizeLegibility",
+        WebkitAppearance: "none",
+        appearance: "none",
+        ...style,
+      }}
       className={`px-1 py-0 rounded outline-none transition-colors duration-150 w-full max-w-full placeholder:text-gray-300 placeholder:font-normal ${baseStateClasses} ${className}`}
     />
   );

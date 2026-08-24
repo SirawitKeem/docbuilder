@@ -17,18 +17,30 @@ export async function POST(request) {
 
     const page = await browser.newPage();
 
-    // 1. Disable animations and transitions for instant clean capture
+    // 1. Lock Viewport strictly to A4 dimensions (794px x 1123px @ 96dpi) with High DPI scale
+    await page.setViewport({
+      width: 794,
+      height: 1123,
+      deviceScaleFactor: 2,
+    });
+
+    // 2. Disable animations and transitions for instant clean capture
     await page.evaluateOnNewDocument(() => {
       const style = document.createElement("style");
       style.innerHTML = "* { animation: none !important; transition: none !important; }";
       document.head.appendChild(style);
     });
 
-    // 2. Open print route and wait for network & selector ready
+    // 3. Open print route and wait for network idle
     await page.goto(printUrl, { waitUntil: "networkidle0" });
-    await page.waitForSelector(".print-page", { timeout: 10000 });
 
-    // 3. Generate 1:1 A4 PDF matching onscreen cards with zero margin offset
+    // 4. Wait for document fonts to be 100% ready & applied in Headless Chrome
+    await page.evaluate(() => document.fonts ? document.fonts.ready : Promise.resolve());
+
+    // 5. Wait for explicit data-ready="true" signal from React print page component
+    await page.waitForSelector('.print-page[data-ready="true"]', { timeout: 15000 });
+
+    // 6. Generate 1:1 A4 PDF matching onscreen cards with zero margin offset
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,

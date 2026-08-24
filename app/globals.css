@@ -80,8 +80,12 @@ body {
   line-height: 1.7;
   color: #111827;
   font-weight: 400;
-  text-align: justify;
-  text-justify: inter-character;
+  text-align: left;
+}
+
+.document-body p {
+  margin-bottom: 6px;
+  text-align: left;
 }
 
 .document-body h1 {
@@ -97,10 +101,6 @@ body {
   margin-top: 10px;
   margin-bottom: 4px;
   text-align: left;
-}
-
-.document-body p {
-  margin-bottom: 6px;
 }
 
 .document-body ul {

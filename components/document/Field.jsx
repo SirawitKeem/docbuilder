@@ -15,25 +15,31 @@ export default function Field({ id, placeholder, type = "text", minWidth = 4 }) 
   const [focused, setFocused] = useState(false);
   const isEmpty = !value;
 
-  // โหมด Review / Print — แสดงเป็นข้อความในเนื้อเอกสารจริง ไม่มีกรอบฟอร์ม
+  // โหมด Review / Print / PDF — แสดงเป็นข้อความในเนื้อเอกสารจริง
   if (readOnly) {
     if (isEmpty) {
-      return <span className="inline-block border-b border-gray-400 min-w-[3ch] px-1">&nbsp;</span>;
+      return <span className="inline-block border-b border-gray-400 min-w-[3ch] px-0.5">&nbsp;</span>;
     }
     return type === "textarea" ? (
-      <span className="whitespace-pre-line">{value}</span>
+      <span className="whitespace-pre-line font-inherit" style={{ textRendering: "optimizeLegibility" }}>{value}</span>
     ) : (
-      <span>{value}</span>
+      <span className="font-inherit" style={{ textRendering: "optimizeLegibility" }}>{value}</span>
     );
   }
 
   const stateClasses = focused
-    ? "border-primary-500 bg-white ring-2 ring-primary-100"
+    ? "border-primary-500 bg-white ring-1 ring-primary-300"
     : isEmpty
-    ? "border-dashed border-primary-300 bg-primary-50 hover:bg-primary-100"
-    : "border-transparent bg-primary-50/80 hover:bg-primary-100";
+    ? "border-b border-dashed border-primary-400 bg-primary-50/60 hover:bg-primary-100/80"
+    : "border-b border-primary-300 bg-primary-50/40 hover:bg-primary-100/60";
 
   if (type === "textarea") {
+    const visualLen = getThaiVisualWidth(value);
+    const placeholderLen = getThaiVisualWidth(placeholder);
+    const calcWidth = value
+      ? Math.max(minWidth || 10, visualLen + 0.2)
+      : Math.max(minWidth || 10, placeholderLen + 0.2);
+
     return (
       <textarea
         value={value || ""}
@@ -42,17 +48,23 @@ export default function Field({ id, placeholder, type = "text", minWidth = 4 }) 
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         rows={1}
-        className={`inline-block w-full max-w-full my-0.5 px-2 py-0.5 rounded border outline-none transition-colors duration-150 resize-y text-inherit font-inherit leading-normal ${stateClasses}`}
+        style={{
+          width: `${Math.min(calcWidth, 55)}ch`,
+          textRendering: "optimizeLegibility",
+          WebkitAppearance: "none",
+          appearance: "none",
+        }}
+        className={`inline-block align-baseline max-w-full px-0.5 py-0 mx-0 rounded-2xs outline-none transition-colors duration-150 resize-y text-inherit font-inherit leading-normal ${stateClasses}`}
       />
     );
   }
 
-  // คำนวณความกว้างอินพุทให้พอดีพอดีตัวอักษร ไม่เหลือขอบด้านขวาเยอะเกินไป
+  // คำนวณความกว้างอินพุทให้ฟิตพอดีกับตัวอักษร ไม่กินพื้นที่บรรทัดจนดันข้อความขึ้นบรรทัดใหม่ต่างจากโหมด Preview
   const visualLen = getThaiVisualWidth(value);
   const placeholderLen = getThaiVisualWidth(placeholder);
   const calcWidth = value
-    ? visualLen + 0.25
-    : Math.max(minWidth || 4, placeholderLen + 0.5);
+    ? Math.max(minWidth || 2, visualLen + 0.1)
+    : Math.max(minWidth || 2, placeholderLen + 0.1);
 
   return (
     <input
@@ -62,8 +74,13 @@ export default function Field({ id, placeholder, type = "text", minWidth = 4 }) 
       onChange={(e) => setValue(e.target.value)}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
-      style={{ width: `${calcWidth}ch` }}
-      className={`inline-block align-baseline max-w-full px-1 py-0 mx-0.5 rounded border outline-none transition-colors duration-150 text-inherit font-inherit ${stateClasses}`}
+      style={{
+        width: `${calcWidth}ch`,
+        textRendering: "optimizeLegibility",
+        WebkitAppearance: "none",
+        appearance: "none",
+      }}
+      className={`inline-block align-baseline max-w-full px-0.5 py-0 mx-0 rounded-2xs outline-none transition-colors duration-150 text-inherit font-inherit ${stateClasses}`}
     />
   );
 }

@@ -649,7 +649,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
 
               {/* Summary Block (Remarks, NOTE, PRICE SUMMARY, Sign-off) */}
               {hasSummary && (
-                <div className="mt-2.5" style={{ breakInside: "avoid" }}>
+                <div className="mt-auto pt-5" style={{ breakInside: "avoid" }}>
                   {remarks && (
                     <div className="pt-1.5 pb-1 text-[11.5px] border-t border-dashed border-gray-200 mt-1.5 flex items-baseline gap-1">
                       <span className="font-semibold text-gray-700">Remarks : </span>

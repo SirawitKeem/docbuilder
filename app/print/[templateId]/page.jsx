@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { DocumentFieldsProvider } from "@/context/DocumentFieldsContext";
 import { templateRegistry } from "@/lib/templates/registry";
@@ -24,6 +24,17 @@ function PrintContent() {
   const searchParams = useSearchParams();
   const values = decodeValues(searchParams.get("data"));
   const entry = templateRegistry[templateId];
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    if (typeof document !== "undefined" && document.fonts) {
+      document.fonts.ready.then(() => {
+        setIsReady(true);
+      });
+    } else {
+      setIsReady(true);
+    }
+  }, []);
 
   if (!entry) return <p>ไม่พบเทมเพลต: {templateId}</p>;
   const { schema, pages, DocumentComponent } = entry;
@@ -31,7 +42,11 @@ function PrintContent() {
   if (schema?.type === "quotation" || DocumentComponent) {
     const QuotationComp = DocumentComponent;
     return (
-      <div id="print-root" className="print-page border-0 p-0 m-0 w-[794px] min-h-[1123px] bg-white">
+      <div
+        id="print-root"
+        className="print-page border-0 p-0 m-0 w-[794px] min-h-[1123px] bg-white"
+        data-ready={isReady ? "true" : "false"}
+      >
         <QuotationComp quotation={values} />
       </div>
     );
@@ -41,7 +56,11 @@ function PrintContent() {
     <DocumentFieldsProvider initialValues={values} defaultReadOnly>
       <div id="print-root">
         {(pages || []).map((PageContent, i) => (
-          <div key={i} className="print-page font-noto-looped">
+          <div
+            key={i}
+            className="print-page font-noto-looped"
+            data-ready={isReady ? "true" : "false"}
+          >
             <DocumentHeader logo={schema.logo} />
             <div className="print-page-body">
               <PageContent />
