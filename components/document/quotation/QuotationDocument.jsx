@@ -458,7 +458,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                             value={currentIssuer.name}
                             onChange={(v) => updateIssuer("name", v)}
                             readOnly={readOnly}
-                            className="font-bold text-xs text-gray-900 tracking-wide block leading-none"
+                            className="font-bold text-[11px] text-gray-900 block leading-none"
                           />
                         </div>
                         <div className="block leading-none">
@@ -466,7 +466,8 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                             value={currentIssuer.nameTh}
                             onChange={(v) => updateIssuer("nameTh", v)}
                             readOnly={readOnly}
-                            className="font-bold text-xs text-gray-700 block leading-none"
+                            className="font-bold text-[12px] text-gray-900 block leading-none"
+                            style={{ letterSpacing: "0.05px" }}
                           />
                         </div>
                         <div className="text-[10px] text-gray-700 flex items-center gap-2 leading-none">
@@ -497,16 +498,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="flex items-center justify-end mb-1.5">
-                        <span
-                          className="h-3.5 w-40"
-                          style={{
-                            backgroundColor: "#0F4C35",
-                            clipPath: "polygon(0 0, 100% 0, 100% 100%, 10px 100%)",
-                          }}
-                        />
-                      </div>
-                      <h1 className="text-2xl font-extrabold tracking-wider" style={{ color: "#0F4C35" }}>
+                      <h1 className="text-2xl font-extrabold tracking-wider pt-3" style={{ color: "#0F4C35" }}>
                         <InlineTextField
                           value={quotation.docTitle || "QUOTATION"}
                           onChange={(v) => updateField("docTitle", v)}
