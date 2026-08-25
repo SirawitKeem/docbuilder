@@ -106,9 +106,7 @@ function QuotationEditorContent({ docId }) {
   };
 
   const handleDownload = async () => {
-    const { blob } = pdfBase64
-      ? { blob: await (await fetch(`data:application/pdf;base64,${pdfBase64}`)).blob() }
-      : await generatePdf();
+    const { blob } = await generatePdf();
 
     if ("showSaveFilePicker" in window) {
       try {
@@ -214,7 +212,7 @@ function QuotationEditorContent({ docId }) {
         <div
           style={{
             width: 794,
-            height: 1123,
+            minHeight: 1123,
             transform: `scale(${zoom / 100})`,
             transformOrigin: "top center",
           }}

@@ -16,14 +16,17 @@ export default function InlineTextField({
   const [focused, setFocused] = useState(false);
   const isEmpty = value === undefined || value === null || value === "";
 
+  const isUnderlined = typeof value === "string" && (value.includes("<u>") || value.includes("</u>"));
+  const cleanValue = typeof value === "string" ? value.replace(/<\/?u>/g, "") : value;
+
   if (readOnly) {
     if (isEmpty) return null;
     return (
       <span
         style={{ textRendering: "optimizeLegibility", ...style }}
-        className={`inline-block ${multiline ? "whitespace-pre-line" : "truncate"} ${className}`}
+        className={`inline-block ${multiline ? "whitespace-pre-line" : "truncate"} ${isUnderlined ? "underline underline-offset-2 font-bold" : ""} ${className}`}
       >
-        {value}
+        {cleanValue}
       </span>
     );
   }
@@ -47,7 +50,7 @@ export default function InlineTextField({
           appearance: "none",
           ...style,
         }}
-        className={`px-1 py-0 rounded outline-none transition-colors duration-150 resize-none w-full max-w-full ${baseStateClasses} ${className}`}
+        className={`px-1 py-0 rounded outline-none transition-colors duration-150 resize-none w-full max-w-full ${baseStateClasses} ${isUnderlined ? "underline underline-offset-2 font-bold" : ""} ${className}`}
       />
     );
   }
@@ -66,7 +69,7 @@ export default function InlineTextField({
         appearance: "none",
         ...style,
       }}
-      className={`px-1 py-0 rounded outline-none transition-colors duration-150 w-full max-w-full placeholder:text-gray-300 placeholder:font-normal ${baseStateClasses} ${className}`}
+      className={`px-1 py-0 rounded outline-none transition-colors duration-150 w-full max-w-full placeholder:text-gray-300 placeholder:font-normal ${baseStateClasses} ${isUnderlined ? "underline underline-offset-2 font-bold" : ""} ${className}`}
     />
   );
 }

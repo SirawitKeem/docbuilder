@@ -45,7 +45,7 @@ const navigationGroups = [
       { name: "หน้าหลัก", href: "/", icon: LayoutGrid },
       { name: "สร้างเอกสาร", href: "/create", icon: FilePlus2, highlight: true },
       { name: "เอกสารของฉัน", href: "/documents", icon: FolderOpen },
-      { name: "ตั้งค่าข้อมูล", href: "/profile-data", icon: FileEdit },
+      { name: "ตั้งค่าข้อมูลกลาง", href: "/profile-data", icon: FileEdit },
     ],
   },
   {

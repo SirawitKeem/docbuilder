@@ -6,8 +6,15 @@ export async function POST(request) {
     const { templateId, values, quotationData, fileName } = await request.json();
 
     const payload = quotationData || values || {};
-    const encoded = Buffer.from(JSON.stringify(payload), "utf-8").toString("base64");
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    
+    // Dynamically resolve host and protocol from current incoming request
+    const host = request.headers.get("host") || "localhost:3000";
+    const protocol = request.headers.get("x-forwarded-proto") || "http";
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || `${protocol}://${host}`;
+    
+    // Also include encoded query string as a secondary fallback
+    const jsonString = JSON.stringify(payload);
+    const encoded = Buffer.from(jsonString, "utf-8").toString("base64");
     const printUrl = `${baseUrl}/print/${templateId}?data=${encodeURIComponent(encoded)}`;
 
     browser = await puppeteer.launch({
@@ -17,34 +24,47 @@ export async function POST(request) {
 
     const page = await browser.newPage();
 
-    // 1. Lock Viewport strictly to A4 dimensions (794px x 1123px @ 96dpi) with High DPI scale
-    await page.setViewport({
-      width: 794,
-      height: 1123,
-      deviceScaleFactor: 2,
-    });
-
-    // 2. Disable animations and transitions for instant clean capture
-    await page.evaluateOnNewDocument(() => {
+    // Inject data object directly into page window.__PRINT_DATA__ (bypasses URL length limits)
+    await page.evaluateOnNewDocument((data) => {
+      window.__PRINT_DATA__ = data;
       const style = document.createElement("style");
       style.innerHTML = "* { animation: none !important; transition: none !important; }";
       document.head.appendChild(style);
+    }, payload);
+
+    // Set initial viewport (794px wide, tall enough for initial render)
+    await page.setViewport({
+      width: 794,
+      height: 1122,
+      deviceScaleFactor: 2,
     });
 
-    // 3. Open print route and wait for network idle
     await page.goto(printUrl, { waitUntil: "networkidle0" });
-
-    // 4. Wait for document fonts to be 100% ready & applied in Headless Chrome
-    await page.evaluate(() => document.fonts ? document.fonts.ready : Promise.resolve());
-
-    // 5. Wait for explicit data-ready="true" signal from React print page component
+    await page.evaluate(() => (document.fonts ? document.fonts.ready : Promise.resolve()));
     await page.waitForSelector('.print-page[data-ready="true"]', { timeout: 15000 });
 
-    // 6. Generate 1:1 A4 PDF matching onscreen cards with zero margin offset
+    // Count actual page card elements rendered in the DOM
+    const pageCount = await page.evaluate(() => {
+      const wrapper = document.querySelector(".quotation-document-wrapper");
+      if (wrapper) return wrapper.children.length;
+      return 1;
+    });
+
+    // Resize viewport to exactly fit all pages (use 1123px per page to avoid fractional pixel overflow)
+    await page.setViewport({
+      width: 794,
+      height: Math.max(1122, pageCount * 1123),
+      deviceScaleFactor: 2,
+    });
+
+    // Small wait for any reflow after resize
+    await new Promise((r) => setTimeout(r, 300));
+
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
-      margin: { top: 0, bottom: 0, left: 0, right: 0 },
+      preferCSSPageSize: true,
+      margin: { top: "0mm", bottom: "0mm", left: "0mm", right: "0mm" },
       displayHeaderFooter: false,
     });
 

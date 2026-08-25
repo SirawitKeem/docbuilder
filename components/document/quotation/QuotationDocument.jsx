@@ -22,12 +22,21 @@ function LineItemHeaderRow({ item }) {
   const updateLineItem = quotationCtx ? quotationCtx.updateLineItem : () => {};
   const removeLineItem = quotationCtx ? quotationCtx.removeLineItem : () => {};
   const addGroup = quotationCtx ? quotationCtx.addGroup : () => {};
+  const addBullet = quotationCtx ? quotationCtx.addBullet : () => {};
   const amount = calcLineItemAmount(item);
 
+  const hasContent = item.title || item.code || item.unitPrice || item.qty > 1;
+  if (readOnly && !hasContent) {
+    return null;
+  }
+
+  // Find or create default group for direct bullets under this item
+  const firstGroupId = item.groups && item.groups.length > 0 ? item.groups[0].id : null;
+
   return (
-    <div className="line-item-header group/item relative pb-1 pt-1 border-b border-gray-200">
+    <div className="line-item-header group/item relative py-0.5">
       {/* 5 Columns: PRODUCT CODE | DESCRIPTION | QTY | PRICE | AMOUNT */}
-      <div className="grid grid-cols-[105px_1fr_40px_105px_105px] gap-2 py-1 items-center">
+      <div className="grid grid-cols-[105px_1fr_40px_105px_105px] gap-2 py-0.5 items-center">
         <div className="font-mono text-xs text-gray-600">
           <InlineTextField
             value={item.code}
@@ -41,13 +50,27 @@ function LineItemHeaderRow({ item }) {
           <InlineTextField
             value={item.title}
             onChange={(v) => updateLineItem(item.id, { ...item, title: v })}
-            placeholder="ชื่อรายการหลัก..."
+            placeholder="ชื่อรายการหลัก / ชื่อเรื่อง..."
             readOnly={readOnly}
             className="font-bold text-xs text-gray-900 flex-1"
           />
 
           {!readOnly && (
             <div className="flex items-center gap-1.5 shrink-0">
+              <button
+                onClick={() => {
+                  if (firstGroupId) {
+                    addBullet(item.id, firstGroupId);
+                  } else {
+                    addGroup(item.id);
+                  }
+                }}
+                className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-1.5 py-0.5 rounded transition-colors"
+                title="เพิ่ม Bullet (•) ใต้ชื่อเรื่องนี้"
+              >
+                <Plus size={11} /> เพิ่ม bullet (•)
+              </button>
+
               <button
                 onClick={() => addGroup(item.id)}
                 className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-1.5 py-0.5 rounded transition-colors"
@@ -114,72 +137,77 @@ function GroupBlockRow({ item, group }) {
   const addSubBullet = quotationCtx ? quotationCtx.addSubBullet : () => {};
 
   const groupAmount = group.unitPrice ? (group.qty || 1) * group.unitPrice : null;
+  const hasHeading = group.heading && group.heading.trim() !== "";
+  const hasCodeOrPrice = group.code || group.unitPrice;
+  const shouldRenderHeadingRow = !readOnly || hasHeading || hasCodeOrPrice;
 
   return (
-    <div className="group-block group/group space-y-1 relative py-1.5 border-b border-gray-100 last:border-0 pl-1">
-      {/* 5 Columns Group Header: PRODUCT CODE | DESCRIPTION | QTY | PRICE | AMOUNT */}
-      <div className="grid grid-cols-[105px_1fr_40px_105px_105px] gap-2 items-center">
-        <div className="font-mono text-xs text-gray-500">
-          <InlineTextField
-            value={group.code}
-            onChange={(v) => updateGroup(item.id, group.id, { ...group, code: v })}
-            placeholder="Code..."
-            readOnly={readOnly}
-          />
-        </div>
-
-        <div className="flex items-center gap-1">
-          <InlineTextField
-            value={group.heading}
-            onChange={(v) => updateGroup(item.id, group.id, { ...group, heading: v })}
-            placeholder="ชื่อหมวดหมู่ย่อย..."
-            readOnly={readOnly}
-            className="font-bold text-xs tracking-wide flex-1"
-            style={{ color: "#0F4C35" }}
-          />
-
-          {!readOnly && (
-            <button
-              onClick={() => removeGroup(item.id, group.id)}
-              className="opacity-0 group-hover/group:opacity-100 p-0.5 text-gray-400 hover:text-red-500 transition-opacity shrink-0"
-              title="ลบหมวดหมู่นี้"
-            >
-              <X size={13} />
-            </button>
-          )}
-        </div>
-
-        <div className="text-center font-mono text-xs font-semibold text-gray-900">
-          <InlineTextField
-            value={group.qty}
-            numeric
-            onChange={(v) => updateGroup(item.id, group.id, { ...group, qty: v })}
-            readOnly={readOnly}
-            className="text-center text-xs font-mono font-semibold text-gray-900 w-10"
-          />
-        </div>
-
-        <div className="text-right font-mono text-xs font-semibold text-gray-900">
-          {readOnly ? (
-            group.unitPrice ? formatTHB(group.unitPrice) : ""
-          ) : (
+    <div className="group-block group/group space-y-0.5 relative py-0.5 pl-1">
+      {/* 5 Columns Group Header: Render ONLY if it has content or is in edit mode with a heading */}
+      {shouldRenderHeadingRow && (hasHeading || hasCodeOrPrice || !readOnly) && (
+        <div className="grid grid-cols-[105px_1fr_40px_105px_105px] gap-2 items-center">
+          <div className="font-mono text-xs text-gray-500">
             <InlineTextField
-              value={group.unitPrice}
-              numeric
-              onChange={(v) => updateGroup(item.id, group.id, { ...group, unitPrice: v })}
+              value={group.code}
+              onChange={(v) => updateGroup(item.id, group.id, { ...group, code: v })}
+              placeholder="Code..."
               readOnly={readOnly}
-              className="text-right text-xs text-gray-900 font-mono w-20"
             />
-          )}
-        </div>
+          </div>
 
-        <div className="text-right text-xs font-semibold text-gray-800 font-mono">
-          {groupAmount ? formatTHB(groupAmount) : ""}
+          <div className="flex items-center gap-1">
+            <InlineTextField
+              value={group.heading}
+              onChange={(v) => updateGroup(item.id, group.id, { ...group, heading: v })}
+              placeholder="ชื่อหมวดหมู่ย่อย (เว้นว่างได้ถ้าต้องการใส่ Bullet เลย)..."
+              readOnly={readOnly}
+              className="font-bold text-xs tracking-wide flex-1"
+              style={{ color: "#0F4C35" }}
+            />
+
+            {!readOnly && (
+              <button
+                onClick={() => removeGroup(item.id, group.id)}
+                className="opacity-0 group-hover/group:opacity-100 p-0.5 text-gray-400 hover:text-red-500 transition-opacity shrink-0"
+                title="ลบหมวดหมู่นี้"
+              >
+                <X size={13} />
+              </button>
+            )}
+          </div>
+
+          <div className="text-center font-mono text-xs font-semibold text-gray-900">
+            <InlineTextField
+              value={group.qty}
+              numeric
+              onChange={(v) => updateGroup(item.id, group.id, { ...group, qty: v })}
+              readOnly={readOnly}
+              className="text-center text-xs font-mono font-semibold text-gray-900 w-10"
+            />
+          </div>
+
+          <div className="text-right font-mono text-xs font-semibold text-gray-900">
+            {readOnly ? (
+              group.unitPrice ? formatTHB(group.unitPrice) : ""
+            ) : (
+              <InlineTextField
+                value={group.unitPrice}
+                numeric
+                onChange={(v) => updateGroup(item.id, group.id, { ...group, unitPrice: v })}
+                readOnly={readOnly}
+                className="text-right text-xs text-gray-900 font-mono w-20"
+              />
+            )}
+          </div>
+
+          <div className="text-right text-xs font-semibold text-gray-800 font-mono">
+            {groupAmount ? formatTHB(groupAmount) : ""}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Bullets List aligned across 5 Columns */}
-      <div className="space-y-1">
+      <div className="space-y-0.5">
         {(group.bullets || []).map((bullet) => {
           const bAmount = bullet.unitPrice ? (bullet.qty || 1) * bullet.unitPrice : null;
 
@@ -352,7 +380,7 @@ function GroupBlockRow({ item, group }) {
         })}
       </div>
 
-      {!readOnly && (
+      {!readOnly && hasHeading && (
         <button
           onClick={() => addBullet(item.id, group.id)}
           className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 hover:text-emerald-800 pt-0.5 pl-[113px]"
@@ -386,12 +414,14 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
     deliveryTerm = "7 days",
     creditTerm = "30 days",
     billTo = {},
-    lineItems = [],
+    lineItems: rawLineItems = [],
     vatRate = 7,
     remarks = "Payment: Annually",
     senderName = "Narin Rattanavajij (PoP)",
     senderPhone = "+6682-44-686-95",
   } = quotation;
+
+  const lineItems = rawLineItems && rawLineItems.length > 0 ? rawLineItems : quotationTemplate.defaultLineItems;
 
   // Paginate line items and groups at the block level
   const pagesList = paginateQuotationBlocks(lineItems);
@@ -402,7 +432,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
     : pagesList;
 
   return (
-    <div className="quotation-document-wrapper flex flex-col items-center space-y-8">
+    <div className="quotation-document-wrapper block w-[794px] mx-auto space-y-8">
       {displayedPages.map((pageData) => {
         const pageIdx = pagesList.indexOf(pageData);
         const isFirstPage = pageIdx === 0;
@@ -413,7 +443,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
           <div
             key={pageIdx}
             className="bg-white shadow-xl rounded-sm text-gray-900 px-8 py-6 font-sans flex flex-col justify-between overflow-hidden"
-            style={{ width: 794, height: 1123, minHeight: 1123, boxSizing: "border-box" }}
+            style={{ width: 794, height: 1122, minHeight: 1122, boxSizing: "border-box" }}
           >
             <div className="flex-1 flex flex-col justify-start space-y-2 overflow-hidden">
               {/* Header Section */}
@@ -422,18 +452,22 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                   <div className="flex items-start justify-between mb-0 border-b border-gray-100 pb-2" style={{ breakAfter: "avoid" }}>
                     <div>
                       <Image src={logo} alt="logo" width={110} height={30} className="object-contain mb-1" />
-                      <InlineTextField
-                        value={currentIssuer.name}
-                        onChange={(v) => updateIssuer("name", v)}
-                        readOnly={readOnly}
-                        className="font-bold text-xs text-gray-900 tracking-wide block"
-                      />
-                      <InlineTextField
-                        value={currentIssuer.nameTh}
-                        onChange={(v) => updateIssuer("nameTh", v)}
-                        readOnly={readOnly}
-                        className="text-[10.5px] text-gray-500 block"
-                      />
+                      <div className="block">
+                        <InlineTextField
+                          value={currentIssuer.name}
+                          onChange={(v) => updateIssuer("name", v)}
+                          readOnly={readOnly}
+                          className="font-bold text-xs text-gray-900 tracking-wide block"
+                        />
+                      </div>
+                      <div className="block">
+                        <InlineTextField
+                          value={currentIssuer.nameTh}
+                          onChange={(v) => updateIssuer("nameTh", v)}
+                          readOnly={readOnly}
+                          className="text-[10.5px] text-gray-500 block"
+                        />
+                      </div>
                       <div className="text-[10px] text-gray-400 mt-0.5 flex items-center gap-1">
                         <span className="shrink-0">เลขประจำตัวผู้เสียภาษีอากร:</span>
                         <InlineTextField
@@ -626,12 +660,29 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
 
               {/* Description Table Flow Chunks */}
               <div className="border border-t-0 border-gray-200/90 px-3 py-1.5 rounded-b-md min-h-[160px]">
-                {blocks.map((block) => {
+                {blocks.map((block, bIdx) => {
+                  const nextBlock = blocks[bIdx + 1];
+                  const isEndOfItemBlock = !nextBlock || nextBlock.type === "item-header";
+
                   if (block.type === "item-header") {
-                    return <LineItemHeaderRow key={block.id} item={block.item} />;
+                    return (
+                      <div
+                        key={block.id}
+                        className={isEndOfItemBlock ? "pb-1.5 border-b border-gray-200/80 mb-1.5" : ""}
+                      >
+                        <LineItemHeaderRow item={block.item} />
+                      </div>
+                    );
                   }
                   if (block.type === "group-block") {
-                    return <GroupBlockRow key={block.id} item={block.item} group={block.group} />;
+                    return (
+                      <div
+                        key={block.id}
+                        className={isEndOfItemBlock ? "pb-1.5 border-b border-gray-200/80 mb-1.5" : ""}
+                      >
+                        <GroupBlockRow item={block.item} group={block.group} />
+                      </div>
+                    );
                   }
                   return null;
                 })}

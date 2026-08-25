@@ -8,23 +8,41 @@ import DocumentHeader from "@/components/document/DocumentHeader";
 import DocumentFooter from "@/components/document/DocumentFooter";
 
 function decodeValues(encoded) {
-  if (!encoded) return {};
+  if (!encoded) return null;
   try {
-    const json = decodeURIComponent(
-      atob(encoded).split("").map((c) => "%" + c.charCodeAt(0).toString(16).padStart(2, "0")).join("")
-    );
+    const binaryString = atob(encoded);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    const json = new TextDecoder("utf-8").decode(bytes);
     return JSON.parse(json);
-  } catch {
-    return {};
+  } catch (e1) {
+    try {
+      const json = decodeURIComponent(escape(atob(encoded)));
+      return JSON.parse(json);
+    } catch (e2) {
+      console.error("decodeValues error:", e2);
+      return null;
+    }
   }
 }
 
 function PrintContent() {
   const { templateId } = useParams();
   const searchParams = useSearchParams();
-  const values = decodeValues(searchParams.get("data"));
-  const entry = templateRegistry[templateId];
+
+  const [injectedData, setInjectedData] = useState(null);
   const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.__PRINT_DATA__) {
+      setInjectedData(window.__PRINT_DATA__);
+    }
+  }, []);
+
+  const values = injectedData || decodeValues(searchParams.get("data")) || {};
+  const entry = templateRegistry[templateId];
 
   useEffect(() => {
     if (typeof document !== "undefined" && document.fonts) {
@@ -44,9 +62,68 @@ function PrintContent() {
     return (
       <div
         id="print-root"
-        className="print-page border-0 p-0 m-0 w-[794px] min-h-[1123px] bg-white"
+        className="print-page border-0 p-0 m-0 w-[794px] bg-white"
         data-ready={isReady ? "true" : "false"}
       >
+        <style>{`
+          @page {
+            size: 210mm 297mm;
+            margin: 0;
+          }
+          @media print, all {
+            html, body {
+              background: #ffffff !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              width: 794px !important;
+              min-width: 794px !important;
+              max-width: 794px !important;
+              height: auto !important;
+              max-height: none !important;
+              overflow: visible !important;
+            }
+            #print-root {
+              margin: 0 !important;
+              padding: 0 !important;
+              width: 794px !important;
+              height: auto !important;
+              overflow: visible !important;
+            }
+            .quotation-document-wrapper {
+              display: block !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              width: 794px !important;
+              height: auto !important;
+              overflow: visible !important;
+            }
+            .quotation-document-wrapper > div {
+              display: flex !important;
+              box-shadow: none !important;
+              margin: 0 !important;
+              width: 794px !important;
+              height: 297mm !important;
+              min-height: 297mm !important;
+              max-height: 297mm !important;
+              overflow: hidden !important;
+              page-break-after: always !important;
+              break-after: page !important;
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+              box-sizing: border-box !important;
+            }
+            .quotation-document-wrapper > div:last-child {
+              page-break-after: auto !important;
+              break-after: auto !important;
+            }
+            /* Remove Tailwind space-y-8 margin gaps between page cards in print/Puppeteer */
+            .quotation-document-wrapper > :not([hidden]) ~ :not([hidden]) {
+              --tw-space-y-reverse: 0 !important;
+              margin-top: 0 !important;
+              margin-bottom: 0 !important;
+            }
+          }
+        `}</style>
         <QuotationComp quotation={values} />
       </div>
     );
