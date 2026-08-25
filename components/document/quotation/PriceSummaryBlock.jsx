@@ -22,7 +22,7 @@ export default function PriceSummaryBlock({ lineItems, vatRate }) {
       {/* Subtotal Row */}
       <div className="flex justify-between text-xs py-1 text-gray-700 font-medium">
         <span>SUBTOTAL</span>
-        <span className="font-mono font-semibold">{formatTHB(subtotal)}</span>
+        <span className="font-semibold">{formatTHB(subtotal)}</span>
       </div>
 
       {/* VAT Row (Editable Rate) */}
@@ -49,7 +49,7 @@ export default function PriceSummaryBlock({ lineItems, vatRate }) {
             </div>
           )}
         </div>
-        <span className="font-mono font-semibold">{formatTHB(vat)}</span>
+        <span className="font-semibold">{formatTHB(vat)}</span>
       </div>
 
       {/* Grand Total Row */}
@@ -57,7 +57,7 @@ export default function PriceSummaryBlock({ lineItems, vatRate }) {
         <span className="font-bold text-xs" style={{ color: "#0F4C35" }}>
           GRAND TOTAL
         </span>
-        <span className="font-bold text-base font-mono" style={{ color: "#0F4C35" }}>
+        <span className="font-bold text-base" style={{ color: "#0F4C35" }}>
           {formatTHB(grandTotal)} THB
         </span>
       </div>

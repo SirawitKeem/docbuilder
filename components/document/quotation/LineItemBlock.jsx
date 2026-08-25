@@ -54,17 +54,17 @@ export default function LineItemBlock({ item }) {
           />
         </div>
 
-        <div className="text-right font-mono">
+        <div className="text-right">
           <InlineTextField
             value={item.unitPrice}
             numeric
             onChange={(v) => updateLineItem(item.id, { ...item, unitPrice: v })}
             readOnly={readOnly}
-            className="text-right text-sm text-gray-800 font-mono w-24"
+            className="text-right text-sm text-gray-800 w-24"
           />
         </div>
 
-        <p className="text-right text-sm font-extrabold text-gray-900 font-mono">
+        <p className="text-right text-sm font-extrabold text-gray-900">
           {formatTHB(amount)}
         </p>
       </div>

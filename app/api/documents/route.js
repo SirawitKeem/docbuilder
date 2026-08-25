@@ -36,6 +36,28 @@ export async function PUT(request) {
 export async function DELETE(request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
+  const idsParam = searchParams.get("ids");
+
+  if (idsParam) {
+    const ids = idsParam.split(",").map((s) => s.trim()).filter(Boolean);
+    await documentsRepo.delete(ids);
+    return Response.json({ success: true, count: ids.length });
+  }
+
+  try {
+    const body = await request.json();
+    if (body?.ids && Array.isArray(body.ids)) {
+      await documentsRepo.delete(body.ids);
+      return Response.json({ success: true, count: body.ids.length });
+    }
+    if (body?.id) {
+      await documentsRepo.delete(body.id);
+      return Response.json({ success: true });
+    }
+  } catch (e) {
+    // Body is empty or not JSON, proceed with searchParams
+  }
+
   if (!id) return Response.json({ error: "Missing id" }, { status: 400 });
   await documentsRepo.delete(id);
   return Response.json({ success: true });

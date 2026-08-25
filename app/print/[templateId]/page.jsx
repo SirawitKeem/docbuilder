@@ -106,15 +106,14 @@ function PrintContent() {
               min-height: 297mm !important;
               max-height: 297mm !important;
               overflow: hidden !important;
-              page-break-after: always !important;
-              break-after: page !important;
               page-break-inside: avoid !important;
               break-inside: avoid !important;
               box-sizing: border-box !important;
             }
-            .quotation-document-wrapper > div:last-child {
-              page-break-after: auto !important;
-              break-after: auto !important;
+            /* Page break BEFORE page 2, 3, ... only — never AFTER the last page */
+            .quotation-document-wrapper > div + div {
+              page-break-before: always !important;
+              break-before: page !important;
             }
             /* Remove Tailwind space-y-8 margin gaps between page cards in print/Puppeteer */
             .quotation-document-wrapper > :not([hidden]) ~ :not([hidden]) {

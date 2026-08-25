@@ -75,22 +75,12 @@ function QuotationEditorContent({ docId }) {
   const generatePdf = async () => {
     setGenerating(true);
     try {
-      let targetId = activeDocId;
-      if (!targetId) {
-        const created = await createQuotation(quotation);
-        targetId = created.id;
-        setActiveDocId(created.id);
-        setQuotation((prev) => ({ ...prev, id: created.id, quotationNo: created.quotationNo }));
-      } else {
-        await updateQuotation(activeDocId, quotation);
-      }
-
       const res = await fetch("/api/export-pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           templateId: "quotation",
-          quotationData: { ...quotation, id: targetId },
+          quotationData: quotation,
           fileName,
         }),
       });

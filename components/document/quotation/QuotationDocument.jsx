@@ -37,7 +37,7 @@ function LineItemHeaderRow({ item }) {
     <div className="line-item-header group/item relative py-0.5">
       {/* 5 Columns: PRODUCT CODE | DESCRIPTION | QTY | PRICE | AMOUNT */}
       <div className="grid grid-cols-[105px_1fr_40px_105px_105px] gap-2 py-0.5 items-center">
-        <div className="font-mono text-xs text-gray-600">
+        <div className="text-xs text-gray-600">
           <InlineTextField
             value={item.code}
             onChange={(v) => updateLineItem(item.id, { ...item, code: v })}
@@ -90,17 +90,17 @@ function LineItemHeaderRow({ item }) {
           )}
         </div>
 
-        <div className="text-center font-mono text-xs font-semibold text-gray-900">
+        <div className="text-center text-xs font-semibold text-gray-900">
           <InlineTextField
             value={item.qty}
             numeric
             onChange={(v) => updateLineItem(item.id, { ...item, qty: v })}
             readOnly={readOnly}
-            className="text-center text-xs font-mono font-semibold text-gray-900 w-10"
+            className="text-center text-xs font-semibold text-gray-900 w-10"
           />
         </div>
 
-        <div className="text-right font-mono text-xs font-semibold text-gray-900">
+        <div className="text-right text-xs font-semibold text-gray-900">
           {readOnly ? (
             item.unitPrice ? formatTHB(item.unitPrice) : ""
           ) : (
@@ -109,12 +109,12 @@ function LineItemHeaderRow({ item }) {
               numeric
               onChange={(v) => updateLineItem(item.id, { ...item, unitPrice: v })}
               readOnly={readOnly}
-              className="text-right text-xs text-gray-900 font-mono w-20"
+              className="text-right text-xs text-gray-900 w-20"
             />
           )}
         </div>
 
-        <div className="text-right text-xs font-bold text-gray-900 font-mono">
+        <div className="text-right text-xs font-bold text-gray-900">
           {amount > 0 ? formatTHB(amount) : ""}
         </div>
       </div>
@@ -146,7 +146,7 @@ function GroupBlockRow({ item, group }) {
       {/* 5 Columns Group Header: Render ONLY if it has content or is in edit mode with a heading */}
       {shouldRenderHeadingRow && (hasHeading || hasCodeOrPrice || !readOnly) && (
         <div className="grid grid-cols-[105px_1fr_40px_105px_105px] gap-2 items-center">
-          <div className="font-mono text-xs text-gray-500">
+          <div className="text-xs text-gray-500">
             <InlineTextField
               value={group.code}
               onChange={(v) => updateGroup(item.id, group.id, { ...group, code: v })}
@@ -176,17 +176,17 @@ function GroupBlockRow({ item, group }) {
             )}
           </div>
 
-          <div className="text-center font-mono text-xs font-semibold text-gray-900">
+          <div className="text-center text-xs font-semibold text-gray-900">
             <InlineTextField
               value={group.qty}
               numeric
               onChange={(v) => updateGroup(item.id, group.id, { ...group, qty: v })}
               readOnly={readOnly}
-              className="text-center text-xs font-mono font-semibold text-gray-900 w-10"
+              className="text-center text-xs font-semibold text-gray-900 w-10"
             />
           </div>
 
-          <div className="text-right font-mono text-xs font-semibold text-gray-900">
+          <div className="text-right text-xs font-semibold text-gray-900">
             {readOnly ? (
               group.unitPrice ? formatTHB(group.unitPrice) : ""
             ) : (
@@ -195,12 +195,12 @@ function GroupBlockRow({ item, group }) {
                 numeric
                 onChange={(v) => updateGroup(item.id, group.id, { ...group, unitPrice: v })}
                 readOnly={readOnly}
-                className="text-right text-xs text-gray-900 font-mono w-20"
+                className="text-right text-xs text-gray-900 w-20"
               />
             )}
           </div>
 
-          <div className="text-right text-xs font-semibold text-gray-800 font-mono">
+          <div className="text-right text-xs font-semibold text-gray-800">
             {groupAmount ? formatTHB(groupAmount) : ""}
           </div>
         </div>
@@ -215,7 +215,7 @@ function GroupBlockRow({ item, group }) {
             <div key={bullet.id} className="space-y-0.5">
               {/* Bullet Row (5-Column Grid) */}
               <div className="grid grid-cols-[105px_1fr_40px_105px_105px] gap-2 items-center text-[10.5px] group/bullet py-0.5">
-                <div className="font-mono text-[10.5px] text-gray-500">
+                <div className="text-[10.5px] text-gray-500">
                   <InlineTextField
                     value={bullet.code}
                     onChange={(v) => updateBullet(item.id, group.id, bullet.id, { ...bullet, code: v })}
@@ -254,7 +254,7 @@ function GroupBlockRow({ item, group }) {
                   )}
                 </div>
 
-                <div className="text-center font-mono text-[10.5px] font-semibold text-gray-900">
+                <div className="text-center text-[10.5px] font-semibold text-gray-900">
                   {readOnly ? (
                     bullet.qty || ""
                   ) : (
@@ -264,12 +264,12 @@ function GroupBlockRow({ item, group }) {
                       onChange={(v) => updateBullet(item.id, group.id, bullet.id, { ...bullet, qty: v })}
                       placeholder=""
                       readOnly={readOnly}
-                      className="text-center text-[10.5px] font-mono font-semibold text-gray-900 w-8"
+                      className="text-center text-[10.5px] font-semibold text-gray-900 w-8"
                     />
                   )}
                 </div>
 
-                <div className="text-right font-mono text-[10.5px] font-semibold text-gray-900">
+                <div className="text-right text-[10.5px] font-semibold text-gray-900">
                   {readOnly ? (
                     bullet.unitPrice ? formatTHB(bullet.unitPrice) : ""
                   ) : (
@@ -279,12 +279,12 @@ function GroupBlockRow({ item, group }) {
                       onChange={(v) => updateBullet(item.id, group.id, bullet.id, { ...bullet, unitPrice: v })}
                       placeholder=""
                       readOnly={readOnly}
-                      className="text-right text-[10.5px] text-gray-900 font-mono w-20"
+                      className="text-right text-[10.5px] text-gray-900 w-20"
                     />
                   )}
                 </div>
 
-                <div className="text-right text-[10.5px] font-semibold text-gray-800 font-mono">
+                <div className="text-right text-[10.5px] font-semibold text-gray-800">
                   {bAmount ? formatTHB(bAmount) : ""}
                 </div>
               </div>
@@ -327,7 +327,7 @@ function GroupBlockRow({ item, group }) {
                           )}
                         </div>
 
-                        <div className="text-center font-mono text-[10px] font-semibold text-gray-800">
+                        <div className="text-center text-[10px] font-semibold text-gray-800">
                           {readOnly ? (
                             sb.qty || ""
                           ) : (
@@ -342,12 +342,12 @@ function GroupBlockRow({ item, group }) {
                               }}
                               placeholder=""
                               readOnly={readOnly}
-                              className="text-center text-[10px] font-mono w-8"
+                              className="text-center text-[10px] w-8"
                             />
                           )}
                         </div>
 
-                        <div className="text-right font-mono text-[10px] text-gray-800">
+                        <div className="text-right text-[10px] text-gray-800">
                           {readOnly ? (
                             sb.unitPrice ? formatTHB(sb.unitPrice) : ""
                           ) : (
@@ -362,12 +362,12 @@ function GroupBlockRow({ item, group }) {
                               }}
                               placeholder=""
                               readOnly={readOnly}
-                              className="text-right text-[10px] text-gray-800 font-mono w-20"
+                              className="text-right text-[10px] text-gray-800 w-20"
                             />
                           )}
                         </div>
 
-                        <div className="text-right text-[10px] font-semibold text-gray-800 font-mono">
+                        <div className="text-right text-[10px] font-semibold text-gray-800">
                           {sbAmount ? formatTHB(sbAmount) : ""}
                         </div>
                       </div>
@@ -449,40 +449,62 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
               {/* Header Section */}
               {isFirstPage ? (
                 <>
-                  <div className="flex items-start justify-between mb-0 border-b border-gray-100 pb-2" style={{ breakAfter: "avoid" }}>
-                    <div>
-                      <Image src={logo} alt="logo" width={110} height={30} className="object-contain mb-1" />
-                      <div className="block">
-                        <InlineTextField
-                          value={currentIssuer.name}
-                          onChange={(v) => updateIssuer("name", v)}
-                          readOnly={readOnly}
-                          className="font-bold text-xs text-gray-900 tracking-wide block"
-                        />
-                      </div>
-                      <div className="block">
-                        <InlineTextField
-                          value={currentIssuer.nameTh}
-                          onChange={(v) => updateIssuer("nameTh", v)}
-                          readOnly={readOnly}
-                          className="text-[10.5px] text-gray-500 block"
-                        />
-                      </div>
-                      <div className="text-[10px] text-gray-400 mt-0.5 flex items-center gap-1">
-                        <span className="shrink-0">เลขประจำตัวผู้เสียภาษีอากร:</span>
-                        <InlineTextField
-                          value={currentIssuer.taxId}
-                          onChange={(v) => updateIssuer("taxId", v)}
-                          readOnly={readOnly}
-                          className="text-[10px] text-gray-400"
-                        />
+                  <div className="flex items-start justify-between mb-0 pb-5" style={{ breakAfter: "avoid" }}>
+                    <div className="flex items-center gap-3.5">
+                      <Image src={logo} alt="logo" width={180} height={56} style={{ width: 180, height: "auto" }} className="object-contain shrink-0" />
+                      <div className="flex flex-col justify-center -space-y-0.5">
+                        <div className="block leading-none">
+                          <InlineTextField
+                            value={currentIssuer.name}
+                            onChange={(v) => updateIssuer("name", v)}
+                            readOnly={readOnly}
+                            className="font-bold text-xs text-gray-900 tracking-wide block leading-none"
+                          />
+                        </div>
+                        <div className="block leading-none">
+                          <InlineTextField
+                            value={currentIssuer.nameTh}
+                            onChange={(v) => updateIssuer("nameTh", v)}
+                            readOnly={readOnly}
+                            className="font-bold text-xs text-gray-700 block leading-none"
+                          />
+                        </div>
+                        <div className="text-[10px] text-gray-700 flex items-center gap-2 leading-none">
+                          <span className="shrink-0 font-medium text-gray-700">เลขประจำตัวผู้เสียภาษีอากร:</span>
+                          <span
+                            className="inline-flex items-center px-2 py-0.5 text-white font-bold text-[10px] tracking-wider"
+                            style={{
+                              backgroundColor: "#0F4C35",
+                              clipPath: "polygon(5px 0%, 100% 0%, calc(100% - 5px) 100%, 0% 100%)",
+                            }}
+                          >
+                            <InlineTextField
+                              value={currentIssuer.taxIdNumber || "0105558073755"}
+                              onChange={(v) => updateIssuer("taxIdNumber", v)}
+                              readOnly={readOnly}
+                              className="font-bold text-[10px] text-white tracking-wider"
+                            />
+                          </span>
+                          <span className="text-[10px] text-gray-700 font-normal">
+                            <InlineTextField
+                              value={currentIssuer.taxBranch || "(สำนักงานใหญ่)"}
+                              onChange={(v) => updateIssuer("taxBranch", v)}
+                              readOnly={readOnly}
+                              className="text-[10px] text-gray-700 font-normal"
+                            />
+                          </span>
+                        </div>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="flex items-center justify-end gap-1 mb-1">
-                        <span className="h-1.5 w-24 rounded-xs" style={{ backgroundColor: "#0F4C35" }} />
-                        <span className="h-1.5 w-3 bg-gray-300 transform -skew-x-12 rounded-2xs" />
-                        <span className="h-1.5 w-2 bg-gray-200 transform -skew-x-12 rounded-2xs" />
+                      <div className="flex items-center justify-end mb-1.5">
+                        <span
+                          className="h-3.5 w-40"
+                          style={{
+                            backgroundColor: "#0F4C35",
+                            clipPath: "polygon(0 0, 100% 0, 100% 100%, 10px 100%)",
+                          }}
+                        />
                       </div>
                       <h1 className="text-2xl font-extrabold tracking-wider" style={{ color: "#0F4C35" }}>
                         <InlineTextField
@@ -490,7 +512,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                           onChange={(v) => updateField("docTitle", v)}
                           readOnly={readOnly}
                           placeholder="QUOTATION"
-                          className="text-2xl font-extrabold tracking-wider text-right"
+                          className="text-3xl font-extrabold tracking-wider text-right"
                           style={{ color: "#0F4C35" }}
                         />
                       </h1>
@@ -498,12 +520,12 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                   </div>
 
                   {/* Compact 5 Symmetric Rows Grid with Top and Bottom Borders */}
-                  <div className="grid grid-cols-2 gap-6 mb-0 mt-0 pt-0.5 pb-0.5 border-t border-b border-gray-200" style={{ breakAfter: "avoid" }}>
+                  <div className="grid grid-cols-2 gap-6 mb-0 mt-0 pt-0.5 pb-1.5" style={{ breakAfter: "avoid" }}>
                     {/* Left Table (5 Rows) */}
                     <div>
                       <table className="text-[10.5px] w-full">
                         <tbody>
-                          <tr className="border-b border-gray-100 h-[25px]">
+                          <tr className="h-[25px]">
                             <td className="text-[#0F4C35] font-semibold w-16 py-0.5 align-middle">To</td>
                             <td className="py-0.5 align-middle">
                               <InlineTextField
@@ -515,7 +537,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                               />
                             </td>
                           </tr>
-                          <tr className="border-b border-gray-100 h-[25px]">
+                          <tr className="h-[25px]">
                             <td className="text-[#0F4C35] font-semibold w-16 py-0.5 align-middle">Attn.</td>
                             <td className="py-0.5 align-middle">
                               <InlineTextField
@@ -527,7 +549,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                               />
                             </td>
                           </tr>
-                          <tr className="border-b border-gray-100 h-[25px]">
+                          <tr className="h-[25px]">
                             <td className="text-[#0F4C35] font-semibold w-16 py-0.5 align-middle">End User</td>
                             <td className="py-0.5 align-middle">
                               <InlineTextField
@@ -539,7 +561,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                               />
                             </td>
                           </tr>
-                          <tr className="border-b border-gray-100 h-[25px]">
+                          <tr className="h-[25px]">
                             <td className="text-[#0F4C35] font-semibold w-16 py-0.5 align-middle">Subject</td>
                             <td className="py-0.5 align-middle">
                               <InlineTextField
@@ -567,8 +589,8 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                       </table>
                     </div>
 
-                    {/* Right Table (5 Rows) */}
-                    <div>
+                    {/* Right Table (ปิดการใช้งานชั่วคราวตามคำขอ) */}
+                    <div className="hidden">
                       <table className="text-[10.5px] w-full">
                         <tbody>
                           <tr className="border-b border-gray-100 h-[25px]">
@@ -637,10 +659,10 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                 /* Page 2+ Continued Compact Header */
                 <div className="flex items-center justify-between mb-3 border-b border-gray-200 pb-1.5">
                   <div className="flex items-center gap-2">
-                    <Image src={logo} alt="logo" width={95} height={26} className="object-contain" />
+                    <Image src={logo} alt="logo" width={95} height={26} className="w-[95px] h-auto object-contain shrink-0" />
                     <span className="text-[11px] font-semibold text-gray-600">| ใบเสนอราคา (ต่อหน้า {pageNumber})</span>
                   </div>
-                  <div className="text-right text-xs font-mono font-semibold text-gray-800">
+                  <div className="text-right text-xs font-semibold text-gray-800">
                     {quotationNo}
                   </div>
                 </div>
@@ -668,7 +690,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                     return (
                       <div
                         key={block.id}
-                        className={isEndOfItemBlock ? "pb-1.5 border-b border-gray-200/80 mb-1.5" : ""}
+                        className={isEndOfItemBlock ? "pb-1.5 mb-1.5" : ""}
                       >
                         <LineItemHeaderRow item={block.item} />
                       </div>
@@ -678,7 +700,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                     return (
                       <div
                         key={block.id}
-                        className={isEndOfItemBlock ? "pb-1.5 border-b border-gray-200/80 mb-1.5" : ""}
+                        className={isEndOfItemBlock ? "pb-1.5 mb-1.5" : ""}
                       >
                         <GroupBlockRow item={block.item} group={block.group} />
                       </div>
@@ -700,9 +722,9 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
 
               {/* Summary Block (Remarks, NOTE, PRICE SUMMARY, Sign-off) */}
               {hasSummary && (
-                <div className="mt-auto pt-5" style={{ breakInside: "avoid" }}>
+                <div className="mt-auto pt-0" style={{ breakInside: "avoid" }}>
                   {remarks && (
-                    <div className="pt-1.5 pb-1 text-[11.5px] border-t border-dashed border-gray-200 mt-1.5 flex items-baseline gap-1">
+                    <div className="pt-1.5 pb-1 text-[11.5px] mt-1.5 flex items-baseline gap-1">
                       <span className="font-semibold text-gray-700">Remarks : </span>
                       <InlineTextField
                         value={remarks}
@@ -747,7 +769,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                         value={senderPhone}
                         onChange={(v) => updateField("senderPhone", v)}
                         readOnly={readOnly}
-                        className="text-gray-500 font-mono block text-[11px]"
+                        className="text-gray-500 block text-[11px]"
                       />
                     </div>
                   </div>

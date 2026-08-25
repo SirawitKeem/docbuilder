@@ -150,9 +150,13 @@ export default function DocumentsTable({
     setIsBulkDeleting(true);
     setDeleteModalState(null);
     try {
-      await Promise.all(
-        selectedIds.map((id) => fetch(`${deleteApiUrl}?id=${id}`, { method: "DELETE" }))
-      );
+      const idsParam = encodeURIComponent(selectedIds.join(","));
+      const res = await fetch(`${deleteApiUrl}?ids=${idsParam}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: selectedIds }),
+      });
+      if (!res.ok) throw new Error("ลบรายการไม่สำเร็จ");
       setSelectedIds([]);
       if (onRefresh) {
         onRefresh();
