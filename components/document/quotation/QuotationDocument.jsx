@@ -683,18 +683,22 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                   {/* Sign-off / Best regards */}
                   <div className="mt-2.5 text-[11.5px] text-gray-800 space-y-0.5">
                     <p className="font-medium text-gray-500">Best regards,</p>
-                    <InlineTextField
-                      value={senderName}
-                      onChange={(v) => updateField("senderName", v)}
-                      readOnly={readOnly}
-                      className="font-semibold text-xs text-gray-900 block"
-                    />
-                    <InlineTextField
-                      value={senderPhone}
-                      onChange={(v) => updateField("senderPhone", v)}
-                      readOnly={readOnly}
-                      className="text-gray-500 font-mono block text-[11px]"
-                    />
+                    <div className="block">
+                      <InlineTextField
+                        value={senderName}
+                        onChange={(v) => updateField("senderName", v)}
+                        readOnly={readOnly}
+                        className="font-bold text-xs text-gray-900 block"
+                      />
+                    </div>
+                    <div className="block">
+                      <InlineTextField
+                        value={senderPhone}
+                        onChange={(v) => updateField("senderPhone", v)}
+                        readOnly={readOnly}
+                        className="text-gray-500 font-mono block text-[11px]"
+                      />
+                    </div>
                   </div>
                 </div>
               )}

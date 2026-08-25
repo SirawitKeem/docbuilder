@@ -9,19 +9,19 @@ export default function PartnerPage5() {
       {/* ส่วนเนื้อหาข้อ 10, ข้อ 11 และย่อหน้าสรุปสัญญา */}
       <div>
         <h2>ข้อ 10. ระยะเวลาและการบอกเลิกสัญญา (Term and Termination)</h2>
-        <div className="space-y-1 pl-4 mb-2 text-[11.5px] text-left">
+        <div className="space-y-1 pl-4 mb-2 text-[12px] text-left">
           <p className="text-left">
             <span className="font-bold">10.1 ระยะเวลาสัญญา:</span> สัญญานี้มีผลบังคับใช้เป็นระยะเวลา 1 (หนึ่ง) ปี นับตั้งแต่วันที่ลงนาม และจะต่ออายุอัตโนมัติคราวละ 1 (หนึ่ง) ปี เว้นแต่ฝ่ายใดฝ่ายหนึ่งจะแจ้งไม่ต่ออายุเป็นลายลักษณ์อักษรล่วงหน้าอย่างน้อย 30 (สามสิบ) วัน ก่อนสิ้นสุดสัญญา
           </p>
           <div>
             <p className="font-bold mb-0.5 text-left">10.2 การบอกเลิกสัญญาแบบมีเหตุผล (Termination for Cause):</p>
             <p className="mb-0.5 text-left">คู่สัญญาฝ่ายใดฝ่ายหนึ่งมีสิทธิบอกเลิกสัญญาได้ทันที หากอีกฝ่าย:</p>
-            <ul className="list-disc pl-8 space-y-0.5 font-normal">
+            <ul className="list-disc pl-8 space-y-0.5 font-normal text-[12px]">
               <li className="text-left">ประพฤติผิดสัญญาข้อหนึ่งข้อใดและไม่แก้ไขภายใน 30 (สามสิบ) วัน นับแต่วันได้รับแจ้งเป็นลายลักษณ์อักษร</li>
               <li className="text-left">ตกเป็นผู้มีหนี้สินล้นพ้นตัว ล้มละลาย เลิกบริษัท หรือเข้าสู่กระบวนการฟื้นฟูกิจการ</li>
               <li className="text-left">กระทำผิดกฎหมายอย่างร้ายแรง เช่น กฎหมายต่อต้านการทุจริต กฎหมายคุ้มครองข้อมูลส่วนบุคคล หรือกฎหมายละเมิดลิขสิทธิ์</li>
             </ul>
-            <p className="mt-0.5 font-normal text-left">
+            <p className="mt-0.5 font-normal text-left text-[12px]">
               สำหรับการลงทะเบียนสิทธิ์ในข้อตกลงทางการค้า (Deal Registration) ที่ได้ทำไว้ก่อนหน้า จะถือว่าสิ้นสุดลงทันที
             </p>
           </div>
@@ -34,7 +34,7 @@ export default function PartnerPage5() {
         </div>
 
         <h2 className="mt-2 mb-1 text-left">ข้อ 11. กฎหมายที่ใช้บังคับและกระบวนการระงับข้อพิพาท (Governing Law & Dispute Resolution)</h2>
-        <div className="space-y-1 pl-4 text-[11.5px] text-left mb-2">
+        <div className="space-y-1 pl-4 text-[12px] text-left mb-2">
           <p className="text-left">
             <span className="font-bold">11.1 กฎหมายที่ใช้บังคับ:</span> สัญญานี้อยู่ภายใต้การบังคับ และตีความตามกฎหมายแห่งราชอาณาจักรไทย
           </p>
@@ -44,7 +44,7 @@ export default function PartnerPage5() {
         </div>
 
         {/* ย่อหน้าสรุปสัญญา */}
-        <p className="indent-8 text-left text-gray-900 text-[11.5px] mt-3 mb-4">
+        <p className="indent-8 text-left text-gray-900 text-[12px] mt-3 mb-4">
           สัญญานี้ทำขึ้นเป็นสองฉบับมีข้อความถูกต้องตรงกัน คู่สัญญาได้อ่านและเข้าใจข้อความโดยรายละเอียดตลอดแล้ว
           <br />
           จึงได้ลงลายมือชื่อและประทับตรา (ถ้ามี) ไว้เป็นสำคัญต่อหน้าพยาน
@@ -52,7 +52,7 @@ export default function PartnerPage5() {
       </div>
 
       {/* ส่วน Signature Block จัดระยะห่าง Gap A และ Gap B ให้เท่ากันเป๊ะที่ 55px */}
-      <div className="mt-15 pb-2 text-[11.5px]">
+      <div className="mt-14 pb-2 text-[12px]">
         {/* คู่สัญญาหลัก */}
         <div className="grid grid-cols-2 gap-6 mb-0">
           <div className="flex flex-col items-center text-center">
