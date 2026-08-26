@@ -21,10 +21,11 @@ export default function InlineTextField({
 
   if (readOnly) {
     if (isEmpty) return null;
+    const isBlock = /\bblock\b/.test(className);
     return (
       <span
-        style={{ textRendering: "optimizeLegibility", ...style }}
-        className={`inline-block ${multiline ? "whitespace-pre-line" : "truncate"} ${isUnderlined ? "font-bold" : ""} ${className}`}
+        style={{ textRendering: "optimizeLegibility", ...(isBlock ? { display: "block" } : {}), ...style }}
+        className={`${multiline ? "whitespace-pre-line" : ""} ${isUnderlined ? "font-bold" : ""} ${className}`}
       >
         {cleanValue}
       </span>

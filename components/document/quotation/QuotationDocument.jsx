@@ -442,222 +442,183 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
               {isFirstPage ? (
                 <>
                   <div className="flex items-start justify-between mb-0 pb-0 gap-4" style={{ breakAfter: "avoid" }}>
-                    <div className="flex items-center gap-2 max-w-[450px] min-w-0">
-                      <Image src={logo} alt="logo" width={175} height={54} style={{ width: 175, height: "auto" }} className="object-contain shrink-0" />
-                      <div className="flex flex-col justify-center space-y-0 min-w-0 pt-6">
-                        <div className="block leading-none">
+                    {/* Left Brand Area: Fixed Logo (175x52) + 2-Tier Balanced Text Container */}
+                    <div className="flex items-start gap-2 shrink-0">
+                      <Image src={logo} alt="logo" width={175} height={52} style={{ width: 175, height: 52 }} className="object-contain shrink-0" />
+                      
+                      {/* Fixed 295px container structured into CREST band (top 2 lines) and ZENDO band (bottom 2 lines) */}
+                      <div
+                        className="flex flex-col w-[295px] max-w-[295px] shrink-0"
+                        style={{ paddingTop: 7, gap: 0 }}
+                      >
+                        {/* Upper Band (Aligned to CREST / T): Lines 1 & 2 */}
+                        <div className="flex flex-col" style={{ gap: 1 }}>
+                          {/* Line 1: CREST ZENDO CO., LTD. */}
                           <InlineTextField
                             value={currentIssuer.name}
                             onChange={(v) => updateIssuer("name", v)}
                             readOnly={readOnly}
-                            className="font-bold text-[10.5px] text-gray-900 block leading-none"
+                            className="font-bold text-gray-900 leading-none truncate block w-full"
+                            style={{ fontSize: 8.5, lineHeight: 1 }}
                           />
-                        </div>
-                        <div className="block leading-none">
+
+                          {/* Line 2: บริษัท เครสท์ เซนโด จำกัด */}
                           <InlineTextField
                             value={currentIssuer.nameTh}
                             onChange={(v) => updateIssuer("nameTh", v)}
                             readOnly={readOnly}
-                            className="font-bold text-[11px] text-gray-900 block leading-none"
-                            style={{ letterSpacing: "0.05px" }}
+                            className="font-bold text-gray-900 leading-none truncate block w-full"
+                            style={{ fontSize: 9.2, lineHeight: 1 }}
                           />
                         </div>
-                        <div className="block text-[8.5px] text-gray-600 leading-tight max-w-[310px] tracking-tight">
+
+                        {/* Lower Band (Aligned to ZENDO / O): Lines 3 & 4 */}
+                        <div className="flex flex-col" style={{ gap: 1, paddingTop: 2 }}>
+                          {/* Line 3: Address */}
                           <InlineTextField
                             value={currentIssuer.address || "8/40 The Connect 37, Soi Chang Air Utis 10 Yaek 1-2, Don Mueang, Bangkok 10210"}
                             onChange={(v) => updateIssuer("address", v)}
                             readOnly={readOnly}
-                            multiline
-                            className="text-[8.5px] text-gray-600 leading-tight tracking-tight block w-full"
+                            className="text-gray-600 tracking-tight whitespace-nowrap block w-full leading-none"
+                            style={{ fontSize: 7.2, lineHeight: 1 }}
                           />
-                        </div>
-                        <div className="text-[9.5px] text-gray-700 flex items-center gap-1.5 leading-none pt-0.5 whitespace-nowrap">
-                          <span className="shrink-0 font-medium text-gray-700 text-[9px]">เลขประจำตัวผู้เสียภาษีอากร:</span>
-                          <span
-                            className="inline-flex items-center px-1.5 py-0.5 text-white font-bold text-[9px] tracking-wider rounded-full shrink-0"
-                            style={{ backgroundColor: "#0F4C35" }}
-                          >
-                            <InlineTextField
-                              value={currentIssuer.taxIdNumber || "0105558073755"}
-                              onChange={(v) => updateIssuer("taxIdNumber", v)}
-                              readOnly={readOnly}
-                              className="font-bold text-[9px] text-white tracking-wider text-center w-[92px]"
-                            />
-                          </span>
-                          <span className="text-[9px] text-gray-700 font-normal shrink-0">
-                            <InlineTextField
-                              value={currentIssuer.taxBranch || "(สำนักงานใหญ่)"}
-                              onChange={(v) => updateIssuer("taxBranch", v)}
-                              readOnly={readOnly}
-                              className="text-[9px] text-gray-700 font-normal w-[80px]"
-                            />
-                          </span>
+
+                          {/* Line 4: เลขประจำตัวผู้เสียภาษีอากร — ขนาดตัวอักษรเท่ากันทุกส่วน (7.2px) */}
+                          <div className="flex items-center gap-1 leading-none tracking-tight whitespace-nowrap" style={{ fontSize: 7.2, lineHeight: 1 }}>
+                            <span className="shrink-0 font-medium text-gray-700" style={{ fontSize: 7.2 }}>เลขประจำตัวผู้เสียภาษีอากร:</span>
+                            <span
+                              className="inline-flex items-center px-1.5 py-0 text-white font-medium tracking-normal rounded-full shrink-0 h-[10px] relative top-[0.5px]"
+                              style={{ backgroundColor: "#0F4C35", fontSize: 7.2 }}
+                            >
+                              <InlineTextField
+                                value={currentIssuer.taxIdNumber || "0105558073755"}
+                                onChange={(v) => updateIssuer("taxIdNumber", v)}
+                                readOnly={readOnly}
+                                className="font-medium text-white tracking-normal text-center w-[64px]"
+                                style={{ fontSize: 7.2 }}
+                              />
+                            </span>
+                            <span className="text-gray-700 font-normal shrink-0" style={{ fontSize: 7.2 }}>
+                              <InlineTextField
+                                value={currentIssuer.taxBranch || "(สำนักงานใหญ่)"}
+                                onChange={(v) => updateIssuer("taxBranch", v)}
+                                readOnly={readOnly}
+                                className="text-gray-700 font-normal w-[65px]"
+                                style={{ fontSize: 7.2 }}
+                              />
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <h1 className="text-2xl font-extrabold tracking-wider pt-7 leading-none" style={{ color: "#0F4C35" }}>
+
+                    {/* Right: QUOTATION Title — aligned flush with right edge of table below */}
+                    <div className="text-right shrink-0 ml-auto">
+                      <h1 className="text-2xl font-extrabold tracking-wider pt-3.5 leading-none text-right" style={{ color: "#0F4C35" }}>
                         <InlineTextField
                           value={quotation.docTitle || "QUOTATION"}
                           onChange={(v) => updateField("docTitle", v)}
                           readOnly={readOnly}
                           placeholder="QUOTATION"
-                          className="text-[31px] font-extrabold tracking-wider text-right leading-none"
-                          style={{ color: "#0F4C35" }}
+                          className="text-[28px] font-extrabold tracking-wider text-right leading-none block p-0"
+                          style={{ color: "#0F4C35", textAlign: "right" }}
                         />
                       </h1>
                     </div>
                   </div>
 
                   {/* Compact 5 Symmetric Rows Grid with Top and Bottom Borders */}
-                  <div className="grid grid-cols-2 gap-6 mb-0 mt-0 pt-1.5 pb-2.5" style={{ breakAfter: "avoid" }}>
+                  <div className="grid grid-cols-2 gap-6 mb-0 mt-0 pt-2.5 pb-2" style={{ breakAfter: "avoid" }}>
                     {/* Left Table (5 Rows) */}
                     <div>
-                      <table className="text-[11px] w-full">
+                      <table className="w-full border-collapse" style={{ fontSize: 11, lineHeight: "21px" }}>
+                        <colgroup>
+                          <col style={{ width: 62 }} />
+                          <col />
+                        </colgroup>
                         <tbody>
-                          <tr className="h-[20px]">
-                            <td className="text-[#0F4C35] font-semibold w-16 py-0.5 align-middle">To</td>
-                            <td className="py-0.5 align-middle">
-                              <InlineTextField
-                                value={billTo.companyName}
-                                onChange={(v) => updateBillTo("companyName", v)}
-                                readOnly={readOnly}
-                                placeholder="ชื่อบริษัทลูกค้า..."
-                                className="font-normal text-[11px] text-gray-800 w-full"
-                              />
-                            </td>
-                          </tr>
-                          <tr className="h-[20px]">
-                            <td className="text-[#0F4C35] font-semibold w-16 py-0.5 align-middle">Attn.</td>
-                            <td className="py-0.5 align-middle">
-                              <InlineTextField
-                                value={billTo.attn}
-                                onChange={(v) => updateBillTo("attn", v)}
-                                readOnly={readOnly}
-                                placeholder="ชื่อผู้ติดต่อ..."
-                                className="font-normal text-[11px] text-gray-800 w-full"
-                              />
-                            </td>
-                          </tr>
-                          <tr className="h-[20px]">
-                            <td className="text-[#0F4C35] font-semibold w-16 py-0.5 align-middle">End User</td>
-                            <td className="py-0.5 align-middle">
-                              <InlineTextField
-                                value={billTo.endUser}
-                                onChange={(v) => updateBillTo("endUser", v)}
-                                readOnly={readOnly}
-                                placeholder="End User..."
-                                className="font-normal text-[11px] text-gray-700 w-full"
-                              />
-                            </td>
-                          </tr>
-                          <tr className="h-[20px]">
-                            <td className="text-[#0F4C35] font-semibold w-16 py-0.5 align-middle">Subject</td>
-                            <td className="py-0.5 align-middle">
-                              <InlineTextField
-                                value={billTo.subject}
-                                onChange={(v) => updateBillTo("subject", v)}
-                                readOnly={readOnly}
-                                placeholder="หัวข้อเรื่อง..."
-                                className="font-normal text-[11px] text-gray-800 w-full"
-                              />
-                            </td>
-                          </tr>
-                          <tr className="h-[20px]">
-                            <td className="text-[#0F4C35] font-semibold w-16 py-0.5 align-middle">AM</td>
-                            <td className="py-0.5 align-middle">
-                              <InlineTextField
-                                value={billTo.am}
-                                onChange={(v) => updateBillTo("am", v)}
-                                readOnly={readOnly}
-                                placeholder="ชื่อ AM..."
-                                className="font-normal text-[11px] text-gray-700 w-full"
-                              />
-                            </td>
-                          </tr>
+                          {[
+                            { label: "To", value: billTo.companyName, field: "companyName", placeholder: "ชื่อบริษัทลูกค้า..." },
+                            { label: "Attn.", value: billTo.attn, field: "attn", placeholder: "ชื่อผู้ติดต่อ..." },
+                            { label: "End User", value: billTo.endUser, field: "endUser", placeholder: "End User..." },
+                            { label: "Subject", value: billTo.subject, field: "subject", placeholder: "หัวข้อเรื่อง..." },
+                            { label: "AM", value: billTo.am, field: "am", placeholder: "ชื่อ AM..." },
+                          ].map(({ label, value, field, placeholder }) => (
+                            <tr key={field} style={{ height: 10 }}>
+                              <td
+                                className="font-semibold align-middle py-0"
+                                style={{ color: "#0F4C35", fontSize: 11, lineHeight: "10px", whiteSpace: "nowrap", verticalAlign: "middle" }}
+                              >
+                                {label}
+                              </td>
+                              <td className="py-0" style={{ verticalAlign: "middle" }}>
+                                <InlineTextField
+                                  value={value}
+                                  onChange={(v) => updateBillTo(field, v)}
+                                  readOnly={readOnly}
+                                  placeholder={placeholder}
+                                  className="font-normal text-gray-800 w-full"
+                                  style={{ fontSize: 11, lineHeight: "10px" }}
+                                />
+                              </td>
+                            </tr>
+                          ))}
                         </tbody>
                       </table>
                     </div>
 
-                    {/* Right Table */}
-                    <div className="-mt-[22px] pt-2">
-                      <table className="text-[11px] w-[200px] border-collapse ml-auto">
+                    {/* Right Table — same row height as left, no negative margin hack */}
+                    <div>
+                      <table className="text-[11px] w-full border-collapse ml-auto" style={{ maxWidth: 215 }}>
+                        <colgroup>
+                          <col style={{ width: "45%" }} />
+                          <col style={{ width: "55%" }} />
+                        </colgroup>
                         <tbody>
-                          <tr className="h-[28px]">
-                            <td className="text-[#0F4C35] font-semibold py-0.5 align-middle whitespace-nowrap">Quotation No.</td>
-                            <td className="text-right py-0.5 align-middle flex items-center justify-end gap-1">
-                              <span
-                                className="inline-flex items-center px-1.5 py-0.5 text-white font-bold text-[9.5px] tracking-wider rounded-md shrink-0"
-                                style={{ backgroundColor: "#0F4C35" }}
-                              >
-                                <InlineTextField
-                                  value={quotationNo}
-                                  onChange={(v) => updateField("quotationNo", v)}
-                                  readOnly={readOnly}
-                                  placeholder="CZ26080001"
-                                  className="font-bold text-[9.5px] text-white tracking-wider text-center w-[74px]"
-                                />
-                              </span>
-                              <span
-                                className="inline-flex items-center px-1.5 py-0.5 text-white font-bold text-[9.5px] tracking-wider rounded-md shrink-0"
-                                style={{ backgroundColor: "#0F4C35" }}
-                              >
-                                <InlineTextField
-                                  value={quotation.revision || "01"}
-                                  onChange={(v) => updateField("revision", v)}
-                                  readOnly={readOnly}
-                                  placeholder="01"
-                                  className="font-bold text-[9.5px] text-white tracking-wider text-center w-[20px]"
-                                />
-                              </span>
+                          <tr style={{ height: 21 }}>
+                            <td className="text-[#0F4C35] font-semibold align-middle py-0 whitespace-nowrap" style={{ fontSize: 11 }}>Quotation No.</td>
+                            <td className="text-right align-middle py-0">
+                              <div className="flex items-center justify-end gap-1">
+                                <span
+                                  className="inline-flex items-center px-1.5 py-0.5 text-white font-bold tracking-wider rounded-md shrink-0 h-[18px]"
+                                  style={{ backgroundColor: "#0F4C35", fontSize: 10.5 }}
+                                >
+                                  <InlineTextField
+                                    value={quotationNo}
+                                    onChange={(v) => updateField("quotationNo", v)}
+                                    readOnly={readOnly}
+                                    placeholder="CZ26080001"
+                                    className="font-bold text-white tracking-wider text-center w-[78px]"
+                                    style={{ fontSize: 10.5 }}
+                                  />
+                                </span>
+                                <span
+                                  className="inline-flex items-center px-1.5 py-0.5 text-white font-bold tracking-wider rounded-md shrink-0 h-[18px]"
+                                  style={{ backgroundColor: "#0F4C35", fontSize: 10.5 }}
+                                >
+                                  <InlineTextField
+                                    value={quotation.revision || "01"}
+                                    onChange={(v) => updateField("revision", v)}
+                                    readOnly={readOnly}
+                                    placeholder="01"
+                                    className="font-bold text-white tracking-wider text-center w-[22px]"
+                                    style={{ fontSize: 10.5 }}
+                                  />
+                                </span>
+                              </div>
                             </td>
                           </tr>
-                          <tr className="h-[25px]">
-                            <td className="text-[#0F4C35] font-semibold py-0.5 align-middle">Quotation Date</td>
-                            <td className="text-right py-0.5 align-middle">
-                              <InlineDatePicker
-                                value={quotationDate}
-                                onChange={(v) => updateField("quotationDate", v)}
-                                readOnly={readOnly}
-                                className="font-normal text-[11px] text-gray-800 text-right"
-                              />
-                            </td>
-                          </tr>
-                          <tr className="h-[25px]">
-                            <td className="text-[#0F4C35] font-semibold py-0.5 align-middle">Price Validity</td>
-                            <td className="text-right py-0.5 align-middle">
-                              <InlineDatePicker
-                                value={priceValidity}
-                                onChange={(v) => updateField("priceValidity", v)}
-                                readOnly={readOnly}
-                                className="font-normal text-[11px] text-gray-800 text-right"
-                              />
-                            </td>
-                          </tr>
-                          <tr className="h-[25px]">
-                            <td className="text-[#0F4C35] font-semibold py-0.5 align-middle">Delivery Term</td>
-                            <td className="text-right py-0.5 align-middle">
-                              <InlineTermSelect
-                                value={deliveryTerm}
-                                onChange={(v) => updateField("deliveryTerm", v)}
-                                readOnly={readOnly}
-                                options={["7 days", "14 days", "30 days", "60 days", "Immediate"]}
-                                className="font-normal text-[11px] text-gray-800 text-right"
-                              />
-                            </td>
-                          </tr>
-                          <tr className="h-[25px]">
-                            <td className="text-[#0F4C35] font-semibold py-0.5 align-middle">Credit Term</td>
-                            <td className="text-right py-0.5 align-middle">
-                              <InlineTermSelect
-                                value={creditTerm}
-                                onChange={(v) => updateField("creditTerm", v)}
-                                readOnly={readOnly}
-                                options={["30 days", "45 days", "60 days", "90 days", "Cash / 100% Advance"]}
-                                className="font-normal text-[11px] text-gray-800 text-right"
-                              />
-                            </td>
-                          </tr>
+                          {[
+                            { label: "Quotation Date", content: <InlineDatePicker value={quotationDate} onChange={(v) => updateField("quotationDate", v)} readOnly={readOnly} className="font-normal text-[11px] text-gray-800 text-right" /> },
+                            { label: "Price Validity", content: <InlineDatePicker value={priceValidity} onChange={(v) => updateField("priceValidity", v)} readOnly={readOnly} className="font-normal text-[11px] text-gray-800 text-right" /> },
+                            { label: "Delivery Term", content: <InlineTermSelect value={deliveryTerm} onChange={(v) => updateField("deliveryTerm", v)} readOnly={readOnly} options={["7 days", "14 days", "30 days", "60 days", "Immediate"]} className="font-normal text-[11px] text-gray-800 text-right" /> },
+                            { label: "Credit Term", content: <InlineTermSelect value={creditTerm} onChange={(v) => updateField("creditTerm", v)} readOnly={readOnly} options={["30 days", "45 days", "60 days", "90 days", "Cash / 100% Advance"]} className="font-normal text-[11px] text-gray-800 text-right" /> },
+                          ].map(({ label, content }) => (
+                            <tr key={label} style={{ height: 21 }}>
+                              <td className="text-[#0F4C35] font-semibold align-middle py-0 whitespace-nowrap">{label}</td>
+                              <td className="text-right align-middle py-0">{content}</td>
+                            </tr>
+                          ))}
                         </tbody>
                       </table>
                     </div>
@@ -808,65 +769,62 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
               {/* Summary Block (Sign-off, Customer Signature, PRICE SUMMARY) */}
               {hasSummary && (
                 <div className="mt-auto pt-2 mb-2" style={{ breakInside: "avoid" }}>
-                  {/* 3-Column Bottom Summary Section */}
-                  <div className="grid grid-cols-[1.15fr_1.15fr_1.5fr] gap-3 items-stretch">
-                    {/* Column 1: Sign-off / Best regards (Name / Position / Email / Mobile) */}
+                  {/* 3-Column Bottom Summary Section — equal width columns */}
+                  <div className="grid grid-cols-3 gap-3 items-stretch">
+                    {/* Column 1: Sign-off / Best regards */}
                     <div className="border border-gray-200 rounded-lg p-2.5 bg-white shadow-2xs h-full flex flex-col justify-between text-left">
                       <div>
-                        <div className="border-b border-gray-100 pb-1 mb-1">
+                        <div className="border-b border-gray-100 pb-1 mb-2">
                           <p className="text-[10px] font-bold tracking-wider uppercase" style={{ color: "#0F4C35" }}>
                             Best regards,
                           </p>
                         </div>
-                        <div className="space-y-1 mt-1 text-[10.5px]">
-                          {/* Name */}
+                        {/* Uniform space-y-1.5 for all 4 fields — strictly 1 row per item */}
+                        <div className="space-y-1.5 text-[10px]">
                           <div className="block leading-tight">
                             <InlineTextField
                               value={senderName}
                               onChange={(v) => updateField("senderName", v)}
                               readOnly={readOnly}
                               placeholder="ชื่อ-นามสกุล ผู้เสนอราคา..."
-                              className="font-bold text-xs text-gray-900 block"
+                              className="font-bold text-[11px] text-gray-900 block w-full leading-tight"
                             />
                           </div>
-
-                          {/* Position */}
                           <div className="block leading-tight">
                             <InlineTextField
                               value={quotation.senderPosition || ""}
                               onChange={(v) => updateField("senderPosition", v)}
                               readOnly={readOnly}
                               placeholder="ตำแหน่ง (เช่น Account Manager)..."
-                              className="text-gray-700 block text-[10px]"
+                              className="text-gray-700 block text-[8.5px] w-full leading-tight tracking-tight"
+                              style={{ fontSize: 8.5 }}
                             />
                           </div>
-
-                          {/* Email */}
                           <div className="block leading-tight">
                             <InlineTextField
                               value={quotation.senderEmail || ""}
                               onChange={(v) => updateField("senderEmail", v)}
                               readOnly={readOnly}
                               placeholder="Email..."
-                              className="text-gray-600 block text-[10px]"
+                              className="text-gray-600 block text-[8.5px] w-full leading-tight tracking-tight"
+                              style={{ fontSize: 8.5 }}
                             />
                           </div>
-
-                          {/* Mobile */}
                           <div className="block leading-tight">
                             <InlineTextField
                               value={senderPhone}
                               onChange={(v) => updateField("senderPhone", v)}
                               readOnly={readOnly}
                               placeholder="Mobile / เบอร์โทรศัพท์..."
-                              className="text-gray-600 block text-[10px]"
+                              className="text-gray-600 block text-[8.5px] w-full leading-tight tracking-tight"
+                              style={{ fontSize: 8.5 }}
                             />
                           </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Column 2: Approve to purchase (Customer Signature Box) */}
+                    {/* Column 2: Approve to purchase */}
                     <div className="border border-gray-200 rounded-lg p-2.5 bg-white shadow-2xs h-full flex flex-col justify-between text-center">
                       <div>
                         <div className="border-b border-gray-100 pb-1 mb-1">
@@ -875,7 +833,6 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                           </p>
                         </div>
                       </div>
-
                       {/* Signature line */}
                       <div className="flex flex-col items-center justify-end space-y-1 mt-auto pt-3 pb-1">
                         <div className="w-[85%] border-b border-gray-400 border-dashed mb-1" />
