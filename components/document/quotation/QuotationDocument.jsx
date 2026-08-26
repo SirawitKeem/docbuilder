@@ -495,7 +495,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                           onChange={(v) => updateField("docTitle", v)}
                           readOnly={readOnly}
                           placeholder="QUOTATION"
-                          className="text-3xl font-extrabold tracking-wider text-right leading-none"
+                          className="text-[31px] font-extrabold tracking-wider text-right leading-none"
                           style={{ color: "#0F4C35" }}
                         />
                       </h1>
@@ -506,7 +506,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                   <div className="grid grid-cols-2 gap-6 mb-0 mt-0 pt-1.5 pb-2.5" style={{ breakAfter: "avoid" }}>
                     {/* Left Table (5 Rows) */}
                     <div>
-                      <table className="text-[10.5px] w-full">
+                      <table className="text-[11px] w-full">
                         <tbody>
                           <tr className="h-[20px]">
                             <td className="text-[#0F4C35] font-semibold w-16 py-0.5 align-middle">To</td>
@@ -516,7 +516,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                                 onChange={(v) => updateBillTo("companyName", v)}
                                 readOnly={readOnly}
                                 placeholder="ชื่อบริษัทลูกค้า..."
-                                className="font-normal text-[10.5px] text-gray-800 w-full"
+                                className="font-normal text-[11px] text-gray-800 w-full"
                               />
                             </td>
                           </tr>
@@ -528,7 +528,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                                 onChange={(v) => updateBillTo("attn", v)}
                                 readOnly={readOnly}
                                 placeholder="ชื่อผู้ติดต่อ..."
-                                className="font-normal text-[10.5px] text-gray-800 w-full"
+                                className="font-normal text-[11px] text-gray-800 w-full"
                               />
                             </td>
                           </tr>
@@ -540,7 +540,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                                 onChange={(v) => updateBillTo("endUser", v)}
                                 readOnly={readOnly}
                                 placeholder="End User..."
-                                className="font-normal text-[10.5px] text-gray-700 w-full"
+                                className="font-normal text-[11px] text-gray-700 w-full"
                               />
                             </td>
                           </tr>
@@ -552,7 +552,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                                 onChange={(v) => updateBillTo("subject", v)}
                                 readOnly={readOnly}
                                 placeholder="หัวข้อเรื่อง..."
-                                className="font-normal text-[10.5px] text-gray-800 w-full"
+                                className="font-normal text-[11px] text-gray-800 w-full"
                               />
                             </td>
                           </tr>
@@ -564,7 +564,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                                 onChange={(v) => updateBillTo("am", v)}
                                 readOnly={readOnly}
                                 placeholder="ชื่อ AM..."
-                                className="font-normal text-[10.5px] text-gray-700 w-full"
+                                className="font-normal text-[11px] text-gray-700 w-full"
                               />
                             </td>
                           </tr>
@@ -574,9 +574,9 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
 
                     {/* Right Table */}
                     <div className="-mt-[22px] pt-2">
-                      <table className="text-[10.5px] w-[195px] border-collapse ml-auto">
+                      <table className="text-[11px] w-[200px] border-collapse ml-auto">
                         <tbody>
-                          <tr className="h-[25px]">
+                          <tr className="h-[28px]">
                             <td className="text-[#0F4C35] font-semibold py-0.5 align-middle">Quotation No.</td>
                             <td className="text-right py-0.5 align-middle flex items-center justify-end gap-1.5">
                               <span
@@ -611,7 +611,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                                 value={quotationDate}
                                 onChange={(v) => updateField("quotationDate", v)}
                                 readOnly={readOnly}
-                                className="font-normal text-[10.5px] text-gray-800 text-right"
+                                className="font-normal text-[11px] text-gray-800 text-right"
                               />
                             </td>
                           </tr>
@@ -622,7 +622,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                                 value={priceValidity}
                                 onChange={(v) => updateField("priceValidity", v)}
                                 readOnly={readOnly}
-                                className="font-normal text-[10.5px] text-gray-800 text-right"
+                                className="font-normal text-[11px] text-gray-800 text-right"
                               />
                             </td>
                           </tr>
@@ -634,7 +634,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                                 onChange={(v) => updateField("deliveryTerm", v)}
                                 readOnly={readOnly}
                                 options={["7 days", "14 days", "30 days", "60 days", "Immediate"]}
-                                className="font-normal text-[10.5px] text-gray-800 text-right"
+                                className="font-normal text-[11px] text-gray-800 text-right"
                               />
                             </td>
                           </tr>
@@ -646,7 +646,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                                 onChange={(v) => updateField("creditTerm", v)}
                                 readOnly={readOnly}
                                 options={["30 days", "45 days", "60 days", "90 days", "Cash / 100% Advance"]}
-                                className="font-normal text-[10.5px] text-gray-800 text-right"
+                                className="font-normal text-[11px] text-gray-800 text-right"
                               />
                             </td>
                           </tr>

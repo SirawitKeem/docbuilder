@@ -16,14 +16,14 @@ export default function QuotationFooter({ pageNumber = 1, totalPages = 1, issuer
   return (
     <div className="w-full text-sans shrink-0 pt-1" style={{ breakInside: "avoid" }}>
       {/* Top 2-Column Address & Contacts Section */}
-      <div className="border-t border-gray-300 pt-2.5 pb-2.5 grid grid-cols-12 gap-1 items-center text-[10px] text-gray-800">
+      <div className="border-t border-gray-300 pt-2 pb-2 grid grid-cols-12 gap-1 items-center text-[10px] text-gray-800">
         
-        {/* Column 1: Address (Expanded width to col-span-8) */}
-        <div className="col-span-8 flex items-start gap-2 pr-4 border-r border-gray-300">
+        {/* Column 1: Address (col-span-7) */}
+        <div className="col-span-7 flex items-start gap-2 pr-6 border-r border-gray-300">
           <div className="w-5 h-5 rounded-full bg-[#0B5D39] text-white flex items-center justify-center shrink-0 mt-0.5">
             <MapPin size={11} />
           </div>
-          <div className="leading-tight text-[11px] w-full">
+          <div className="leading-tight text-[10px] w-full">
             <InlineTextField
               value={issuer.nameEn || "Crest Zendo Company Limited"}
               onChange={(v) => updateIssuer("nameEn", v)}
@@ -35,13 +35,13 @@ export default function QuotationFooter({ pageNumber = 1, totalPages = 1, issuer
               onChange={(v) => updateIssuer("address", v)}
               readOnly={readOnly}
               multiline
-              className="text-gray-700 text-[10px] leading-tight block w-full"
+              className="text-gray-700 text-[10px] leading-tight block w-full pt-1"
             />
           </div>
         </div>
 
-        {/* Column 2: Phone, Email & Website (col-span-4) */}
-        <div className="col-span-4 flex flex-col justify-center space-y-1.5 pl-4">
+        {/* Column 2: Phone, Email & Website (col-span-5) */}
+        <div className="col-span-5 flex flex-col justify-center space-y-1.5 pl-6">
           <div className="flex items-center gap-1.5">
             <div className="w-5 h-5 rounded-full bg-[#0B5D39] text-white flex items-center justify-center shrink-0">
               <Phone size={10} />
@@ -50,7 +50,7 @@ export default function QuotationFooter({ pageNumber = 1, totalPages = 1, issuer
               value={issuer.phone}
               onChange={(v) => updateIssuer("phone", v)}
               readOnly={readOnly}
-              className="font-bold text-gray-900 text-[9.5px]"
+              className="font-semibold text-gray-800 text-[9.5px]"
             />
           </div>
 
