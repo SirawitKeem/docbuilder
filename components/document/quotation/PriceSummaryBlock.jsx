@@ -1,11 +1,9 @@
+import { useContext } from "react";
 import { formatTHB, calcQuotationTotals } from "@/lib/format";
-import { useQuotationData } from "@/context/QuotationDataContext";
+import { QuotationDataContext } from "@/context/QuotationDataContext";
 
 export default function PriceSummaryBlock({ lineItems, vatRate }) {
-  let quotationCtx = null;
-  try {
-    quotationCtx = useQuotationData();
-  } catch (e) {}
+  const quotationCtx = useContext(QuotationDataContext);
 
   const readOnly = quotationCtx ? quotationCtx.readOnly : true;
   const updateField = quotationCtx ? quotationCtx.updateField : () => {};
@@ -14,19 +12,19 @@ export default function PriceSummaryBlock({ lineItems, vatRate }) {
   const { subtotal, vat, grandTotal } = calcQuotationTotals(lineItems, currentVatRate);
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4 bg-white shadow-2xs">
-      <p className="text-xs font-bold tracking-wide mb-3" style={{ color: "#0F4C35" }}>
+    <div className="border border-gray-200 rounded-lg p-2.5 bg-white shadow-2xs h-full flex flex-col justify-between">
+      <p className="text-[10px] font-bold tracking-wider mb-1" style={{ color: "#0F4C35" }}>
         PRICE SUMMARY
       </p>
 
       {/* Subtotal Row */}
-      <div className="flex justify-between text-xs py-1 text-gray-700 font-medium">
+      <div className="flex justify-between text-xs py-0.5 text-gray-700 font-medium">
         <span>SUBTOTAL</span>
         <span className="font-semibold">{formatTHB(subtotal)}</span>
       </div>
 
       {/* VAT Row (Editable Rate) */}
-      <div className="flex justify-between items-center text-xs py-1 text-gray-700 font-medium">
+      <div className="flex justify-between items-center text-xs py-0.5 text-gray-700 font-medium">
         <div className="flex items-center gap-1">
           <span>VAT</span>
           {readOnly ? (
@@ -53,12 +51,12 @@ export default function PriceSummaryBlock({ lineItems, vatRate }) {
       </div>
 
       {/* Grand Total Row */}
-      <div className="flex justify-between items-center mt-2 pt-2 border-t border-gray-200">
-        <span className="font-bold text-xs" style={{ color: "#0F4C35" }}>
-          GRAND TOTAL
+      <div className="flex justify-between items-center mt-1.5 pt-1.5 border-t border-gray-200">
+        <span className="font-bold text-[10px] tracking-wider" style={{ color: "#0F4C35" }}>
+          GRAND TOTAL (THB)
         </span>
-        <span className="font-bold text-base" style={{ color: "#0F4C35" }}>
-          {formatTHB(grandTotal)} THB
+        <span className="font-semibold text-sm" style={{ color: "#0F4C35" }}>
+          {formatTHB(grandTotal)}
         </span>
       </div>
     </div>

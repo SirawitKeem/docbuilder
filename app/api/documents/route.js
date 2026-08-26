@@ -54,7 +54,7 @@ export async function DELETE(request) {
       await documentsRepo.delete(body.id);
       return Response.json({ success: true });
     }
-  } catch (e) {
+  } catch {
     // Body is empty or not JSON, proceed with searchParams
   }
 

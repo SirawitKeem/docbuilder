@@ -17,7 +17,7 @@ function decodeValues(encoded) {
     }
     const json = new TextDecoder("utf-8").decode(bytes);
     return JSON.parse(json);
-  } catch (e1) {
+  } catch {
     try {
       const json = decodeURIComponent(escape(atob(encoded)));
       return JSON.parse(json);
@@ -37,6 +37,7 @@ function PrintContent() {
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.__PRINT_DATA__) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setInjectedData(window.__PRINT_DATA__);
     }
   }, []);
@@ -50,6 +51,7 @@ function PrintContent() {
         setIsReady(true);
       });
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsReady(true);
     }
   }, []);

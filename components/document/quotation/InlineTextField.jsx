@@ -24,7 +24,7 @@ export default function InlineTextField({
     return (
       <span
         style={{ textRendering: "optimizeLegibility", ...style }}
-        className={`inline-block ${multiline ? "whitespace-pre-line" : "truncate"} ${isUnderlined ? "underline underline-offset-2 font-bold" : ""} ${className}`}
+        className={`inline-block ${multiline ? "whitespace-pre-line" : "truncate"} ${isUnderlined ? "font-bold" : ""} ${className}`}
       >
         {cleanValue}
       </span>
@@ -34,6 +34,11 @@ export default function InlineTextField({
   const baseStateClasses = focused
     ? "bg-white ring-1 ring-emerald-500 shadow-2xs"
     : "bg-transparent hover:bg-emerald-50/50";
+
+  let finalClassName = className;
+  if (focused) {
+    finalClassName = className.replace(/\btext-white\b/g, "text-gray-900");
+  }
 
   if (multiline) {
     return (
@@ -50,7 +55,7 @@ export default function InlineTextField({
           appearance: "none",
           ...style,
         }}
-        className={`px-1 py-0 rounded outline-none transition-colors duration-150 resize-none w-full max-w-full ${baseStateClasses} ${isUnderlined ? "underline underline-offset-2 font-bold" : ""} ${className}`}
+        className={`px-1 py-0 rounded outline-none transition-colors duration-150 resize-none w-full max-w-full ${baseStateClasses} ${isUnderlined ? "font-bold" : ""} ${finalClassName}`}
       />
     );
   }
@@ -69,7 +74,7 @@ export default function InlineTextField({
         appearance: "none",
         ...style,
       }}
-      className={`px-1 py-0 rounded outline-none transition-colors duration-150 w-full max-w-full placeholder:text-gray-300 placeholder:font-normal ${baseStateClasses} ${isUnderlined ? "underline underline-offset-2 font-bold" : ""} ${className}`}
+      className={`px-1 py-0 rounded outline-none transition-colors duration-150 w-full max-w-full placeholder:text-gray-300 placeholder:font-normal ${baseStateClasses} ${isUnderlined ? "font-bold" : ""} ${finalClassName}`}
     />
   );
 }

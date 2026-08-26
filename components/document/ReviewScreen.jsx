@@ -1,7 +1,8 @@
 "use client";
 
+import { useContext } from "react";
 import { ArrowLeft, Send, Download, Loader2 } from "lucide-react";
-import { useDocumentFields } from "@/context/DocumentFieldsContext";
+import { DocumentFieldsContext } from "@/context/DocumentFieldsContext";
 import DocumentHeader from "./DocumentHeader";
 import DocumentFooter from "./DocumentFooter";
 
@@ -18,13 +19,7 @@ export default function ReviewScreen({
   onBackToEdit,
   customRender = false,
 }) {
-  let docFieldsCtx = null;
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    docFieldsCtx = useDocumentFields();
-  } catch (e) {
-    // Fallback if rendered outside of DocumentFieldsProvider
-  }
+  const docFieldsCtx = useContext(DocumentFieldsContext);
 
   const handleBack = () => {
     if (onBackToEdit) {

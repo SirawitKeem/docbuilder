@@ -4,6 +4,7 @@ export default function DocumentHeader({ logo }) {
       <div className="flex items-center justify-between gap-4">
         {/* Logo on the left */}
         <div className="h-9 flex items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={logo} alt="Logo" className="h-9 object-contain" />
         </div>
 

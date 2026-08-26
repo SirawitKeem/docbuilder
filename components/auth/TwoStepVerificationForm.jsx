@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function TwoStepVerificationForm() {
@@ -57,7 +56,7 @@ export default function TwoStepVerificationForm() {
             Two-Factor Authentication
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
-            We've sent a 6-digit code to your registered mobile number. Please enter it below to continue.
+            We&apos;ve sent a 6-digit code to your registered mobile number. Please enter it below to continue.
           </p>
         </div>
 
@@ -120,7 +119,7 @@ export default function TwoStepVerificationForm() {
 
         {/* Didn't receive the code? Tap to resend */}
         <div className="text-center text-xs text-muted-foreground pt-1">
-          Didn't receive the code?{" "}
+          Didn&apos;t receive the code?{" "}
           <button
             type="button"
             onClick={() => alert("A new 6-digit code has been sent.")}

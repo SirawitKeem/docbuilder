@@ -3,7 +3,7 @@
 import { createContext, useContext, useState } from "react";
 import { createEmptyLineItem, createEmptyGroup, createEmptyBullet, createEmptySubBullet } from "@/lib/quotationHelpers";
 
-const QuotationDataContext = createContext(null);
+export const QuotationDataContext = createContext(null);
 
 export function QuotationDataProvider({ children, initialQuotation, defaultReadOnly = false }) {
   const [quotation, setQuotation] = useState(initialQuotation);

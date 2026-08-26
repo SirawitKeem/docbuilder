@@ -42,7 +42,7 @@ export default function ResetPasswordForm() {
         {submitted ? (
           <div className="space-y-5 text-center py-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="p-4 rounded-xl bg-success/10 border border-success/20 text-success text-xs font-semibold leading-relaxed">
-              ✓ We've sent a password reset link to <strong className="font-bold">{email}</strong>. Please check your inbox.
+              ✓ We&apos;ve sent a password reset link to <strong className="font-bold">{email}</strong>. Please check your inbox.
             </div>
 
             <Link

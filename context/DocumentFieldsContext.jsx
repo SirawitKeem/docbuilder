@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 
-const DocumentFieldsContext = createContext(null);
+export const DocumentFieldsContext = createContext(null);
 
 export function DocumentFieldsProvider({ children, initialValues = {}, defaultReadOnly = false }) {
   const [values, setValues] = useState(initialValues);
@@ -10,6 +10,7 @@ export function DocumentFieldsProvider({ children, initialValues = {}, defaultRe
 
   useEffect(() => {
     if (initialValues && Object.keys(initialValues).length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setValues((prev) => ({ ...initialValues, ...prev }));
     }
   }, [initialValues]);

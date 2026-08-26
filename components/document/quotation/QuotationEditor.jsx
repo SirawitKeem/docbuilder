@@ -10,7 +10,6 @@ import { getFieldProfile } from "@/lib/data/fieldProfiles";
 import { paginateQuotationLineItems } from "@/lib/quotationHelpers";
 import QuotationDocument from "./QuotationDocument";
 import EditorToolbar from "../EditorToolbar";
-import DocumentCanvas from "../DocumentCanvas";
 import PageControls from "../PageControls";
 import ReviewScreen from "../ReviewScreen";
 import EmailScreen from "../EmailScreen";
@@ -163,6 +162,7 @@ function QuotationEditorContent({ docId }) {
           pageCount: pageCount,
           isCustomDoc: true,
         }}
+        // eslint-disable-next-line react/display-name
         pages={Array.from({ length: pageCount }, (_, i) => () => <QuotationDocument currentPage={i + 1} />)}
         status={{ isComplete: true, filled: 1, total: 1 }}
         onExport={handleDownload}
@@ -270,7 +270,7 @@ export default function QuotationEditor({ docId, profileId }) {
 
       setInitialQuotation({
         id: "",
-        quotationNo: "CZ2608063",
+        quotationNo: "QT2608063",
         quotationDate: todayStr,
         priceValidity: validityStr,
         deliveryTerm: "7 days",

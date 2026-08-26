@@ -86,8 +86,8 @@ export default function DocumentsTable({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Clear selections when documents change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedIds((prev) => prev.filter((id) => documents.some((d) => d.id === id)));
   }, [documents]);
 

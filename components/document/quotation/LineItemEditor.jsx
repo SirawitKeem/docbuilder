@@ -5,9 +5,6 @@ import { formatTHB, calcLineItemAmount } from "@/lib/format";
 import { createEmptyLineItem, createEmptyGroup } from "@/lib/quotationHelpers";
 import GroupEditor from "./GroupEditor";
 
-const inputClass =
-  "h-9 px-2.5 rounded-lg border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100";
-
 export default function LineItemEditor({ items = [], onChange }) {
   const addItem = () => {
     onChange([...items, createEmptyLineItem()]);

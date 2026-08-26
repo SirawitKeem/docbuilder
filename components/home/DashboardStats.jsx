@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { FileText, Send, Clock, TrendingUp, CheckCircle2, FileEdit } from "lucide-react";
+import { FileText, Send, Clock, TrendingUp, FileEdit } from "lucide-react";
 
 const stats = [
   {

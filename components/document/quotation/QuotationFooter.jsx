@@ -1,13 +1,11 @@
+import { useContext } from "react";
 import { Globe, MapPin, Phone, Mail } from "lucide-react";
 import { quotationTemplate } from "@/lib/templates/quotation/schema";
-import { useQuotationData } from "@/context/QuotationDataContext";
+import { QuotationDataContext } from "@/context/QuotationDataContext";
 import InlineTextField from "./InlineTextField";
 
 export default function QuotationFooter({ pageNumber = 1, totalPages = 1, issuerData }) {
-  let quotationCtx = null;
-  try {
-    quotationCtx = useQuotationData();
-  } catch (e) {}
+  const quotationCtx = useContext(QuotationDataContext);
 
   const readOnly = quotationCtx ? quotationCtx.readOnly : true;
   const updateIssuer = quotationCtx ? quotationCtx.updateIssuer : () => {};
@@ -17,28 +15,15 @@ export default function QuotationFooter({ pageNumber = 1, totalPages = 1, issuer
 
   return (
     <div className="w-full text-sans shrink-0 pt-1" style={{ breakInside: "avoid" }}>
-      {/* Top 3-Column Address & Contacts Section */}
-      <div className="border-t border-gray-300 pt-1.5 pb-1.5 grid grid-cols-12 gap-1 items-center text-[10px] text-gray-800">
+      {/* Top 2-Column Address & Contacts Section */}
+      <div className="border-t border-gray-300 pt-2.5 pb-2.5 grid grid-cols-12 gap-1 items-center text-[10px] text-gray-800">
         
-        {/* Column 1: Website */}
-        <div className="col-span-3 flex items-center gap-2 pr-2 border-r border-gray-300">
-          <div className="w-5 h-5 rounded-full bg-[#0B5D39] text-white flex items-center justify-center shrink-0">
-            <Globe size={11} />
-          </div>
-          <InlineTextField
-            value={issuer.website}
-            onChange={(v) => updateIssuer("website", v)}
-            readOnly={readOnly}
-            className="font-semibold text-gray-900 tracking-tight text-[10px]"
-          />
-        </div>
-
-        {/* Column 2: Address (Expanded width to col-span-6) */}
-        <div className="col-span-6 flex items-start gap-2 px-3 border-r border-gray-300">
+        {/* Column 1: Address (Expanded width to col-span-8) */}
+        <div className="col-span-8 flex items-start gap-2 pr-4 border-r border-gray-300">
           <div className="w-5 h-5 rounded-full bg-[#0B5D39] text-white flex items-center justify-center shrink-0 mt-0.5">
             <MapPin size={11} />
           </div>
-          <div className="leading-tight text-[9px] w-full">
+          <div className="leading-tight text-[11px] w-full">
             <InlineTextField
               value={issuer.nameEn || "Crest Zendo Company Limited"}
               onChange={(v) => updateIssuer("nameEn", v)}
@@ -50,13 +35,13 @@ export default function QuotationFooter({ pageNumber = 1, totalPages = 1, issuer
               onChange={(v) => updateIssuer("address", v)}
               readOnly={readOnly}
               multiline
-              className="text-gray-700 text-[9px] leading-tight block w-full"
+              className="text-gray-700 text-[10px] leading-tight block w-full"
             />
           </div>
         </div>
 
-        {/* Column 3: Phone & Email */}
-        <div className="col-span-3 flex flex-col justify-center space-y-0.5 pl-2">
+        {/* Column 2: Phone, Email & Website (col-span-4) */}
+        <div className="col-span-4 flex flex-col justify-center space-y-1.5 pl-4">
           <div className="flex items-center gap-1.5">
             <div className="w-5 h-5 rounded-full bg-[#0B5D39] text-white flex items-center justify-center shrink-0">
               <Phone size={10} />
@@ -76,6 +61,18 @@ export default function QuotationFooter({ pageNumber = 1, totalPages = 1, issuer
             <InlineTextField
               value={issuer.email}
               onChange={(v) => updateIssuer("email", v)}
+              readOnly={readOnly}
+              className="font-semibold text-gray-800 text-[9.5px]"
+            />
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <div className="w-5 h-5 rounded-full bg-[#0B5D39] text-white flex items-center justify-center shrink-0">
+              <Globe size={10} />
+            </div>
+            <InlineTextField
+              value={issuer.website}
+              onChange={(v) => updateIssuer("website", v)}
               readOnly={readOnly}
               className="font-semibold text-gray-800 text-[9.5px]"
             />

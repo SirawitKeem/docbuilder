@@ -72,6 +72,7 @@ export function AppSidebar() {
       {/* Sidebar Header */}
       <SidebarHeader className="h-16 flex items-center justify-center px-4 border-b-0 shrink-0">
         <Link href="/" className="flex items-center gap-2.5 min-w-0 w-full group-data-[collapsible=icon]:justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo_ally.png"
             alt="Ally Logo"
