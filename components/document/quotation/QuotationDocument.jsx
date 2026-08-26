@@ -156,8 +156,7 @@ function GroupBlockRow({ item, group }) {
               onChange={(v) => updateGroup(item.id, group.id, { ...group, heading: v })}
               placeholder="ชื่อหมวดหมู่ย่อย (เว้นว่างได้ถ้าต้องการใส่ Bullet เลย)..."
               readOnly={readOnly}
-              className="font-bold text-xs tracking-wide flex-1"
-              style={{ color: "#0F4C35" }}
+              className="font-bold text-xs text-gray-900 tracking-wide flex-1"
             />
 
             {!readOnly && (
@@ -400,7 +399,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
   const { logo } = quotationTemplate;
   const currentIssuer = { ...quotationTemplate.issuer, ...(quotation.issuer || {}) };
   const {
-    quotationNo = "QT-202608063",
+    quotationNo = "CZ26080001",
     quotationDate = "17 Aug 2026",
     priceValidity = "15 Sep 2026",
     deliveryTerm = "7 days",
@@ -429,6 +428,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
         const pageIdx = pagesList.indexOf(pageData);
         const isFirstPage = pageIdx === 0;
         const pageNumber = pageIdx + 1;
+        const isLastPage = pageNumber === totalPages;
         const { blocks, hasSummary } = pageData;
 
         return (
@@ -441,16 +441,16 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
               {/* Header Section */}
               {isFirstPage ? (
                 <>
-                  <div className="flex items-start justify-between mb-0 pb-2" style={{ breakAfter: "avoid" }}>
-                    <div className="flex items-center gap-3.5">
-                      <Image src={logo} alt="logo" width={180} height={56} style={{ width: 180, height: "auto" }} className="object-contain shrink-0" />
-                      <div className="flex flex-col justify-center -space-y-0.5 hidden">
+                  <div className="flex items-start justify-between mb-0 pb-0 gap-4" style={{ breakAfter: "avoid" }}>
+                    <div className="flex items-center gap-2 max-w-[450px] min-w-0">
+                      <Image src={logo} alt="logo" width={175} height={54} style={{ width: 175, height: "auto" }} className="object-contain shrink-0" />
+                      <div className="flex flex-col justify-center space-y-0 min-w-0 pt-6">
                         <div className="block leading-none">
                           <InlineTextField
                             value={currentIssuer.name}
                             onChange={(v) => updateIssuer("name", v)}
                             readOnly={readOnly}
-                            className="font-bold text-[11px] text-gray-900 block leading-none"
+                            className="font-bold text-[10.5px] text-gray-900 block leading-none"
                           />
                         </div>
                         <div className="block leading-none">
@@ -458,38 +458,45 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                             value={currentIssuer.nameTh}
                             onChange={(v) => updateIssuer("nameTh", v)}
                             readOnly={readOnly}
-                            className="font-bold text-[12px] text-gray-900 block leading-none"
+                            className="font-bold text-[11px] text-gray-900 block leading-none"
                             style={{ letterSpacing: "0.05px" }}
                           />
                         </div>
-                        <div className="text-[10px] text-gray-700 flex items-center gap-2 leading-none">
-                          <span className="shrink-0 font-medium text-gray-700">เลขประจำตัวผู้เสียภาษีอากร:</span>
+                        <div className="block text-[8.5px] text-gray-600 leading-tight max-w-[310px] tracking-tight">
+                          <InlineTextField
+                            value={currentIssuer.address || "8/40 The Connect 37, Soi Chang Air Utis 10 Yaek 1-2, Don Mueang, Bangkok 10210"}
+                            onChange={(v) => updateIssuer("address", v)}
+                            readOnly={readOnly}
+                            multiline
+                            className="text-[8.5px] text-gray-600 leading-tight tracking-tight block w-full"
+                          />
+                        </div>
+                        <div className="text-[9.5px] text-gray-700 flex items-center gap-1.5 leading-none pt-0.5 whitespace-nowrap">
+                          <span className="shrink-0 font-medium text-gray-700 text-[9px]">เลขประจำตัวผู้เสียภาษีอากร:</span>
                           <span
-                            className="inline-flex items-center px-2 py-0.5 text-white font-bold text-[10px] tracking-wider rounded-full"
-                            style={{
-                              backgroundColor: "#0F4C35",
-                            }}
+                            className="inline-flex items-center px-1.5 py-0.5 text-white font-bold text-[9px] tracking-wider rounded-full shrink-0"
+                            style={{ backgroundColor: "#0F4C35" }}
                           >
                             <InlineTextField
                               value={currentIssuer.taxIdNumber || "0105558073755"}
                               onChange={(v) => updateIssuer("taxIdNumber", v)}
                               readOnly={readOnly}
-                              className="font-bold text-[10px] text-white tracking-wider"
+                              className="font-bold text-[9px] text-white tracking-wider text-center w-[92px]"
                             />
                           </span>
-                          <span className="text-[10px] text-gray-700 font-normal">
+                          <span className="text-[9px] text-gray-700 font-normal shrink-0">
                             <InlineTextField
                               value={currentIssuer.taxBranch || "(สำนักงานใหญ่)"}
                               onChange={(v) => updateIssuer("taxBranch", v)}
                               readOnly={readOnly}
-                              className="text-[10px] text-gray-700 font-normal"
+                              className="text-[9px] text-gray-700 font-normal w-[80px]"
                             />
                           </span>
                         </div>
                       </div>
                     </div>
                     <div className="text-right">
-                      <h1 className="text-2xl font-extrabold tracking-wider pt-2 leading-none" style={{ color: "#0F4C35" }}>
+                      <h1 className="text-2xl font-extrabold tracking-wider pt-7 leading-none" style={{ color: "#0F4C35" }}>
                         <InlineTextField
                           value={quotation.docTitle || "QUOTATION"}
                           onChange={(v) => updateField("docTitle", v)}
@@ -577,21 +584,22 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                       <table className="text-[11px] w-[200px] border-collapse ml-auto">
                         <tbody>
                           <tr className="h-[28px]">
-                            <td className="text-[#0F4C35] font-semibold py-0.5 align-middle">Quotation No.</td>
-                            <td className="text-right py-0.5 align-middle flex items-center justify-end gap-1.5">
+                            <td className="text-[#0F4C35] font-semibold py-0.5 align-middle whitespace-nowrap">Quotation No.</td>
+                            <td className="text-right py-0.5 align-middle flex items-center justify-end gap-1">
                               <span
-                                className="inline-flex items-center px-2 py-0.5 text-white font-bold text-[9.5px] tracking-wider rounded-md"
+                                className="inline-flex items-center px-1.5 py-0.5 text-white font-bold text-[9.5px] tracking-wider rounded-md shrink-0"
                                 style={{ backgroundColor: "#0F4C35" }}
                               >
                                 <InlineTextField
                                   value={quotationNo}
                                   onChange={(v) => updateField("quotationNo", v)}
                                   readOnly={readOnly}
-                                  className="font-bold text-[9.5px] text-white tracking-wider text-center"
+                                  placeholder="CZ26080001"
+                                  className="font-bold text-[9.5px] text-white tracking-wider text-center w-[74px]"
                                 />
                               </span>
                               <span
-                                className="inline-flex items-center px-2 py-0.5 text-white font-bold text-[9.5px] tracking-wider rounded-md"
+                                className="inline-flex items-center px-1.5 py-0.5 text-white font-bold text-[9.5px] tracking-wider rounded-md shrink-0"
                                 style={{ backgroundColor: "#0F4C35" }}
                               >
                                 <InlineTextField
@@ -599,7 +607,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                                   onChange={(v) => updateField("revision", v)}
                                   readOnly={readOnly}
                                   placeholder="01"
-                                  className="font-bold text-[9.5px] text-white tracking-wider text-center"
+                                  className="font-bold text-[9.5px] text-white tracking-wider text-center w-[20px]"
                                 />
                               </span>
                             </td>
@@ -659,7 +667,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                 /* Page 2+ Continued Compact Header */
                 <div className="flex items-center justify-between mb-3 border-b border-gray-200 pb-1.5">
                   <div className="flex items-center gap-2">
-                    <Image src={logo} alt="logo" width={95} height={26} className="w-[95px] h-auto object-contain shrink-0" />
+                    <Image src={logo} alt="logo" width={95} height={26} className="w-[100px] h-auto object-contain shrink-0" />
                     <span className="text-[11px] font-semibold text-gray-600">| ใบเสนอราคา (ต่อหน้า {pageNumber})</span>
                   </div>
                   <div className="text-right text-xs font-semibold text-gray-800">
@@ -709,8 +717,8 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                   return null;
                 })}
 
-                {/* Add Line Item Button (only on Page 1 if editable) */}
-                {!readOnly && isFirstPage && (
+                {/* Add Line Item Button (shown when editable on the last page of table items) */}
+                {!readOnly && (isLastPage || totalPages === 1) && (
                   <button
                     onClick={addLineItem}
                     className="w-full h-8 mt-2 rounded-lg border border-dashed border-gray-300 text-[11.5px] font-semibold text-gray-500 hover:border-emerald-500 hover:text-emerald-700 hover:bg-emerald-50/50 flex items-center justify-center gap-1.5 transition-colors"
@@ -720,61 +728,167 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                 )}
               </div>
 
-              {/* Summary Block (Remarks, NOTE, PRICE SUMMARY, Sign-off) */}
-              {hasSummary && (
-                <div className="mt-auto pt-0 mb-4" style={{ breakInside: "avoid" }}>
-                  <div className="grid grid-cols-[1fr_1.3fr_1.5fr] gap-4 items-stretch mt-3">
-                    {/* Column 1: Sign-off / Best regards */}
-                    <div className="text-[11.5px] text-gray-800 space-y-0.5 flex flex-col justify-end h-full pb-0.5">
-                      <p className="font-medium text-gray-500">Best regards,</p>
-                      <div className="block">
-                        <InlineTextField
-                          value={senderName}
-                          onChange={(v) => updateField("senderName", v)}
-                          readOnly={readOnly}
-                          className="font-bold text-xs text-gray-900 block"
-                        />
+              {/* Dynamic Remarks Section directly below table (tightly aligned to table bottom) */}
+              {hasSummary && (() => {
+                const currentRemarksList = Array.isArray(quotation.remarksList)
+                  ? quotation.remarksList
+                  : (quotation.remarks ? [quotation.remarks] : []);
+                
+                const activeRemarks = currentRemarksList.filter((r) => r && r.trim().length > 0);
+
+                // In ReadOnly mode (Preview / Export PDF), hide completely if there are no remarks
+                if (readOnly && activeRemarks.length === 0) {
+                  return null;
+                }
+
+                return (
+                  <div className="mt-1 mb-0.5 text-left px-1">
+                    {/* Header + Add button */}
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="font-bold text-[10px] text-gray-800 tracking-wide">Remarks :</span>
+                      {!readOnly && (
+                        <button
+                          onClick={() => {
+                            updateField("remarksList", [...currentRemarksList, ""]);
+                          }}
+                          className="inline-flex items-center gap-0.5 text-[9px] font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-1.5 py-0.5 rounded transition-colors"
+                          title="เพิ่มข้อความหมายเหตุ"
+                        >
+                          <Plus size={10} /> เพิ่ม Remark
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Remarks items */}
+                    {currentRemarksList.length > 0 ? (
+                      <div className="space-y-0.5 pl-1">
+                        {currentRemarksList.map((rem, idx) => {
+                          if (readOnly && !rem?.trim()) return null;
+                          return (
+                            <div key={idx} className="flex items-center gap-1.5 group/rem text-[9.5px]">
+                              <span className="text-red-500 font-bold">•</span>
+                              <InlineTextField
+                                value={rem}
+                                onChange={(v) => {
+                                  const updated = [...currentRemarksList];
+                                  updated[idx] = v;
+                                  updateField("remarksList", updated);
+                                }}
+                                readOnly={readOnly}
+                                placeholder="ระบุหมายเหตุ (เช่น Payment: Annually)..."
+                                className="text-[9.5px] text-red-600 font-semibold flex-1 leading-tight"
+                              />
+                              {!readOnly && (
+                                <button
+                                  onClick={() => {
+                                    const updated = currentRemarksList.filter((_, i) => i !== idx);
+                                    updateField("remarksList", updated);
+                                  }}
+                                  className="opacity-70 hover:opacity-100 p-0.5 text-gray-400 hover:text-red-500 transition-opacity"
+                                  title="ลบหมายเหตุนี้"
+                                >
+                                  <Trash2 size={11} />
+                                </button>
+                              )}
+                            </div>
+                          );
+                        })}
                       </div>
-                      <div className="block">
-                        <InlineTextField
-                          value={senderPhone}
-                          onChange={(v) => updateField("senderPhone", v)}
-                          readOnly={readOnly}
-                          className="text-gray-500 block text-[11px]"
-                        />
+                    ) : (
+                      !readOnly && (
+                        <div className="text-[9px] text-gray-400 italic pl-1">
+                          ไม่มีหมายเหตุ (สามารถกด &quot;+ เพิ่ม Remark&quot; ด้านบนเพื่อเพิ่มได้)
+                        </div>
+                      )
+                    )}
+                  </div>
+                );
+              })()}
+
+              {/* Summary Block (Sign-off, Customer Signature, PRICE SUMMARY) */}
+              {hasSummary && (
+                <div className="mt-auto pt-2 mb-2" style={{ breakInside: "avoid" }}>
+                  {/* 3-Column Bottom Summary Section */}
+                  <div className="grid grid-cols-[1.15fr_1.15fr_1.5fr] gap-3 items-stretch">
+                    {/* Column 1: Sign-off / Best regards (Name / Position / Email / Mobile) */}
+                    <div className="border border-gray-200 rounded-lg p-2.5 bg-white shadow-2xs h-full flex flex-col justify-between text-left">
+                      <div>
+                        <div className="border-b border-gray-100 pb-1 mb-1">
+                          <p className="text-[10px] font-bold tracking-wider uppercase" style={{ color: "#0F4C35" }}>
+                            Best regards,
+                          </p>
+                        </div>
+                        <div className="space-y-1 mt-1 text-[10.5px]">
+                          {/* Name */}
+                          <div className="block leading-tight">
+                            <InlineTextField
+                              value={senderName}
+                              onChange={(v) => updateField("senderName", v)}
+                              readOnly={readOnly}
+                              placeholder="ชื่อ-นามสกุล ผู้เสนอราคา..."
+                              className="font-bold text-xs text-gray-900 block"
+                            />
+                          </div>
+
+                          {/* Position */}
+                          <div className="block leading-tight">
+                            <InlineTextField
+                              value={quotation.senderPosition || ""}
+                              onChange={(v) => updateField("senderPosition", v)}
+                              readOnly={readOnly}
+                              placeholder="ตำแหน่ง (เช่น Account Manager)..."
+                              className="text-gray-700 block text-[10px]"
+                            />
+                          </div>
+
+                          {/* Email */}
+                          <div className="block leading-tight">
+                            <InlineTextField
+                              value={quotation.senderEmail || ""}
+                              onChange={(v) => updateField("senderEmail", v)}
+                              readOnly={readOnly}
+                              placeholder="Email..."
+                              className="text-gray-600 block text-[10px]"
+                            />
+                          </div>
+
+                          {/* Mobile */}
+                          <div className="block leading-tight">
+                            <InlineTextField
+                              value={senderPhone}
+                              onChange={(v) => updateField("senderPhone", v)}
+                              readOnly={readOnly}
+                              placeholder="Mobile / เบอร์โทรศัพท์..."
+                              className="text-gray-600 block text-[10px]"
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Column 2: Note Box (ลดสัดส่วนกล่อง) */}
-                    <div className="border border-gray-200 rounded-lg p-2.5 bg-gray-50/40 h-full flex flex-col justify-between">
+                    {/* Column 2: Approve to purchase (Customer Signature Box) */}
+                    <div className="border border-gray-200 rounded-lg p-2.5 bg-white shadow-2xs h-full flex flex-col justify-between text-center">
                       <div>
-                        <div className="flex items-center gap-1 mb-2">
-                          <span className="w-1.5 h-1.5 rounded-xs" style={{ backgroundColor: "#0F4C35" }} />
-                          <p className="text-[10px] font-bold tracking-wider" style={{ color: "#0F4C35" }}>NOTE</p>
+                        <div className="border-b border-gray-100 pb-1 mb-1">
+                          <p className="text-[10px] font-bold tracking-wider uppercase text-center" style={{ color: "#0F4C35" }}>
+                            Approve to purchase
+                          </p>
                         </div>
-                        <ul className="text-[9.5px] text-gray-600 space-y-1.5 list-disc pl-3.5 leading-snug">
-                          <li>ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม 7%</li>
-                          <li>การชำระเงิน : ภายในเงื่อนไขที่กำหนด</li>
-                          <li>ใบเสนอราคานี้มีผลบังคับใช้ตามวันที่ระบุเท่านั้น</li>
-                          {(!readOnly || remarks) && (
-                            <li>
-                              <div className="inline-flex items-baseline gap-1 w-[calc(100%-10px)]">
-                                <span className="font-semibold text-gray-700 shrink-0">Remarks : </span>
-                                <InlineTextField
-                                  value={remarks}
-                                  onChange={(v) => updateField("remarks", v)}
-                                  readOnly={readOnly}
-                                  className="text-red-600 font-medium w-full"
-                                />
-                              </div>
-                            </li>
-                          )}
-                        </ul>
+                      </div>
+
+                      {/* Signature line */}
+                      <div className="flex flex-col items-center justify-end space-y-1 mt-auto pt-3 pb-1">
+                        <div className="w-[85%] border-b border-gray-400 border-dashed mb-1" />
+                        <p className="text-[9.5px] font-semibold text-gray-700 leading-none">Authorized Signature</p>
                       </div>
                     </div>
 
                     {/* Column 3: Price Summary Box */}
-                    <PriceSummaryBlock lineItems={lineItems} vatRate={vatRate} />
+                    <PriceSummaryBlock
+                      lineItems={lineItems}
+                      vatRate={vatRate}
+                      specialDiscount={quotation.specialDiscount}
+                    />
                   </div>
                 </div>
               )}

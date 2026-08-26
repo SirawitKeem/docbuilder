@@ -64,7 +64,7 @@ function PrintContent() {
     return (
       <div
         id="print-root"
-        className="print-page border-0 p-0 m-0 w-[794px] bg-white"
+        className="border-0 p-0 m-0 w-[794px] bg-white"
         data-ready={isReady ? "true" : "false"}
       >
         <style>{`

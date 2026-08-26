@@ -41,7 +41,7 @@ export async function POST(request) {
 
     await page.goto(printUrl, { waitUntil: "networkidle0" });
     await page.evaluate(() => (document.fonts ? document.fonts.ready : Promise.resolve()));
-    await page.waitForSelector('.print-page[data-ready="true"]', { timeout: 15000 });
+    await page.waitForSelector('[data-ready="true"]', { timeout: 15000 });
 
     // Count actual page card elements rendered in the DOM
     const pageCount = await page.evaluate(() => {

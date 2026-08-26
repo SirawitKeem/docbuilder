@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Eye, MoreHorizontal, Edit3, Trash2, X, Download } from "lucide-react";
+import { Eye, MoreHorizontal, Edit3, Trash2, X, Download, CopyPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { templateRegistry } from "@/lib/templates/registry";
 import { getFieldProfile } from "@/lib/data/fieldProfile";
@@ -240,9 +240,10 @@ export default function DocumentsTable({
                 </td>
               </tr>
             ) : (
-              documents.map((doc) => {
+              documents.map((doc, docIdx) => {
                 const { dateStr, timeStr } = formatDateTime(doc.createdAt);
                 const isSelected = selectedIds.includes(doc.id);
+                const isNearBottom = docIdx >= Math.max(0, documents.length - 2);
 
                 return (
                   <tr
@@ -321,7 +322,7 @@ export default function DocumentsTable({
                         {openMenuId === doc.id && (
                           <div
                             ref={menuRef}
-                            className="absolute right-5 top-11 w-40 bg-surface text-foreground rounded-xl shadow-xl border border-border py-1 z-50 animate-in fade-in zoom-in-95 duration-100 opacity-100"
+                            className={`absolute right-4 ${isNearBottom ? "bottom-10" : "top-11"} w-52 bg-surface text-foreground rounded-xl shadow-xl border border-border py-1 z-50 animate-in fade-in zoom-in-95 duration-100 opacity-100`}
                           >
                             {allowEdit && (
                               <button
@@ -329,10 +330,29 @@ export default function DocumentsTable({
                                   setOpenMenuId(null);
                                   router.push(`/create/${doc.templateId || "nda"}?id=${doc.id}`);
                                 }}
-                                className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2 transition-colors"
+                                className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap"
                               >
                                 <Edit3 size={14} className="text-muted-foreground" />
                                 แก้ไขเอกสาร
+                              </button>
+                            )}
+                            {doc.templateId === "quotation" && (
+                              <button
+                                onClick={async () => {
+                                  setOpenMenuId(null);
+                                  try {
+                                    const res = await fetch(`/api/quotations/${doc.id}/revision`, { method: "POST" });
+                                    if (!res.ok) throw new Error();
+                                    const newRev = await res.json();
+                                    router.push(`/create/quotation?id=${newRev.id}`);
+                                  } catch {
+                                    alert("ไม่สามารถสร้างฉบับปรับปรุงได้");
+                                  }
+                                }}
+                                className="w-full text-left px-3.5 py-2 text-xs font-medium text-emerald-700 hover:bg-emerald-50 flex items-center gap-2.5 transition-colors whitespace-nowrap"
+                              >
+                                <CopyPlus size={14} className="text-emerald-600" />
+                                สร้างฉบับปรับปรุง (New Rev)
                               </button>
                             )}
                             <button
@@ -340,7 +360,7 @@ export default function DocumentsTable({
                                 setOpenMenuId(null);
                                 handlePrintOrExport(doc);
                               }}
-                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2 transition-colors"
+                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap"
                             >
                               <Download size={14} className="text-muted-foreground" />
                               Export PDF / พิมพ์
@@ -351,7 +371,7 @@ export default function DocumentsTable({
                                 requestSingleDelete(doc);
                               }}
                               disabled={deletingId === doc.id}
-                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-destructive hover:bg-destructive/10 flex items-center gap-2 transition-colors disabled:opacity-40"
+                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-destructive hover:bg-destructive/10 flex items-center gap-2.5 transition-colors disabled:opacity-40 whitespace-nowrap"
                             >
                               <Trash2 size={14} className="text-destructive" />
                               ลบเอกสาร

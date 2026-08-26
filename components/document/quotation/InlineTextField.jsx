@@ -31,21 +31,23 @@ export default function InlineTextField({
     );
   }
 
-  const baseStateClasses = focused
-    ? "bg-white ring-1 ring-emerald-500 shadow-2xs"
-    : "bg-transparent hover:bg-emerald-50/50";
+  const isWhiteText = /\btext-white\b/.test(className);
+  const hasCustomWidth = /\bw-\[|\bw-auto\b|\bw-\d+/.test(className);
 
-  let finalClassName = className;
-  if (focused) {
-    finalClassName = className.replace(/\btext-white\b/g, "text-gray-900");
-  }
+  const baseStateClasses = focused
+    ? isWhiteText
+      ? "bg-black/20 ring-1 ring-white/70 shadow-2xs"
+      : "bg-white ring-1 ring-emerald-500 shadow-2xs"
+    : "bg-transparent hover:bg-emerald-50/40";
+
+  const widthClass = hasCustomWidth ? "" : "w-full max-w-full";
 
   if (multiline) {
     return (
       <textarea
         value={value || ""}
         placeholder={placeholder}
-        rows={2}
+        rows={1}
         onChange={(e) => onChange?.(e.target.value)}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
@@ -55,7 +57,7 @@ export default function InlineTextField({
           appearance: "none",
           ...style,
         }}
-        className={`px-1 py-0 rounded outline-none transition-colors duration-150 resize-none w-full max-w-full ${baseStateClasses} ${isUnderlined ? "font-bold" : ""} ${finalClassName}`}
+        className={`px-1 py-0 rounded outline-none transition-colors duration-150 resize-none ${widthClass} ${baseStateClasses} ${isUnderlined ? "font-bold" : ""} ${className}`}
       />
     );
   }
@@ -74,7 +76,7 @@ export default function InlineTextField({
         appearance: "none",
         ...style,
       }}
-      className={`px-1 py-0 rounded outline-none transition-colors duration-150 w-full max-w-full placeholder:text-gray-300 placeholder:font-normal ${baseStateClasses} ${isUnderlined ? "font-bold" : ""} ${finalClassName}`}
+      className={`px-1 py-0 rounded outline-none transition-colors duration-150 ${widthClass} placeholder:text-gray-300 placeholder:font-normal ${baseStateClasses} ${isUnderlined ? "font-bold" : ""} ${className}`}
     />
   );
 }

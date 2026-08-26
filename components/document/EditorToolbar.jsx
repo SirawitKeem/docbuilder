@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Undo2, Redo2, Eye, Download, Save, MoreHorizontal, Loader2, Check } from "lucide-react";
+import { ArrowLeft, Undo2, Redo2, Eye, Download, Save, MoreHorizontal, Loader2, Check, CopyPlus } from "lucide-react";
 
 export default function EditorToolbar({
   template,
@@ -12,6 +12,8 @@ export default function EditorToolbar({
   onSave,
   isSaving,
   savedAt,
+  onCreateRevision,
+  isCreatingRevision,
 }) {
   return (
     <div className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 shrink-0">
@@ -43,6 +45,23 @@ export default function EditorToolbar({
       </div>
 
       <div className="flex items-center gap-2 shrink-0">
+        {/* ปุ่ม สร้าง Rev ใหม่ (เมื่อเป็นเอกสารที่บันทึกแล้ว) */}
+        {onCreateRevision && (
+          <button
+            onClick={onCreateRevision}
+            disabled={isCreatingRevision}
+            className="flex items-center gap-2 h-10 px-4 rounded-[10px] border border-[#E4E4E8] text-[#22162B] text-sm font-medium hover:bg-[#F6F6FA] transition-colors disabled:opacity-60"
+            title="สร้างฉบับปรับปรุงใหม่ (คงเลข Quotation No. เดิม แต่อัปเกรด Rev ขึ้น)"
+          >
+            {isCreatingRevision ? (
+              <Loader2 size={16} className="animate-spin text-[#7C4DFF]" />
+            ) : (
+              <CopyPlus size={16} />
+            )}
+            <span className="hidden sm:inline">{isCreatingRevision ? "กำลังสร้าง..." : "สร้าง Rev ใหม่"}</span>
+          </button>
+        )}
+
         {/* ปุ่ม บันทึกเอกสาร (Save Document) */}
         <button
           onClick={onSave}
