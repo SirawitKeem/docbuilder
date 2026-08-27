@@ -434,93 +434,96 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
         return (
           <div
             key={pageIdx}
-            className="bg-white shadow-xl rounded-sm text-gray-900 px-8 py-6 font-sans flex flex-col justify-between overflow-hidden"
+            className="bg-white shadow-xl rounded-sm text-gray-900 px-8 py-6 font-sans flex flex-col justify-between overflow-hidden relative"
             style={{ width: 794, height: 1122, minHeight: 1122, boxSizing: "border-box" }}
           >
-            <div className="flex-1 flex flex-col justify-start space-y-2 overflow-hidden">
+            {/* Header Background Graphic (bg1.png) */}
+            {isFirstPage && (
+              <div
+                className="absolute top-0 left-0 right-0 w-full h-[115px] pointer-events-none z-0 bg-no-repeat bg-cover"
+                style={{
+                  backgroundImage: "url('/bg1.png')",
+                  backgroundSize: "100% 100%",
+                  backgroundPosition: "top center",
+                }}
+              />
+            )}
+
+            <div className="flex-1 flex flex-col justify-start space-y-2 overflow-hidden relative z-10">
               {/* Header Section */}
               {isFirstPage ? (
                 <>
                   <div className="flex items-start justify-between mb-0 pb-0 gap-4 pt-3" style={{ breakAfter: "avoid" }}>
-                    {/* Left Brand Area: Logo + 2-Tier Balanced Text Container */}
-                    <div className="flex items-start gap-2 shrink-0">
-                      <Image src={logo || "/quotation.png"} alt="logo" width={138} height={90} style={{ width: "auto", height: 52 }} className="object-contain shrink-0" />
+                    {/* Left Brand Area: Logo + Uniform 4-Row Company Info Container */}
+                    <div className="flex items-start gap-2.5 shrink-0">
+                      <Image src={logo || "/quotation.png"} alt="logo" width={138} height={90} style={{ width: "auto", height: 62 }} className="object-contain shrink-0" />
                       
-                      {/* Text block stretched to fill logo height (52px) — top 2 at top, bottom 2 at bottom */}
-                      <div
-                        className="flex flex-col w-[295px] max-w-[295px] shrink-0 justify-between"
-                        style={{ height: 52, gap: 0 }}
-                      >
-                        {/* Upper Band: Lines 1 & 2 */}
-                        <div className="flex flex-col" style={{ gap: 1.5 }}>
-                          {/* Line 1: CREST ZENDO CO., LTD. */}
-                          <InlineTextField
-                            value={currentIssuer.name}
-                            onChange={(v) => updateIssuer("name", v)}
-                            readOnly={readOnly}
-                            className="font-bold text-gray-900 leading-none truncate block w-full"
-                            style={{ fontSize: 12, lineHeight: 1 }}
-                          />
+                      {/* Uniform spacing between all 4 lines — equal distance */}
+                      <div className="flex flex-col w-[310px] max-w-[310px] shrink-0 space-y-1.5">
+                        {/* Line 1: CREST ZENDO CO., LTD. */}
+                        <InlineTextField
+                          value={currentIssuer.name}
+                          onChange={(v) => updateIssuer("name", v)}
+                          readOnly={readOnly}
+                          className="font-bold text-gray-900 leading-none truncate block w-full"
+                          style={{ fontSize: 12, lineHeight: 1 }}
+                        />
 
-                          {/* Line 2: บริษัท เครสท์ เซนโด จำกัด */}
-                          <InlineTextField
-                            value={currentIssuer.nameTh}
-                            onChange={(v) => updateIssuer("nameTh", v)}
-                            readOnly={readOnly}
-                            className="font-bold text-gray-900 leading-none truncate block w-full"
-                            style={{ fontSize: 12, lineHeight: 1 }}
-                          />
-                        </div>
+                        {/* Line 2: บริษัท เครสท์ เซนโด จำกัด */}
+                        <InlineTextField
+                          value={currentIssuer.nameTh}
+                          onChange={(v) => updateIssuer("nameTh", v)}
+                          readOnly={readOnly}
+                          className="font-bold text-gray-900 leading-none truncate block w-full"
+                          style={{ fontSize: 12, lineHeight: 1 }}
+                        />
 
-                        {/* Lower Band: Lines 3 & 4 */}
-                        <div className="flex flex-col" style={{ gap: 3 }}>
-                          {/* Line 3: Address */}
-                          <InlineTextField
-                            value={currentIssuer.address || "8/40 The Connect 37, Soi Chang Air Utis 10 Yaek 1-2, Don Mueang, Bangkok 10210"}
-                            onChange={(v) => updateIssuer("address", v)}
-                            readOnly={readOnly}
-                            className="text-gray-600 tracking-tight whitespace-nowrap block w-full leading-none"
-                            style={{ fontSize: 10, lineHeight: 1 }}
-                          />
+                        {/* Line 3: Address */}
+                        <InlineTextField
+                          value={currentIssuer.address || "The Connect 37, 8/40 Soi Chang Akat Uthit 10 Yaek 1-2, Donmueang, Bangkok 10210"}
+                          onChange={(v) => updateIssuer("address", v)}
+                          readOnly={readOnly}
+                          className="text-gray-600 tracking-tight whitespace-nowrap block w-full leading-none font-medium"
+                          style={{ fontSize: 8.5, lineHeight: 1 }}
+                        />
 
-                          {/* Line 4: เลขประจำตัวผู้เสียภาษีอากร */}
-                          <div className="flex items-center gap-1 leading-none tracking-tight whitespace-nowrap" style={{ fontSize: 10, lineHeight: 1 }}>
-                            <span className="shrink-0 font-medium text-gray-700" style={{ fontSize: 10 }}>เลขประจำตัวผู้เสียภาษีอากร:</span>
-                            <span
-                              className="inline-flex items-center px-1.5 py-0 text-white font-medium tracking-normal rounded-full shrink-0 h-[10px] relative top-[0.5px]"
-                              style={{ backgroundColor: "#0F4C35", fontSize: 10 }}
-                            >
-                              <InlineTextField
-                                value={currentIssuer.taxIdNumber || "0105558073755"}
-                                onChange={(v) => updateIssuer("taxIdNumber", v)}
-                                readOnly={readOnly}
-                                className="font-normal text-white tracking-normal text-center w-[65px] pt-0.5"
-                                style={{ fontSize: 8.5 }}
-                              />
-                            </span>
-                            <span className="text-gray-700 font-normal shrink-0" style={{ fontSize: 10 }}>
-                              <InlineTextField
-                                value={currentIssuer.taxBranch || "(สำนักงานใหญ่)"}
-                                onChange={(v) => updateIssuer("taxBranch", v)}
-                                readOnly={readOnly}
-                                className="text-gray-700 font-normal w-[75px]"
-                                style={{ fontSize: 10 }}
-                              />
-                            </span>
-                          </div>
+                        {/* Line 4: เลขประจำตัวผู้เสียภาษีอากร */}
+                        <div className="flex items-center gap-1 leading-none tracking-tight whitespace-nowrap" style={{ fontSize: 9.5, lineHeight: 1 }}>
+                          <span className="shrink-0 font-medium text-gray-600" style={{ fontSize: 9.5 }}>เลขประจำตัวผู้เสียภาษีอากร:</span>
+                          <span
+                            className="inline-flex items-center px-1.5 py-0 text-white font-medium tracking-normal rounded-full shrink-0 h-[10px] relative top-[0.5px]"
+                            style={{ backgroundColor: "#0F4C35", fontSize: 8.5 }}
+                          >
+                            <InlineTextField
+                              value={currentIssuer.taxIdNumber || "0105558073755"}
+                              onChange={(v) => updateIssuer("taxIdNumber", v)}
+                              readOnly={readOnly}
+                              className="font-normal text-white tracking-normal text-center w-[66px]"
+                              style={{ fontSize: 8.5 }}
+                            />
+                          </span>
+                          <span className="text-gray-600 font-normal shrink-0" style={{ fontSize: 9.5 }}>
+                            <InlineTextField
+                              value={currentIssuer.taxBranch || "(สำนักงานใหญ่)"}
+                              onChange={(v) => updateIssuer("taxBranch", v)}
+                              readOnly={readOnly}
+                              className="text-gray-600 font-normal w-[75px]"
+                              style={{ fontSize: 8.5 }}
+                            />
+                          </span>
                         </div>
                       </div>
                     </div>
 
                     {/* Right: QUOTATION Title — aligned flush with right edge of table below */}
                     <div className="text-right shrink-0 ml-auto">
-                      <h1 className="text-2xl font-extrabold tracking-wider pt-3.5 leading-none text-right" style={{ color: "#0F4C35" }}>
+                      <h1 className="text-2xl font-extrabold tracking-wider pt-2.5 leading-none text-right" style={{ color: "#0F4C35" }}>
                         <InlineTextField
                           value={quotation.docTitle || "QUOTATION"}
                           onChange={(v) => updateField("docTitle", v)}
                           readOnly={readOnly}
                           placeholder="QUOTATION"
-                          className="text-[28px] font-extrabold tracking-wider text-right leading-none block p-0"
+                          className="text-[33px] font-extrabold tracking-wider text-right leading-none block p-0"
                           style={{ color: "#0F4C35", textAlign: "right" }}
                         />
                       </h1>
