@@ -517,14 +517,14 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                     </div>
 
                     {/* Right: QUOTATION Title — aligned flush with right edge of table below */}
-                    <div className="text-right shrink-0 ml-auto">
-                      <h1 className="text-2xl font-extrabold tracking-wider pt-2.5 leading-none text-right" style={{ color: "#0F4C35" }}>
+                    <div className="text-right shrink-0 ml-auto w-[280px]">
+                      <h1 className="text-right leading-none pt-2.5" style={{ color: "#0F4C35" }}>
                         <InlineTextField
                           value={quotation.docTitle || "QUOTATION"}
                           onChange={(v) => updateField("docTitle", v)}
                           readOnly={readOnly}
                           placeholder="QUOTATION"
-                          className="text-[33px] font-extrabold tracking-wider text-right leading-none block p-0"
+                          className="w-[280px] text-[33px] font-black tracking-wider text-right leading-none block p-0"
                           style={{ color: "#0F4C35", textAlign: "right" }}
                         />
                       </h1>

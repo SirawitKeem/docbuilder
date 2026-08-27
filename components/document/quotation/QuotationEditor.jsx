@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, AlertCircle } from "lucide-react";
 import { QuotationDataProvider, useQuotationData } from "@/context/QuotationDataContext";
 import { quotationTemplate } from "@/lib/templates/quotation/schema";
 import { getQuotation, createQuotation, updateQuotation, createQuotationRevision } from "@/lib/data/quotations";
@@ -125,7 +125,11 @@ function QuotationEditorContent({ docId }) {
   };
 
   const handleDownload = async () => {
-    if (!validation.isValid) return;
+    if (!validation.isValid) {
+      setShowToast({ type: "error", message: `กรุณากรอกข้อมูลให้ครบถ้วน: ${validation.errors.join(", ")}` });
+      setTimeout(() => setShowToast(null), 4000);
+      return;
+    }
     const { blob } = await generatePdf();
 
     if ("showSaveFilePicker" in window) {
@@ -157,7 +161,11 @@ function QuotationEditorContent({ docId }) {
   };
 
   const handleGoToEmail = async () => {
-    if (!validation.isValid) return;
+    if (!validation.isValid) {
+      setShowToast({ type: "error", message: `กรุณากรอกข้อมูลให้ครบถ้วน: ${validation.errors.join(", ")}` });
+      setTimeout(() => setShowToast(null), 4000);
+      return;
+    }
     if (!pdfBase64) await generatePdf();
     setMode("email");
   };
@@ -215,8 +223,12 @@ function QuotationEditorContent({ docId }) {
       {/* Toast Notification */}
       {showToast && (
         <div className="fixed top-20 right-6 z-50 bg-gray-900 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-top-3 duration-200">
-          <CheckCircle2 size={16} className="text-emerald-400" />
-          <span>{showToast}</span>
+          {typeof showToast === "object" && showToast.type === "error" ? (
+            <AlertCircle size={16} className="text-amber-400 shrink-0" />
+          ) : (
+            <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
+          )}
+          <span>{typeof showToast === "object" ? showToast.message : showToast}</span>
         </div>
       )}
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Eye, MoreHorizontal, Edit3, Trash2, X, Download, CopyPlus } from "lucide-react";
+import { Eye, MoreHorizontal, Edit3, Trash2, X, Download, CopyPlus, Send } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { templateRegistry } from "@/lib/templates/registry";
 import { getFieldProfile } from "@/lib/data/fieldProfile";
@@ -10,6 +10,7 @@ import { paginateQuotationLineItems } from "@/lib/quotationHelpers";
 import QuotationDocument from "@/components/document/quotation/QuotationDocument";
 import DocumentHeader from "@/components/document/DocumentHeader";
 import DocumentFooter from "@/components/document/DocumentFooter";
+import EmailScreen from "@/components/document/EmailScreen";
 
 const statusStyles = {
   sent: "bg-[#DDEEE2] text-[#17682F]",
@@ -72,6 +73,7 @@ export default function DocumentsTable({
   const [selectedIds, setSelectedIds] = useState([]);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [previewDoc, setPreviewDoc] = useState(null);
+  const [emailDoc, setEmailDoc] = useState(null);
   
   // Custom Delete Confirmation Modal State (null | { type: 'single', id, docName } | { type: 'bulk', count })
   const [deleteModalState, setDeleteModalState] = useState(null);
@@ -326,6 +328,16 @@ export default function DocumentsTable({
                             ref={menuRef}
                             className={`absolute right-4 ${isNearBottom ? "bottom-10" : "top-11"} w-52 bg-surface text-foreground rounded-xl shadow-xl border border-border py-1 z-50 animate-in fade-in zoom-in-95 duration-100 opacity-100`}
                           >
+                            <button
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                setEmailDoc(doc);
+                              }}
+                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap"
+                            >
+                              <Send size={14} className="text-muted-foreground" />
+                              ส่งอีเมล
+                            </button>
                             {allowEdit && (
                               <button
                                 onClick={() => {
@@ -460,6 +472,24 @@ export default function DocumentsTable({
           doc={previewDoc}
           onClose={() => setPreviewDoc(null)}
         />
+      )}
+
+      {/* Pop-Up Modal Send Email */}
+      {emailDoc && (
+        <div className="fixed inset-0 z-50 bg-background overflow-y-auto animate-in fade-in duration-150">
+          <EmailScreen
+            defaultSubject={`เอกสาร ${emailDoc.templateName || emailDoc.name || "เอกสาร"}`}
+            fileName={emailDoc.name || `${emailDoc.templateId || "document"}.pdf`}
+            templateId={emailDoc.templateId || "nda"}
+            templateName={emailDoc.templateName}
+            values={emailDoc.values || {}}
+            onBack={() => setEmailDoc(null)}
+            onSent={() => {
+              setEmailDoc(null);
+              if (onRefresh) onRefresh();
+            }}
+          />
+        </div>
       )}
     </>
   );

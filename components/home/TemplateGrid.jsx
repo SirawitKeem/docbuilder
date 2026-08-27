@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import TemplateCard from "@/components/templates/TemplateCard";
+import TemplateSelectModal from "@/components/templates/TemplateSelectModal";
 import { getTemplates } from "@/lib/data/templates";
 
 export default function TemplateGrid() {
   const [templates, setTemplates] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     getTemplates().then(setTemplates);
@@ -22,9 +24,21 @@ export default function TemplateGrid() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {templates.slice(0, 4).map((t) => (
-          <TemplateCard key={t.id} template={t} />
+          <TemplateCard
+            key={t.id}
+            template={t}
+            onSelect={(cat) => setSelectedCategory(cat)}
+          />
         ))}
       </div>
+
+      {/* Category Sub-templates Selection Modal */}
+      {selectedCategory && (
+        <TemplateSelectModal
+          category={selectedCategory}
+          onClose={() => setSelectedCategory(null)}
+        />
+      )}
     </section>
   );
 }

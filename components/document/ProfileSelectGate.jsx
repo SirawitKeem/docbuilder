@@ -40,6 +40,7 @@ function formatThaiDateTime(isoString) {
 function ProfileSelectGateContent({ templateId }) {
   const searchParams = useSearchParams();
   const docIdFromUrl = searchParams.get("id") || searchParams.get("docId");
+  const subTemplateId = searchParams.get("templateId");
 
   const [profiles, setProfiles] = useState(null);
   const [selectedId, setSelectedId] = useState(undefined); // undefined = ยังไม่เลือก
@@ -90,9 +91,9 @@ function ProfileSelectGateContent({ templateId }) {
   // เลือกแล้ว (รวมถึงเลือก "เอกสารเปล่า" ที่ selectedId = null) → เข้าตัว editor จริง
   if (selectedId !== undefined) {
     if (isQuotation) {
-      return <QuotationEditor profileId={selectedId} />;
+      return <QuotationEditor profileId={selectedId} subTemplateId={subTemplateId} />;
     }
-    return <DocumentEditor templateId={templateId} profileId={selectedId} />;
+    return <DocumentEditor templateId={templateId} profileId={selectedId} subTemplateId={subTemplateId} />;
   }
 
   if (profiles === null) {

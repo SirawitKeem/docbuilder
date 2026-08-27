@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { Eye, MoreVertical, Search, X } from "lucide-react";
+import { Eye, MoreVertical, Search, X, Send } from "lucide-react";
 import { templateRegistry } from "@/lib/templates/registry";
 import { getFieldProfile } from "@/lib/data/fieldProfile";
 import { DocumentFieldsProvider } from "@/context/DocumentFieldsContext";
@@ -9,6 +9,7 @@ import { paginateQuotationLineItems } from "@/lib/quotationHelpers";
 import QuotationDocument from "@/components/document/quotation/QuotationDocument";
 import DocumentHeader from "@/components/document/DocumentHeader";
 import DocumentFooter from "@/components/document/DocumentFooter";
+import EmailScreen from "@/components/document/EmailScreen";
 
 const statusStyles = {
   sent: "bg-success-100 text-success-600",
@@ -54,76 +55,81 @@ export default function DocumentsTable({
   documents,
   showSentTo = false,
   emptyMessage = "ยังไม่มีเอกสาร",
+  onRefresh,
 }) {
   const [query, setQuery] = useState("");
   const [previewDoc, setPreviewDoc] = useState(null);
+  const [emailDoc, setEmailDoc] = useState(null);
 
   const filtered = useMemo(() => {
     if (!query.trim()) return documents;
     const q = query.toLowerCase();
     return documents.filter(
       (doc) =>
-        doc.name.toLowerCase().includes(q) ||
-        doc.templateName.toLowerCase().includes(q) ||
+        doc.name?.toLowerCase().includes(q) ||
+        doc.templateName?.toLowerCase().includes(q) ||
         doc.sentTo?.toLowerCase().includes(q)
     );
   }, [documents, query]);
 
   return (
     <div>
-      <div className="relative mb-4 max-w-xs">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="ค้นหาเอกสาร..."
-          className="w-full h-10 pl-9 pr-3 rounded-lg border border-gray-200 text-sm outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
-        />
+      {/* Search Bar */}
+      <div className="p-4 border-b border-gray-100 flex items-center justify-between gap-4">
+        <div className="relative flex-1 max-w-sm">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="ค้นหาชื่อเอกสาร, เทมเพลต, ผู้รับ..."
+            className="w-full h-9 pl-9 pr-8 rounded-lg border border-gray-200 text-xs outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+          />
+          {query && (
+            <button
+              onClick={() => setQuery("")}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <X size={14} />
+            </button>
+          )}
+        </div>
+        <p className="text-xs text-gray-500 shrink-0">
+          ทั้งหมด <strong className="text-gray-900">{filtered.length}</strong> รายการ
+        </p>
       </div>
 
-      <div className="bg-white border border-gray-200 rounded-card overflow-hidden shadow-card">
-        <table className="w-full text-sm table-fixed">
-          <thead>
-            <tr className="border-b border-gray-200 text-left text-xs text-gray-500 bg-gray-50/50">
-              <th className={`${showSentTo ? "w-[30%]" : "w-[34%]"} px-5 py-3.5 font-medium`}>ชื่อเอกสาร</th>
-              <th className={`${showSentTo ? "w-[20%]" : "w-[26%]"} px-5 py-3.5 font-medium`}>เทมเพลต</th>
-              {showSentTo ? (
-                <th className="w-[22%] px-5 py-3.5 font-medium">ส่งถึง</th>
-              ) : (
-                <th className="w-[14%] px-5 py-3.5 font-medium">ผู้สร้าง</th>
-              )}
-              <th className="w-[13%] px-5 py-3.5 font-medium">วันที่สร้าง</th>
-              <th className="w-[9%] px-4 py-3.5 font-medium text-center">สถานะ</th>
-              <th className="w-[6%] px-5 py-3.5 font-medium text-right">การดำเนินการ</th>
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-gray-50/75 border-b border-gray-100 text-xs text-gray-500 uppercase tracking-wider font-semibold">
+            <tr>
+              <th className="px-5 py-3">ชื่อเอกสาร</th>
+              <th className="px-5 py-3">เทมเพลต</th>
+              {showSentTo ? <th className="px-5 py-3">ส่งถึง</th> : <th className="px-5 py-3">สร้างโดย</th>}
+              <th className="px-5 py-3">วันที่ / เวลา</th>
+              <th className="px-4 py-3 text-center">สถานะ</th>
+              <th className="px-5 py-3 text-right">การดำเนินการ</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-100">
             {filtered.length === 0 ? (
               <tr>
-                <td
-                  colSpan={showSentTo ? 6 : 6}
-                  className="px-5 py-10 text-center text-gray-400"
-                >
-                  {query ? "ไม่พบเอกสารที่ค้นหา" : emptyMessage}
+                <td colSpan={6} className="px-5 py-12 text-center text-sm text-gray-400">
+                  {emptyMessage}
                 </td>
               </tr>
             ) : (
               filtered.map((doc) => {
                 const { dateStr, timeStr } = formatDateTime(doc.createdAt);
-
                 return (
-                  <tr key={doc.id} className="border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors">
+                  <tr key={doc.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
-                        <PdfIcon className="w-8 h-9 shrink-0" />
-                        <div className="min-w-0 flex-1">
-                          <p className="font-medium text-gray-900 text-sm leading-snug truncate" title={doc.name}>
-                            {doc.name}
-                          </p>
-                          <p className="text-xs text-gray-500 mt-0.5 truncate">
-                            {getContractFullName(doc)}
-                          </p>
+                        <PdfIcon />
+                        <div>
+                          <p className="font-semibold text-gray-900 text-sm">{doc.name}</p>
+                          <p className="text-xs text-gray-400 mt-0.5">PDF Document</p>
                         </div>
                       </div>
                     </td>
@@ -139,28 +145,25 @@ export default function DocumentsTable({
                     ) : (
                       <td className="px-5 py-3.5 text-gray-500">{doc.createdBy || "Admin"}</td>
                     )}
-                    <td className="px-5 py-3.5 whitespace-nowrap">
-                      <p className="text-gray-900 text-sm font-medium">{dateStr}</p>
+                    <td className="px-5 py-3.5">
+                      <p className="text-gray-900 text-sm font-semibold">{dateStr}</p>
                       <p className="text-xs text-gray-500 mt-0.5">{timeStr}</p>
                     </td>
                     <td className="px-4 py-3.5 text-center">
                       <span
-                        className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${statusStyles[doc.status]}`}
+                        className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusStyles[doc.status]}`}
                       >
                         {statusLabel[doc.status]}
                       </span>
                     </td>
                     <td className="px-5 py-3.5">
-                      <div className="flex items-center justify-end gap-1">
+                      <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => setPreviewDoc(doc)}
                           className="p-1.5 rounded hover:bg-gray-100 text-gray-500 transition-colors"
                           title="ดูตัวอย่างเอกสาร (Preview)"
                         >
                           <Eye size={16} />
-                        </button>
-                        <button className="p-1.5 rounded hover:bg-gray-100 text-gray-500">
-                          <MoreVertical size={16} />
                         </button>
                       </div>
                     </td>

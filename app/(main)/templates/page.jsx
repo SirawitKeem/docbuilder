@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import TemplateCard from "@/components/templates/TemplateCard";
+import TemplateSelectModal from "@/components/templates/TemplateSelectModal";
 import { getTemplates } from "@/lib/data/templates";
 
 export default function TemplatesPage() {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     getTemplates().then((data) => {
@@ -19,21 +21,34 @@ export default function TemplatesPage() {
     <div>
       <h1 className="text-2xl font-bold text-gray-900 mb-1">เทมเพลตเอกสาร</h1>
       <p className="text-sm text-gray-500 mb-8">
-        เทมเพลตทั้งหมดที่รองรับในระบบ Document Generator
+        เลือกหมวดหมู่เพื่อดูรูปแบบเทมเพลตทั้งหมดที่รองรับในระบบ Document Generator
       </p>
 
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-48 rounded-card bg-gray-100 animate-pulse" />
+            <div key={i} className="h-48 rounded-2xl bg-gray-100 animate-pulse" />
           ))}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {templates.map((t) => (
-            <TemplateCard key={t.id} template={t} variant="full" />
+            <TemplateCard
+              key={t.id}
+              template={t}
+              variant="full"
+              onSelect={(cat) => setSelectedCategory(cat)}
+            />
           ))}
         </div>
+      )}
+
+      {/* Category Sub-templates Selection Modal */}
+      {selectedCategory && (
+        <TemplateSelectModal
+          category={selectedCategory}
+          onClose={() => setSelectedCategory(null)}
+        />
       )}
     </div>
   );
