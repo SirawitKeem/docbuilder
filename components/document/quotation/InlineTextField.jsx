@@ -20,12 +20,21 @@ export default function InlineTextField({
   const cleanValue = typeof value === "string" ? value.replace(/<\/?u>/g, "") : value;
 
   if (readOnly) {
-    if (isEmpty) return null;
+    if (isEmpty) {
+      return (
+        <span
+          style={{ textRendering: "optimizeLegibility", ...style }}
+          className={`inline-block select-none opacity-0 ${className}`}
+        >
+          &nbsp;
+        </span>
+      );
+    }
     const isBlock = /\bblock\b/.test(className);
     return (
       <span
         style={{ textRendering: "optimizeLegibility", ...(isBlock ? { display: "block" } : {}), ...style }}
-        className={`${multiline ? "whitespace-pre-line" : ""} ${isUnderlined ? "font-bold" : ""} ${className}`}
+        className={`px-0.5 py-0 ${multiline ? "whitespace-pre-line" : ""} ${isUnderlined ? "font-bold" : ""} ${className}`}
       >
         {cleanValue}
       </span>
@@ -58,7 +67,7 @@ export default function InlineTextField({
           appearance: "none",
           ...style,
         }}
-        className={`px-1 py-0 rounded outline-none transition-colors duration-150 resize-none ${widthClass} ${baseStateClasses} ${isUnderlined ? "font-bold" : ""} ${className}`}
+        className={`px-0.5 py-0 rounded outline-none transition-colors duration-150 resize-none ${widthClass} ${baseStateClasses} ${isUnderlined ? "font-bold" : ""} ${className}`}
       />
     );
   }
@@ -77,7 +86,7 @@ export default function InlineTextField({
         appearance: "none",
         ...style,
       }}
-      className={`px-1 py-0 rounded outline-none transition-colors duration-150 ${widthClass} placeholder:text-gray-300 placeholder:font-normal ${baseStateClasses} ${isUnderlined ? "font-bold" : ""} ${className}`}
+      className={`px-0.5 py-0 rounded outline-none transition-colors duration-150 ${widthClass} placeholder:text-gray-300 placeholder:font-normal ${baseStateClasses} ${isUnderlined ? "font-bold" : ""} ${className}`}
     />
   );
 }

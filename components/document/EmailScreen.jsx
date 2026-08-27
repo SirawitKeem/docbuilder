@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { templateRegistry } from "@/lib/templates/registry";
 import { DocumentFieldsProvider } from "@/context/DocumentFieldsContext";
+import { paginateQuotationLineItems } from "@/lib/quotationHelpers";
+import QuotationDocument from "./quotation/QuotationDocument";
 import DocumentHeader from "./DocumentHeader";
 import DocumentFooter from "./DocumentFooter";
 
@@ -45,8 +47,10 @@ export default function EmailScreen({
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to);
 
   const entry = templateRegistry[templateId] || templateRegistry["nda"];
-  const { schema, pages } = entry;
-  const pageCount = pages ? pages.length : 4;
+  const { schema, pages, DocumentComponent } = entry || {};
+  const isQuotation = templateId === "quotation" || schema?.type === "quotation" || Boolean(DocumentComponent);
+  const quotationPages = isQuotation ? paginateQuotationLineItems(values?.lineItems || []) : [];
+  const pageCount = isQuotation ? (quotationPages.length || 1) : (pages ? pages.length : 4);
   const Page1Component = pages ? pages[0] : null;
 
   const handleSend = async () => {
@@ -244,40 +248,44 @@ export default function EmailScreen({
                   </button>
                 </div>
 
-                {/* 100% Exact Scaled Preview Container (A4 Aspect Ratio: 794x1123) */}
+                {/* 100% Exact Scaled Preview Container (A4 Aspect Ratio: 794x1122/1123) */}
                 <div className="w-full flex justify-center py-1 relative">
                   <div
                     className="relative rounded border border-gray-300 shadow-sm overflow-hidden bg-white"
                     style={{
                       width: 794 * 0.36,
-                      height: 1123 * 0.36,
+                      height: 1122 * 0.36,
                     }}
                   >
                     <div
                       style={{
                         width: 794,
-                        height: 1123,
+                        height: 1122,
                         transform: "scale(0.36)",
                         transformOrigin: "top left",
                       }}
                       className="pointer-events-none select-none text-left"
                     >
-                      <div
-                        className="px-14 pt-10 pb-6 flex flex-col font-noto-looped h-full box-border text-gray-900 bg-white"
-                        style={{ width: 794, height: 1123 }}
-                      >
-                        <DocumentFieldsProvider initialValues={values} defaultReadOnly>
-                          <DocumentHeader logo={schema?.logo} />
-                          <div className="flex-1 my-3 overflow-hidden">
-                            {Page1Component && <Page1Component />}
-                          </div>
-                          <DocumentFooter
-                            title={schema?.fullName}
-                            pageNumber={1}
-                            totalPages={pageCount}
-                          />
-                        </DocumentFieldsProvider>
-                      </div>
+                      {isQuotation ? (
+                        <QuotationDocument quotation={values} currentPage={1} />
+                      ) : (
+                        <div
+                          className="px-14 pt-10 pb-6 flex flex-col font-noto-looped h-full box-border text-gray-900 bg-white"
+                          style={{ width: 794, height: 1123 }}
+                        >
+                          <DocumentFieldsProvider initialValues={values} defaultReadOnly>
+                            <DocumentHeader logo={schema?.logo} />
+                            <div className="flex-1 my-3 overflow-hidden">
+                              {Page1Component && <Page1Component />}
+                            </div>
+                            <DocumentFooter
+                              title={schema?.fullName}
+                              pageNumber={1}
+                              totalPages={pageCount}
+                            />
+                          </DocumentFieldsProvider>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -333,32 +341,40 @@ export default function EmailScreen({
               </button>
             </div>
 
-            {/* Full Document Pages Scroll Area - Render at exact A4 794px x 1123px */}
+            {/* Full Document Pages Scroll Area - Render at exact A4 794px x 1122/1123px */}
             <div className="flex-1 overflow-auto bg-gray-200/90 p-8 flex flex-col items-center gap-8">
-              <DocumentFieldsProvider initialValues={values} defaultReadOnly>
-                {pages.map((PageContent, i) => (
-                  <div
-                    key={i}
-                    className="bg-white shadow-xl rounded-sm shrink-0 font-noto-looped text-gray-900"
-                    style={{ width: 794, minHeight: 1123, height: 1123 }}
-                  >
-                    <div
-                      className="px-14 pt-10 pb-6 flex flex-col h-full box-border text-left"
-                      style={{ height: 1123 }}
-                    >
-                      <DocumentHeader logo={schema?.logo} />
-                      <div className="flex-1 my-3 overflow-hidden">
-                        <PageContent />
-                      </div>
-                      <DocumentFooter
-                        title={schema?.fullName}
-                        pageNumber={i + 1}
-                        totalPages={pages.length}
-                      />
-                    </div>
+              {isQuotation ? (
+                Array.from({ length: pageCount }, (_, i) => (
+                  <div key={i} className="shrink-0">
+                    <QuotationDocument quotation={values} currentPage={i + 1} />
                   </div>
-                ))}
-              </DocumentFieldsProvider>
+                ))
+              ) : (
+                <DocumentFieldsProvider initialValues={values} defaultReadOnly>
+                  {(pages || []).map((PageContent, i) => (
+                    <div
+                      key={i}
+                      className="bg-white shadow-xl rounded-sm shrink-0 font-noto-looped text-gray-900"
+                      style={{ width: 794, minHeight: 1123, height: 1123 }}
+                    >
+                      <div
+                        className="px-14 pt-10 pb-6 flex flex-col h-full box-border text-left"
+                        style={{ height: 1123 }}
+                      >
+                        <DocumentHeader logo={schema?.logo} />
+                        <div className="flex-1 my-3 overflow-hidden">
+                          <PageContent />
+                        </div>
+                        <DocumentFooter
+                          title={schema?.fullName}
+                          pageNumber={i + 1}
+                          totalPages={pages.length}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </DocumentFieldsProvider>
+              )}
             </div>
 
             <div className="px-6 py-3.5 border-t border-gray-200 flex items-center justify-between bg-white z-10">

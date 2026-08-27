@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { templateRegistry } from "@/lib/templates/registry";
 import { getFieldProfile } from "@/lib/data/fieldProfile";
 import { DocumentFieldsProvider } from "@/context/DocumentFieldsContext";
+import { paginateQuotationLineItems } from "@/lib/quotationHelpers";
+import QuotationDocument from "@/components/document/quotation/QuotationDocument";
 import DocumentHeader from "@/components/document/DocumentHeader";
 import DocumentFooter from "@/components/document/DocumentFooter";
 
@@ -487,7 +489,9 @@ function PreviewModal({ doc, onClose }) {
   }, [doc, entry]);
 
   if (!entry) return null;
-  const { schema, pages } = entry;
+  const { schema, pages, DocumentComponent } = entry;
+  const isQuotation = doc.templateId === "quotation" || schema?.type === "quotation" || Boolean(DocumentComponent);
+  const quotationPageCount = isQuotation ? (paginateQuotationLineItems(modalValues.lineItems || []).length || 1) : 1;
 
   return (
     <div className="fixed inset-0 z-50 bg-black/65 backdrop-blur-xs flex items-center justify-center p-4">
@@ -516,24 +520,32 @@ function PreviewModal({ doc, onClose }) {
 
         {/* Modal Body - Readonly Preview Canvas */}
         <div className="flex-1 overflow-auto bg-muted p-8 flex flex-col items-center gap-8">
-          <DocumentFieldsProvider key={JSON.stringify(modalValues)} initialValues={modalValues} defaultReadOnly>
-            {pages.map((PageContent, i) => (
-              <div
-                key={i}
-                className="bg-[#FFFFFF] shadow-document w-[794px] min-h-[1123px] px-14 pt-10 pb-6 flex flex-col justify-between font-noto-looped text-gray-900 rounded-sm shrink-0"
-              >
-                <DocumentHeader logo={schema.logo} />
-                <div className="flex-1 min-h-0 overflow-hidden text-left">
-                  <PageContent />
-                </div>
-                <DocumentFooter
-                  title={schema.fullName}
-                  pageNumber={i + 1}
-                  totalPages={pages.length}
-                />
+          {isQuotation ? (
+            Array.from({ length: quotationPageCount }, (_, i) => (
+              <div key={i} className="shrink-0">
+                <QuotationDocument quotation={modalValues} currentPage={i + 1} />
               </div>
-            ))}
-          </DocumentFieldsProvider>
+            ))
+          ) : (
+            <DocumentFieldsProvider key={JSON.stringify(modalValues)} initialValues={modalValues} defaultReadOnly>
+              {(pages || []).map((PageContent, i) => (
+                <div
+                  key={i}
+                  className="bg-[#FFFFFF] shadow-document w-[794px] min-h-[1123px] px-14 pt-10 pb-6 flex flex-col justify-between font-noto-looped text-gray-900 rounded-sm shrink-0"
+                >
+                  <DocumentHeader logo={schema?.logo} />
+                  <div className="flex-1 min-h-0 overflow-hidden text-left">
+                    <PageContent />
+                  </div>
+                  <DocumentFooter
+                    title={schema?.fullName}
+                    pageNumber={i + 1}
+                    totalPages={pages.length}
+                  />
+                </div>
+              ))}
+            </DocumentFieldsProvider>
+          )}
         </div>
 
         {/* Modal Footer */}

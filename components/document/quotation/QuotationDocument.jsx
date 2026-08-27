@@ -33,6 +33,41 @@ function LineItemHeaderRow({ item }) {
 
   return (
     <div className="line-item-header group/item relative py-0.5">
+      {/* Floating Action Toolbar on Hover in Edit Mode */}
+      {!readOnly && (
+        <div className="opacity-0 group-hover/item:opacity-100 absolute right-1 -top-3 z-20 flex items-center gap-1 bg-white border border-emerald-300 shadow-md px-2 py-0.5 rounded-md transition-opacity">
+          <button
+            onClick={() => {
+              if (firstGroupId) {
+                addBullet(item.id, firstGroupId);
+              } else {
+                addGroup(item.id);
+              }
+            }}
+            className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-1.5 py-0.5 rounded transition-colors"
+            title="เพิ่ม Bullet (•) ใต้ชื่อเรื่องนี้"
+          >
+            <Plus size={11} /> เพิ่ม bullet (•)
+          </button>
+
+          <button
+            onClick={() => addGroup(item.id)}
+            className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-1.5 py-0.5 rounded transition-colors"
+            title="เพิ่มหมวดหมู่ย่อย"
+          >
+            <Plus size={11} /> เพิ่มหมวดหมู่ย่อย
+          </button>
+
+          <button
+            onClick={() => removeLineItem(item.id)}
+            className="p-1 rounded text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+            title="ลบรายการหลักนี้"
+          >
+            <Trash2 size={13} />
+          </button>
+        </div>
+      )}
+
       {/* 5 Columns: PRODUCT CODE | DESCRIPTION | QTY | PRICE | AMOUNT */}
       <div className="grid grid-cols-[105px_1fr_40px_105px_105px] gap-2 py-0.5 items-center">
         <div className="text-xs text-gray-600">
@@ -44,48 +79,14 @@ function LineItemHeaderRow({ item }) {
           />
         </div>
 
-        <div className="flex items-center justify-between gap-2">
+        <div className="w-full">
           <InlineTextField
             value={item.title}
             onChange={(v) => updateLineItem(item.id, { ...item, title: v })}
             placeholder="ชื่อรายการหลัก / ชื่อเรื่อง..."
             readOnly={readOnly}
-            className="font-bold text-xs text-gray-900 flex-1"
+            className="font-bold text-xs text-gray-900 w-full block"
           />
-
-          {!readOnly && (
-            <div className="flex items-center gap-1.5 shrink-0">
-              <button
-                onClick={() => {
-                  if (firstGroupId) {
-                    addBullet(item.id, firstGroupId);
-                  } else {
-                    addGroup(item.id);
-                  }
-                }}
-                className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-1.5 py-0.5 rounded transition-colors"
-                title="เพิ่ม Bullet (•) ใต้ชื่อเรื่องนี้"
-              >
-                <Plus size={11} /> เพิ่ม bullet (•)
-              </button>
-
-              <button
-                onClick={() => addGroup(item.id)}
-                className="inline-flex items-center gap-0.5 text-[10px] font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-1.5 py-0.5 rounded transition-colors"
-                title="เพิ่มหมวดหมู่ย่อย"
-              >
-                <Plus size={11} /> เพิ่มหมวดหมู่ย่อย
-              </button>
-
-              <button
-                onClick={() => removeLineItem(item.id)}
-                className="opacity-0 group-hover/item:opacity-100 p-0.5 rounded text-gray-400 hover:text-red-500 transition-opacity"
-                title="ลบรายการหลักนี้"
-              >
-                <Trash2 size={13} />
-              </button>
-            </div>
-          )}
         </div>
 
         <div className="text-center text-xs font-semibold text-gray-900">
@@ -140,7 +141,7 @@ function GroupBlockRow({ item, group }) {
     <div className="group-block group/group space-y-0.5 relative py-0.5 pl-1">
       {/* 5 Columns Group Header: Render ONLY if it has content or is in edit mode with a heading */}
       {shouldRenderHeadingRow && (hasHeading || hasCodeOrPrice || !readOnly) && (
-        <div className="grid grid-cols-[105px_1fr_40px_105px_105px] gap-2 items-center">
+        <div className="grid grid-cols-[105px_1fr_40px_105px_105px] gap-2 items-center relative">
           <div className="text-xs text-gray-500">
             <InlineTextField
               value={group.code}
@@ -150,7 +151,7 @@ function GroupBlockRow({ item, group }) {
             />
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 relative">
             <InlineTextField
               value={group.heading}
               onChange={(v) => updateGroup(item.id, group.id, { ...group, heading: v })}
@@ -162,7 +163,7 @@ function GroupBlockRow({ item, group }) {
             {!readOnly && (
               <button
                 onClick={() => removeGroup(item.id, group.id)}
-                className="opacity-0 group-hover/group:opacity-100 p-0.5 text-gray-400 hover:text-red-500 transition-opacity shrink-0"
+                className="opacity-0 group-hover/group:opacity-100 absolute -right-4 top-1/2 -translate-y-1/2 p-0.5 text-gray-400 hover:text-red-500 transition-opacity shrink-0"
                 title="ลบหมวดหมู่นี้"
               >
                 <X size={13} />
@@ -218,7 +219,7 @@ function GroupBlockRow({ item, group }) {
                   />
                 </div>
 
-                <div className="flex items-start gap-1">
+                <div className="flex items-start gap-1 relative">
                   <span className="shrink-0 text-gray-400 font-bold mt-0.5">•</span>
                   <InlineTextField
                     value={bullet.text}
@@ -229,20 +230,20 @@ function GroupBlockRow({ item, group }) {
                   />
 
                   {!readOnly && (
-                    <span className="opacity-0 group-hover/bullet:opacity-100 flex items-center gap-1 shrink-0 transition-opacity">
+                    <span className="opacity-0 group-hover/bullet:opacity-100 absolute right-0 -top-1 z-10 flex items-center gap-0.5 bg-white/95 border border-gray-200 shadow-xs px-1 py-0.2 rounded transition-opacity">
                       <button
                         onClick={() => addSubBullet(item.id, group.id, bullet.id)}
-                        className="text-gray-400 hover:text-emerald-600 p-0.5"
+                        className="text-gray-500 hover:text-emerald-600 p-0.5"
                         title="เพิ่มข้อความย่อย (-)"
                       >
-                        <Plus size={13} />
+                        <Plus size={12} />
                       </button>
                       <button
                         onClick={() => removeBullet(item.id, group.id, bullet.id)}
-                        className="text-gray-400 hover:text-red-500 p-0.5"
+                        className="text-gray-500 hover:text-red-500 p-0.5"
                         title="ลบรายการนี้"
                       >
-                        <X size={13} />
+                        <X size={12} />
                       </button>
                     </span>
                   )}
@@ -292,7 +293,7 @@ function GroupBlockRow({ item, group }) {
                     return (
                       <div key={sb.id} className="grid grid-cols-[105px_1fr_40px_105px_105px] gap-2 items-center text-[10px] group/subbullet py-0.5">
                         <div />
-                        <div className="flex items-start gap-1 pl-4">
+                        <div className="flex items-start gap-1 pl-4 relative">
                           <span className="shrink-0 text-gray-400 font-bold mt-0.5">-</span>
                           <InlineTextField
                             value={sb.text}
@@ -313,10 +314,10 @@ function GroupBlockRow({ item, group }) {
                                 const updatedSub = bullet.subBullets.filter((x) => x.id !== sb.id);
                                 updateBullet(item.id, group.id, bullet.id, { ...bullet, subBullets: updatedSub });
                               }}
-                              className="opacity-0 group-hover/subbullet:opacity-100 text-gray-400 hover:text-red-500 p-0.5 transition-opacity"
+                              className="opacity-0 group-hover/subbullet:opacity-100 absolute right-0 -top-1 z-10 bg-white/95 border border-gray-200 shadow-xs rounded text-gray-500 hover:text-red-500 p-0.5 transition-opacity"
                               title="ลบ"
                             >
-                              <X size={12} />
+                              <X size={11} />
                             </button>
                           )}
                         </div>
@@ -489,17 +490,17 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
 
                         {/* Line 4: เลขประจำตัวผู้เสียภาษีอากร */}
                         <div className="flex items-center gap-1 leading-none tracking-tight whitespace-nowrap" style={{ fontSize: 9.5, lineHeight: 1 }}>
-                          <span className="shrink-0 font-medium text-gray-600" style={{ fontSize: 9.5 }}>เลขประจำตัวผู้เสียภาษีอากร:</span>
+                          <span className="shrink-0 font-medium text-gray-600 pl-0.5" style={{ fontSize: 9.5 }}>เลขประจำตัวผู้เสียภาษีอากร:</span>
                           <span
-                            className="inline-flex items-center px-1.5 py-0 text-white font-medium tracking-normal rounded-full shrink-0 h-[10px] relative top-[0.5px]"
-                            style={{ backgroundColor: "#0F4C35", fontSize: 8.5 }}
+                            className="inline-flex items-center justify-center px-1.5 py-0 text-white font-semibold tracking-normal rounded-full shrink-0 h-[13px]"
+                            style={{ backgroundColor: "#0F4C35", fontSize: 9 }}
                           >
                             <InlineTextField
                               value={currentIssuer.taxIdNumber || "0105558073755"}
                               onChange={(v) => updateIssuer("taxIdNumber", v)}
                               readOnly={readOnly}
-                              className="font-normal text-white tracking-normal text-center w-[66px]"
-                              style={{ fontSize: 8.5 }}
+                              className="font-semibold text-white tracking-normal text-center w-[75px] p-0 leading-none"
+                              style={{ fontSize: 9, lineHeight: 1 }}
                             />
                           </span>
                           <span className="text-gray-600 font-normal shrink-0" style={{ fontSize: 9.5 }}>
@@ -508,7 +509,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                               onChange={(v) => updateIssuer("taxBranch", v)}
                               readOnly={readOnly}
                               className="text-gray-600 font-normal w-[75px]"
-                              style={{ fontSize: 8.5 }}
+                              style={{ fontSize: 9.5 }}
                             />
                           </span>
                         </div>
@@ -547,10 +548,10 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                             { label: "Subject", value: billTo.subject, field: "subject", placeholder: "หัวข้อเรื่อง..." },
                             { label: "AM", value: billTo.am, field: "am", placeholder: "ชื่อ AM..." },
                           ].map(({ label, value, field, placeholder }) => (
-                            <tr key={field} style={{ height: 10 }}>
+                            <tr key={field} style={{ height: 21 }}>
                               <td
                                 className="font-semibold align-middle py-0"
-                                style={{ color: "#0F4C35", fontSize: 11, lineHeight: "10px", whiteSpace: "nowrap", verticalAlign: "middle" }}
+                                style={{ color: "#0F4C35", fontSize: 11, lineHeight: "21px", whiteSpace: "nowrap", verticalAlign: "middle" }}
                               >
                                 {label}
                               </td>
@@ -561,7 +562,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                                   readOnly={readOnly}
                                   placeholder={placeholder}
                                   className="font-normal text-gray-800 w-full"
-                                  style={{ fontSize: 11, lineHeight: "10px" }}
+                                  style={{ fontSize: 11, lineHeight: "21px" }}
                                 />
                               </td>
                             </tr>
@@ -579,33 +580,33 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                         </colgroup>
                         <tbody>
                           <tr style={{ height: 21 }}>
-                            <td className="text-[#0F4C35] font-semibold align-middle py-0 whitespace-nowrap" style={{ fontSize: 11 }}>Quotation No.</td>
+                            <td className="font-semibold align-middle py-0 whitespace-nowrap" style={{ color: "#0F4C35", fontSize: 11, lineHeight: "21px" }}>Quotation No.</td>
                             <td className="text-right align-middle py-0">
                               <div className="flex items-center justify-end gap-1">
                                 <span
-                                  className="inline-flex items-center px-1.5 py-0.5 text-white font-bold tracking-wider rounded-md shrink-0 h-[18px]"
-                                  style={{ backgroundColor: "#0F4C35", fontSize: 10.5 }}
+                                  className="inline-flex items-center px-2 py-0.5 text-white font-semibold tracking-normal rounded-md shrink-0 h-[18px]"
+                                  style={{ backgroundColor: "#0F4C35", fontSize: 11 }}
                                 >
                                   <InlineTextField
                                     value={quotationNo}
                                     onChange={(v) => updateField("quotationNo", v)}
                                     readOnly={readOnly}
                                     placeholder="CZ26080001"
-                                    className="font-bold text-white tracking-wider text-center w-[78px]"
-                                    style={{ fontSize: 10.5 }}
+                                    className="font-semibold text-white tracking-normal text-center w-[82px]"
+                                    style={{ fontSize: 11 }}
                                   />
                                 </span>
                                 <span
-                                  className="inline-flex items-center px-1.5 py-0.5 text-white font-bold tracking-wider rounded-md shrink-0 h-[18px]"
-                                  style={{ backgroundColor: "#0F4C35", fontSize: 10.5 }}
+                                  className="inline-flex items-center px-1.5 py-0.5 text-white font-semibold tracking-normal rounded-md shrink-0 h-[18px]"
+                                  style={{ backgroundColor: "#0F4C35", fontSize: 11 }}
                                 >
                                   <InlineTextField
                                     value={quotation.revision || "01"}
                                     onChange={(v) => updateField("revision", v)}
                                     readOnly={readOnly}
                                     placeholder="01"
-                                    className="font-bold text-white tracking-wider text-center w-[22px]"
-                                    style={{ fontSize: 10.5 }}
+                                    className="font-semibold text-white tracking-normal text-center w-[22px]"
+                                    style={{ fontSize: 11 }}
                                   />
                                 </span>
                               </div>
@@ -618,7 +619,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                             { label: "Credit Term", content: <InlineTermSelect value={creditTerm} onChange={(v) => updateField("creditTerm", v)} readOnly={readOnly} options={["30 days", "45 days", "60 days", "90 days", "Cash / 100% Advance"]} className="font-normal text-[11px] text-gray-800 text-right" /> },
                           ].map(({ label, content }) => (
                             <tr key={label} style={{ height: 21 }}>
-                              <td className="text-[#0F4C35] font-semibold align-middle py-0 whitespace-nowrap">{label}</td>
+                              <td className="font-semibold align-middle py-0 whitespace-nowrap" style={{ color: "#0F4C35", fontSize: 11, lineHeight: "21px" }}>{label}</td>
                               <td className="text-right align-middle py-0">{content}</td>
                             </tr>
                           ))}
