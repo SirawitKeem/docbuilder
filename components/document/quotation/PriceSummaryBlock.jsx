@@ -27,7 +27,6 @@ export default function PriceSummaryBlock({ lineItems, vatRate, specialDiscount 
         <p className="text-[10px] font-bold tracking-wider" style={{ color: "#0F4C35" }}>
           PRICE SUMMARY
         </p>
-        <span className="text-[9px] text-gray-400 font-semibold tracking-wider">THB</span>
       </div>
 
       <div className="space-y-0.5 text-gray-700 font-medium">
@@ -101,7 +100,7 @@ export default function PriceSummaryBlock({ lineItems, vatRate, specialDiscount 
 
       {/* Grand Total Row with accounting double-line accent */}
       <div className="flex justify-between items-center mt-1 pt-1.5 border-t border-gray-300">
-        <span className="font-bold text-[10px] tracking-wider" style={{ color: "#0F4C35" }}>
+        <span className="font-bold text-[13px] tracking-wider" style={{ color: "#0F4C35" }}>
           GRAND TOTAL
         </span>
         <div className="border-b-2 border-double border-[#0F4C35] pb-0.5">

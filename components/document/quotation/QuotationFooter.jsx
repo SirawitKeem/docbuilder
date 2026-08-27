@@ -15,20 +15,8 @@ export default function QuotationFooter({ pageNumber = 1, totalPages = 1, issuer
 
   return (
     <div className="w-full text-sans shrink-0 pt-1" style={{ breakInside: "avoid" }}>
-      {/* Top Contacts Section (Phone & Website) */}
+      {/* Top Contacts Section (Website) */}
       <div className="border-t border-gray-300 pt-1.5 pb-1.5 flex items-center justify-center gap-8 text-[10px] text-gray-800">
-        <div className="flex items-center gap-1.5">
-          <div className="w-4 h-4 rounded-full bg-[#0B5D39] text-white flex items-center justify-center shrink-0">
-            <Phone size={9} />
-          </div>
-          <InlineTextField
-            value={issuer.phone}
-            onChange={(v) => updateIssuer("phone", v)}
-            readOnly={readOnly}
-            className="font-semibold text-gray-800 text-[9.5px]"
-          />
-        </div>
-
         <div className="flex items-center gap-1.5">
           <div className="w-4 h-4 rounded-full bg-[#0B5D39] text-white flex items-center justify-center shrink-0">
             <Globe size={9} />

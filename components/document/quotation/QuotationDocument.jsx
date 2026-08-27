@@ -441,25 +441,25 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
               {/* Header Section */}
               {isFirstPage ? (
                 <>
-                  <div className="flex items-start justify-between mb-0 pb-0 gap-4" style={{ breakAfter: "avoid" }}>
-                    {/* Left Brand Area: Fixed Logo (175x52) + 2-Tier Balanced Text Container */}
+                  <div className="flex items-start justify-between mb-0 pb-0 gap-4 pt-3" style={{ breakAfter: "avoid" }}>
+                    {/* Left Brand Area: Logo + 2-Tier Balanced Text Container */}
                     <div className="flex items-start gap-2 shrink-0">
-                      <Image src={logo} alt="logo" width={175} height={52} style={{ width: 175, height: 52 }} className="object-contain shrink-0" />
+                      <Image src={logo || "/quotation.png"} alt="logo" width={138} height={90} style={{ width: "auto", height: 52 }} className="object-contain shrink-0" />
                       
-                      {/* Fixed 295px container structured into CREST band (top 2 lines) and ZENDO band (bottom 2 lines) */}
+                      {/* Text block stretched to fill logo height (52px) — top 2 at top, bottom 2 at bottom */}
                       <div
-                        className="flex flex-col w-[295px] max-w-[295px] shrink-0"
-                        style={{ paddingTop: 7, gap: 0 }}
+                        className="flex flex-col w-[295px] max-w-[295px] shrink-0 justify-between"
+                        style={{ height: 52, gap: 0 }}
                       >
-                        {/* Upper Band (Aligned to CREST / T): Lines 1 & 2 */}
-                        <div className="flex flex-col" style={{ gap: 1 }}>
+                        {/* Upper Band: Lines 1 & 2 */}
+                        <div className="flex flex-col" style={{ gap: 1.5 }}>
                           {/* Line 1: CREST ZENDO CO., LTD. */}
                           <InlineTextField
                             value={currentIssuer.name}
                             onChange={(v) => updateIssuer("name", v)}
                             readOnly={readOnly}
                             className="font-bold text-gray-900 leading-none truncate block w-full"
-                            style={{ fontSize: 8.5, lineHeight: 1 }}
+                            style={{ fontSize: 12, lineHeight: 1 }}
                           />
 
                           {/* Line 2: บริษัท เครสท์ เซนโด จำกัด */}
@@ -468,43 +468,43 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                             onChange={(v) => updateIssuer("nameTh", v)}
                             readOnly={readOnly}
                             className="font-bold text-gray-900 leading-none truncate block w-full"
-                            style={{ fontSize: 9.2, lineHeight: 1 }}
+                            style={{ fontSize: 12, lineHeight: 1 }}
                           />
                         </div>
 
-                        {/* Lower Band (Aligned to ZENDO / O): Lines 3 & 4 */}
-                        <div className="flex flex-col" style={{ gap: 1, paddingTop: 2 }}>
+                        {/* Lower Band: Lines 3 & 4 */}
+                        <div className="flex flex-col" style={{ gap: 3 }}>
                           {/* Line 3: Address */}
                           <InlineTextField
                             value={currentIssuer.address || "8/40 The Connect 37, Soi Chang Air Utis 10 Yaek 1-2, Don Mueang, Bangkok 10210"}
                             onChange={(v) => updateIssuer("address", v)}
                             readOnly={readOnly}
                             className="text-gray-600 tracking-tight whitespace-nowrap block w-full leading-none"
-                            style={{ fontSize: 7.2, lineHeight: 1 }}
+                            style={{ fontSize: 10, lineHeight: 1 }}
                           />
 
-                          {/* Line 4: เลขประจำตัวผู้เสียภาษีอากร — ขนาดตัวอักษรเท่ากันทุกส่วน (7.2px) */}
-                          <div className="flex items-center gap-1 leading-none tracking-tight whitespace-nowrap" style={{ fontSize: 7.2, lineHeight: 1 }}>
-                            <span className="shrink-0 font-medium text-gray-700" style={{ fontSize: 7.2 }}>เลขประจำตัวผู้เสียภาษีอากร:</span>
+                          {/* Line 4: เลขประจำตัวผู้เสียภาษีอากร */}
+                          <div className="flex items-center gap-1 leading-none tracking-tight whitespace-nowrap" style={{ fontSize: 10, lineHeight: 1 }}>
+                            <span className="shrink-0 font-medium text-gray-700" style={{ fontSize: 10 }}>เลขประจำตัวผู้เสียภาษีอากร:</span>
                             <span
                               className="inline-flex items-center px-1.5 py-0 text-white font-medium tracking-normal rounded-full shrink-0 h-[10px] relative top-[0.5px]"
-                              style={{ backgroundColor: "#0F4C35", fontSize: 7.2 }}
+                              style={{ backgroundColor: "#0F4C35", fontSize: 10 }}
                             >
                               <InlineTextField
                                 value={currentIssuer.taxIdNumber || "0105558073755"}
                                 onChange={(v) => updateIssuer("taxIdNumber", v)}
                                 readOnly={readOnly}
-                                className="font-medium text-white tracking-normal text-center w-[64px]"
-                                style={{ fontSize: 7.2 }}
+                                className="font-normal text-white tracking-normal text-center w-[65px] pt-0.5"
+                                style={{ fontSize: 8.5 }}
                               />
                             </span>
-                            <span className="text-gray-700 font-normal shrink-0" style={{ fontSize: 7.2 }}>
+                            <span className="text-gray-700 font-normal shrink-0" style={{ fontSize: 10 }}>
                               <InlineTextField
                                 value={currentIssuer.taxBranch || "(สำนักงานใหญ่)"}
                                 onChange={(v) => updateIssuer("taxBranch", v)}
                                 readOnly={readOnly}
-                                className="text-gray-700 font-normal w-[65px]"
-                                style={{ fontSize: 7.2 }}
+                                className="text-gray-700 font-normal w-[75px]"
+                                style={{ fontSize: 10 }}
                               />
                             </span>
                           </div>
@@ -528,7 +528,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                   </div>
 
                   {/* Compact 5 Symmetric Rows Grid with Top and Bottom Borders */}
-                  <div className="grid grid-cols-2 gap-6 mb-0 mt-0 pt-2.5 pb-2" style={{ breakAfter: "avoid" }}>
+                  <div className="grid grid-cols-2 gap-6 mb-0 mt-0 pt-3 pb-2.5" style={{ breakAfter: "avoid" }}>
                     {/* Left Table (5 Rows) */}
                     <div>
                       <table className="w-full border-collapse" style={{ fontSize: 11, lineHeight: "21px" }}>
@@ -569,7 +569,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
 
                     {/* Right Table — same row height as left, no negative margin hack */}
                     <div>
-                      <table className="text-[11px] w-full border-collapse ml-auto" style={{ maxWidth: 215 }}>
+                      <table className="text-[11px] w-full border-collapse ml-auto" style={{ maxWidth: 212 }}>
                         <colgroup>
                           <col style={{ width: "45%" }} />
                           <col style={{ width: "55%" }} />
@@ -628,7 +628,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                 /* Page 2+ Continued Compact Header */
                 <div className="flex items-center justify-between mb-3 border-b border-gray-200 pb-1.5">
                   <div className="flex items-center gap-2">
-                    <Image src={logo} alt="logo" width={95} height={26} className="w-[100px] h-auto object-contain shrink-0" />
+                    <Image src={logo || "/quotation.png"} alt="logo" width={95} height={26} className="w-[100px] h-auto object-contain shrink-0" />
                     <span className="text-[11px] font-semibold text-gray-600">| ใบเสนอราคา (ต่อหน้า {pageNumber})</span>
                   </div>
                   <div className="text-right text-xs font-semibold text-gray-800">
@@ -775,7 +775,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                     <div className="border border-gray-200 rounded-lg p-2.5 bg-white shadow-2xs h-full flex flex-col justify-between text-left">
                       <div>
                         <div className="border-b border-gray-100 pb-1 mb-2">
-                          <p className="text-[10px] font-bold tracking-wider uppercase" style={{ color: "#0F4C35" }}>
+                          <p className="text-[10.5px] font-bold" style={{ color: "#0F4C35" }}>
                             Best regards,
                           </p>
                         </div>
@@ -827,8 +827,8 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                     {/* Column 2: Approve to purchase */}
                     <div className="border border-gray-200 rounded-lg p-2.5 bg-white shadow-2xs h-full flex flex-col justify-between text-center">
                       <div>
-                        <div className="border-b border-gray-100 pb-1 mb-1">
-                          <p className="text-[10px] font-bold tracking-wider uppercase text-center" style={{ color: "#0F4C35" }}>
+                        <div className="border-b border-gray-100 pb-1 mb-2">
+                          <p className="text-[10.5px] font-bold text-center" style={{ color: "#0F4C35" }}>
                             Approve to purchase
                           </p>
                         </div>
@@ -836,7 +836,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
                       {/* Signature line */}
                       <div className="flex flex-col items-center justify-end space-y-1 mt-auto pt-3 pb-1">
                         <div className="w-[85%] border-b border-gray-400 border-dashed mb-1" />
-                        <p className="text-[9.5px] font-semibold text-gray-700 leading-none">Authorized Signature</p>
+                        <p className="text-[9.5px] font-semibold text-gray-700 leading-none">Authorized Signature / Date</p>
                       </div>
                     </div>
 
