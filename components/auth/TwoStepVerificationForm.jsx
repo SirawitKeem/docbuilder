@@ -1,11 +1,24 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ArrowLeft, ShieldCheck } from "lucide-react";
+
+// 4-Point Diamond Sparkle Star
+function SparkleStar({ className = "w-4 h-4 text-white fill-white" }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M12 0C12 6.627 17.373 12 24 12C17.373 12 12 17.373 12 24C12 17.373 6.627 12 0 12C6.627 12 12 6.627 12 0Z" />
+    </svg>
+  );
+}
 
 export default function TwoStepVerificationForm() {
   const router = useRouter();
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [trustDevice, setTrustDevice] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const inputRefs = useRef([]);
@@ -29,11 +42,21 @@ export default function TwoStepVerificationForm() {
     }
   };
 
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text").trim();
+    if (/^\d{6}$/.test(pastedData)) {
+      const digits = pastedData.split("");
+      setOtp(digits);
+      inputRefs.current[5]?.focus();
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const code = otp.join("");
     if (code.length < 6) {
-      setError("Please enter the complete 6-digit code.");
+      setError("Please enter the complete 6-digit verification code.");
       return;
     }
 
@@ -47,31 +70,44 @@ export default function TwoStepVerificationForm() {
   };
 
   return (
-    <div className="w-full space-y-6">
-      {/* Form Center Box */}
-      <div className="my-auto space-y-6">
-        {/* Title & Subtitle */}
-        <div className="text-center space-y-1.5">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">
-            Two-Factor Authentication
-          </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
-            We&apos;ve sent a 6-digit code to your registered mobile number. Please enter it below to continue.
-          </p>
-        </div>
+    <div className="w-full">
+      {/* Top Logo */}
+      <div className="mb-7">
+        <Image
+          src="/logo_ally.png"
+          alt="Ally Doc"
+          width={92}
+          height={40}
+          priority
+          className="h-9 w-auto object-contain select-none"
+        />
+      </div>
 
-        {/* Form Elements */}
-        <form onSubmit={handleSubmit} className="space-y-6 pt-1">
-          {error && (
-            <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs font-medium text-center">
-              {error}
-            </div>
-          )}
+      {/* Title & Subtitle */}
+      <div className="mb-6">
+        <h1 className="text-[28px] sm:text-[32px] font-black tracking-tight text-gray-900 leading-tight">
+          Two-step verification
+        </h1>
+        <p className="mt-1 text-[13.5px] text-gray-500 font-normal leading-relaxed">
+          Enter the 6-digit code from your authenticator app to continue.
+        </p>
+      </div>
 
-          {/* 3 - 3 OTP Box Group with Middle Hyphen */}
-          <div className="flex items-center justify-center gap-2 sm:gap-2.5">
-            {/* First 3 Digits */}
-            {otp.slice(0, 3).map((digit, idx) => (
+      {/* Form Elements */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {error && (
+          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-medium animate-in fade-in duration-150">
+            {error}
+          </div>
+        )}
+
+        {/* 6 OTP Input Boxes */}
+        <div>
+          <label className="block text-[13px] font-semibold text-gray-800 mb-2">
+            Verification code
+          </label>
+          <div className="grid grid-cols-6 gap-2 sm:gap-2.5 on-paste={handlePaste}">
+            {otp.map((digit, idx) => (
               <input
                 key={idx}
                 ref={(el) => (inputRefs.current[idx] = el)}
@@ -81,54 +117,73 @@ export default function TwoStepVerificationForm() {
                 value={digit}
                 onChange={(e) => handleChange(idx, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(idx, e)}
-                className="w-11 h-12 text-center text-lg font-bold text-foreground border border-slate-200 rounded-lg bg-slate-50/50 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
+                onPaste={handlePaste}
+                autoFocus={idx === 0}
+                className="w-full h-13 sm:h-14 text-center text-xl font-extrabold text-gray-900 bg-white border border-gray-200 rounded-xl focus:border-[#5542F6] focus:ring-3 focus:ring-purple-500/15 outline-none transition-all shadow-2xs"
               />
             ))}
-
-            {/* Middle Separator Hyphen */}
-            <span className="text-muted-foreground font-bold text-lg px-0.5">-</span>
-
-            {/* Last 3 Digits */}
-            {otp.slice(3, 6).map((digit, idx) => {
-              const actualIdx = idx + 3;
-              return (
-                <input
-                  key={actualIdx}
-                  ref={(el) => (inputRefs.current[actualIdx] = el)}
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={1}
-                  value={digit}
-                  onChange={(e) => handleChange(actualIdx, e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(actualIdx, e)}
-                  className="w-11 h-12 text-center text-lg font-bold text-foreground border border-slate-200 rounded-lg bg-slate-50/50 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
-                />
-              );
-            })}
           </div>
+        </div>
 
-          {/* Confirm Verification Submit Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full h-11 sm:h-12 rounded-lg bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] hover:opacity-95 text-white px-4 text-sm font-semibold shadow-md transition focus:ring-4 focus:ring-primary/20 cursor-pointer disabled:opacity-60"
-          >
-            {loading ? "Verifying..." : "Confirm Verification"}
-          </button>
-        </form>
-
-        {/* Didn't receive the code? Tap to resend */}
-        <div className="text-center text-xs text-muted-foreground pt-1">
-          Didn&apos;t receive the code?{" "}
+        {/* Options: Trust device & Backup code */}
+        <div className="flex items-center justify-between text-xs pt-1">
+          <label className="flex items-center gap-2 text-gray-600 select-none cursor-pointer hover:text-gray-900 transition-colors">
+            <input
+              type="checkbox"
+              checked={trustDevice}
+              onChange={(e) => setTrustDevice(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-300 text-[#5542F6] focus:ring-[#5542F6] accent-[#5542F6] cursor-pointer"
+            />
+            <span className="font-medium text-[13px] text-gray-700">Trust this device for 30 days</span>
+          </label>
           <button
             type="button"
-            onClick={() => alert("A new 6-digit code has been sent.")}
-            className="font-semibold text-primary hover:underline cursor-pointer"
+            onClick={() => alert("Enter your backup code in the boxes above.")}
+            className="font-semibold text-[13px] text-[#5542F6] hover:underline cursor-pointer"
           >
-            Tap to resend
+            Use backup code
           </button>
+        </div>
+
+        {/* Primary CTA Submit Button with Flowing Gradient & White Text */}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full h-12 animate-gradient-button flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.99] mt-4 select-none"
+        >
+          <SparkleStar className="w-4 h-4 text-white fill-white shrink-0" />
+          <span className="font-bold text-white text-[14.5px] tracking-tight">
+            {loading ? "Verifying..." : "Verify and continue"}
+          </span>
+        </button>
+      </form>
+
+      {/* Back Link */}
+      <div className="mt-6 flex items-center gap-1.5 text-xs text-gray-500">
+        <ArrowLeft size={14} className="text-gray-400 shrink-0" />
+        <Link
+          href="/login"
+          className="font-bold text-[#5542F6] hover:underline"
+        >
+          Back to sign in
+        </Link>
+      </div>
+
+      {/* Security Info Card */}
+      <div className="mt-6 p-4 rounded-2xl bg-gradient-to-r from-purple-50/70 to-blue-50/50 border border-purple-100/70 flex items-start gap-3.5 shadow-2xs">
+        <div className="w-8 h-8 rounded-full bg-white text-[#5542F6] flex items-center justify-center shrink-0 border border-purple-100 shadow-2xs">
+          <ShieldCheck size={16} />
+        </div>
+        <div>
+          <h4 className="text-[13px] font-bold text-gray-900 leading-tight">
+            Your security matters
+          </h4>
+          <p className="text-[11.5px] text-gray-500 font-normal leading-relaxed mt-0.5">
+            Two-step verification adds an extra layer of protection to keep your account secure.
+          </p>
         </div>
       </div>
     </div>
   );
 }
+

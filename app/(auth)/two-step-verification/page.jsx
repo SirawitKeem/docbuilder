@@ -5,8 +5,9 @@ import TwoStepVerificationForm from "@/components/auth/TwoStepVerificationForm";
 
 export default function TwoStepVerificationPage() {
   return (
-    <AuthLayoutShell showBack backHref="/login">
+    <AuthLayoutShell>
       <TwoStepVerificationForm />
     </AuthLayoutShell>
   );
 }
+

@@ -5,8 +5,9 @@ import SignUpForm from "@/components/auth/SignUpForm";
 
 export default function SignUpPage() {
   return (
-    <AuthLayoutShell showBack backHref="/login">
+    <AuthLayoutShell>
       <SignUpForm />
     </AuthLayoutShell>
   );
 }
+
