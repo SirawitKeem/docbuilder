@@ -53,8 +53,9 @@ export default function DocumentsPage() {
 
     const matchesStatus =
       statusFilter === "all" ||
-      (statusFilter === "draft" && doc.status === "draft") ||
-      (statusFilter === "sent" && doc.status === "sent");
+      (statusFilter === "draft" && (doc.status === "draft" || !doc.status)) ||
+      (statusFilter === "signed" && doc.status === "signed") ||
+      (statusFilter === "completed" && (doc.status === "completed" || doc.status === "issued" || doc.status === "sent"));
 
     const matchesTemplate =
       templateFilter === "all" || doc.templateId === templateFilter;
@@ -62,10 +63,11 @@ export default function DocumentsPage() {
     return matchesSearch && matchesStatus && matchesTemplate;
   });
 
-  // Calculate status counts
+  // Calculate status counts (Document lifecycle states)
   const totalCount = documents.length;
-  const draftCount = documents.filter((d) => d.status === "draft").length;
-  const sentCount = documents.filter((d) => d.status === "sent").length;
+  const draftCount = documents.filter((d) => d.status === "draft" || !d.status).length;
+  const signedCount = documents.filter((d) => d.status === "signed").length;
+  const completedCount = documents.filter((d) => d.status === "completed" || d.status === "issued" || d.status === "sent").length;
 
   // Pagination Calculations
   const totalItems = filteredDocuments.length;
@@ -83,7 +85,7 @@ export default function DocumentsPage() {
             เอกสารของฉัน
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground">
-            เอกสารทั้งหมดที่คุณสร้างและบันทึกไว้ ทั้งฉบับร่างและที่จัดส่งแล้ว
+            คลังจัดการเอกสารและสัญญาธุรกิจทั้งหมดที่คุณสร้างและบันทึกไว้ในระบบ
           </p>
         </div>
 
@@ -100,14 +102,14 @@ export default function DocumentsPage() {
       <div className="bg-surface border border-border rounded-2xl p-4 shadow-xs space-y-3">
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
           
-          {/* Status Segmented Tabs */}
+          {/* Status Segmented Tabs - Clean Document Lifecycle */}
           <div className="flex items-center gap-1.5 p-1 bg-muted/50 rounded-xl border border-border/60 self-start sm:self-auto overflow-x-auto">
             <button
               onClick={() => {
                 setStatusFilter("all");
                 setCurrentPage(1);
               }}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                 statusFilter === "all"
                   ? "bg-surface text-foreground shadow-2xs border border-border"
                   : "text-muted-foreground hover:text-foreground"
@@ -124,32 +126,49 @@ export default function DocumentsPage() {
                 setStatusFilter("draft");
                 setCurrentPage(1);
               }}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
                 statusFilter === "draft"
                   ? "bg-surface text-foreground shadow-2xs border border-border"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <span>ฉบับร่าง</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-[#FFF2CE] text-[#725000] text-[10px] font-bold">
+              <span className="px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">
                 {draftCount}
               </span>
             </button>
 
             <button
               onClick={() => {
-                setStatusFilter("sent");
+                setStatusFilter("signed");
                 setCurrentPage(1);
               }}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
-                statusFilter === "sent"
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                statusFilter === "signed"
                   ? "bg-surface text-foreground shadow-2xs border border-border"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <span>ส่งแล้ว</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-[#DDEEE2] text-[#17682F] text-[10px] font-bold">
-                {sentCount}
+              <span>ลงนามแล้ว</span>
+              <span className="px-1.5 py-0.2 rounded-full bg-purple-100 text-[#5542F6] text-[10px] font-bold">
+                {signedCount}
+              </span>
+            </button>
+
+            <button
+              onClick={() => {
+                setStatusFilter("completed");
+                setCurrentPage(1);
+              }}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                statusFilter === "completed"
+                  ? "bg-surface text-foreground shadow-2xs border border-border"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <span>เสร็จสมบูรณ์</span>
+              <span className="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                {completedCount}
               </span>
             </button>
           </div>

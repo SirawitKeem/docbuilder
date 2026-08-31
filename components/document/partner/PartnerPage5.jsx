@@ -1,8 +1,11 @@
 import Field from "../Field";
 import { partnerTemplate } from "@/lib/templates/partner/schema";
+import { useDocumentFields } from "@/context/DocumentFieldsContext";
+import CorporateSeal from "../CorporateSeal";
 
 export default function PartnerPage5() {
   const { distributorParty } = partnerTemplate;
+  const { values } = useDocumentFields();
 
   return (
     <div className="document-body pt-2 text-[12px] leading-snug">
@@ -51,16 +54,31 @@ export default function PartnerPage5() {
         </p>
       </div>
 
-      {/* ส่วน Signature Block จัดระยะห่าง Gap A และ Gap B ให้เท่ากันเป๊ะที่ 55px */}
-      <div className="mt-14 pb-2 text-[12px]">
+      {/* ส่วน Signature Block */}
+      <div className="mt-8 pb-2 text-[12px]">
         {/* คู่สัญญาหลัก */}
         <div className="grid grid-cols-2 gap-6 mb-0">
-          <div className="flex flex-col items-center text-center">
+          <div className="flex flex-col items-center text-center relative">
             <p className="font-bold w-full text-center" style={{ textAlign: "center" }}>
               {distributorParty.name}
             </p>
-            <div className="space-y-1.5 w-full">
-              <p className="w-full text-center" style={{ textAlign: "center", marginTop: "55px" }}>
+            <div className="h-14 flex items-center justify-center relative w-full mb-0.5">
+              {values.our_signature_image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={values.our_signature_image}
+                  alt="ลายเซ็นฝ่ายเรา"
+                  className="max-h-12 max-w-[160px] object-contain select-none z-10"
+                />
+              ) : null}
+              {values.include_seal !== false && (
+                <div className="absolute -right-1 -top-2">
+                  <CorporateSeal className="w-14 h-14" opacity={0.82} />
+                </div>
+              )}
+            </div>
+            <div className="space-y-1 w-full">
+              <p className="w-full text-center" style={{ textAlign: "center" }}>
                 ลงชื่อ ......................................................
               </p>
               <p className="w-full text-center" style={{ textAlign: "center" }}>( {distributorParty.signatoryName} )</p>
@@ -72,8 +90,18 @@ export default function PartnerPage5() {
             <p className="font-bold w-full text-center" style={{ textAlign: "center" }}>
               <Field id="reseller_name" placeholder="ระบุชื่อบริษัท Reseller" minWidth={22} />
             </p>
-            <div className="space-y-1.5 w-full">
-              <p className="w-full text-center" style={{ textAlign: "center", marginTop: "55px" }}>
+            <div className="h-14 flex items-center justify-center relative w-full mb-0.5">
+              {values.counterparty_signature_image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={values.counterparty_signature_image}
+                  alt="ลายเซ็นคู่สัญญา"
+                  className="max-h-12 max-w-[160px] object-contain select-none"
+                />
+              ) : null}
+            </div>
+            <div className="space-y-1 w-full">
+              <p className="w-full text-center" style={{ textAlign: "center" }}>
                 ลงชื่อ ......................................................
               </p>
               <p className="w-full text-center" style={{ textAlign: "center" }}>
@@ -87,8 +115,8 @@ export default function PartnerPage5() {
           </div>
         </div>
 
-        {/* พยาน — เว้นระยะห่างจากส่วนบนเท่ากันเป๊ะที่ 55px */}
-        <div className="grid grid-cols-2 gap-6" style={{ marginTop: "55px" }}>
+        {/* พยาน */}
+        <div className="grid grid-cols-2 gap-6" style={{ marginTop: "35px" }}>
           <div className="flex flex-col items-center text-center space-y-1.5 w-full">
             <p className="w-full text-center" style={{ textAlign: "center" }}>ลงชื่อ ...................................................... พยาน</p>
             <p className="w-full text-center" style={{ textAlign: "center" }}>( ...................................................... )</p>

@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Undo2, Redo2, Eye, Download, Save, MoreHorizontal, Loader2, Check, CopyPlus, SlidersHorizontal } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowLeft, Undo2, Redo2, Eye, Download, Save, MoreHorizontal, Loader2, Check, CopyPlus, SlidersHorizontal, Pencil } from "lucide-react";
 
 export default function EditorToolbar({
   template,
+  docName,
+  onDocNameChange,
   status,
   onPreview,
   onExport,
@@ -17,14 +20,53 @@ export default function EditorToolbar({
   isFormOpen,
   onToggleForm,
 }) {
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState(docName || template?.fullName || "เอกสาร");
+
+  useEffect(() => {
+    if (docName) setNameInput(docName);
+  }, [docName]);
+
+  const handleFinishEdit = () => {
+    setIsEditingName(false);
+    if (nameInput.trim() && onDocNameChange) {
+      onDocNameChange(nameInput.trim());
+    }
+  };
+
   return (
-    <div className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 shrink-0">
+    <div className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 shrink-0 select-none">
       <div className="flex items-center gap-4 min-w-0">
         <Link href="/" className="p-2 -ml-2 rounded-lg hover:bg-gray-100 text-gray-700 shrink-0">
           <ArrowLeft size={20} />
         </Link>
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-gray-900 truncate">{template.fullName}</p>
+          <div className="flex items-center gap-1.5 group">
+            {isEditingName ? (
+              <input
+                type="text"
+                value={nameInput}
+                onChange={(e) => setNameInput(e.target.value)}
+                onBlur={handleFinishEdit}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleFinishEdit();
+                }}
+                className="h-7 px-2 text-sm font-semibold text-gray-900 border border-[#5542F6] rounded-md outline-none focus:ring-1 focus:ring-[#5542F6]"
+                autoFocus
+              />
+            ) : (
+              <div
+                onClick={() => setIsEditingName(true)}
+                className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-100/70 px-1 py-0.5 rounded-md transition-colors"
+                title="คลิกเพื่อแก้ไขชื่อเอกสาร"
+              >
+                <p className="text-sm font-bold text-gray-900 truncate max-w-[280px]">
+                  {docName || template.fullName}
+                </p>
+                <Pencil size={12} className="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+            )}
+          </div>
           <div className="flex items-center gap-3">
             <StatusBadge status={status} />
             {savedAt && (

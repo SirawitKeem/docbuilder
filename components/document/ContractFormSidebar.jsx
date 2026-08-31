@@ -1,6 +1,6 @@
-﻿"use client";
+"use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Calendar,
   Building2,
@@ -8,13 +8,20 @@ import {
   Sparkles,
   CheckCircle2,
   FileSignature,
+  PenTool,
+  Trash2,
 } from "lucide-react";
 import { useDocumentFields } from "@/context/DocumentFieldsContext";
+import SignaturePadModal from "./SignaturePadModal";
 
 export default function ContractFormSidebar({ template, isOpen }) {
   const { values, setField } = useDocumentFields();
+  const [sigModalTarget, setSigModalTarget] = useState(null); // 'our' | 'counterparty' | null
 
   if (!isOpen) return null;
+
+  const isDistributorOrPartner = template?.id === "distributor" || template?.id === "partner";
+  const isPartner = template?.id === "partner";
 
   const handleFillTodayDate = () => {
     const now = new Date();
@@ -25,14 +32,17 @@ export default function ContractFormSidebar({ template, isOpen }) {
     setField("contract_date_day", String(now.getDate()));
     setField("contract_date_month", thaiMonths[now.getMonth()]);
     setField("contract_date_year", String(now.getFullYear() + 543));
-    if (!values.contract_location) {
+    if (!values.contract_location && template?.id !== "partner") {
       setField("contract_location", "กรุงเทพมหานคร");
     }
   };
 
   const fields = template?.fields || [];
   const requiredFields = fields.filter((f) => f.required);
-  const filledRequiredCount = requiredFields.filter((f) => values[f.id]?.trim()).length;
+  const filledRequiredCount = requiredFields.filter((f) => {
+    const val = values[f.id] || (f.sharedKey ? values[f.sharedKey] : "");
+    return val && String(val).trim().length > 0;
+  }).length;
   const isComplete = requiredFields.length > 0 && filledRequiredCount === requiredFields.length;
 
   return (
@@ -46,7 +56,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
             </div>
             <div>
               <h2 className="text-sm font-bold text-gray-900 leading-none">กรอกข้อมูลสัญญา</h2>
-              <span className="text-[11px] text-gray-500">{template?.name || "สัญญา NDA"}</span>
+              <span className="text-[11px] text-gray-500">{template?.name || "หนังสือสัญญา"}</span>
             </div>
           </div>
 
@@ -92,16 +102,18 @@ export default function ContractFormSidebar({ template, isOpen }) {
             <span>1. วันที่และสถานที่ทำสัญญา</span>
           </div>
 
-          <div className="space-y-1">
-            <label className="text-[11px] font-semibold text-gray-600">สถานที่ทำสัญญา</label>
-            <input
-              type="text"
-              value={values.contract_location || ""}
-              onChange={(e) => setField("contract_location", e.target.value)}
-              placeholder="เช่น กรุงเทพมหานคร"
-              className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all"
-            />
-          </div>
+          {template?.id !== "partner" && (
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold text-gray-600">สถานที่ทำสัญญา</label>
+              <input
+                type="text"
+                value={values.contract_location || ""}
+                onChange={(e) => setField("contract_location", e.target.value)}
+                placeholder="เช่น กรุงเทพมหานคร"
+                className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all"
+              />
+            </div>
+          )}
 
           <div className="grid grid-cols-3 gap-2">
             <div className="space-y-1">
@@ -137,11 +149,13 @@ export default function ContractFormSidebar({ template, isOpen }) {
           </div>
         </div>
 
-        {/* Section 2: ข้อมูลคู่สัญญา (ผู้รับข้อมูล) */}
+        {/* Section 2: ข้อมูลคู่สัญญา (Reseller หรือ ผู้รับข้อมูล) */}
         <div className="space-y-3 p-3.5 rounded-xl border border-gray-100 bg-[#FAFAFC]">
           <div className="flex items-center gap-2 text-xs font-bold text-gray-800">
             <Building2 size={15} className="text-[#5542F6]" />
-            <span>2. ข้อมูลคู่สัญญา (ผู้รับข้อมูล)</span>
+            <span>
+              2. {isDistributorOrPartner ? "ข้อมูลตัวแทนจำหน่าย (Reseller)" : "ข้อมูลคู่สัญญา (ผู้รับข้อมูล)"}
+            </span>
           </div>
 
           <div className="space-y-1">
@@ -150,15 +164,43 @@ export default function ContractFormSidebar({ template, isOpen }) {
             </label>
             <input
               type="text"
-              value={values.receiving_party_name || values.counterparty_name || ""}
+              value={
+                isDistributorOrPartner
+                  ? values.reseller_name || values.counterparty_name || ""
+                  : values.receiving_party_name || values.counterparty_name || ""
+              }
               onChange={(e) => {
-                setField("receiving_party_name", e.target.value);
-                setField("counterparty_name", e.target.value);
+                const val = e.target.value;
+                if (isDistributorOrPartner) {
+                  setField("reseller_name", val);
+                } else {
+                  setField("receiving_party_name", val);
+                }
+                setField("counterparty_name", val);
               }}
-              placeholder="บริษัท คู่สัญญา จำกัด"
+              placeholder={isDistributorOrPartner ? "บริษัท ตัวแทนจำหน่าย จำกัด" : "บริษัท คู่สัญญา จำกัด"}
               className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all"
             />
           </div>
+
+          {/* เลขทะเบียนนิติบุคคล (สำหรับสัญญา Partner หรือ Distributor) */}
+          {(isPartner || isDistributorOrPartner) && (
+            <div className="space-y-1">
+              <label className="text-[11px] font-semibold text-gray-600">
+                เลขทะเบียนนิติบุคคล (13 หลัก) {isPartner && <span className="text-red-500">*</span>}
+              </label>
+              <input
+                type="text"
+                value={values.reseller_registration_number || values.counterparty_registration_number || ""}
+                onChange={(e) => {
+                  setField("reseller_registration_number", e.target.value);
+                  setField("counterparty_registration_number", e.target.value);
+                }}
+                placeholder="เช่น 0105558000000"
+                className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all"
+              />
+            </div>
+          )}
 
           <div className="space-y-1">
             <label className="text-[11px] font-semibold text-gray-600">
@@ -166,10 +208,19 @@ export default function ContractFormSidebar({ template, isOpen }) {
             </label>
             <textarea
               rows={3}
-              value={values.receiving_party_address || values.counterparty_address || ""}
+              value={
+                isDistributorOrPartner
+                  ? values.reseller_address || values.counterparty_address || ""
+                  : values.receiving_party_address || values.counterparty_address || ""
+              }
               onChange={(e) => {
-                setField("receiving_party_address", e.target.value);
-                setField("counterparty_address", e.target.value);
+                const val = e.target.value;
+                if (isDistributorOrPartner) {
+                  setField("reseller_address", val);
+                } else {
+                  setField("receiving_party_address", val);
+                }
+                setField("counterparty_address", val);
               }}
               placeholder="เลขที่ ... ถนน ... แขวง/ตำบล ... เขต/อำเภอ ... จังหวัด ... รหัสไปรษณีย์ ..."
               className="w-full p-2.5 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all resize-none leading-relaxed"
@@ -177,11 +228,11 @@ export default function ContractFormSidebar({ template, isOpen }) {
           </div>
         </div>
 
-        {/* Section 3: ข้อมูลผู้ลงนาม */}
+        {/* Section 3: ข้อมูลผู้ลงนาม & ลายเซ็นดิจิทัลคู่สัญญา */}
         <div className="space-y-3 p-3.5 rounded-xl border border-gray-100 bg-[#FAFAFC]">
           <div className="flex items-center gap-2 text-xs font-bold text-gray-800">
             <UserCheck size={15} className="text-[#5542F6]" />
-            <span>3. ผู้ลงนาม (คู่สัญญา)</span>
+            <span>3. ผู้ลงนาม ({isDistributorOrPartner ? "Reseller" : "คู่สัญญา"})</span>
           </div>
 
           <div className="space-y-1">
@@ -190,10 +241,19 @@ export default function ContractFormSidebar({ template, isOpen }) {
             </label>
             <input
               type="text"
-              value={values.receiving_signatory_name || values.counterparty_signatory_name || ""}
+              value={
+                isDistributorOrPartner
+                  ? values.reseller_signatory_name || values.counterparty_signatory_name || ""
+                  : values.receiving_signatory_name || values.counterparty_signatory_name || ""
+              }
               onChange={(e) => {
-                setField("receiving_signatory_name", e.target.value);
-                setField("counterparty_signatory_name", e.target.value);
+                const val = e.target.value;
+                if (isDistributorOrPartner) {
+                  setField("reseller_signatory_name", val);
+                } else {
+                  setField("receiving_signatory_name", val);
+                }
+                setField("counterparty_signatory_name", val);
               }}
               placeholder="เช่น นายสมชาย ตัวอย่าง"
               className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all"
@@ -206,30 +266,155 @@ export default function ContractFormSidebar({ template, isOpen }) {
             </label>
             <input
               type="text"
-              value={values.receiving_signatory_position || values.counterparty_signatory_position || ""}
+              value={
+                isDistributorOrPartner
+                  ? values.reseller_signatory_position || values.counterparty_signatory_position || ""
+                  : values.receiving_signatory_position || values.counterparty_signatory_position || ""
+              }
               onChange={(e) => {
-                setField("receiving_signatory_position", e.target.value);
-                setField("counterparty_signatory_position", e.target.value);
+                const val = e.target.value;
+                if (isDistributorOrPartner) {
+                  setField("reseller_signatory_position", val);
+                } else {
+                  setField("receiving_signatory_position", val);
+                }
+                setField("counterparty_signatory_position", val);
               }}
               placeholder="เช่น กรรมการผู้จัดการ"
               className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all"
             />
           </div>
+
+          {/* ลายเซ็นคู่สัญญา */}
+          <div className="pt-2 border-t border-gray-200/60 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-[11px] font-semibold text-gray-600">ลายมือชื่อดิจิทัล (คู่สัญญา)</label>
+              <button
+                type="button"
+                onClick={() => setSigModalTarget("counterparty")}
+                className="inline-flex items-center gap-1 text-[11px] font-bold text-[#5542F6] hover:underline cursor-pointer"
+              >
+                <PenTool size={11} />
+                <span>{values.counterparty_signature_image ? "เปลี่ยนลายเซ็น" : "วาด/แนบลายเซ็น"}</span>
+              </button>
+            </div>
+
+            {values.counterparty_signature_image ? (
+              <div className="relative border border-purple-200 bg-purple-50/40 rounded-xl p-2 flex items-center justify-between">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={values.counterparty_signature_image}
+                  alt="ลายเซ็นคู่สัญญา"
+                  className="max-h-10 max-w-[140px] object-contain"
+                />
+                <button
+                  type="button"
+                  onClick={() => setField("counterparty_signature_image", null)}
+                  className="p-1 rounded-md text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                  title="ลบลายเซ็น"
+                >
+                  <Trash2 size={13} />
+                </button>
+              </div>
+            ) : (
+              <p className="text-[10px] text-gray-400 italic">ยังไม่ได้แนบลายเซ็น (แสดงจุดไข่ปลาบนกระดาษ A4)</p>
+            )}
+          </div>
         </div>
 
-        {/* Section 4: ข้อมูลฝ่ายเรา (ผู้เปิดเผยข้อมูล - เครสท์ เซนโด) */}
-        <div className="p-3 rounded-xl border border-purple-100 bg-[#FBF9FF] text-xs text-gray-600 space-y-1.5">
-          <p className="font-bold text-[#5542F6] flex items-center gap-1.5">
-            <CheckCircle2 size={14} /> ฝ่ายผู้เปิดเผยข้อมูล (ฝ่ายเรา):
-          </p>
+        {/* Section 4: ข้อมูลฝ่ายเรา (เครสท์ เซนโด) & ลายเซ็น */}
+        <div className="p-3.5 rounded-xl border border-purple-100 bg-[#FBF9FF] text-xs text-gray-600 space-y-2.5">
+          <div className="flex items-center justify-between">
+            <p className="font-bold text-[#5542F6] flex items-center gap-1.5">
+              <CheckCircle2 size={14} /> {isDistributorOrPartner ? "ฝ่ายผู้จัดจำหน่ายหลัก (ฝ่ายเรา):" : "ฝ่ายผู้เปิดเผยข้อมูล (ฝ่ายเรา):"}
+            </p>
+            <button
+              type="button"
+              onClick={() => setSigModalTarget("our")}
+              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#5542F6] hover:underline cursor-pointer"
+            >
+              <PenTool size={11} />
+              <span>{values.our_signature_image ? "เปลี่ยนลายเซ็น" : "วาด/แนบลายเซ็น"}</span>
+            </button>
+          </div>
+
           <p className="text-[11px] leading-relaxed text-gray-600">
             <strong>บริษัท เครสท์ เซนโด จำกัด</strong>
             <br />
             ผู้ลงนาม: นายศรายุทธ โกสิยารักษ์ (CEO/Founder)
           </p>
+
+          {values.our_signature_image ? (
+            <div className="relative border border-purple-200 bg-white rounded-xl p-2 flex items-center justify-between">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={values.our_signature_image}
+                alt="ลายเซ็นฝ่ายเรา"
+                className="max-h-10 max-w-[140px] object-contain"
+              />
+              <button
+                type="button"
+                onClick={() => setField("our_signature_image", null)}
+                className="p-1 rounded-md text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                title="ลบลายเซ็น"
+              >
+                <Trash2 size={13} />
+              </button>
+            </div>
+          ) : (
+            <p className="text-[10px] text-gray-400 italic">ยังไม่ได้แนบลายเซ็นฝ่ายเรา</p>
+          )}
+
+          {/* ตราประทับบริษัทสีแดง Toggle */}
+          <label className="flex items-center justify-between pt-2 border-t border-purple-100/80 text-gray-700 cursor-pointer">
+            <span className="text-[11px] font-semibold text-gray-700">ประทับตราสำคัญบริษัท (Red Seal)</span>
+            <input
+              type="checkbox"
+              checked={values.include_seal !== false}
+              onChange={(e) => setField("include_seal", e.target.checked)}
+              className="w-4 h-4 rounded text-[#5542F6] accent-[#5542F6] cursor-pointer"
+            />
+          </label>
+        </div>
+
+        {/* Section 5: ความปลอดภัย & ลายน้ำ PDF */}
+        <div className="space-y-2 p-3.5 rounded-xl border border-gray-100 bg-[#FAFAFC]">
+          <div className="flex items-center justify-between text-xs font-bold text-gray-800">
+            <div className="flex items-center gap-2">
+              <span className="text-[#5542F6]">🛡️</span>
+              <span>5. ลายน้ำบน PDF (Watermark)</span>
+            </div>
+          </div>
+          <select
+            value={values.watermark || "none"}
+            onChange={(e) => setField("watermark", e.target.value)}
+            className="w-full h-9 px-2.5 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all cursor-pointer font-medium"
+          >
+            <option value="none">⚪ ไม่มีลายน้ำ (ต้นฉบับปกติ)</option>
+            <option value="DRAFT">🟡 ฉบับร่าง (DRAFT)</option>
+            <option value="COPY">🔵 สำเนาถูกต้อง (COPY)</option>
+            <option value="CONFIDENTIAL">🔴 ลับเฉพาะ (CONFIDENTIAL)</option>
+          </select>
         </div>
 
       </div>
+
+      {/* Signature Pad Modal */}
+      {sigModalTarget && (
+        <SignaturePadModal
+          title={sigModalTarget === "our" ? "ลายมือชื่อฝ่ายเรา (Crest Zendo)" : "ลายมือชื่อคู่สัญญา (Counterparty)"}
+          partyName={sigModalTarget === "our" ? "นายศรายุทธ โกสิยารักษ์ (CEO/Founder)" : (values.reseller_signatory_name || values.receiving_signatory_name || "ผู้มีอำนาจลงนาม")}
+          initialImage={sigModalTarget === "our" ? values.our_signature_image : values.counterparty_signature_image}
+          onSave={(dataUrl) => {
+            if (sigModalTarget === "our") {
+              setField("our_signature_image", dataUrl);
+            } else {
+              setField("counterparty_signature_image", dataUrl);
+            }
+          }}
+          onClose={() => setSigModalTarget(null)}
+        />
+      )}
     </div>
   );
 }

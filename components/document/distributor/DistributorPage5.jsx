@@ -1,6 +1,7 @@
 import Field from "../Field";
 import { distributorTemplate } from "@/lib/templates/distributor/schema";
 import { useDocumentFields } from "@/context/DocumentFieldsContext";
+import CorporateSeal from "../CorporateSeal";
 
 export default function DistributorPage5() {
   const { distributorParty } = distributorTemplate;
@@ -20,22 +21,47 @@ export default function DistributorPage5() {
       {/* Signature Block - Symmetrical 2 Columns */}
       <div className="grid grid-cols-2 gap-10" style={{ marginBottom: "50px" }}>
         {/* Main Distributor (Crest Zendo) */}
-        <div className="text-center">
+        <div className="text-center flex flex-col items-center relative">
           <p className="font-bold mb-1">ผู้จัดจำหน่ายหลัก (Distributor)</p>
-          <p className="font-bold" style={{ marginBottom: "65px" }}>
+          <p className="font-bold mb-1">
             {values.distributor_company_name || distributorParty.name}
           </p>
+          <div className="h-16 flex items-center justify-center relative w-full mb-0.5">
+            {values.our_signature_image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={values.our_signature_image}
+                alt="ลายเซ็นฝ่ายเรา"
+                className="max-h-14 max-w-[180px] object-contain select-none z-10"
+              />
+            ) : null}
+            {values.include_seal !== false && (
+              <div className="absolute -right-2 -top-2">
+                <CorporateSeal className="w-16 h-16" opacity={0.82} />
+              </div>
+            )}
+          </div>
           <p className="mb-3">ลงชื่อ ......................................................</p>
           <p className="mb-3">( {disclosingName} )</p>
           <p>ตำแหน่ง: {disclosingPos}</p>
         </div>
 
         {/* Reseller */}
-        <div className="text-center">
+        <div className="text-center flex flex-col items-center">
           <p className="font-bold mb-1">ตัวแทนจำหน่ายต่อ (Reseller)</p>
-          <p className="font-bold" style={{ marginBottom: "65px" }}>
+          <p className="font-bold mb-1">
             <Field id="reseller_name" placeholder="ระบุชื่อบริษัท Reseller" minWidth={20} />
           </p>
+          <div className="h-16 flex items-center justify-center relative w-full mb-0.5">
+            {values.counterparty_signature_image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={values.counterparty_signature_image}
+                alt="ลายเซ็นคู่สัญญา"
+                className="max-h-14 max-w-[180px] object-contain select-none"
+              />
+            ) : null}
+          </div>
           <p className="mb-3">ลงชื่อ ......................................................</p>
           <p className="mb-3">
             (&nbsp;<Field id="reseller_signatory_name" placeholder="ชื่อ-นามสกุล" minWidth={16} />&nbsp;)

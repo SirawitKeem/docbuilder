@@ -29,6 +29,12 @@ function decodeValues(encoded) {
   }
 }
 
+const watermarkLabels = {
+  DRAFT: "ฉบับร่าง (DRAFT)",
+  COPY: "สำเนาถูกต้อง (COPY)",
+  CONFIDENTIAL: "ลับเฉพาะ (CONFIDENTIAL)",
+};
+
 function PrintContent() {
   const { templateId } = useParams();
   const searchParams = useSearchParams();
@@ -44,6 +50,7 @@ function PrintContent() {
   }, []);
 
   const values = injectedData || decodeValues(searchParams.get("data")) || {};
+  const activeWatermark = values.watermark || searchParams.get("watermark");
   const entry = templateRegistry[templateId];
 
   useEffect(() => {
@@ -65,7 +72,7 @@ function PrintContent() {
     return (
       <div
         id="print-root"
-        className="border-0 p-0 m-0 w-[794px] bg-white"
+        className="border-0 p-0 m-0 w-[794px] bg-white relative"
         data-ready={isReady ? "true" : "false"}
       >
         <style>{`
@@ -112,6 +119,7 @@ function PrintContent() {
               page-break-inside: avoid !important;
               break-inside: avoid !important;
               box-sizing: border-box !important;
+              position: relative !important;
             }
             /* Page break BEFORE page 2, 3, ... only — never AFTER the last page */
             .quotation-document-wrapper > div + div {
@@ -137,9 +145,25 @@ function PrintContent() {
         {(pages || []).map((PageContent, i) => (
           <div
             key={i}
-            className="print-page font-noto-looped"
+            className="print-page font-noto-looped relative"
             data-ready={isReady ? "true" : "false"}
           >
+            {activeWatermark && watermarkLabels[activeWatermark] && (
+              <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-30 select-none overflow-hidden">
+                <div
+                  className="font-black uppercase border-4 px-8 py-4 rounded-3xl"
+                  style={{
+                    transform: "rotate(-35deg)",
+                    fontSize: "52px",
+                    letterSpacing: "0.15em",
+                    color: "rgba(100, 116, 139, 0.12)",
+                    borderColor: "rgba(100, 116, 139, 0.14)",
+                  }}
+                >
+                  {watermarkLabels[activeWatermark]}
+                </div>
+              </div>
+            )}
             <DocumentHeader logo={schema.logo} />
             <div className="print-page-body">
               <PageContent />

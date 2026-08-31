@@ -69,7 +69,7 @@ async function sendGraphMail({ to, subject, message, attachmentBase64, attachmen
 
 export async function POST(request) {
   try {
-    const { to, subject, message, attachmentBase64, attachmentName, templateId, templateName, values } =
+    const { documentId, to, subject, message, attachmentBase64, attachmentName, templateId, templateName, values } =
       await request.json();
 
     if (!to || !subject) {
@@ -79,19 +79,43 @@ export async function POST(request) {
       );
     }
 
-    const docPayload = {
-      name: attachmentName || "NDA.pdf",
+    const historyPayload = {
+      documentId: documentId || null,
+      name: attachmentName || "Document.pdf",
       templateId: templateId || "nda",
-      templateName: templateName || "NDA",
+      templateName: templateName || "เอกสาร",
       sentTo: to,
+      subject: subject || "เอกสาร",
       values: values || {},
+      status: "delivered",
+      sentAt: new Date().toISOString(),
+    };
+
+    const recordTransmission = async () => {
+      // 1. Record Audit Log in Sent History
+      await sentHistoryRepo.create(historyPayload);
+
+      // 2. If a documentId is passed, update lastSentAt on the document without creating a duplicate
+      if (documentId) {
+        try {
+          const existing = await documentsRepo.getById(documentId);
+          if (existing) {
+            await documentsRepo.update(documentId, {
+              ...existing,
+              sentTo: to,
+              lastSentAt: new Date().toISOString(),
+            });
+          }
+        } catch (e) {
+          console.warn("Update document lastSentAt error:", e);
+        }
+      }
     };
 
     // If Microsoft Graph API credentials are set, use Microsoft Graph
     if (process.env.CLIENT_ID && process.env.CLIENT_SECRET && process.env.TENANT_ID) {
       await sendGraphMail({ to, subject, message, attachmentBase64, attachmentName });
-      await documentsRepo.create(docPayload);
-      await sentHistoryRepo.create(docPayload);
+      await recordTransmission();
       return Response.json({ success: true, provider: "Microsoft Graph" });
     }
 
@@ -123,8 +147,7 @@ export async function POST(request) {
         attachments,
       });
 
-      await documentsRepo.create(docPayload);
-      await sentHistoryRepo.create(docPayload);
+      await recordTransmission();
 
       return Response.json({ success: true, provider: "Nodemailer (Gmail)" });
     }

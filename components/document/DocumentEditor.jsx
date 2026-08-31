@@ -31,7 +31,7 @@ async function blobToBase64(blob) {
   });
 }
 
-function EditorContent({ templateId, initialDocId }) {
+function EditorContent({ templateId, initialDocId, initialDocName }) {
   const router = useRouter();
   const { schema, pages } = templateRegistry[templateId];
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,13 +41,14 @@ function EditorContent({ templateId, initialDocId }) {
   const [generating, setGenerating] = useState(false);
   const [sentTo, setSentTo] = useState("");
   const [activeDocId, setActiveDocId] = useState(initialDocId || null);
+  const [docName, setDocName] = useState(initialDocName || fileNameFor(schema.name.replace(/\s+/g, "")));
   const [isSaving, setIsSaving] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(true);
   const { readOnly, setReadOnly, values } = useDocumentFields();
 
-  const fileName = fileNameFor(schema.name.replace(/\s+/g, ""));
+  const fileName = docName.endsWith(".pdf") ? docName : `${docName}.pdf`;
   const status = getCompletionStatus(values, templateId);
 
   // ปุ่ม บันทึกเอกสาร (Save Document) - บันทึกลง "เอกสารของฉัน" เฉพาะเมื่อคลิกปุ่มนี้เท่านั้น
@@ -59,7 +60,7 @@ function EditorContent({ templateId, initialDocId }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...(activeDocId ? { id: activeDocId } : {}),
-          name: fileName,
+          name: docName,
           templateId,
           templateName: schema.fullName,
           values,
@@ -191,6 +192,8 @@ function EditorContent({ templateId, initialDocId }) {
 
       <EditorToolbar
         template={schema}
+        docName={docName}
+        onDocNameChange={setDocName}
         status={status}
         onPreview={() => setReadOnly(true)}
         onExport={handleDownload}
@@ -239,6 +242,7 @@ function EditorContent({ templateId, initialDocId }) {
 export default function DocumentEditor({ templateId, profileId, docId }) {
   const [initialValues, setInitialValues] = useState(null); // null = กำลังโหลด
   const [loadedDocId, setLoadedDocId] = useState(docId || null);
+  const [loadedDocName, setLoadedDocName] = useState(null);
 
   useEffect(() => {
     const { schema } = templateRegistry[templateId];
@@ -252,6 +256,7 @@ export default function DocumentEditor({ templateId, profileId, docId }) {
             const doc = await res.json();
             setInitialValues(doc.values || {});
             setLoadedDocId(doc.id);
+            setLoadedDocName(doc.name || null);
             return;
           }
         } catch (err) {
@@ -291,7 +296,7 @@ export default function DocumentEditor({ templateId, profileId, docId }) {
 
   return (
     <DocumentFieldsProvider initialValues={initialValues}>
-      <EditorContent templateId={templateId} initialDocId={loadedDocId} />
+      <EditorContent templateId={templateId} initialDocId={loadedDocId} initialDocName={loadedDocName} />
     </DocumentFieldsProvider>
   );
 }

@@ -24,6 +24,7 @@ import DocumentHeader from "./DocumentHeader";
 import DocumentFooter from "./DocumentFooter";
 
 export default function EmailScreen({
+  documentId,
   defaultSubject,
   fileName,
   attachmentBase64,
@@ -65,6 +66,7 @@ export default function EmailScreen({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          documentId,
           to,
           subject,
           message,

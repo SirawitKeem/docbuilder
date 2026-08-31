@@ -237,6 +237,10 @@ function QuotationEditorContent({ docId }) {
         template={{
           fullName: `ใบเสนอราคา ${quotation.quotationNo || ""}${quotation.revision ? ` (Rev. ${quotation.revision})` : ""}`,
         }}
+        docName={quotation.name || `ใบเสนอราคา ${quotation.quotationNo || ""}`}
+        onDocNameChange={(newName) => {
+          setQuotation((prev) => ({ ...prev, name: newName }));
+        }}
         status={{
           isComplete: validation.isValid,
           filled: validation.isValid ? 1 : 0,

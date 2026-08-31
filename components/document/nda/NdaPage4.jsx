@@ -1,6 +1,7 @@
 import Field from "../Field";
 import { ndaTemplate } from "@/lib/templates/nda/schema";
 import { useDocumentFields } from "@/context/DocumentFieldsContext";
+import CorporateSeal from "../CorporateSeal";
 
 export default function NdaPage4() {
   const { disclosingParty } = ndaTemplate;
@@ -50,22 +51,47 @@ export default function NdaPage4() {
       {/* Signature Block - Symmetrical 2 Columns */}
       <div className="grid grid-cols-2 gap-10" style={{ marginBottom: "50px" }}>
         {/* ฝั่งซ้าย: ผู้เปิดเผยข้อมูล (Disclosing Party) */}
-        <div className="text-center">
+        <div className="text-center flex flex-col items-center relative">
           <p className="font-bold mb-1">ผู้เปิดเผยข้อมูล (Disclosing Party)</p>
-          <p className="font-bold" style={{ marginBottom: "65px" }}>
+          <p className="font-bold mb-1">
             {values.disclosing_party_name || disclosingParty.name}
           </p>
+          <div className="h-16 flex items-center justify-center relative w-full mb-0.5">
+            {values.our_signature_image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={values.our_signature_image}
+                alt="ลายเซ็นฝ่ายเรา"
+                className="max-h-14 max-w-[180px] object-contain select-none z-10"
+              />
+            ) : null}
+            {values.include_seal !== false && (
+              <div className="absolute -right-2 -top-2">
+                <CorporateSeal className="w-16 h-16" opacity={0.82} />
+              </div>
+            )}
+          </div>
           <p className="mb-3">ลงชื่อ ......................................................</p>
           <p className="mb-3">( {disclosingName} )</p>
           <p>ตำแหน่ง: {disclosingPos}</p>
         </div>
 
         {/* ฝั่งขวา: ผู้รับข้อมูล (Receiving Party) */}
-        <div className="text-center">
+        <div className="text-center flex flex-col items-center">
           <p className="font-bold mb-1">ผู้รับข้อมูล (Receiving Party)</p>
-          <p className="font-bold" style={{ marginBottom: "65px" }}>
+          <p className="font-bold mb-1">
             <Field id="receiving_party_name" placeholder="ระบุชื่อบริษัท ผู้รับข้อมูล" minWidth={20} />
           </p>
+          <div className="h-16 flex items-center justify-center relative w-full mb-0.5">
+            {values.counterparty_signature_image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={values.counterparty_signature_image}
+                alt="ลายเซ็นคู่สัญญา"
+                className="max-h-14 max-w-[180px] object-contain select-none"
+              />
+            ) : null}
+          </div>
           <p className="mb-3">ลงชื่อ ......................................................</p>
           <p className="mb-3">
             (&nbsp;<Field id="receiving_signatory_name" placeholder="ชื่อ-นามสกุล" minWidth={16} />&nbsp;)

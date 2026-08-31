@@ -140,11 +140,19 @@ docbuilder/
 ## 5. 🚀 แผนการพัฒนาปัจจุบันและขั้นตอนถัดไป (Current Roadmap)
 
 * ✅ **Auth Module**: เสร็จสมบูรณ์ 100% (Login, Sign Up, Reset Password, 2FA, Three.js 3D Conic Particles)
-* ✅ **Sidebar Modernization**: เสร็จสมบูรณ์ (Header Brand, SparkleStar `✦`, Active States, Gradient Border `NEW` Pill Badge)
-* 🎯 **เป้าหมายถัดไป (Home Dashboard Transformation - `http://localhost:3000/`)**:
-  1. **Hero Banner โฉมใหม่**: คำทักทาย Smart Greeting ตามช่วงเวลาจริง + ปุ่ม `+ สร้างเอกสารใหม่` แบบ Gradient สีวิ่งประกายดาว `✦`
-  2. **Dynamic Template Grid**: การ์ดเทมเพลตดีไซน์โมเดิร์น ขอบมน `rounded-2xl` พร้อม Hover Lift & Glow Effect
-  3. **Recent Documents Table**: ตารางเอกสารล่าสุดโปร่งสบายตา พร้อมสถานะเอกสารที่ชัดเจนและปุ่มด่วนดูตัวอย่าง PDF / ส่งอีเมล
+* ✅ **Sidebar Modernization**: เสร็จสมบูรณ์ 100% (Header Brand, SparkleStar `✦`, Active States, Gradient Border `NEW` Pill Badge)
+* ✅ **All Contract Workspaces (`/create/nda`, `/create/distributor`, `/create/partner`)**: เสร็จสมบูรณ์ 100% (2-Column Split Workspace, Form Sidebar ปรับตามประเภทสัญญา, วันที่อัตโนมัติ, Multi-Page PDF Export 4-5 หน้า)
+* ✅ **Digital Signature Pad & E-Sign**: เสร็จสมบูรณ์ 100% (วาดลายเซ็นสดด้วย Canvas หรืออัปโหลดรูป PNG, ประทับลงในหน้า A4 และไฟล์ PDF ทุกสัญญา)
+* ✅ **1-Click Duplicate & Status Workflow**: เสร็จสมบูรณ์ 100% (ปุ่มคัดลอกสร้างซ้ำใน 1 คลิก พร้อมปุ่มลัดเปิดแก้ไขทันที, ป๊อปอัปเปลี่ยนสถานะได้โดยตรง 4 สถานะหลัก)
+* ✅ **Corporate Red Seal & PDF Watermark**: เสร็จสมบูรณ์ 100% (ตราประทับสีแดงบริษัท เครสท์ เซนโด จำกัด, ลายน้ำ PDF 4 รูปแบบ: DRAFT, COPY, CONFIDENTIAL, None)
+* ✅ **Quotation ➔ Receipt in 1-Click**: เสร็จสมบูรณ์ 100% (ปุ่มแปลงใบเสนอราคาเป็นใบเสร็จรับเงิน/ใบกำกับภาษี รันเลข REC อัตโนมัติ)
+* ✅ **Systematic Architecture Realignment**: เสร็จสมบูรณ์ 100% (แยกคลังเอกสาร `/documents` กับประวัติการจัดส่ง `/history` อย่างถูกต้องตามหลักวิศวกรรมซอฟต์แวร์ ไม่สร้างเอกสารซ้ำซ้อนเมื่อส่งอีเมล)
+* ✅ **Templates Catalog Hub (`/templates`)**: เสร็จสมบูรณ์ 100% (Search Bar, Category Tabs, Structure Preview Modal, Modern Cards)
+* ✅ **Home Dashboard Clean Focus (`/`)**: เสร็จสมบูรณ์ 100% (Hero Banner ทักทายตามเวลาจริง + 3D Document Stack, Dynamic Template Cards, Recent Documents Hub มุ่งเน้นการจัดการเอกสาร 100%)
+* ✅ **Document Management & Renaming (`/documents`)**: เสร็จสมบูรณ์ 100% (ระบบเปลี่ยนชื่อเอกสารแบบ Pop-up และ Inline Toolbar, กรองสถานะ, ค้นหา, ลบเดี่ยว/กลุ่ม)
+* ✅ **Sent History (`/history`) & Central Field Profiles (`/profile-data`)**: เสร็จสมบูรณ์ 100%
+* ✅ **Settings & Organization Profile (`/settings`)**: เสร็จสมบูรณ์ 100% (Company Info, Default Signatory, SMTP Status)
+* 🎯 **เป้าหมายหลักถัดไป (Core Vision)**: เพิ่มเทมเพลตประกาศและแบบฟอร์มบริษัท (*Company Announcement & Request Form*) และพัฒนาระบบสร้างเทมเพลตเอง (*Custom Template Builder*)
 
 ---
 
