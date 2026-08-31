@@ -180,14 +180,25 @@ function ProfileSelectGateContent({ templateId }) {
             />
           </div>
 
-          <Link
-            href="/profile-data/new"
-            target="_blank"
-            className="inline-flex items-center justify-center gap-2 h-10 px-5 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-sm font-semibold hover:opacity-95 transition-opacity shrink-0"
-          >
-            <Plus size={16} />
-            สร้างชุดข้อมูลใหม่
-          </Link>
+          <div className="flex items-center gap-2.5 shrink-0">
+            <button
+              onClick={() => setSelectedId(null)}
+              type="button"
+              className="inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-[10px] bg-[#5542F6] text-white text-xs font-bold hover:bg-[#4332D6] transition-colors cursor-pointer shadow-xs"
+            >
+              <FileText size={15} />
+              <span>เริ่มสร้างเอกสารทันที</span>
+            </button>
+
+            <Link
+              href="/profile-data/new"
+              target="_blank"
+              className="inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-[10px] border border-[#E4E4E8] bg-white text-gray-700 hover:bg-gray-50 text-xs font-semibold transition-colors shrink-0"
+            >
+              <Plus size={15} />
+              <span>เพิ่มชุดข้อมูลกลาง</span>
+            </Link>
+          </div>
         </div>
 
         {/* Profiles Table / Card List */}

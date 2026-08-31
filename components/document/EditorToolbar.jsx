@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Undo2, Redo2, Eye, Download, Save, MoreHorizontal, Loader2, Check, CopyPlus } from "lucide-react";
+import { ArrowLeft, Undo2, Redo2, Eye, Download, Save, MoreHorizontal, Loader2, Check, CopyPlus, SlidersHorizontal } from "lucide-react";
 
 export default function EditorToolbar({
   template,
@@ -14,6 +14,8 @@ export default function EditorToolbar({
   savedAt,
   onCreateRevision,
   isCreatingRevision,
+  isFormOpen,
+  onToggleForm,
 }) {
   return (
     <div className="h-16 border-b border-gray-200 bg-white flex items-center justify-between px-6 shrink-0">
@@ -45,6 +47,21 @@ export default function EditorToolbar({
       </div>
 
       <div className="flex items-center gap-2 shrink-0">
+        {/* ปุ่ม เปิด/ปิด แถบฟอร์มกรอกข้อมูล */}
+        {onToggleForm && (
+          <button
+            onClick={onToggleForm}
+            className={`flex items-center gap-1.5 h-10 px-3.5 rounded-[10px] border text-xs font-bold transition-all cursor-pointer ${
+              isFormOpen
+                ? "border-[#5542F6] bg-[#F5F1FF] text-[#5542F6]"
+                : "border-[#E4E4E8] bg-white text-[#52525B] hover:bg-[#F6F6FA]"
+            }`}
+            title="เปิด/ปิด แถบฟอร์มกรอกข้อมูล"
+          >
+            <SlidersHorizontal size={15} />
+            <span className="hidden sm:inline">{isFormOpen ? "ซ่อนฟอร์ม" : "เปิดฟอร์ม"}</span>
+          </button>
+        )}
         {/* ปุ่ม สร้าง Rev ใหม่ (เมื่อเป็นเอกสารที่บันทึกแล้ว) */}
         {onCreateRevision && (
           <button

@@ -6,6 +6,7 @@ import { DocumentFieldsProvider } from "@/context/DocumentFieldsContext";
 import { templateRegistry } from "@/lib/templates/registry";
 import DocumentHeader from "@/components/document/DocumentHeader";
 import DocumentFooter from "@/components/document/DocumentFooter";
+import "@/app/print/print.css";
 
 function decodeValues(encoded) {
   if (!encoded) return null;

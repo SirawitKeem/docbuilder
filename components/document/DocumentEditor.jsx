@@ -12,6 +12,7 @@ import PageControls from "./PageControls";
 import ReviewScreen from "./ReviewScreen";
 import EmailScreen from "./EmailScreen";
 import SuccessScreen from "./SuccessScreen";
+import ContractFormSidebar from "./ContractFormSidebar";
 
 function fileNameFor(prefix) {
   const d = new Date();
@@ -43,6 +44,7 @@ function EditorContent({ templateId, initialDocId }) {
   const [isSaving, setIsSaving] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
   const [showToast, setShowToast] = useState(null);
+  const [isFormOpen, setIsFormOpen] = useState(true);
   const { readOnly, setReadOnly, values } = useDocumentFields();
 
   const fileName = fileNameFor(schema.name.replace(/\s+/g, ""));
@@ -196,18 +198,30 @@ function EditorContent({ templateId, initialDocId }) {
         onSave={handleSaveDocument}
         isSaving={isSaving}
         savedAt={savedAt}
+        isFormOpen={isFormOpen}
+        onToggleForm={() => setIsFormOpen((prev) => !prev)}
       />
-      <div className="flex-1 min-h-0 flex">
-        <DocumentCanvas
-          logo={schema.logo}
-          footerTitle={schema.fullName}
-          currentPage={currentPage}
-          totalPages={schema.pageCount}
-          zoom={zoom}
-        >
-          <PageContent />
-        </DocumentCanvas>
+
+      {/* 2-Column Split Workspace: Left Form + Right Live A4 Canvas */}
+      <div className="flex-1 min-h-0 flex overflow-hidden">
+        <ContractFormSidebar
+          template={schema}
+          isOpen={isFormOpen}
+        />
+
+        <div className="flex-1 min-h-0 flex flex-col relative overflow-hidden bg-muted/30">
+          <DocumentCanvas
+            logo={schema.logo}
+            footerTitle={schema.fullName}
+            currentPage={currentPage}
+            totalPages={schema.pageCount}
+            zoom={zoom}
+          >
+            <PageContent />
+          </DocumentCanvas>
+        </div>
       </div>
+
       <PageControls
         currentPage={currentPage}
         totalPages={schema.pageCount}

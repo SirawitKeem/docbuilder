@@ -46,7 +46,11 @@ export async function POST(request) {
     // Count actual page card elements rendered in the DOM
     const pageCount = await page.evaluate(() => {
       const wrapper = document.querySelector(".quotation-document-wrapper");
-      if (wrapper) return wrapper.children.length;
+      if (wrapper && wrapper.children.length > 0) return wrapper.children.length;
+      const printPages = document.querySelectorAll(".print-page");
+      if (printPages && printPages.length > 0) return printPages.length;
+      const readyPages = document.querySelectorAll("[data-ready='true']");
+      if (readyPages && readyPages.length > 0) return readyPages.length;
       return 1;
     });
 
