@@ -141,7 +141,7 @@ export default function Antigravity({
       // 0.80 (288°) -> Warm Coral/Peach (#FB923C, ~28°)
       // 1.00 (360°) -> Back to Sky Blue (#38BDF8)
       const hue = (195 + normalizedAngle * 360) % 360;
-      colorObj.setHSL(hue / 360, 0.90, 0.62);
+      colorObj.setHSL(hue / 360, 0.92, 0.60);
       return colorObj;
     };
 
@@ -173,6 +173,7 @@ export default function Antigravity({
       const globalRotation = elapsedTime * rotationSpeed;
       const conicTimeOffset = elapsedTime * 0.05;
 
+      // Animate Outer Ring Particles
       for (let i = 0; i < count; i++) {
         const particle = particles[i];
         particle.t += particle.speed / 2;
@@ -303,4 +304,6 @@ export default function Antigravity({
     />
   );
 }
+
+
 
