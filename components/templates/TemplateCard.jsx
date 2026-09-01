@@ -1,61 +1,26 @@
 import Link from "next/link";
-import { FileText, Lock, ArrowRight, Layers, FileSignature, Receipt, Building2, Handshake } from "lucide-react";
-
-function getTemplateIcon(templateId) {
-  switch (templateId) {
-    case "nda":
-      return { Icon: FileSignature, colorClass: "bg-[#F5F1FF] text-[#5542F6] border-[#EBE3FF]" };
-    case "quotation":
-      return { Icon: Receipt, colorClass: "bg-[#EFF6FF] text-[#2563EB] border-[#DBEAFE]" };
-    case "distributor":
-      return { Icon: Building2, colorClass: "bg-[#FDF2F8] text-[#DB2777] border-[#FCE7F3]" };
-    case "partner":
-      return { Icon: Handshake, colorClass: "bg-[#ECFDF5] text-[#059669] border-[#D1FAE5]" };
-    default:
-      return { Icon: FileText, colorClass: "bg-[#F5F1FF] text-[#5542F6] border-[#EBE3FF]" };
-  }
-}
-
-function getTemplateBadge(template) {
-  if (!template.available) {
-    return (
-      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-gray-100 text-gray-500 text-[10px] font-bold">
-        <Lock size={10} /> เร็วๆ นี้
-      </span>
-    );
-  }
-  if (template.id === "nda") {
-    return (
-      <span className="px-2.5 py-0.5 rounded-full bg-[#F5F1FF] text-[#5542F6] text-[10px] font-bold border border-[#EBE3FF]">
-        ยอดนิยม
-      </span>
-    );
-  }
-  if (template.id === "quotation") {
-    return (
-      <span className="px-2.5 py-0.5 rounded-full bg-[#EFF6FF] text-[#2563EB] text-[10px] font-bold border border-[#DBEAFE]">
-        คำนวณอัตโนมัติ
-      </span>
-    );
-  }
-  return (
-    <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-100">
-      พร้อมใช้งาน
-    </span>
-  );
-}
+import { FileText, Lock, ArrowRight } from "lucide-react";
+import { EXTENDED_ICON_MAP } from "@/components/templates/CreateCategoryModal";
+import { COLOR_MAP } from "@/components/templates/CategoryManagerModal";
 
 export default function TemplateCard({ template, variant = "compact", onSelect }) {
-  const { Icon, colorClass } = getTemplateIcon(template.id);
+  const iconData = EXTENDED_ICON_MAP[template.icon];
+  const Icon = iconData ? iconData.icon : FileText;
+  const colorClass = COLOR_MAP[template.color] || COLOR_MAP.purple;
+  const badgeText = template.badge || "พร้อมใช้งาน";
+
+  const isAvailable = template.available !== false;
 
   const cardInner = (
     <div className="bg-white border border-[#EAEAEF] rounded-[20px] shadow-2xs p-5 h-full flex flex-col transition-all duration-200 group-hover:-translate-y-1 group-hover:border-[#5542F6]/50 group-hover:shadow-md text-left relative overflow-hidden select-none">
       {/* Top Bar: Icon Box + Category Badge */}
       <div className="flex items-center justify-between gap-2 mb-3.5">
-        <div className={`w-11 h-11 rounded-xl flex items-center justify-center border ${colorClass} transition-transform group-hover:scale-105 duration-200`}>
+        <div className={`w-11 h-11 rounded-2xl flex items-center justify-center border ${colorClass.bg} ${colorClass.text} ${colorClass.border} transition-transform group-hover:scale-105 duration-200 shadow-2xs`}>
           <Icon size={20} />
         </div>
-        {getTemplateBadge(template)}
+        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${colorClass.bg} ${colorClass.text} ${colorClass.border}`}>
+          {badgeText}
+        </span>
       </div>
 
       {/* Title & Full Name */}
@@ -63,7 +28,7 @@ export default function TemplateCard({ template, variant = "compact", onSelect }
         {template.name}
       </p>
       <p className="text-xs text-gray-500 mt-0.5 mb-1 font-normal line-clamp-2 leading-relaxed">
-        {template.fullName}
+        {template.fullName || template.description}
       </p>
 
       {variant === "full" && (
@@ -74,7 +39,7 @@ export default function TemplateCard({ template, variant = "compact", onSelect }
 
       {/* Bottom Action CTA */}
       <div className={variant === "full" ? "mt-auto pt-3 border-t border-gray-100" : "mt-auto pt-3"}>
-        {template.available ? (
+        {isAvailable ? (
           <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5542F6]">
             <span>เลือกเทมเพลต</span>
             <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
@@ -89,7 +54,7 @@ export default function TemplateCard({ template, variant = "compact", onSelect }
     </div>
   );
 
-  if (!template.available) {
+  if (!isAvailable) {
     return <div className="opacity-60 cursor-not-allowed h-full">{cardInner}</div>;
   }
 
@@ -104,8 +69,12 @@ export default function TemplateCard({ template, variant = "compact", onSelect }
     );
   }
 
+  const standardHref = ["quotation", "nda", "partner", "distributor"].includes((template.id || "").toLowerCase())
+    ? `/create/${template.id}`
+    : `/create/custom?categoryId=${template.id}`;
+
   return (
-    <Link href={template.href} className="block group h-full">
+    <Link href={template.href || standardHref} className="block group h-full">
       {cardInner}
     </Link>
   );

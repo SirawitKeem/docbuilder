@@ -413,7 +413,7 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
     senderPhone = "+6682-44-686-95",
   } = quotation;
 
-  const lineItems = rawLineItems && rawLineItems.length > 0 ? rawLineItems : quotationTemplate.defaultLineItems;
+  const lineItems = rawLineItems || [];
 
   // Paginate line items and groups at the block level
   const pagesList = paginateQuotationBlocks(lineItems);
@@ -655,32 +655,38 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
 
               {/* Description Table Flow Chunks */}
               <div className="border border-t-0 border-gray-200/90 px-3 py-1.5 rounded-b-md min-h-[160px]">
-                {blocks.map((block, bIdx) => {
-                  const nextBlock = blocks[bIdx + 1];
-                  const isEndOfItemBlock = !nextBlock || nextBlock.type === "item-header";
+                {blocks.length === 0 ? (
+                  <div className="py-10 text-center text-gray-400 text-xs italic font-medium">
+                    [ ระบุรายการสินค้า / บริการ ]
+                  </div>
+                ) : (
+                  blocks.map((block, bIdx) => {
+                    const nextBlock = blocks[bIdx + 1];
+                    const isEndOfItemBlock = !nextBlock || nextBlock.type === "item-header";
 
-                  if (block.type === "item-header") {
-                    return (
-                      <div
-                        key={block.id}
-                        className={isEndOfItemBlock ? "pb-1.5 mb-1.5" : ""}
-                      >
-                        <LineItemHeaderRow item={block.item} />
-                      </div>
-                    );
-                  }
-                  if (block.type === "group-block") {
-                    return (
-                      <div
-                        key={block.id}
-                        className={isEndOfItemBlock ? "pb-1.5 mb-1.5" : ""}
-                      >
-                        <GroupBlockRow item={block.item} group={block.group} />
-                      </div>
-                    );
-                  }
-                  return null;
-                })}
+                    if (block.type === "item-header") {
+                      return (
+                        <div
+                          key={block.id}
+                          className={isEndOfItemBlock ? "pb-1.5 mb-1.5" : ""}
+                        >
+                          <LineItemHeaderRow item={block.item} />
+                        </div>
+                      );
+                    }
+                    if (block.type === "group-block") {
+                      return (
+                        <div
+                          key={block.id}
+                          className={isEndOfItemBlock ? "pb-1.5 mb-1.5" : ""}
+                        >
+                          <GroupBlockRow item={block.item} group={block.group} />
+                        </div>
+                      );
+                    }
+                    return null;
+                  })
+                )}
 
                 {/* Add Line Item Button (shown when editable on the last page of table items) */}
                 {!readOnly && (isLastPage || totalPages === 1) && (

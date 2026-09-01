@@ -71,11 +71,6 @@ export default function PartnerPage5() {
                   className="max-h-12 max-w-[160px] object-contain select-none z-10"
                 />
               ) : null}
-              {values.include_seal !== false && (
-                <div className="absolute -right-1 -top-2">
-                  <CorporateSeal className="w-14 h-14" opacity={0.82} />
-                </div>
-              )}
             </div>
             <div className="space-y-1 w-full">
               <p className="w-full text-center" style={{ textAlign: "center" }}>

@@ -35,11 +35,6 @@ export default function DistributorPage5() {
                 className="max-h-14 max-w-[180px] object-contain select-none z-10"
               />
             ) : null}
-            {values.include_seal !== false && (
-              <div className="absolute -right-2 -top-2">
-                <CorporateSeal className="w-16 h-16" opacity={0.82} />
-              </div>
-            )}
           </div>
           <p className="mb-3">ลงชื่อ ......................................................</p>
           <p className="mb-3">( {disclosingName} )</p>

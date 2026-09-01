@@ -108,7 +108,34 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
       );
     }
 
-    return null;
+    return (
+      <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped p-10 flex flex-col justify-between overflow-hidden select-none">
+        <div className="border-b border-gray-200 pb-3 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-lg bg-[#5542F6] flex items-center justify-center text-white font-bold text-xs">
+              CZ
+            </div>
+            <div>
+              <p className="font-bold text-gray-900 text-xs">บริษัท เครสท์ เซนโด จำกัด</p>
+              <p className="text-[10px] text-gray-500">CREST ZENDO CO., LTD.</p>
+            </div>
+          </div>
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-50 text-[#5542F6] font-bold border border-purple-100">
+            เอกสารทางการ
+          </span>
+        </div>
+        <div className="flex-1 py-6 space-y-3">
+          <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto" />
+          <div className="h-2.5 bg-gray-100 rounded w-full" />
+          <div className="h-2.5 bg-gray-100 rounded w-5/6" />
+          <div className="h-2.5 bg-gray-100 rounded w-4/6" />
+        </div>
+        <div className="border-t border-gray-100 pt-4 flex justify-between">
+          <div className="h-8 border-b border-gray-300 w-28" />
+          <div className="h-8 border-b border-gray-300 w-28" />
+        </div>
+      </div>
+    );
   }, [categoryId]);
 
   return (
@@ -133,21 +160,28 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
 export default function TemplateSelectModal({ category, onClose }) {
   const router = useRouter();
 
-  // Load sub-templates specifically for the clicked category
-  const subTemplates = useMemo(() => {
-    if (!category?.id) return [];
-    return getTemplatesByCategory(category.id);
-  }, [category]);
-
+  const [subTemplates, setSubTemplates] = useState([]);
+  const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTemplate, setSelectedTemplate] = useState(subTemplates[0] || null);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
 
-  // Synchronize selection when category changes
+  // Load sub-templates asynchronously from single API/JSON source
   useEffect(() => {
-    if (subTemplates.length > 0) {
-      setSelectedTemplate(subTemplates[0]);
+    if (!category?.id) {
+      setSubTemplates([]);
+      setLoadingTemplates(false);
+      return;
     }
-  }, [subTemplates]);
+    setLoadingTemplates(true);
+    Promise.resolve(getTemplatesByCategory(category.id)).then((data) => {
+      const list = Array.isArray(data) ? data : [];
+      setSubTemplates(list);
+      if (list.length > 0) {
+        setSelectedTemplate(list[0]);
+      }
+      setLoadingTemplates(false);
+    });
+  }, [category]);
 
   // Keyboard shortcut: ESC to close
   useEffect(() => {
@@ -174,7 +208,12 @@ export default function TemplateSelectModal({ category, onClose }) {
   const handleUseTemplate = () => {
     if (!selectedTemplate || !category?.id) return;
     onClose?.();
-    router.push(`/create/${category.id}`);
+    const standardCategories = ["quotation", "nda", "partner", "distributor"];
+    if (standardCategories.includes(category.id.toLowerCase())) {
+      router.push(`/create/${category.id}`);
+    } else {
+      router.push(`/create/custom?templateId=${selectedTemplate.id}&categoryId=${category.id}`);
+    }
   };
 
   if (!category) return null;
@@ -188,15 +227,15 @@ export default function TemplateSelectModal({ category, onClose }) {
         {/* Modal Header */}
         <div className="h-18 px-6 border-b border-gray-100 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#7C4DFF] flex items-center justify-center shrink-0 border border-purple-100/60 shadow-2xs">
-              <FileText size={20} className="text-[#7C4DFF]" />
+            <div className="w-10 h-10 rounded-2xl bg-purple-50 text-[#5542F6] flex items-center justify-center shrink-0 border border-purple-100/60 shadow-2xs">
+              <FileText size={20} className="text-[#5542F6]" />
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-gray-900 tracking-tight">
                 เลือกเทมเพลต {category.name}
               </h2>
               <p className="text-xs text-gray-500 font-medium">
-                เลือกเทมเพลตที่ต้องการใช้ในการสร้างเอกสาร{category.fullName}
+                เลือกเทมเพลตที่ต้องการใช้ในการสร้างเอกสาร {category.fullName || category.name}
               </p>
             </div>
           </div>

@@ -30,26 +30,32 @@ import EmailScreen from "@/components/document/EmailScreen";
 
 const statusStyles = {
   draft: "bg-amber-50 text-amber-700 border border-amber-200/80 hover:bg-amber-100/80",
+  pending_approval: "bg-purple-50 text-[#5542F6] border border-purple-200/80 hover:bg-purple-100/80",
   signed: "bg-purple-50 text-[#5542F6] border border-purple-200/80 hover:bg-purple-100/80",
   completed: "bg-emerald-50 text-emerald-700 border border-emerald-200/80 hover:bg-emerald-100/80",
   issued: "bg-emerald-50 text-emerald-700 border border-emerald-200/80 hover:bg-emerald-100/80",
   sent: "bg-blue-50 text-blue-700 border border-blue-200/80 hover:bg-blue-100/80",
+  rejected: "bg-rose-50 text-rose-700 border border-rose-200/80 hover:bg-rose-100/80",
   cancelled: "bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200/80",
 };
 
 const statusLabel = {
   draft: "ฉบับร่าง",
+  pending_approval: "รอการอนุมัติ",
   signed: "ลงนามแล้ว",
   completed: "เสร็จสมบูรณ์",
   issued: "เสร็จสมบูรณ์",
   sent: "ส่งแล้ว",
+  rejected: "ตีกลับแก้ไข",
   cancelled: "ยกเลิก",
 };
 
 const statusList = [
   { id: "draft", label: "ฉบับร่าง (Draft)", dot: "bg-amber-500" },
-  { id: "signed", label: "ลงนามแล้ว (Signed)", dot: "bg-[#5542F6]" },
+  { id: "pending_approval", label: "รอการอนุมัติ (Pending)", dot: "bg-[#5542F6]" },
   { id: "completed", label: "เสร็จสมบูรณ์ (Completed)", dot: "bg-emerald-500" },
+  { id: "rejected", label: "ตีกลับแก้ไข (Rejected)", dot: "bg-rose-500" },
+  { id: "sent", label: "ส่งแล้ว (Sent)", dot: "bg-blue-500" },
   { id: "cancelled", label: "ยกเลิก (Cancelled)", dot: "bg-gray-400" },
 ];
 
@@ -495,9 +501,13 @@ export default function DocumentsTable({
                         <PdfIcon className="w-8 h-9 shrink-0" />
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5 group/name flex-wrap">
-                            <p className="font-semibold text-foreground text-sm leading-snug truncate max-w-[200px] sm:max-w-xs" title={doc.name}>
+                            <Link
+                              href={`/documents/${doc.id}`}
+                              className="font-semibold text-foreground text-sm leading-snug truncate max-w-[200px] sm:max-w-xs hover:text-[#5542F6] hover:underline"
+                              title={doc.name}
+                            >
                               {doc.name}
-                            </p>
+                            </Link>
                             <button
                               onClick={() => setRenameDoc(doc)}
                               className="opacity-0 group-hover/name:opacity-100 p-0.5 rounded-md hover:bg-muted text-muted-foreground hover:text-primary transition-all cursor-pointer"
@@ -624,6 +634,13 @@ export default function DocumentsTable({
                             ref={menuRef}
                             className={`absolute right-4 ${isNearBottom ? "bottom-10" : "top-11"} w-52 bg-surface text-foreground rounded-xl shadow-xl border border-border py-1 z-50 animate-in fade-in zoom-in-95 duration-100 opacity-100 text-left`}
                           >
+                            <Link
+                              href={`/documents/${doc.id}`}
+                              className="w-full text-left px-3.5 py-2 text-xs font-bold text-[#5542F6] hover:bg-purple-50 flex items-center gap-2.5 transition-colors whitespace-nowrap"
+                            >
+                              <Eye size={14} className="text-[#5542F6]" />
+                              <span>สตูดิโอตรวจทาน & สายอนุมัติ</span>
+                            </Link>
                             <button
                               onClick={() => {
                                 setOpenMenuId(null);
