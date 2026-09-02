@@ -1,35 +1,41 @@
+﻿import React from "react";
 import Field from "../Field";
+import defaultContent from "@/lib/templates/nda/content.json";
 
-export default function NdaPage1() {
+export default function NdaPage1({ content = defaultContent }) {
+  const c = content || defaultContent;
+  const sec1 = c.sections?.[0] || {};
+
   return (
     <div className="document-body">
-      <h1>หนังสือสัญญาไม่เปิดเผยข้อมูล</h1>
-      <p className="subtitle text-center text-[16px] mb-2">(NON-DISCLOSURE AGREEMENT - NDA)</p>
+      <h1>{c.title?.titleTh}</h1>
+      <p className="subtitle text-center text-[16px] mb-2">{c.title?.titleEn}</p>
 
       <p style={{ marginBottom: "5px" }}>
-        สัญญาฉบับนี้ทำขึ้น ณ{" "}
+        {c.preamble?.locationPrefix}{" "}
         <Field id="contract_location" placeholder="กรุงเทพมหานคร" minWidth={14} />{" "}
-        เมื่อวันที่ <Field id="contract_date_day" placeholder="17" minWidth={3} />{" "}
-        เดือน <Field id="contract_date_month" placeholder="สิงหาคม" minWidth={8} />{" "}
-        พ.ศ. <Field id="contract_date_year" placeholder="2569" minWidth={5} />
+        {c.preamble?.datePrefix} <Field id="contract_date_day" placeholder="17" minWidth={3} />{" "}
+        {c.preamble?.monthPrefix} <Field id="contract_date_month" placeholder="สิงหาคม" minWidth={8} />{" "}
+        {c.preamble?.yearPrefix} <Field id="contract_date_year" placeholder="2569" minWidth={5} />
       </p>
 
-      <p className="font-normal" style={{ marginTop: "4px", marginBottom: "4px" }}>ระหว่าง:</p>
+      <p className="font-normal" style={{ marginTop: "4px", marginBottom: "4px" }}>
+        {c.preamble?.betweenLabel}
+      </p>
 
       <p className="indent-8" style={{ marginBottom: "4px" }}>
-        (1) บริษัท เครสท์ เซนโด จำกัด สำนักงานใหญ่ ตั้งอยู่เลขที่ 8/40 เดอะ
-        คอนเนค 37 ซอยช่างอากาศอุทิศ 10 แยก 1-2 แขวงดอนเมือง เขตดอนเมือง
-        กรุงเทพมหานคร 10210 ประเทศไทย ซึ่งต่อไปในสัญญานี้จะเรียกว่า{" "}
-        <span className="font-bold">&ldquo;ผู้เปิดเผยข้อมูล&rdquo; (Disclosing Party)</span>{" "}
-        ฝ่ายหนึ่ง
+        (1) <Field id="disclosing_party_name" placeholder="บริษัท เครสท์ เซนโด จำกัด" minWidth={24} /> {c.preamble?.disclosingPartyBoilerplate}{" "}
+        <span className="font-bold">{c.preamble?.disclosingPartyRole}</span> ฝ่ายหนึ่ง
       </p>
 
-      <p className="font-normal" style={{ marginTop: "4px", marginBottom: "4px" }}>และ</p>
+      <p className="font-normal" style={{ marginTop: "4px", marginBottom: "4px" }}>
+        {c.preamble?.andLabel}
+      </p>
 
       <p className="indent-8" style={{ marginBottom: "4px" }}>
         (2) บริษัท/นิติบุคคล{" "}
         <Field id="receiving_party_name" placeholder="บริษัท ตัวอย่าง จำกัด" minWidth={24} />{" "}
-        สำนักงานใหญ่ ตั้งอยู่เลขที่{" "}
+        {c.preamble?.receivingPartyAddressPrefix}{" "}
         <Field
           id="receiving_party_address"
           type="textarea"
@@ -37,59 +43,28 @@ export default function NdaPage1() {
         />
         <br />
         ซึ่งต่อไปในสัญญานี้จะเรียกว่า{" "}
-        <span className="font-bold">&ldquo;ผู้รับข้อมูล&rdquo; (Receiving Party)</span>{" "}
-        อีกฝ่ายหนึ่ง
+        <span className="font-bold">{c.preamble?.receivingPartyRole}</span> อีกฝ่ายหนึ่ง
       </p>
 
       <p className="indent-8" style={{ marginTop: "4px", marginBottom: "4px" }}>
-        (รวมเรียกว่า &ldquo;คู่สัญญาทั้งสองฝ่าย&rdquo; หรือเรียกว่า &ldquo;ฝ่าย&rdquo;
-        หากหมายถึงฝ่ายใดฝ่ายหนึ่ง)
+        {c.preamble?.partiesSummary}
       </p>
 
       <p className="indent-8" style={{ marginTop: "6px", marginBottom: "8px" }}>
-        โดยที่ ผู้เปิดเผยข้อมูล เป็นผู้ประกอบธุรกิจจัดจำหน่ายและให้บริการด้านซอฟต์แวร์
-        ไอทีโซลูชัน และเทคโนโลยีดิจิทัล และมีความประสงค์จะเปิดเผยข้อมูลที่มีลักษณะเป็นความลับ
-        ของตนให้แก่ ผู้รับข้อมูล เพื่อวัตถุประสงค์ในการประเมิน ความร่วมมือ หรือการทำธุรกิจร่วมกัน
-        และผู้รับข้อมูลตกลงที่จะรับและรักษาข้อมูลความลับดังกล่าวตามข้อกำหนดและเงื่อนไขในสัญญานี้
-        คู่สัญญาจึงตกลงทำสัญญามีข้อความดังต่อไปนี้:
+        {c.preamble?.recital}
       </p>
 
-      <h2>1. คำนิยามข้อมูลที่เป็นความลับ (Definition of Confidential Information)</h2>
+      <h2>{sec1.title}</h2>
       <p className="pl-4">
-        1.1. &ldquo;ข้อมูลที่เป็นความลับ&rdquo; (Confidential Information) หมายถึง
-        ข้อมูล เอกสาร สารสนเทศ เทคโนโลยี และความรู้ความชำนาญ (Know-how) ทั้งหมด
-        ไม่ว่าจะอยู่ในรูปแบบใด (ลายลักษณ์อักษร, วาจา, อิเล็กทรอนิกส์, รหัสคอมพิวเตอร์,
-        หรือสื่อบันทึกข้อมูลอื่นใด) ที่ผู้เปิดเผยข้อมูลส่งมอบ เปิดเผย หรือให้เข้าถึงแก่ผู้รับข้อมูล
-        ทั้งก่อนและหลังวันทำสัญญาฉบับนี้ ซึ่งรวมถึงแต่ไม่จำกัดเพียง:
+        {sec1.intro}
       </p>
 
       <ul className="list-disc pl-10 space-y-0.5">
-        <li>
-          <span className="font-bold">ข้อมูลด้านเทคนิคและซอฟต์แวร์:</span> ซอร์ซโค้ด
-          (Source Code), ออบเจกต์โค้ด (Object Code), อัลกอริทึม (Algorithms),
-          สถาปัตยกรรมระบบ (System Architecture), โครงสร้างฐานข้อมูล, เอกสาร API,
-          คู่มือเทคนิค, ผลการทดสอบ, บัก (Bugs), Credential, Log, API Token, User
-          Experience (UX), User Interface (UI), Credential ต่างๆ, Knowledge Base
-          และข้อผิดพลาดของระบบ
-        </li>
-        <li>
-          <span className="font-bold">ข้อมูลทางการค้าและธุรกิจ:</span>{" "}
-          ข้อมูลราคาต้นทุน (Cost Structure), โครงสร้างส่วนลด (Discount Schemes),
-          อัตราค่าคอมมิชชั่น, บันทึกการประชุม, แผนกลยุทธ์การตลาด, แผนการขาย,
-          รายชื่อและข้อมูลลูกค้าปลายทาง (End-customers), รายชื่อผู้จัดจำหน่าย
-          และประมาณการทางการเงิน
-        </li>
-        <li>
-          <span className="font-bold">ข้อมูลส่วนบุคคล (Personal Data):</span>{" "}
-          ข้อมูลส่วนบุคคลของพนักงาน ลูกค้า หรือผู้ใช้งานระบบตามกฎหมายว่าด้วยการคุ้มครอง
-          ข้อมูลส่วนบุคคล (PDPA) ที่ผู้รับข้อมูลเข้าถึงได้ระหว่างการทำระบบ การทดสอบ (PoC)
-          หรือการสนับสนุนทางเทคนิค (Technical Support)
-        </li>
-        <li>
-          <span className="font-bold">ความคิดสร้างสรรค์และทรัพย์สินทางปัญญา:</span>{" "}
-          แบบระเบียบ ขั้นตอนการทำงาน ต้นแบบ (Prototypes) สิทธิบัตร เครื่องหมายการค้า
-          หรือความลับทางการค้าที่ยังไม่ได้เปิดเผยต่อสาธารณะ
-        </li>
+        {(sec1.bullets || []).map((bullet, idx) => (
+          <li key={idx}>
+            {bullet}
+          </li>
+        ))}
       </ul>
     </div>
   );

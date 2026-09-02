@@ -266,25 +266,31 @@ export default function EmailScreen({
                         transform: "scale(0.36)",
                         transformOrigin: "top left",
                       }}
-                      className="pointer-events-none select-none text-left"
+                      className="text-left"
                     >
                       {isQuotation ? (
                         <QuotationDocument quotation={values} currentPage={1} />
                       ) : (
                         <div
-                          className="px-14 pt-10 pb-6 flex flex-col font-noto-looped h-full box-border text-gray-900 bg-white"
-                          style={{ width: 794, height: 1123 }}
+                          className="flex flex-col font-noto-looped h-full box-border text-gray-900 bg-white overflow-hidden"
+                          style={{
+                            width: 794,
+                            height: 1123,
+                            padding: `${schema?.hasHeader !== false ? "28px" : "0px"} 48px ${schema?.hasFooter !== false ? "28px" : "0px"} 48px`,
+                          }}
                         >
                           <DocumentFieldsProvider initialValues={values} defaultReadOnly>
-                            <DocumentHeader logo={schema?.logo} />
-                            <div className="flex-1 my-3 overflow-hidden">
+                            {schema?.hasHeader !== false && <DocumentHeader logo={schema?.logo} />}
+                            <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
                               {Page1Component && <Page1Component />}
                             </div>
-                            <DocumentFooter
-                              title={schema?.fullName}
-                              pageNumber={1}
-                              totalPages={pageCount}
-                            />
+                            {schema?.hasFooter !== false && (
+                              <DocumentFooter
+                                title={schema?.fullName}
+                                pageNumber={1}
+                                totalPages={pageCount}
+                              />
+                            )}
                           </DocumentFieldsProvider>
                         </div>
                       )}
@@ -356,22 +362,27 @@ export default function EmailScreen({
                   {(pages || []).map((PageContent, i) => (
                     <div
                       key={i}
-                      className="bg-white shadow-xl rounded-sm shrink-0 font-noto-looped text-gray-900"
+                      className="bg-white shadow-xl rounded-sm shrink-0 font-noto-looped text-gray-900 overflow-hidden"
                       style={{ width: 794, minHeight: 1123, height: 1123 }}
                     >
                       <div
-                        className="px-14 pt-10 pb-6 flex flex-col h-full box-border text-left"
-                        style={{ height: 1123 }}
+                        className="flex flex-col h-full box-border text-left overflow-hidden"
+                        style={{
+                          height: 1123,
+                          padding: `${schema?.hasHeader !== false ? "28px" : "0px"} 48px ${schema?.hasFooter !== false ? "28px" : "0px"} 48px`,
+                        }}
                       >
-                        <DocumentHeader logo={schema?.logo} />
-                        <div className="flex-1 my-3 overflow-hidden">
+                        {schema?.hasHeader !== false && <DocumentHeader logo={schema?.logo} />}
+                        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
                           <PageContent />
                         </div>
-                        <DocumentFooter
-                          title={schema?.fullName}
-                          pageNumber={i + 1}
-                          totalPages={pages.length}
-                        />
+                        {schema?.hasFooter !== false && (
+                          <DocumentFooter
+                            title={schema?.fullName}
+                            pageNumber={i + 1}
+                            totalPages={pages.length}
+                          />
+                        )}
                       </div>
                     </div>
                   ))}

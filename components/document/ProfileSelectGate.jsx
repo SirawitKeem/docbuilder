@@ -129,11 +129,12 @@ function ProfileSelectGateContent({ templateId }) {
     const q = searchQuery.toLowerCase().trim();
     if (!q) return true;
     const name = (p.name || "").toLowerCase();
-    const counterparty = (values.counterparty_name || values.bill_to_company || values.receiving_party_name || "").toLowerCase();
+    const counterparty = (values.counterparty_name || values.bill_to_company || values.receiving_party_name || values.notification_recipient || values.notification_subject || "").toLowerCase();
     const signatory = (
       values.our_signatory_name ||
       values.disclosing_signatory_name ||
       values.counterparty_signatory_name ||
+      values.notification_signatory_name ||
       values.attn_name ||
       values.am_name ||
       ""

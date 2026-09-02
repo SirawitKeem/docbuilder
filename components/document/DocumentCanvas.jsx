@@ -13,6 +13,8 @@ export default function DocumentCanvas({
   currentPage,
   totalPages,
   zoom = 100,
+  hasHeader = true,
+  hasFooter = true,
   children,
 }) {
   return (
@@ -29,16 +31,22 @@ export default function DocumentCanvas({
           style={{ width: A4_WIDTH, minHeight: A4_HEIGHT, height: A4_HEIGHT }}
         >
           <div
-            className="px-14 pt-10 pb-6 flex flex-col font-noto-looped overflow-hidden"
-            style={{ height: A4_HEIGHT, boxSizing: "border-box" }}
+            className="flex flex-col font-noto-looped overflow-hidden"
+            style={{
+              padding: `${hasHeader ? "28px" : "0px"} 48px ${hasFooter ? "28px" : "0px"} 48px`,
+              height: A4_HEIGHT,
+              boxSizing: "border-box",
+            }}
           >
-            <DocumentHeader logo={logo} />
-            <div className="flex-1 min-h-0 overflow-hidden">{children}</div>
-            <DocumentFooter
-              title={footerTitle}
-              pageNumber={currentPage}
-              totalPages={totalPages}
-            />
+            {hasHeader && <DocumentHeader logo={logo} />}
+            <div className="flex-1 min-h-0 flex flex-col">{children}</div>
+            {hasFooter && (
+              <DocumentFooter
+                title={footerTitle}
+                pageNumber={currentPage}
+                totalPages={totalPages}
+              />
+            )}
           </div>
         </div>
       </div>

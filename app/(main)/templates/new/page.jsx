@@ -263,7 +263,7 @@ function TemplateBuilderContent() {
             minHeight: paperHeight * zoomScale,
             backgroundColor: "#FFFFFF",
           }}
-          className="rounded-sm shadow-2xl border border-gray-300 transition-all relative flex flex-col justify-between select-none"
+          className="rounded-sm shadow-2xl border border-gray-300 transition-all relative flex flex-col justify-between"
         >
           {/* Pure Empty A4 Content */}
           <div className="flex-1 p-8 sm:p-12 flex flex-col justify-between">

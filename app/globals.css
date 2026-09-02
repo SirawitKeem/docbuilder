@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,300..800;1,300..800&family=Noto+Sans+Thai+Looped:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
@@ -27,6 +28,7 @@
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
   --font-sans: var(--font-inter), var(--font-noto-thai), "Inter", "Noto Sans Thai", sans-serif;
+  --font-noto-looped: var(--font-noto-sans), "Noto Sans", var(--font-noto-thai-looped), "Noto Sans Thai Looped", sans-serif;
 }
  
 :root {
@@ -107,9 +109,12 @@ nextjs-portal {
 }
 
 /* Document Template-Specific Font Scopes (Isolated per template for PDF export parity) */
+.font-noto-looped,
+.template-notification,
+.notification-document-wrapper,
 .template-quotation,
 .quotation-document-wrapper {
-  font-family: var(--font-noto-thai-looped), "Noto Sans Thai Looped", sans-serif !important;
+  font-family: var(--font-noto-sans), "Noto Sans", var(--font-noto-thai-looped), "Noto Sans Thai Looped", sans-serif !important;
 }
 
 .template-nda,
@@ -281,4 +286,8 @@ nextjs-portal {
 
 .animate-orb-bottom {
   animation: orbFloatBottom 12s ease-in-out infinite alternate;
+}
+
+.font-sarabun {
+  font-family: var(--font-sarabun), "TH Sarabun New", "Sarabun", "Noto Sans Thai", sans-serif;
 }

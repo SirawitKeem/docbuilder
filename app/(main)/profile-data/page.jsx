@@ -128,13 +128,13 @@ export default function ProfileDataListPage() {
 
   const selectedProfile = profiles.find((p) => p.id === selectedProfileId);
   const selectedValues = selectedProfile?.values || {};
-  const selectedCompanyName = selectedProfile?.name || selectedValues.counterparty_name || selectedValues.bill_to_company || selectedValues.our_company_name || "บริษัท ไม่ระบุชื่อ";
+  const selectedCompanyName = selectedProfile?.name || selectedValues.counterparty_name || selectedValues.bill_to_company || selectedValues.notification_recipient || selectedValues.our_company_name || "บริษัท ไม่ระบุชื่อ";
   const selectedTaxId = selectedValues.counterparty_registration_number || selectedValues.tax_id || "-";
-  const selectedAddress = selectedValues.counterparty_address || selectedValues.our_company_address || "-";
+  const selectedAddress = selectedValues.counterparty_address || selectedValues.notification_new_address_th || selectedValues.our_company_address || "-";
   const selectedPhone = selectedValues.am_phone || selectedValues.phone || "-";
   const selectedEmail = selectedValues.email || "-";
-  const selectedContactName = selectedValues.counterparty_signatory_name || selectedValues.attn_name || selectedValues.our_signatory_name || "-";
-  const selectedPosition = selectedValues.counterparty_signatory_position || selectedValues.our_signatory_position || "-";
+  const selectedContactName = selectedValues.counterparty_signatory_name || selectedValues.notification_signatory_name || selectedValues.attn_name || selectedValues.our_signatory_name || "-";
+  const selectedPosition = selectedValues.counterparty_signatory_position || selectedValues.notification_signatory_position || selectedValues.our_signatory_position || "-";
   const selectedRelevantTemplates = selectedProfile ? getRelevantTemplates(selectedValues) : [];
   const selectedIsComplete = selectedRelevantTemplates.length > 0 && selectedRelevantTemplates.some((r) => r.isComplete);
 

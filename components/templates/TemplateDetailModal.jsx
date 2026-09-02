@@ -44,6 +44,8 @@ import PartnerPage2 from "@/components/document/partner/PartnerPage2";
 import PartnerPage3 from "@/components/document/partner/PartnerPage3";
 import PartnerPage4 from "@/components/document/partner/PartnerPage4";
 import PartnerPage5 from "@/components/document/partner/PartnerPage5";
+import NotificationPage1 from "@/components/document/notification/NotificationPage1";
+import NotificationRelocationDocument from "@/components/document/notification/NotificationRelocationDocument";
 
 const emptyQuotationPreviewData = {
   id: "preview",
@@ -81,7 +83,7 @@ function AuthenticDocumentPreview({ template, currentPage = 1, scale = 0.58 }) {
   if (catId === "quotation" || tmplId.includes("quotation")) {
     return (
       <div
-        className="origin-top pointer-events-none select-none rounded-sm shadow-xl border border-gray-300 overflow-hidden"
+        className="origin-top rounded-sm shadow-xl border border-gray-300 overflow-hidden"
         style={{
           width: 794 * effectiveScale,
           minHeight: 1123 * effectiveScale,
@@ -119,7 +121,7 @@ function AuthenticDocumentPreview({ template, currentPage = 1, scale = 0.58 }) {
 
     return (
       <div
-        className="origin-top pointer-events-none select-none rounded-sm shadow-xl border border-gray-300 overflow-hidden"
+        className="origin-top rounded-sm shadow-xl border border-gray-300 overflow-hidden"
         style={{
           width: 794 * effectiveScale,
           minHeight: 1123 * effectiveScale,
@@ -162,7 +164,7 @@ function AuthenticDocumentPreview({ template, currentPage = 1, scale = 0.58 }) {
 
     return (
       <div
-        className="origin-top pointer-events-none select-none rounded-sm shadow-xl border border-gray-300 overflow-hidden"
+        className="origin-top rounded-sm shadow-xl border border-gray-300 overflow-hidden"
         style={{
           width: 794 * effectiveScale,
           minHeight: 1123 * effectiveScale,
@@ -205,7 +207,7 @@ function AuthenticDocumentPreview({ template, currentPage = 1, scale = 0.58 }) {
 
     return (
       <div
-        className="origin-top pointer-events-none select-none rounded-sm shadow-xl border border-gray-300 overflow-hidden"
+        className="origin-top rounded-sm shadow-xl border border-gray-300 overflow-hidden"
         style={{
           width: 794 * effectiveScale,
           minHeight: 1123 * effectiveScale,
@@ -228,6 +230,29 @@ function AuthenticDocumentPreview({ template, currentPage = 1, scale = 0.58 }) {
               <DocumentFooter currentPage={currentPage} totalPages={5} />
             </div>
           </DocumentFieldsProvider>
+        </div>
+      </div>
+    );
+  }
+
+  if (catId === "notification" || tmplId.includes("notification") || tmplId.includes("relocation")) {
+    return (
+      <div
+        className="origin-top rounded-sm shadow-xl border border-gray-300 overflow-hidden"
+        style={{
+          width: 794 * effectiveScale,
+          minHeight: 1123 * effectiveScale,
+        }}
+      >
+        <div
+          style={{
+            width: 794,
+            height: 1123,
+            transform: `scale(${effectiveScale})`,
+            transformOrigin: "top left",
+          }}
+        >
+          <NotificationRelocationDocument />
         </div>
       </div>
     );

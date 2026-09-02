@@ -134,7 +134,7 @@ function PrintContent() {
             }
           }
         `}</style>
-        <QuotationComp quotation={values} />
+        <QuotationComp quotation={values} values={values} data={values} />
       </div>
     );
   }
@@ -164,11 +164,13 @@ function PrintContent() {
                 </div>
               </div>
             )}
-            <DocumentHeader logo={schema.logo} />
+            {schema.hasHeader !== false && <DocumentHeader logo={schema.logo} />}
             <div className="print-page-body">
               <PageContent />
             </div>
-            <DocumentFooter title={schema.fullName} pageNumber={i + 1} totalPages={pages.length} />
+            {schema.hasFooter !== false && (
+              <DocumentFooter title={schema.fullName} pageNumber={i + 1} totalPages={pages.length} />
+            )}
           </div>
         ))}
       </div>

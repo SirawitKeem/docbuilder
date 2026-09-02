@@ -1,29 +1,25 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useMemo, Suspense } from "react";
+import React, { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
-  ArrowLeft,
+  ChevronLeft,
   Save,
   Download,
   Send,
-  Sparkles,
-  Eye,
-  CheckCircle2,
+  Printer,
   FileText,
   Building2,
   Calendar,
   Layers,
-  Stamp,
-  FileSignature,
-  Printer,
-  X,
-  Clock,
-  RotateCcw,
+  MapPin,
+  CheckCircle2,
+  Eye,
+  Sparkles,
 } from "lucide-react";
-import CorporateSeal from "@/components/document/CorporateSeal";
-import SignaturePadModal from "@/components/document/SignaturePadModal";
+import UniversalTemplateRenderer from "@/components/document/UniversalTemplateRenderer";
+import NotificationRelocationDocument from "@/components/document/notification/NotificationRelocationDocument";
 import EmailScreen from "@/components/document/EmailScreen";
 
 const WATERMARK_OPTIONS = [
@@ -48,9 +44,6 @@ function UniversalDocumentContent() {
   // Dynamic values state
   const [values, setValues] = useState({});
   const [watermark, setWatermark] = useState("none");
-  const [showSeal, setShowSeal] = useState(false);
-  const [signatures, setSignatures] = useState({});
-  const [activeSigSlot, setActiveSigSlot] = useState(null);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveToast, setSaveToast] = useState("");
@@ -71,17 +64,58 @@ function UniversalDocumentContent() {
         const tmplData = await tmplRes.json();
         setTemplate(tmplData);
 
-        // Initial default values
-        const initialValues = {};
-        (tmplData.fields || []).forEach((f) => {
-          initialValues[f.id] = f.defaultValue || "";
-        });
+        setDocumentName(tmplData.name || "เอกสารใหม่");
 
-        // Set default security policies from template
-        if (tmplData.contentLayout) {
-          setShowSeal(tmplData.contentLayout.hasSeal || false);
-          setWatermark(tmplData.contentLayout.defaultWatermark || "none");
+        // Extract initial values from blocks or fields
+        const initialVals = {};
+
+        if (Array.isArray(tmplData.blocks)) {
+          tmplData.blocks.forEach((b) => {
+            const s = b.settings || {};
+            if (b.type === "header") {
+              initialVals.company_name_th = s.companyName || "";
+              initialVals.company_name_en = s.companyNameEn || "";
+              initialVals.tax_id = s.taxId || "";
+              initialVals.phone = s.phone || "";
+              initialVals.logo_url = s.logoUrl || "";
+            }
+            if (b.type === "info_grid") {
+              initialVals.doc_date = s.date || "";
+              initialVals.recipient = s.recipient || s.billToCompany || "";
+              initialVals.subject = s.subject || "";
+            }
+            if (b.type === "address_comparison") {
+              initialVals.old_address_th = s.previousAddressTh || "";
+              initialVals.old_address_en = s.previousAddressEn || "";
+              initialVals.new_address_th = s.newAddressTh || "";
+              initialVals.new_address_en = s.newAddressEn || "";
+            }
+            if (b.type === "signatures" && Array.isArray(s.slots) && s.slots[0]) {
+              initialVals.signatory_name = s.slots[0].name || "";
+              initialVals.signatory_position = s.slots[0].role || "";
+            }
+          });
         }
+
+        // Default notification values fallback
+        if (tmplData.id === "tmpl-notification-relocation" || tmplData.categoryId === "notification") {
+          initialVals.company_name_th = initialVals.company_name_th || "บริษัท เดอะ รีโคฟเวอรี่ แอดไวเซอร์ จำกัด";
+          initialVals.company_name_en = initialVals.company_name_en || "THE RECOVERY ADVISOR CO., LTD.";
+          initialVals.tax_id = initialVals.tax_id || "0105554007189";
+          initialVals.phone = initialVals.phone || "02-1019884";
+          initialVals.logo_url = initialVals.logo_url || "/header_logo.png";
+          initialVals.doc_date = initialVals.doc_date || "01 กันยายน 2569 / September 01, 2026";
+          initialVals.recipient = initialVals.recipient || "ท่านคู่ค้าและลูกค้าผู้มีอุปการคุณ / Valued Business Partners";
+          initialVals.subject = initialVals.subject || "แจ้งเปลี่ยนแปลงที่อยู่สำนักงานใหญ่ / Change of Head Office Address";
+          initialVals.old_address_th = initialVals.old_address_th || "45 ซอยโกสุมรวมใจ 37 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210";
+          initialVals.old_address_en = initialVals.old_address_en || "45 Soi Kosum Ruam Chai 37, Don Mueang, Don Mueang, Bangkok 10210, Thailand";
+          initialVals.new_address_th = initialVals.new_address_th || "18 ซอยโกสุมรวมใจ 35 แยก 4 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210";
+          initialVals.new_address_en = initialVals.new_address_en || "18 Soi Kosum Ruam Chai 35 Yaek 4, Don Mueang, Don Mueang, Bangkok 10210, Thailand";
+          initialVals.signatory_name = initialVals.signatory_name || "นายศรายุทธ  โกสิยารักษ์";
+          initialVals.signatory_position = initialVals.signatory_position || "กรรมการผู้จัดการ / CEO";
+        }
+
+        setValues(initialVals);
 
         // If editing existing document
         if (documentId) {
@@ -90,29 +124,17 @@ function UniversalDocumentContent() {
             const allDocs = await docRes.json();
             const existingDoc = (allDocs || []).find((d) => d.id === documentId);
             if (existingDoc) {
-              setDocumentName(existingDoc.name || "");
+              setDocumentName(existingDoc.name || tmplData.name);
               setDocumentStatus(existingDoc.status || "draft");
               if (existingDoc.values) {
-                Object.assign(initialValues, existingDoc.values);
-              }
-              if (existingDoc.values?.signatures) {
-                setSignatures(existingDoc.values.signatures);
-              }
-              if (existingDoc.values?.watermark) {
-                setWatermark(existingDoc.values.watermark);
-              }
-              if (existingDoc.values?.showSeal !== undefined) {
-                setShowSeal(existingDoc.values.showSeal);
+                setValues((prev) => ({ ...prev, ...existingDoc.values }));
               }
             }
           }
-        } else {
-          setDocumentName(`${tmplData.name} - ${new Date().toLocaleDateString("th-TH")}`);
         }
-
-        setValues(initialValues);
       } catch (err) {
-        setErrorMsg(err.message);
+        console.error("Error loading template:", err);
+        setErrorMsg(err.message || "เกิดข้อผิดพลาดในการโหลดเทมเพลต");
       } finally {
         setLoading(false);
       }
@@ -125,165 +147,121 @@ function UniversalDocumentContent() {
     setValues((prev) => ({ ...prev, [fieldId]: val }));
   };
 
-  // Interpolate body text for live rendering
-  const interpolatedContent = useMemo(() => {
-    if (!template?.contentLayout?.bodyMarkdown) return "";
+  const isNotification =
+    template?.id === "tmpl-notification-relocation" ||
+    template?.categoryId === "notification" ||
+    (template?.name || "").includes("เปลี่ยนแปลงที่ตั้ง");
 
-    let text = template.contentLayout.bodyMarkdown;
-
-    // System variables
-    text = text.replace(/\{\{company_name\}\}/g, "บริษัท เครสท์ เซนโด จำกัด");
-    text = text.replace(
-      /\{\{current_date\}\}/g,
-      new Date().toLocaleDateString("th-TH", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    );
-    text = text.replace(/\{\{document_id\}\}/g, documentId || `DOC-${Date.now().toString().slice(-6)}`);
-
-    // Field variables
-    (template.fields || []).forEach((f) => {
-      const val = values[f.id];
-      const displayVal = val !== undefined && val !== "" ? val : `[${f.label}]`;
-      const regex = new RegExp(`\\{\\{${f.id}\\}\\}`, "g");
-      text = text.replace(
-        regex,
-        `<span class="font-bold text-gray-900 border-b border-gray-300 px-1">${displayVal}</span>`
-      );
-    });
-
-    return text;
-  }, [template, values, documentId]);
-
-  // Save Document
-  const handleSaveDocument = async (status = "draft") => {
-    setIsSaving(true);
+  // Save Document to JSON API
+  const handleSave = async (status = "draft") => {
     try {
-      const docPayload = {
-        name: documentName.trim() || template.name,
-        templateId: template.id,
-        templateName: template.name,
-        templateVersion: template.version || 1,
-        status,
-        values: {
-          ...values,
-          signatures,
-          watermark,
-          showSeal,
-        },
+      setIsSaving(true);
+      const payload = {
+        name: documentName || template?.name || "เอกสารไม่มีชื่อ",
+        templateId: template?.id,
+        categoryId: template?.categoryId,
+        status: status,
+        values: values,
+        watermark: watermark,
       };
 
-      let res;
-      if (documentId) {
-        res = await fetch("/api/documents", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: documentId, ...docPayload }),
-        });
-      } else {
-        res = await fetch("/api/documents", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(docPayload),
-        });
-      }
+      const res = await fetch(documentId ? `/api/documents/${documentId}` : "/api/documents", {
+        method: documentId ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "บันทึกเอกสารไม่สำเร็จ");
+      if (!res.ok) throw new Error("ไม่สามารถบันทึกเอกสารได้");
+      const savedDoc = await res.json();
 
       setDocumentStatus(status);
-      setSaveToast("✅ บันทึกเอกสารเรียบร้อยแล้ว");
-      setTimeout(() => setSaveToast(""), 3500);
+      setSaveToast("บันทึกเอกสารสำเร็จเรียบร้อย!");
+      setTimeout(() => setSaveToast(""), 3000);
 
-      if (!documentId && data.id) {
-        router.replace(`/create/custom?templateId=${template.id}&documentId=${data.id}`);
+      if (!documentId && savedDoc?.id) {
+        router.replace(`/create/custom?templateId=${templateId}&documentId=${savedDoc.id}`);
       }
-    } catch (err) {
-      alert(err.message);
+    } catch (e) {
+      alert("เกิดข้อผิดพลาด: " + e.message);
     } finally {
       setIsSaving(false);
     }
   };
 
-  const handlePrintPdf = () => {
+  const handlePrint = () => {
     window.print();
   };
 
   if (loading) {
     return (
-      <div className="p-16 text-center space-y-3">
-        <div className="w-10 h-10 border-4 border-[#5542F6] border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-xs text-gray-500 font-medium">กำลังเตรียมพร้อมเครื่องมือสร้างเอกสาร...</p>
+      <div className="flex flex-col items-center justify-center min-h-[450px] space-y-3">
+        <div className="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" />
+        <p className="text-xs font-semibold text-gray-500">กำลังโหลดเทมเพลตเอกสาร...</p>
       </div>
     );
   }
 
   if (errorMsg || !template) {
     return (
-      <div className="p-12 text-center max-w-md mx-auto space-y-4">
-        <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-700 font-medium">
-          ⚠️ {errorMsg || "ไม่พบข้อมูลเทมเพลต"}
-        </div>
+      <div className="max-w-md mx-auto my-12 p-6 bg-red-50 border border-red-200 rounded-2xl text-center space-y-3">
+        <h2 className="text-sm font-bold text-red-700">ไม่สามารถเปิดเอกสารได้</h2>
+        <p className="text-xs text-red-500">{errorMsg || "ไม่พบเทมเพลต"}</p>
         <Link
           href="/templates"
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#5542F6] text-white text-xs font-bold shadow-xs hover:bg-[#4332D6]"
+          className="inline-block px-4 py-2 bg-white text-gray-700 text-xs font-bold rounded-xl border border-gray-200 shadow-xs hover:bg-gray-50"
         >
-          <ArrowLeft size={15} />
-          <span>กลับไปยังคลังเทมเพลต</span>
+          กลับไปคลังเทมเพลต
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="space-y-5 text-left pb-20">
-      {/* Top Header & Quick Actions Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-gray-200/80 pb-4">
+    <div className="space-y-6 text-left pb-24">
+      {/* Save Success Toast */}
+      {saveToast && (
+        <div className="fixed top-6 right-6 z-50 bg-emerald-600 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 text-xs font-bold animate-in fade-in slide-in-from-top-4">
+          <CheckCircle2 size={16} />
+          <span>{saveToast}</span>
+        </div>
+      )}
+
+      {/* Top Header Bar */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-gray-200/80 pb-4">
         <div className="flex items-center gap-3">
           <Link
             href="/templates"
-            className="w-9 h-9 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors shadow-2xs"
+            className="w-9 h-9 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors shadow-2xs cursor-pointer"
+            title="ย้อนกลับ"
           >
-            <ArrowLeft size={16} />
+            <ChevronLeft size={18} />
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-gray-400">เทมเพลต / {template.name}</span>
-              <span
-                className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
-                  documentStatus === "completed"
-                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                    : "bg-amber-50 text-amber-700 border-amber-200"
-                }`}
-              >
-                {documentStatus === "completed" ? "เสร็จสมบูรณ์" : "ฉบับร่าง"}
+              <span className="text-xs font-semibold text-gray-400">เทมเพลต</span>
+              <span className="text-gray-300 text-xs">/</span>
+              <span className="text-xs font-bold text-[#5542F6]">{template.name}</span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                {documentStatus === "published" ? "เสร็จสมบูรณ์" : "ฉบับร่าง"}
               </span>
             </div>
             <input
               type="text"
               value={documentName}
               onChange={(e) => setDocumentName(e.target.value)}
-              placeholder="ชื่อเอกสาร..."
-              className="text-base sm:text-lg font-black text-gray-900 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-[#5542F6] outline-none transition-colors"
+              className="text-lg sm:text-xl font-black text-gray-900 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-[#5542F6] outline-none transition-all py-0.5 mt-0.5 max-w-xl"
+              placeholder="ระบุชื่อเอกสาร..."
             />
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center flex-wrap gap-2">
-          {saveToast && (
-            <span className="text-xs font-bold text-emerald-600 animate-in fade-in duration-150">
-              {saveToast}
-            </span>
-          )}
-
+        <div className="flex items-center gap-2 flex-wrap">
           <button
             type="button"
-            onClick={() => handleSaveDocument("draft")}
+            onClick={() => handleSave("draft")}
             disabled={isSaving}
-            className="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-xs font-semibold text-gray-700 transition-colors cursor-pointer shadow-2xs disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-xs font-bold text-gray-700 shadow-2xs cursor-pointer disabled:opacity-50"
           >
             <Save size={14} className="text-gray-400" />
             <span>{isSaving ? "กำลังบันทึก..." : "บันทึกฉบับร่าง"}</span>
@@ -291,9 +269,9 @@ function UniversalDocumentContent() {
 
           <button
             type="button"
-            onClick={() => handleSaveDocument("completed")}
+            onClick={() => handleSave("published")}
             disabled={isSaving}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs cursor-pointer disabled:opacity-50"
           >
             <CheckCircle2 size={14} />
             <span>เสร็จสมบูรณ์</span>
@@ -301,8 +279,8 @@ function UniversalDocumentContent() {
 
           <button
             type="button"
-            onClick={handlePrintPdf}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#5542F6] hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
+            onClick={handlePrint}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#5542F6] hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs cursor-pointer"
           >
             <Printer size={14} />
             <span>พิมพ์ / PDF</span>
@@ -311,7 +289,7 @@ function UniversalDocumentContent() {
           <button
             type="button"
             onClick={() => setIsEmailModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-purple-200 bg-[#F5F1FF] hover:bg-[#ECE6FF] text-xs font-bold text-[#5542F6] transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-purple-200 bg-purple-50 hover:bg-purple-100 text-[#5542F6] text-xs font-bold shadow-2xs cursor-pointer"
           >
             <Send size={14} />
             <span>ส่งอีเมล</span>
@@ -321,281 +299,178 @@ function UniversalDocumentContent() {
 
       {/* 2-Column Split Workspace */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Dynamic Form Sidebar */}
+        {/* Left Column: Editable Form Fields */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-xs space-y-5">
+          <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-xs space-y-4">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-[#F5F1FF] text-[#5542F6] flex items-center justify-center font-bold text-xs">
                   <FileText size={15} />
                 </div>
-                <h2 className="text-sm font-bold text-gray-900">กรอกข้อมูลเอกสาร</h2>
+                <h2 className="text-sm font-bold text-gray-900">กรอกและปรับแต่งข้อมูลเอกสาร</h2>
               </div>
-              <span className="text-[11px] text-gray-400">{template.fields?.length || 0} ช่องกรอก</span>
+              <span className="text-[11px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">
+                Live Sync ⚡
+              </span>
             </div>
 
-            {/* Generated Form Fields */}
-            <div className="space-y-3.5">
-              {(template.fields || []).map((f) => {
-                const val = values[f.id] || "";
+            {/* If Notification Document */}
+            {isNotification ? (
+              <div className="space-y-3.5 text-xs">
+                <div className="space-y-1">
+                  <label className="font-bold text-gray-700">วันที่ออกเอกสาร (Date)</label>
+                  <input
+                    type="text"
+                    value={values.doc_date || ""}
+                    onChange={(e) => handleFieldChange("doc_date", e.target.value)}
+                    className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6]"
+                  />
+                </div>
 
-                if (f.type === "textarea") {
-                  return (
-                    <div key={f.id} className="space-y-1">
-                      <label className="text-xs font-semibold text-gray-700 flex items-center justify-between">
-                        <span>{f.label} {f.required && <span className="text-red-500">*</span>}</span>
-                      </label>
-                      <textarea
-                        value={val}
-                        onChange={(e) => handleFieldChange(f.id, e.target.value)}
-                        placeholder={f.placeholder || `ระบุ ${f.label}...`}
-                        rows={f.rows || 3}
-                        className="w-full p-2.5 rounded-lg border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] transition-all"
-                      />
-                    </div>
-                  );
-                }
+                <div className="space-y-1">
+                  <label className="font-bold text-gray-700">เรียน / ผู้รับ (To / Recipient)</label>
+                  <input
+                    type="text"
+                    value={values.recipient || ""}
+                    onChange={(e) => handleFieldChange("recipient", e.target.value)}
+                    className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6]"
+                  />
+                </div>
 
-                if (f.type === "select") {
-                  return (
-                    <div key={f.id} className="space-y-1">
-                      <label className="text-xs font-semibold text-gray-700">
-                        {f.label} {f.required && <span className="text-red-500">*</span>}
-                      </label>
-                      <select
-                        value={val}
-                        onChange={(e) => handleFieldChange(f.id, e.target.value)}
-                        className="w-full h-9 px-2.5 rounded-lg border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#5542F6]"
-                      >
-                        <option value="">-- เลือก{f.label} --</option>
-                        {(f.options || []).map((opt, i) => (
-                          <option key={i} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  );
-                }
+                <div className="space-y-1">
+                  <label className="font-bold text-gray-700">เรื่อง (Subject)</label>
+                  <input
+                    type="text"
+                    value={values.subject || ""}
+                    onChange={(e) => handleFieldChange("subject", e.target.value)}
+                    className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6]"
+                  />
+                </div>
 
-                return (
-                  <div key={f.id} className="space-y-1">
-                    <label className="text-xs font-semibold text-gray-700 flex items-center justify-between">
-                      <span>{f.label} {f.required && <span className="text-red-500">*</span>}</span>
-                    </label>
+                <div className="pt-2 border-t border-gray-100 space-y-1">
+                  <label className="font-bold text-gray-700 flex items-center gap-1.5">
+                    <Building2 size={13} className="text-gray-400" />
+                    <span>ที่อยู่เดิม (Previous Address)</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={values.old_address_th || ""}
+                    onChange={(e) => handleFieldChange("old_address_th", e.target.value)}
+                    placeholder="ที่อยู่เดิม (ภาษาไทย)..."
+                    className="w-full p-2.5 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6]"
+                  />
+                  <textarea
+                    rows={2}
+                    value={values.old_address_en || ""}
+                    onChange={(e) => handleFieldChange("old_address_en", e.target.value)}
+                    placeholder="Previous Address (English)..."
+                    className="w-full p-2.5 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6]"
+                  />
+                </div>
+
+                <div className="pt-2 border-t border-gray-100 space-y-1">
+                  <label className="font-bold text-[#af0e0e] flex items-center gap-1.5">
+                    <MapPin size={13} />
+                    <span>ที่อยู่ใหม่ (New Address - มีผล 16 ก.ย. 2569)</span>
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={values.new_address_th || ""}
+                    onChange={(e) => handleFieldChange("new_address_th", e.target.value)}
+                    placeholder="ที่อยู่ใหม่ (ภาษาไทย)..."
+                    className="w-full p-2.5 rounded-lg border border-red-200 bg-red-50/20 text-xs outline-none focus:border-red-500"
+                  />
+                  <textarea
+                    rows={2}
+                    value={values.new_address_en || ""}
+                    onChange={(e) => handleFieldChange("new_address_en", e.target.value)}
+                    placeholder="New Address (English)..."
+                    className="w-full p-2.5 rounded-lg border border-red-200 bg-red-50/20 text-xs outline-none focus:border-red-500"
+                  />
+                </div>
+
+                <div className="pt-2 border-t border-gray-100 grid grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <label className="font-bold text-gray-700">ชื่อผู้ลงนาม</label>
                     <input
-                      type={f.type === "date" ? "date" : f.type === "number" ? "number" : "text"}
-                      value={val}
-                      onChange={(e) => handleFieldChange(f.id, e.target.value)}
-                      placeholder={f.placeholder || `ระบุ ${f.label}...`}
-                      className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] transition-all"
+                      type="text"
+                      value={values.signatory_name || ""}
+                      onChange={(e) => handleFieldChange("signatory_name", e.target.value)}
+                      className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6]"
                     />
                   </div>
-                );
-              })}
-            </div>
-
-            {/* Document Controls (Watermark & Red Seal) */}
-            <div className="pt-4 border-t border-gray-100 space-y-3">
-              <h3 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
-                ตราประทับและลายน้ำบนเอกสาร
-              </h3>
-
-              {/* Watermark Selector */}
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-gray-700">ลายน้ำเอกสาร (PDF Watermark)</label>
-                <select
-                  value={watermark}
-                  onChange={(e) => setWatermark(e.target.value)}
-                  className="w-full h-9 px-2.5 rounded-lg border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#5542F6]"
-                >
-                  {WATERMARK_OPTIONS.map((w) => (
-                    <option key={w.id} value={w.id}>
-                      {w.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Corporate Seal Checkbox */}
-              <label className="flex items-center justify-between p-3 rounded-xl border border-gray-100 bg-gray-50/50 hover:bg-white cursor-pointer transition-all">
-                <div className="flex items-center gap-2">
-                  <Stamp size={16} className="text-red-600" />
-                  <div>
-                    <p className="text-xs font-bold text-gray-800">ประทับตราสำคัญองค์กรสีแดง</p>
-                    <p className="text-[10px] text-gray-400">บริษัท เครสท์ เซนโด จำกัด</p>
+                  <div className="space-y-1">
+                    <label className="font-bold text-gray-700">ตำแหน่ง</label>
+                    <input
+                      type="text"
+                      value={values.signatory_position || ""}
+                      onChange={(e) => handleFieldChange("signatory_position", e.target.value)}
+                      className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6]"
+                    />
                   </div>
                 </div>
-                <input
-                  type="checkbox"
-                  checked={showSeal}
-                  onChange={(e) => setShowSeal(e.target.checked)}
-                  className="w-4 h-4 rounded text-[#5542F6] focus:ring-[#5542F6]"
-                />
-              </label>
+              </div>
+            ) : (
+              /* Generic Block Form */
+              <div className="space-y-3">
+                <p className="text-xs text-gray-500">
+                  เทมเพลตนี้ประกอบด้วยโครงสร้างบล็อกอัตโนมัติ ข้อมูลจะถูกจัดระเบียบตาม Layout มาตรฐาน
+                </p>
+                {(template.blocks || []).map((b, idx) => (
+                  <div key={b.id || idx} className="p-3 bg-gray-50 rounded-xl border border-gray-200/80 space-y-1">
+                    <p className="text-xs font-bold text-gray-800">{b.title || b.type}</p>
+                    {b.settings?.content && (
+                      <textarea
+                        rows={3}
+                        defaultValue={b.settings.content}
+                        onChange={(e) => {
+                          b.settings.content = e.target.value;
+                          setValues({ ...values, [`block_${b.id}`]: e.target.value });
+                        }}
+                        className="w-full p-2 bg-white rounded-lg border border-gray-200 text-xs"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
 
-              {/* Digital E-Sign Blocks */}
-              {template.contentLayout?.hasSignature && (
-                <div className="space-y-2 pt-2">
-                  <h4 className="text-xs font-bold text-gray-800 flex items-center gap-1.5">
-                    <FileSignature size={14} className="text-[#5542F6]" />
-                    <span>ลายมือชื่อดิจิทัล (Digital E-Sign)</span>
-                  </h4>
-
-                  {(template.contentLayout.signatureSlots || []).map((slot) => {
-                    const hasSig = !!signatures[slot.id];
-                    return (
-                      <div key={slot.id} className="p-3 rounded-xl border border-gray-100 bg-gray-50 space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-gray-800">{slot.label}</span>
-                          <span className="text-[10px] text-gray-500">{slot.role}</span>
-                        </div>
-                        {hasSig ? (
-                          <div className="p-2 rounded-lg bg-white border border-purple-100 flex items-center justify-between">
-                            <img src={signatures[slot.id]} alt="ลายเซ็น" className="h-10 object-contain" />
-                            <div className="flex items-center gap-2">
-                              <button
-                                type="button"
-                                onClick={() => setActiveSigSlot(slot)}
-                                className="text-xs text-[#5542F6] font-semibold hover:underline cursor-pointer"
-                              >
-                                แก้ไข
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => setSignatures((prev) => ({ ...prev, [slot.id]: null }))}
-                                className="text-xs text-rose-600 font-semibold hover:underline cursor-pointer"
-                              >
-                                ลบ
-                              </button>
-                            </div>
-                          </div>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => setActiveSigSlot(slot)}
-                            className="w-full py-2 px-3 rounded-lg border border-dashed border-purple-300 text-xs font-bold text-[#5542F6] bg-purple-50/50 hover:bg-purple-100/60 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                          >
-                            <FileSignature size={14} />
-                            <span>วาดหรืออัปโหลดลายมือชื่อ</span>
-                          </button>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+            {/* Watermark Selector */}
+            <div className="pt-4 border-t border-gray-100 space-y-1">
+              <label className="text-xs font-semibold text-gray-700">ลายน้ำเอกสาร (PDF Watermark)</label>
+              <select
+                value={watermark}
+                onChange={(e) => setWatermark(e.target.value)}
+                className="w-full h-9 px-2.5 rounded-lg border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#5542F6]"
+              >
+                {WATERMARK_OPTIONS.map((w) => (
+                  <option key={w.id} value={w.id}>
+                    {w.label}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Live A4 Document Canvas */}
-        <div className="lg:col-span-7 sticky top-6">
-          <div className="bg-gray-100/90 rounded-2xl p-4 sm:p-6 border border-gray-200/80 space-y-2">
-            <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
-                <Eye size={14} className="text-[#5542F6]" />
-                <span>พรีวิวกระดาษ A4 เสมือนจริง (Print Preview)</span>
-              </span>
-              <span className="text-[10px] font-semibold text-gray-400">ขนาด 210 x 297 mm</span>
+        {/* Right Column: Live A4 Document Output */}
+        <div className="lg:col-span-7 space-y-3">
+          <div className="flex items-center justify-between px-1">
+            <div className="flex items-center gap-2">
+              <Eye size={15} className="text-[#5542F6]" />
+              <span className="text-xs font-bold text-gray-700">พรีวิวกระดาษ A4 เสมือนจริง (Print Preview)</span>
             </div>
+            <span className="text-[10px] font-semibold text-gray-400">ขนาด 210 x 297 mm</span>
+          </div>
 
-            {/* A4 Paper Output Container */}
-            <div
-              id="printable-document"
-              className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 sm:p-12 text-left min-h-[700px] flex flex-col justify-between relative overflow-hidden select-none"
-            >
-              {/* Diagonal Watermark Overlay */}
-              {watermark !== "none" && (
-                <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-10 select-none overflow-hidden">
-                  <div
-                    className={`transform -rotate-35 text-5xl sm:text-6xl font-black tracking-widest uppercase opacity-15 border-4 py-3 px-8 rounded-2xl ${
-                      watermark === "draft"
-                        ? "text-amber-500 border-amber-500"
-                        : watermark === "confidential"
-                        ? "text-red-500 border-red-500"
-                        : "text-blue-500 border-blue-500"
-                    }`}
-                  >
-                    {watermark === "draft"
-                      ? "DRAFT"
-                      : watermark === "confidential"
-                      ? "CONFIDENTIAL"
-                      : "COPY"}
-                  </div>
-                </div>
+          {/* A4 Paper Output Container */}
+          <div className="bg-gray-100/70 p-4 sm:p-6 rounded-2xl border border-gray-200/80 flex justify-center overflow-x-auto shadow-inner">
+            <div className="origin-top shadow-xl border border-gray-300 rounded-sm overflow-hidden bg-white">
+              {isNotification ? (
+                <NotificationRelocationDocument values={values} />
+              ) : (
+                <UniversalTemplateRenderer template={template} scale={1} />
               )}
-
-              {/* Company Header */}
-              {template.contentLayout?.hasHeader && (
-                <div className="border-b-2 border-gray-800 pb-4 mb-6 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#4F03BC] to-[#9F1EF4] flex items-center justify-center text-white font-bold text-base shadow-xs">
-                      CZ
-                    </div>
-                    <div>
-                      <p className="text-sm font-black text-gray-900 leading-tight">บริษัท เครสท์ เซนโด จำกัด</p>
-                      <p className="text-xs font-semibold text-gray-600">CREST ZENDO CO., LTD.</p>
-                      <p className="text-[10px] text-gray-500 mt-0.5">
-                        888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ กรุงเทพฯ 10120 | เลขภาษี: 0105564088911
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-purple-50 text-[#5542F6] font-bold border border-purple-200">
-                      เอกสารมาตรฐาน
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {/* Document Title & Body */}
-              <div className="space-y-5 flex-1">
-                <h1 className="text-lg font-black text-center text-gray-900 border-b border-gray-200 pb-3">
-                  {template.contentLayout?.documentHeaderTitle || template.name}
-                </h1>
-
-                <div
-                  className="text-xs sm:text-sm text-gray-800 leading-relaxed whitespace-pre-wrap space-y-3"
-                  dangerouslySetInnerHTML={{ __html: interpolatedContent }}
-                />
-              </div>
-
-              {/* Footer: Seal & Signatures */}
-              <div className="pt-8 mt-8 border-t border-gray-200 relative">
-                {showSeal && (
-                  <div className="absolute right-8 bottom-6 pointer-events-none opacity-90 z-20">
-                    <CorporateSeal className="w-24 h-24" />
-                  </div>
-                )}
-
-                {template.contentLayout?.hasSignature && (
-                  <div className="grid grid-cols-2 gap-8 pt-4">
-                    {(template.contentLayout.signatureSlots || []).map((slot) => {
-                      const sigImg = signatures[slot.id];
-                      return (
-                        <div key={slot.id} className="text-center space-y-1.5">
-                          <div className="h-16 border-b border-gray-300 border-dashed flex items-end justify-center pb-1">
-                            {sigImg ? (
-                              <img
-                                src={sigImg}
-                                alt="ลายมือชื่อดิจิทัล"
-                                className="max-h-14 object-contain"
-                              />
-                            ) : (
-                              <span className="text-[11px] text-gray-300 italic">
-                                [ ลายมือชื่อผู้มีอำนาจ ]
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-xs font-bold text-gray-900">{slot.label}</p>
-                          <p className="text-[11px] text-gray-500">{slot.role}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
             </div>
           </div>
         </div>
@@ -604,24 +479,12 @@ function UniversalDocumentContent() {
       {/* Email Modal */}
       {isEmailModalOpen && (
         <EmailScreen
-          documentId={documentId}
-          templateId={template.id}
-          templateName={template.name}
-          onClose={() => setIsEmailModalOpen(false)}
-        />
-      )}
-
-      {/* Digital Signature Pad Modal */}
-      {activeSigSlot && (
-        <SignaturePadModal
-          title={`ลงลายมือชื่อ: ${activeSigSlot.label}`}
-          partyName={activeSigSlot.role || activeSigSlot.label}
-          initialImage={signatures[activeSigSlot.id] || null}
-          onSave={(imgBase64) => {
-            setSignatures((prev) => ({ ...prev, [activeSigSlot.id]: imgBase64 }));
-            setActiveSigSlot(null);
+          document={{
+            id: documentId || "preview",
+            name: documentName,
+            status: documentStatus,
           }}
-          onClose={() => setActiveSigSlot(null)}
+          onClose={() => setIsEmailModalOpen(false)}
         />
       )}
     </div>
@@ -632,9 +495,8 @@ export default function UniversalDocumentPage() {
   return (
     <Suspense
       fallback={
-        <div className="p-16 text-center space-y-3">
-          <div className="w-10 h-10 border-4 border-[#5542F6] border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-xs text-gray-500 font-medium">กำลังโหลดเอกสาร...</p>
+        <div className="flex justify-center items-center min-h-[400px]">
+          <div className="w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" />
         </div>
       }
     >
@@ -642,4 +504,3 @@ export default function UniversalDocumentPage() {
     </Suspense>
   );
 }
-

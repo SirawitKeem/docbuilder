@@ -21,6 +21,8 @@ import DocumentFooter from "@/components/document/DocumentFooter";
 import NdaPage1 from "@/components/document/nda/NdaPage1";
 import DistributorPage1 from "@/components/document/distributor/DistributorPage1";
 import PartnerPage1 from "@/components/document/partner/PartnerPage1";
+import NotificationRelocationDocument from "@/components/document/notification/NotificationRelocationDocument";
+import { notificationTemplate } from "@/lib/templates/notification/schema";
 
 const emptyQuotationPreviewData = {
   id: "preview",
@@ -83,7 +85,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
     if (categoryId === "partner") {
       return (
         <DocumentFieldsProvider initialValues={{}} defaultReadOnly={true}>
-          <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden select-none">
+          <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden">
             <DocumentHeader logo="/quotation.png" />
             <div className="flex-1 min-h-0 overflow-hidden text-gray-900 text-sm">
               <PartnerPage1 />
@@ -97,7 +99,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
     if (categoryId === "distributor") {
       return (
         <DocumentFieldsProvider initialValues={{}} defaultReadOnly={true}>
-          <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden select-none">
+          <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden">
             <DocumentHeader logo="/quotation.png" />
             <div className="flex-1 min-h-0 overflow-hidden text-gray-900 text-sm">
               <DistributorPage1 />
@@ -108,8 +110,16 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
       );
     }
 
+    if (categoryId === "notification") {
+      return (
+        <div style={{ width: 794, height: 1123 }} className="bg-white overflow-hidden text-left font-noto-looped select-none">
+          <NotificationRelocationDocument data={notificationTemplate.defaultValues} />
+        </div>
+      );
+    }
+
     return (
-      <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped p-10 flex flex-col justify-between overflow-hidden select-none">
+      <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped p-10 flex flex-col justify-between overflow-hidden">
         <div className="border-b border-gray-200 pb-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-lg bg-[#5542F6] flex items-center justify-center text-white font-bold text-xs">
@@ -208,7 +218,7 @@ export default function TemplateSelectModal({ category, onClose }) {
   const handleUseTemplate = () => {
     if (!selectedTemplate || !category?.id) return;
     onClose?.();
-    const standardCategories = ["quotation", "nda", "partner", "distributor"];
+    const standardCategories = ["quotation", "nda", "partner", "distributor", "notification"];
     if (standardCategories.includes(category.id.toLowerCase())) {
       router.push(`/create/${category.id}`);
     } else {

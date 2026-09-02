@@ -62,10 +62,12 @@ const statusList = [
 const getCounterpartyName = (doc) => {
   if (doc?.values) {
     if (doc.values.counterparty_name) return doc.values.counterparty_name;
+    if (doc.values.recipient) return doc.values.recipient;
     if (doc.values.reseller_company_name) return doc.values.reseller_company_name;
     if (doc.values.distributor_company_name && doc.values.distributor_company_name !== "บริษัท เครสท์ เซนโด จำกัด") {
       return doc.values.distributor_company_name;
     }
+    if (doc.values.subject) return doc.values.subject;
   }
   if (doc?.billTo && (doc.billTo.companyName || doc.billTo.name)) {
     return doc.billTo.companyName || doc.billTo.name;
@@ -92,6 +94,9 @@ function getContractFullName(doc) {
   }
   if (doc.templateId === "partner" || doc.name?.includes("Partner")) {
     return "สัญญาแต่งตั้งพันธมิตรตัวแทนจำหน่าย";
+  }
+  if (doc.templateId === "notification" || doc.name?.includes("Notification") || doc.name?.includes("หนังสือแจ้ง")) {
+    return "หนังสือแจ้งเปลี่ยนแปลงที่ตั้งสำนักงานใหญ่";
   }
   return doc.templateName || "หนังสือสัญญา";
 }
@@ -600,22 +605,13 @@ export default function DocumentsTable({
 
                     {/* Action Column */}
                     <td className="px-4 py-3.5 relative whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-1">
+                      <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => setPreviewDoc(doc)}
                           className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                           title="ดูตัวอย่างเอกสาร (Preview)"
                         >
                           <Eye size={16} />
-                        </button>
-
-                        <button
-                          onClick={() => handleDuplicate(doc)}
-                          disabled={duplicatingId === doc.id}
-                          className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-primary transition-colors cursor-pointer disabled:opacity-40"
-                          title="คัดลอกสร้างซ้ำใน 1 คลิก (Duplicate)"
-                        >
-                          <Copy size={16} />
                         </button>
 
                         <button
@@ -634,13 +630,6 @@ export default function DocumentsTable({
                             ref={menuRef}
                             className={`absolute right-4 ${isNearBottom ? "bottom-10" : "top-11"} w-52 bg-surface text-foreground rounded-xl shadow-xl border border-border py-1 z-50 animate-in fade-in zoom-in-95 duration-100 opacity-100 text-left`}
                           >
-                            <Link
-                              href={`/documents/${doc.id}`}
-                              className="w-full text-left px-3.5 py-2 text-xs font-bold text-[#5542F6] hover:bg-purple-50 flex items-center gap-2.5 transition-colors whitespace-nowrap"
-                            >
-                              <Eye size={14} className="text-[#5542F6]" />
-                              <span>สตูดิโอตรวจทาน & สายอนุมัติ</span>
-                            </Link>
                             <button
                               onClick={() => {
                                 setOpenMenuId(null);
@@ -648,7 +637,7 @@ export default function DocumentsTable({
                               }}
                               className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
                             >
-                              <Copy size={14} className="text-primary" />
+                              <Copy size={14} className="text-[#5542F6]" />
                               <span>คัดลอกเอกสารนี้</span>
                             </button>
                             <button
@@ -998,17 +987,23 @@ function PreviewModal({ doc, onClose }) {
               {(pages || []).map((PageContent, i) => (
                 <div
                   key={i}
-                  className="bg-[#FFFFFF] shadow-document w-[794px] min-h-[1123px] px-14 pt-10 pb-6 flex flex-col justify-between font-noto-looped text-gray-900 rounded-sm shrink-0"
+                  className="bg-[#FFFFFF] shadow-document w-[794px] min-h-[1123px] flex flex-col justify-between font-noto-looped text-gray-900 rounded-sm shrink-0 overflow-hidden"
+                  style={{
+                    padding: `${schema?.hasHeader !== false ? "28px" : "0px"} 48px ${schema?.hasFooter !== false ? "28px" : "0px"} 48px`,
+                    boxSizing: "border-box",
+                  }}
                 >
-                  <DocumentHeader logo={schema?.logo} />
+                  {schema?.hasHeader !== false && <DocumentHeader logo={schema?.logo} />}
                   <div className="flex-1 min-h-0 overflow-hidden text-left">
                     <PageContent />
                   </div>
-                  <DocumentFooter
-                    title={schema?.fullName}
-                    pageNumber={i + 1}
-                    totalPages={pages.length}
-                  />
+                  {schema?.hasFooter !== false && (
+                    <DocumentFooter
+                      title={schema?.fullName}
+                      pageNumber={i + 1}
+                      totalPages={pages.length}
+                    />
+                  )}
                 </div>
               ))}
             </DocumentFieldsProvider>

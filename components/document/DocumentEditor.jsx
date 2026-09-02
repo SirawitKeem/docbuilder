@@ -13,6 +13,7 @@ import ReviewScreen from "./ReviewScreen";
 import EmailScreen from "./EmailScreen";
 import SuccessScreen from "./SuccessScreen";
 import ContractFormSidebar from "./ContractFormSidebar";
+import NotificationFormSidebar from "./NotificationFormSidebar";
 
 function fileNameFor(prefix) {
   const d = new Date();
@@ -207,10 +208,17 @@ function EditorContent({ templateId, initialDocId, initialDocName }) {
 
       {/* 2-Column Split Workspace: Left Form + Right Live A4 Canvas */}
       <div className="flex-1 min-h-0 flex overflow-hidden">
-        <ContractFormSidebar
-          template={schema}
-          isOpen={isFormOpen}
-        />
+        {templateId === "notification" ? (
+          <NotificationFormSidebar
+            template={schema}
+            isOpen={isFormOpen}
+          />
+        ) : (
+          <ContractFormSidebar
+            template={schema}
+            isOpen={isFormOpen}
+          />
+        )}
 
         <div className="flex-1 min-h-0 flex flex-col relative overflow-hidden bg-muted/30">
           <DocumentCanvas
@@ -218,6 +226,8 @@ function EditorContent({ templateId, initialDocId, initialDocName }) {
             footerTitle={schema.fullName}
             currentPage={currentPage}
             totalPages={schema.pageCount}
+            hasHeader={schema.hasHeader !== false}
+            hasFooter={schema.hasFooter !== false}
             zoom={zoom}
           >
             <PageContent />
@@ -267,7 +277,7 @@ export default function DocumentEditor({ templateId, profileId, docId }) {
       // 2. หากเป็นการเลือกใช้ Profile Data
       if (profileId) {
         const profile = await getFieldProfile(profileId);
-        const prefilled = {};
+        const prefilled = { ...(schema.defaultValues || {}) };
         if (profile?.values) {
           for (const field of schema.fields) {
             if (field.sharedKey && profile.values[field.sharedKey]) {
@@ -279,8 +289,8 @@ export default function DocumentEditor({ templateId, profileId, docId }) {
         return;
       }
 
-      // 3. เริ่มจากเอกสารเปล่า
-      setInitialValues({});
+      // 3. เริ่มจากเอกสารเปล่า (ใช้ defaultValues จาก schema ถ้ามี)
+      setInitialValues({ ...(schema.defaultValues || {}) });
     }
 
     load();

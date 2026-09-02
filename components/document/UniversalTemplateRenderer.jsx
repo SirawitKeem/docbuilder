@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import CorporateSeal from "@/components/document/CorporateSeal";
 import { formatTHB } from "@/lib/format";
+import { Building2, MapPin } from "lucide-react";
 
 /**
  * Universal Dynamic Template Document Renderer
@@ -34,7 +34,7 @@ export default function UniversalTemplateRenderer({ template, scale = 1, classNa
         transformOrigin: "top center",
         backgroundColor: theme.backgroundColor || "#FFFFFF",
       }}
-      className={`rounded-lg shadow-xl border border-gray-300 p-8 sm:p-10 flex flex-col justify-between font-noto-looped text-gray-800 text-xs transition-all relative select-none overflow-hidden ${className}`}
+      className={`rounded-lg shadow-xl border border-gray-300 p-8 sm:p-10 flex flex-col justify-between font-noto-looped text-gray-800 text-xs transition-all relative overflow-hidden ${className}`}
     >
       {/* Optional Watermark */}
       {theme.hasWatermark && (
@@ -244,6 +244,33 @@ export default function UniversalTemplateRenderer({ template, scale = 1, classNa
               );
             }
 
+            // 6.1 Address Comparison Block
+            if (block.type === "address_comparison") {
+              return (
+                <div key={block.id} className="grid grid-cols-2 gap-3.5 my-2">
+                  <div className="bg-[#f3f3f4] rounded-xl p-3 border border-gray-200">
+                    <div className="flex items-center gap-1.5 pb-1 mb-1 border-b border-gray-300">
+                      <Building2 size={12} className="text-gray-500" />
+                      <p className="text-[11px] font-bold text-gray-700">ที่อยู่เดิม / Previous Address:</p>
+                    </div>
+                    <p className="text-[10px] text-gray-800 font-medium">{s.previousAddressTh}</p>
+                    <p className="text-[10px] text-gray-500">{s.previousAddressEn}</p>
+                  </div>
+                  <div className="bg-gradient-to-br from-[#fff5f5] to-white rounded-xl p-3 border-2 border-[#cb1717]">
+                    <div className="flex justify-between items-center pb-1 mb-1 border-b border-[#cb1717]/30">
+                      <div className="flex items-center gap-1.5">
+                        <MapPin size={12} className="text-[#af0e0e]" />
+                        <span className="text-[11px] font-black text-[#af0e0e]">ที่อยู่ใหม่ / New Address:</span>
+                      </div>
+                      <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-[#cb1717] text-white">มีผล {s.effectiveDate || "16 ก.ย. 2569"}</span>
+                    </div>
+                    <p className="text-[10px] text-gray-900 font-bold">{s.newAddressTh}</p>
+                    <p className="text-[10px] text-gray-600">{s.newAddressEn}</p>
+                  </div>
+                </div>
+              );
+            }
+
             // 7. Signatures Block
             if (block.type === "signatures") {
               const slots = s.slots || [];
@@ -259,17 +286,6 @@ export default function UniversalTemplateRenderer({ template, scale = 1, classNa
                         <p className="text-[9px] text-gray-400">{slot.role}</p>
                       </div>
                     ))}
-                  </div>
-                </div>
-              );
-            }
-
-            // 8. Seal Block
-            if (block.type === "seal" && s.enabled !== false) {
-              return (
-                <div key={block.id} className="flex justify-end pt-2">
-                  <div className="opacity-85 pointer-events-none">
-                    <CorporateSeal className="w-18 h-18" />
                   </div>
                 </div>
               );

@@ -47,6 +47,8 @@ import DocumentFooter from "@/components/document/DocumentFooter";
 import NdaPage1 from "@/components/document/nda/NdaPage1";
 import DistributorPage1 from "@/components/document/distributor/DistributorPage1";
 import PartnerPage1 from "@/components/document/partner/PartnerPage1";
+import NotificationPage1 from "@/components/document/notification/NotificationPage1";
+import NotificationRelocationDocument from "@/components/document/notification/NotificationRelocationDocument";
 
 const emptyQuotationPreviewData = {
   id: "preview",
@@ -81,7 +83,7 @@ function renderAuthenticDocumentContent(template) {
   if (catId === "quotation" || tmplId.includes("quotation")) {
     return (
       <QuotationDataProvider initialQuotation={emptyQuotationPreviewData} defaultReadOnly={true}>
-        <div style={{ width: 794, height: 1123 }} className="bg-white overflow-hidden text-left font-noto-looped select-none">
+        <div style={{ width: 794, height: 1123 }} className="bg-white overflow-hidden text-left font-noto-looped">
           <QuotationDocument currentPage={1} />
         </div>
       </QuotationDataProvider>
@@ -91,7 +93,7 @@ function renderAuthenticDocumentContent(template) {
   if (catId === "nda" || tmplId.includes("nda")) {
     return (
       <DocumentFieldsProvider initialValues={{}} defaultReadOnly={true}>
-        <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden select-none">
+        <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden">
           <DocumentHeader logo="/quotation.png" />
           <div className="flex-1 min-h-0 overflow-hidden text-gray-900 text-sm">
             <NdaPage1 />
@@ -105,7 +107,7 @@ function renderAuthenticDocumentContent(template) {
   if (catId === "partner" || tmplId.includes("partner")) {
     return (
       <DocumentFieldsProvider initialValues={{}} defaultReadOnly={true}>
-        <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden select-none">
+        <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden">
           <DocumentHeader logo="/quotation.png" />
           <div className="flex-1 min-h-0 overflow-hidden text-gray-900 text-sm">
             <PartnerPage1 />
@@ -119,7 +121,7 @@ function renderAuthenticDocumentContent(template) {
   if (catId === "distributor" || tmplId.includes("distributor")) {
     return (
       <DocumentFieldsProvider initialValues={{}} defaultReadOnly={true}>
-        <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden select-none">
+        <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden">
           <DocumentHeader logo="/quotation.png" />
           <div className="flex-1 min-h-0 overflow-hidden text-gray-900 text-sm">
             <DistributorPage1 />
@@ -127,6 +129,14 @@ function renderAuthenticDocumentContent(template) {
           <DocumentFooter currentPage={1} totalPages={5} />
         </div>
       </DocumentFieldsProvider>
+    );
+  }
+
+  if (catId === "notification" || tmplId.includes("notification") || tmplId.includes("relocation")) {
+    return (
+      <div style={{ width: 794, height: 1123 }} className="bg-white overflow-hidden text-left font-noto-looped select-none">
+        <NotificationRelocationDocument />
+      </div>
     );
   }
 

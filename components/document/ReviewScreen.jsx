@@ -92,14 +92,20 @@ export default function ReviewScreen({
                   style={{ width: A4_WIDTH, height: A4_HEIGHT, minHeight: A4_HEIGHT }}
                 >
                   <div
-                    className="px-14 pt-10 pb-6 flex flex-col overflow-hidden text-left"
-                    style={{ height: A4_HEIGHT, boxSizing: "border-box" }}
+                    className="flex flex-col overflow-hidden text-left"
+                    style={{
+                      padding: `${template.hasHeader !== false ? "28px" : "0px"} 48px ${template.hasFooter !== false ? "28px" : "0px"} 48px`,
+                      height: A4_HEIGHT,
+                      boxSizing: "border-box",
+                    }}
                   >
-                    <DocumentHeader logo={template.logo} />
-                    <div className="flex-1 min-h-0 overflow-hidden">
+                    {template.hasHeader !== false && <DocumentHeader logo={template.logo} />}
+                    <div className="flex-1 min-h-0 flex flex-col">
                       <PageContent />
                     </div>
-                    <DocumentFooter title={template.fullName} pageNumber={i + 1} totalPages={pages.length} />
+                    {template.hasFooter !== false && (
+                      <DocumentFooter title={template.fullName} pageNumber={i + 1} totalPages={pages.length} />
+                    )}
                   </div>
                 </div>
               );
