@@ -14,7 +14,10 @@ import {
   Building,
   FileCheck2,
   ScrollText,
+  Braces,
+  Sparkles,
 } from "lucide-react";
+import { AVAILABLE_TOKEN_CATEGORIES } from "@/lib/tokens/tokenEngine";
 
 export default function LeftSidebar({
   onAddText,
@@ -23,8 +26,9 @@ export default function LeftSidebar({
   onAddPreset,
   onAddTable,
   onAddSignature,
+  onInsertToken,
 }) {
-  const [activeTab, setActiveTab] = useState("blocks"); // "blocks" | "text" | "shapes" | "uploads"
+  const [activeTab, setActiveTab] = useState("blocks"); // "blocks" | "tokens" | "text" | "shapes" | "uploads"
   const fileInputRef = useRef(null);
 
   // Handle local image file upload
@@ -58,6 +62,20 @@ export default function LeftSidebar({
         >
           <LayoutTemplate className="w-5 h-5" />
           <span className="text-[10px]">บล็อกเอกสาร</span>
+        </button>
+
+        {/* 🏷️ TAB: TOKENS / DYNAMIC VARIABLES (Phase 6) */}
+        <button
+          onClick={() => setActiveTab("tokens")}
+          className={`w-14 h-14 rounded-xl flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
+            activeTab === "tokens"
+              ? "bg-indigo-600 text-white shadow-sm font-semibold"
+              : "text-gray-600 hover:bg-gray-200/70 hover:text-gray-900"
+          }`}
+          title="ตัวแปรไดนามิก {{token}}"
+        >
+          <Braces className="w-5 h-5" />
+          <span className="text-[10px]">ตัวแปรไดนามิก</span>
         </button>
 
         <button
@@ -119,78 +137,64 @@ export default function LeftSidebar({
                     <Table className="w-4 h-4" />
                     <span>ตารางใบเสนอราคา (Pricing Table)</span>
                   </div>
-                  <p className="text-[11px] text-gray-500 leading-snug">
-                    ตารางรายการสินค้า พร้อมสูตรสรุปยอดรวม และภาษี VAT 7%
+                  <p className="text-[11px] text-gray-500">
+                    ตาราง 5 คอลัมน์พร้อมคำนวณ VAT 7% และยอดรวมอัตโนมัติ
                   </p>
                 </button>
 
-                {/* 2. Dual Signature */}
+                {/* 2. Signature Dual Block */}
                 <button
                   onClick={() => onAddSignature && onAddSignature("dual")}
-                  className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-indigo-50 hover:border-indigo-300 transition-all cursor-pointer group"
+                  className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
                 >
-                  <div className="flex items-center gap-2 mb-1 text-gray-900 group-hover:text-indigo-600 font-bold text-xs">
-                    <PenTool className="w-4 h-4" />
-                    <span>กล่องลงนาม 2 ฝั่ง (Dual Signature)</span>
+                  <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
+                    <PenTool className="w-4 h-4 text-indigo-600" />
+                    <span>บล็อกลงนามคู่ (ผู้เสนอราคา + ลูกค้า)</span>
                   </div>
-                  <p className="text-[11px] text-gray-500 leading-snug">
-                    ช่องลงนาม 2 คอลัมน์ (ผู้มีอำนาจฝ่ายเรา vs คู่สัญญา/ลูกค้า)
+                  <p className="text-[11px] text-gray-500">
+                    ช่องลงลายมือชื่อ 2 ฝั่งซ้าย-ขวา พร้อมวันที่และตำแหน่ง
                   </p>
                 </button>
 
-                {/* 3. Single Signature */}
-                <button
-                  onClick={() => onAddSignature && onAddSignature("single")}
-                  className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-indigo-50 hover:border-indigo-300 transition-all cursor-pointer group"
-                >
-                  <div className="flex items-center gap-2 mb-1 text-gray-900 group-hover:text-indigo-600 font-bold text-xs">
-                    <PenTool className="w-4 h-4" />
-                    <span>ช่องลงนามเดี่ยว (Single Signature)</span>
-                  </div>
-                  <p className="text-[11px] text-gray-500 leading-snug">
-                    คำลงท้าย ขอแสดงความนับถือ + เส้นประ + ตำแหน่ง
-                  </p>
-                </button>
-
-                {/* 4. Company Header */}
+                {/* 3. Company Header Block */}
                 <button
                   onClick={() => onAddPreset && onAddPreset("company_header")}
-                  className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-indigo-50 hover:border-indigo-300 transition-all cursor-pointer group"
+                  className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
                 >
-                  <div className="flex items-center gap-2 mb-1 text-gray-900 group-hover:text-indigo-600 font-bold text-xs">
-                    <Building className="w-4 h-4" />
-                    <span>หัวกระดาษบริษัท (Company Letterhead)</span>
+                  <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
+                    <Building className="w-4 h-4 text-emerald-600" />
+                    <span>หัวกระดาษบริษัท (Company Header)</span>
                   </div>
-                  <p className="text-[11px] text-gray-500 leading-snug">
-                    ชื่อบริษัท + เลขประจำตัวผู้เสียภาษี + ที่อยู่ + เส้นคั่น
+                  <p className="text-[11px] text-gray-500">
+                    ชื่อบริษัท, เลขประจำตัวผู้เสียภาษี, ที่อยู่, เบอร์โทร
                   </p>
                 </button>
 
-                {/* 5. Party Info Grid */}
+                {/* 4. Party Info Grid */}
                 <button
                   onClick={() => onAddPreset && onAddPreset("party_info")}
-                  className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-indigo-50 hover:border-indigo-300 transition-all cursor-pointer group"
+                  className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
                 >
-                  <div className="flex items-center gap-2 mb-1 text-gray-900 group-hover:text-indigo-600 font-bold text-xs">
-                    <FileCheck2 className="w-4 h-4" />
-                    <span>กล่องข้อมูลผู้รับ & วันที่ (Info Grid)</span>
+                  <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
+                    <FileCheck2 className="w-4 h-4 text-purple-600" />
+                    <span>ข้อมูลคู่สัญญา / เลขที่เอกสาร (Info Grid)</span>
                   </div>
-                  <p className="text-[11px] text-gray-500 leading-snug">
-                    เรียน / To, เรื่อง / Subject, วันที่ / Date
+                  <p className="text-[11px] text-gray-500">
+                    กล่อง Bill To และช่องเลขที่/วันที่เอกสารแบบ 2 คอลัมน์
                   </p>
                 </button>
 
-                {/* 6. Terms Box */}
+                {/* 5. Terms & Conditions Box */}
                 <button
                   onClick={() => onAddPreset && onAddPreset("terms_box")}
-                  className="w-full text-left p-3 rounded-xl border border-amber-200 bg-amber-50/40 hover:bg-amber-50 hover:border-amber-300 transition-all cursor-pointer group"
+                  className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
                 >
-                  <div className="flex items-center gap-2 mb-1 text-amber-800 font-bold text-xs">
-                    <ScrollText className="w-4 h-4" />
-                    <span>ข้อกำหนดและเงื่อนไข (Terms Box)</span>
+                  <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
+                    <ScrollText className="w-4 h-4 text-amber-600" />
+                    <span>เงื่อนไขและข้อตกลง (Terms & Conditions)</span>
                   </div>
-                  <p className="text-[11px] text-gray-500 leading-snug">
-                    กล่องข้อกำหนดชำระเงิน การยืนราคา และเงื่อนไขสัญญา
+                  <p className="text-[11px] text-gray-500">
+                    กล่องข้อกำหนดการชำระเงินและเงื่อนไขการส่งมอบ
                   </p>
                 </button>
               </div>
@@ -198,7 +202,49 @@ export default function LeftSidebar({
           </div>
         )}
 
-        {/* ── TAB 2: TEXT ── */}
+        {/* ── TAB 2: DYNAMIC TOKENS (Phase 6) ── */}
+        {activeTab === "tokens" && (
+          <div className="space-y-4">
+            <div className="p-2.5 bg-indigo-50/70 border border-indigo-200 rounded-xl">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-900 mb-1">
+                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                <span>ตัวแปรไดนามิก (Data Binding)</span>
+              </div>
+              <p className="text-[11px] text-indigo-800 leading-relaxed">
+                คลิกที่ตัวแปรด้านล่างเพื่อแทรกลงในข้อความ หรือแทรกลงในตาราง ระบบจะดึงข้อมูลจริงมาแทนที่อัตโนมัติเมื่อสร้างเอกสาร
+              </p>
+            </div>
+
+            {AVAILABLE_TOKEN_CATEGORIES.map((cat, idx) => (
+              <div key={idx} className="space-y-2">
+                <h3 className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">
+                  {cat.category}
+                </h3>
+                <div className="space-y-1.5">
+                  {cat.tokens.map((tok) => (
+                    <button
+                      key={tok.key}
+                      onClick={() => onInsertToken && onInsertToken(tok.key, tok.example)}
+                      className="w-full text-left p-2 rounded-lg border border-gray-200 hover:border-indigo-400 hover:bg-indigo-50/40 transition-all cursor-pointer group bg-white shadow-2xs"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold text-indigo-600 group-hover:text-indigo-800">
+                          {tok.key}
+                        </span>
+                        <span className="text-[10px] text-gray-500">{tok.label}</span>
+                      </div>
+                      <div className="text-[10px] text-gray-400 truncate mt-0.5">
+                        ตัวอย่าง: {tok.example}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ── TAB 3: TEXT ── */}
         {activeTab === "text" && (
           <div className="space-y-4">
             <div>
@@ -208,293 +254,111 @@ export default function LeftSidebar({
               <div className="space-y-2">
                 <button
                   onClick={() =>
+                    onAddText &&
                     onAddText({
-                      text: "หัวข้อเอกสาร (Heading)",
+                      text: "หัวข้อเอกสาร (Heading 1)",
                       fontSize: 22,
                       fontWeight: "bold",
                     })
                   }
-                  className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-indigo-50 hover:border-indigo-300 transition-all cursor-pointer group"
+                  className="w-full text-left p-3 rounded-xl border border-gray-200 hover:border-indigo-500 hover:bg-indigo-50/30 transition-all cursor-pointer"
                 >
-                  <p className="text-base font-bold text-gray-900 group-hover:text-indigo-600">
-                    หัวข้อใหญ่ (Heading 1)
-                  </p>
-                  <p className="text-[11px] text-gray-400">ขนาด 22px ตัวหนา</p>
+                  <p className="font-bold text-base text-gray-900">หัวข้อใหญ่ (H1)</p>
+                  <p className="text-[11px] text-gray-400">22px • ตัวหนา (Bold)</p>
                 </button>
 
                 <button
                   onClick={() =>
+                    onAddText &&
                     onAddText({
-                      text: "หัวข้อย่อย (Subheading)",
+                      text: "หัวข้อย่อย (Heading 2)",
                       fontSize: 16,
-                      fontWeight: "600",
+                      fontWeight: "bold",
                     })
                   }
-                  className="w-full text-left p-2.5 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-indigo-50 hover:border-indigo-300 transition-all cursor-pointer group"
+                  className="w-full text-left p-2.5 rounded-xl border border-gray-200 hover:border-indigo-500 hover:bg-indigo-50/30 transition-all cursor-pointer"
                 >
-                  <p className="text-sm font-semibold text-gray-800 group-hover:text-indigo-600">
-                    หัวข้อย่อย (Heading 2)
-                  </p>
-                  <p className="text-[11px] text-gray-400">ขนาด 16px ตัวกึ่งหนา</p>
+                  <p className="font-bold text-sm text-gray-800">หัวข้อย่อย (H2)</p>
+                  <p className="text-[11px] text-gray-400">16px • กึ่งหนา</p>
                 </button>
 
                 <button
                   onClick={() =>
+                    onAddText &&
                     onAddText({
-                      text: "พิมพ์ข้อความเนื้อหาเอกสารตรงนี้...",
-                      fontSize: 13,
+                      text: "ข้อความเนื้อหาเอกสาร รายละเอียด หรือเงื่อนไขต่างๆ...",
+                      fontSize: 12,
                       fontWeight: "normal",
                     })
                   }
-                  className="w-full text-left p-2.5 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-indigo-50 hover:border-indigo-300 transition-all cursor-pointer group"
+                  className="w-full text-left p-2.5 rounded-xl border border-gray-200 hover:border-indigo-500 hover:bg-indigo-50/30 transition-all cursor-pointer"
                 >
-                  <p className="text-xs font-normal text-gray-700 group-hover:text-indigo-600">
-                    เนื้อหาข้อความ (Body Text)
-                  </p>
-                  <p className="text-[11px] text-gray-400">ขนาด 13px ข้อความปกติ</p>
+                  <p className="text-xs text-gray-700">เนื้อหาเอกสาร (Body Text)</p>
+                  <p className="text-[11px] text-gray-400">12px • ขนาดปกติ</p>
                 </button>
-              </div>
-            </div>
-
-            {/* Document Specific Text Presets */}
-            <div>
-              <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                ข้อความสำเร็จรูป (Document Labels)
-              </h2>
-              <div className="space-y-1.5">
-                {[
-                  {
-                    title: "หนังสือแจ้งเปลี่ยนแปลงที่ตั้งสำนักงานใหญ่",
-                    fontFamily: "'Noto Sans Thai', sans-serif",
-                    fontSize: 16,
-                    fontWeight: "bold",
-                  },
-                  {
-                    title: "วันที่ / Date: 01 กันยายน 2569",
-                    fontFamily: "'Noto Sans Thai', sans-serif",
-                    fontSize: 13,
-                    fontWeight: "normal",
-                  },
-                  {
-                    title: "เรียน / To: ท่านคู่ค้าและลูกค้าผู้มีอุปการคุณ",
-                    fontFamily: "'Noto Sans Thai', sans-serif",
-                    fontSize: 13,
-                    fontWeight: "normal",
-                  },
-                  {
-                    title: "เรื่อง / Subject: แจ้งเปลี่ยนแปลงที่อยู่สำนักงานใหญ่",
-                    fontFamily: "'Noto Sans Thai', sans-serif",
-                    fontSize: 13,
-                    fontWeight: "normal",
-                  },
-                  {
-                    title: "ขอแสดงความนับถือ / Sincerely yours,",
-                    fontFamily: "'Noto Sans Thai', sans-serif",
-                    fontSize: 13,
-                    fontWeight: "normal",
-                  },
-                ].map((item, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() =>
-                      onAddText({
-                        text: item.title,
-                        fontSize: item.fontSize,
-                        fontWeight: item.fontWeight,
-                        fontFamily: item.fontFamily,
-                      })
-                    }
-                    className="w-full text-left px-3 py-2 rounded-lg bg-gray-50 hover:bg-indigo-50 border border-gray-100 hover:border-indigo-200 text-xs text-gray-800 transition-colors cursor-pointer"
-                  >
-                    {item.title}
-                  </button>
-                ))}
               </div>
             </div>
           </div>
         )}
 
-        {/* ── TAB 3: SHAPES ── */}
+        {/* ── TAB 4: SHAPES ── */}
         {activeTab === "shapes" && (
           <div className="space-y-4">
             <div>
               <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                รูปทรงพื้นฐาน (Basic Shapes)
+                รูปทรงเรขาคณิต & เส้น
               </h2>
               <div className="grid grid-cols-2 gap-2">
                 <button
-                  onClick={() =>
-                    onAddShape({
-                      type: "rect",
-                      width: 200,
-                      height: 100,
-                      fill: "#F3F4F6",
-                      stroke: "#9CA3AF",
-                      strokeWidth: 1,
-                      rx: 0,
-                    })
-                  }
-                  className="p-3 border border-gray-200 rounded-xl hover:bg-indigo-50 hover:border-indigo-300 flex flex-col items-center gap-1.5 transition-all cursor-pointer"
+                  onClick={() => onAddShape && onAddShape({ type: "rect" })}
+                  className="p-3 rounded-xl border border-gray-200 hover:border-indigo-500 hover:bg-indigo-50/30 flex flex-col items-center gap-1.5 transition-all cursor-pointer"
                 >
-                  <Square className="w-8 h-8 text-gray-700" />
-                  <span className="text-[11px] font-medium text-gray-700">กล่องสี่เหลี่ยม</span>
+                  <Square className="w-6 h-6 text-gray-700" />
+                  <span className="text-xs font-medium text-gray-700">สี่เหลี่ยม</span>
                 </button>
 
                 <button
-                  onClick={() =>
-                    onAddShape({
-                      type: "rect",
-                      width: 240,
-                      height: 110,
-                      fill: "#F1F5F9",
-                      stroke: "#64748B",
-                      strokeWidth: 1.5,
-                      rx: 8,
-                    })
-                  }
-                  className="p-3 border border-gray-200 rounded-xl hover:bg-indigo-50 hover:border-indigo-300 flex flex-col items-center gap-1.5 transition-all cursor-pointer"
+                  onClick={() => onAddShape && onAddShape({ type: "circle" })}
+                  className="p-3 rounded-xl border border-gray-200 hover:border-indigo-500 hover:bg-indigo-50/30 flex flex-col items-center gap-1.5 transition-all cursor-pointer"
                 >
-                  <div className="w-8 h-8 rounded-md bg-gray-200 border border-gray-500" />
-                  <span className="text-[11px] font-medium text-gray-700">กล่องขอบมน</span>
+                  <Circle className="w-6 h-6 text-gray-700" />
+                  <span className="text-xs font-medium text-gray-700">วงกลม</span>
                 </button>
 
                 <button
-                  onClick={() =>
-                    onAddShape({
-                      type: "circle",
-                      radius: 45,
-                      fill: "#EEF2FF",
-                      stroke: "#6366F1",
-                      strokeWidth: 2,
-                    })
-                  }
-                  className="p-3 border border-gray-200 rounded-xl hover:bg-indigo-50 hover:border-indigo-300 flex flex-col items-center gap-1.5 transition-all cursor-pointer"
+                  onClick={() => onAddShape && onAddShape({ type: "line" })}
+                  className="p-3 rounded-xl border border-gray-200 hover:border-indigo-500 hover:bg-indigo-50/30 flex flex-col items-center gap-1.5 transition-all cursor-pointer col-span-2"
                 >
-                  <Circle className="w-8 h-8 text-indigo-600" />
-                  <span className="text-[11px] font-medium text-gray-700">วงกลม / ตรา</span>
-                </button>
-
-                <button
-                  onClick={() =>
-                    onAddShape({
-                      type: "line",
-                      width: 300,
-                      stroke: "#D1D5DB",
-                      strokeWidth: 1.5,
-                    })
-                  }
-                  className="p-3 border border-gray-200 rounded-xl hover:bg-indigo-50 hover:border-indigo-300 flex flex-col items-center gap-1.5 transition-all cursor-pointer"
-                >
-                  <Minus className="w-8 h-8 text-gray-500" />
-                  <span className="text-[11px] font-medium text-gray-700">เส้นคั่น (Line)</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Document Highlight Cards */}
-            <div>
-              <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                กล่องข้อมูลเอกสาร (Document Cards)
-              </h2>
-              <div className="space-y-2">
-                <button
-                  onClick={() =>
-                    onAddShape({
-                      type: "rect",
-                      width: 680,
-                      height: 75,
-                      fill: "#F1F3F5",
-                      stroke: "#6B7280",
-                      strokeWidth: 3,
-                      rx: 3,
-                    })
-                  }
-                  className="w-full p-2.5 rounded-lg border-l-4 border-gray-500 bg-[#F1F3F5] text-left hover:opacity-90 transition-opacity cursor-pointer"
-                >
-                  <p className="text-xs font-bold text-gray-800">กล่องที่อยู่เดิม (Previous Address)</p>
-                  <p className="text-[10px] text-gray-500">พื้นหลังสีเทาอ่อน ขอบซ้ายหนา</p>
-                </button>
-
-                <button
-                  onClick={() =>
-                    onAddShape({
-                      type: "rect",
-                      width: 680,
-                      height: 75,
-                      fill: "#E2EEFB",
-                      stroke: "#1D4ED8",
-                      strokeWidth: 3,
-                      rx: 3,
-                    })
-                  }
-                  className="w-full p-2.5 rounded-lg border-l-4 border-[#1D4ED8] bg-[#E2EEFB] text-left hover:opacity-90 transition-opacity cursor-pointer"
-                >
-                  <p className="text-xs font-bold text-blue-900">กล่องที่อยู่ใหม่ (New Address)</p>
-                  <p className="text-[10px] text-blue-700">พื้นหลังสีฟ้าพาสเทล ขอบซ้ายสีน้ำเงิน</p>
+                  <Minus className="w-6 h-6 text-gray-700" />
+                  <span className="text-xs font-medium text-gray-700">เส้นคั่น (Divider Line)</span>
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* ── TAB 4: UPLOADS ── */}
+        {/* ── TAB 5: UPLOADS ── */}
         {activeTab === "uploads" && (
           <div className="space-y-4">
             <div>
               <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                อัปโหลดรูปภาพของคุณ
+                อัปโหลดรูปภาพ / โลโก้
               </h2>
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/png,image/jpeg,image/svg+xml"
                 onChange={handleFileChange}
                 className="hidden"
               />
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full border-2 border-dashed border-indigo-300 bg-indigo-50/50 hover:bg-indigo-50 rounded-2xl p-6 flex flex-col items-center justify-center gap-2 text-center transition-all cursor-pointer group"
+                className="w-full p-5 rounded-2xl border-2 border-dashed border-indigo-200 bg-indigo-50/40 hover:bg-indigo-50 flex flex-col items-center justify-center gap-2 text-indigo-700 transition-colors cursor-pointer"
               >
-                <div className="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                  <UploadCloud className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-indigo-900">คลิกเพื่ออัปโหลดไฟล์</p>
-                  <p className="text-[10px] text-indigo-600/70">รองรับ PNG, JPG, SVG, WebP</p>
-                </div>
+                <UploadCloud className="w-8 h-8 text-indigo-500" />
+                <span className="text-xs font-bold">เลือกไฟล์รูปภาพ / โลโก้</span>
+                <span className="text-[10px] text-gray-400">PNG, JPG, SVG</span>
               </button>
-            </div>
-
-            {/* Preset Sample Logos */}
-            <div>
-              <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                โลโก้ตัวอย่างในระบบ
-              </h2>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  { name: "Header Logo", url: "/header_logo.png" },
-                  { name: "Quotation Logo", url: "/quotation.png" },
-                  { name: "Partner Logo", url: "/Partner-logo.webp" },
-                ].map((logo, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => onAddImage(logo.url)}
-                    className="p-3 border border-gray-200 rounded-xl hover:bg-gray-50 flex flex-col items-center gap-2 transition-all cursor-pointer"
-                  >
-                    <div className="w-14 h-14 bg-white rounded border border-gray-100 flex items-center justify-center p-1">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={logo.url}
-                        alt={logo.name}
-                        className="max-h-full max-w-full object-contain"
-                      />
-                    </div>
-                    <span className="text-[10px] font-medium text-gray-700 truncate w-full text-center">
-                      {logo.name}
-                    </span>
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
         )}

@@ -21,13 +21,15 @@ import {
   Plus,
   Table as TableIcon,
 } from "lucide-react";
-import { A4_WIDTH, A4_HEIGHT } from "./CanvasStage";
+import { getCanvasPreset } from "@/lib/editor/canvasPresets";
 
 export default function RightSidebar({
   canvas,
   activeObject,
   onPushHistory,
+  canvasPreset = "a4-portrait",
 }) {
+  const preset = getCanvasPreset(canvasPreset);
   const [activeTab, setActiveTab] = useState("properties");
   const [layersList, setLayersList] = useState([]);
 
@@ -138,22 +140,22 @@ export default function RightSidebar({
 
     switch (type) {
       case "left":
-        activeObject.set("left", 56);
+        activeObject.set("left", preset.marginPx);
         break;
       case "center":
-        activeObject.set("left", (A4_WIDTH - objWidth) / 2);
+        activeObject.set("left", (preset.width - objWidth) / 2);
         break;
       case "right":
-        activeObject.set("left", A4_WIDTH - 56 - objWidth);
+        activeObject.set("left", preset.width - preset.marginPx - objWidth);
         break;
       case "top":
-        activeObject.set("top", 56);
+        activeObject.set("top", preset.marginPx);
         break;
       case "middle":
-        activeObject.set("top", (A4_HEIGHT - objHeight) / 2);
+        activeObject.set("top", (preset.height - objHeight) / 2);
         break;
       case "bottom":
-        activeObject.set("top", A4_HEIGHT - 56 - objHeight);
+        activeObject.set("top", preset.height - preset.marginPx - objHeight);
         break;
     }
 
@@ -265,16 +267,16 @@ export default function RightSidebar({
 
               <div className="bg-gray-50 rounded-xl p-3 border border-gray-100 text-left space-y-1.5 mt-4">
                 <div className="flex justify-between text-gray-500">
-                  <span>ขนาดเอกสาร:</span>
-                  <span className="font-mono font-semibold text-gray-800">A4 (210 × 297 mm)</span>
+                  <span>ประเภท / ขนาด:</span>
+                  <span className="font-mono font-semibold text-gray-800">{preset.name}</span>
                 </div>
                 <div className="flex justify-between text-gray-500">
                   <span>พิกเซล (96 DPI):</span>
-                  <span className="font-mono font-semibold text-gray-800">794 × 1123 px</span>
+                  <span className="font-mono font-semibold text-gray-800">{preset.width} × {preset.height} px</span>
                 </div>
                 <div className="flex justify-between text-gray-500">
                   <span>ระยะขอบ (Margin):</span>
-                  <span className="font-mono font-semibold text-rose-500">15 mm (56 px)</span>
+                  <span className="font-mono font-semibold text-rose-500">{preset.mmWidth ? `15 mm (${preset.marginPx} px)` : `${preset.marginPx} px`}</span>
                 </div>
               </div>
             </div>

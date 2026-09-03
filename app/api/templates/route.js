@@ -17,17 +17,38 @@ export async function GET(req) {
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { name, categoryId, description, icon, badge, status, orientation, theme, blocks } = body;
+    const {
+      name,
+      categoryId,
+      description,
+      icon,
+      badge,
+      status,
+      orientation,
+      theme,
+      blocks,
+      pageCount,
+      pages,
+      editorType,
+      canvasPreset,
+      sheetData,
+    } = body;
 
     if (!name?.trim()) {
       return NextResponse.json({ error: "กรุณาระบุชื่อเทมเพลต" }, { status: 400 });
     }
 
+    const validEditorTypes = ["document", "slide", "sheet"];
+    const safeEditorType = editorType && validEditorTypes.includes(editorType) ? editorType : "document";
+    const safeCanvasPreset = canvasPreset || (safeEditorType === "slide" ? "slide-16-9" : "a4-portrait");
+
     const created = await customTemplatesRepo.create({
       name: name.trim(),
       categoryId: categoryId || "forms",
+      editorType: safeEditorType,
+      canvasPreset: safeCanvasPreset,
       description: description || "",
-      icon: icon || "FileText",
+      icon: icon || (safeEditorType === "sheet" ? "Table" : "FileText"),
       badge: badge || "กำหนดเอง",
       status: status || "published",
       orientation: orientation || "portrait",
@@ -36,6 +57,9 @@ export async function POST(req) {
         backgroundColor: "#FFFFFF",
         hasWatermark: false,
       },
+      pageCount: pageCount || (pages?.length || 1),
+      pages: Array.isArray(pages) ? pages : [],
+      sheetData: Array.isArray(sheetData) ? sheetData : [],
       blocks: Array.isArray(blocks) ? blocks : [],
     });
 

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Folder,
   Layers,
@@ -38,6 +39,7 @@ import {
 import CategoryManagerModal, { ICON_MAP, COLOR_MAP } from "@/components/templates/CategoryManagerModal";
 import CreateCategoryModal, { EXTENDED_ICON_MAP } from "@/components/templates/CreateCategoryModal";
 import TemplateDetailModal from "@/components/templates/TemplateDetailModal";
+import NewTemplateTypeModal from "@/components/templates/NewTemplateTypeModal";
 import UniversalTemplateRenderer from "@/components/document/UniversalTemplateRenderer";
 import { QuotationDataProvider } from "@/context/QuotationDataContext";
 import QuotationDocument from "@/components/document/quotation/QuotationDocument";
@@ -170,6 +172,7 @@ function CardMiniaturePreview({ template }) {
 }
 
 export default function TemplatesHubPage() {
+  const router = useRouter();
   const [categories, setCategories] = useState([]);
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -180,11 +183,23 @@ export default function TemplatesHubPage() {
   const [previewTemplate, setPreviewTemplate] = useState(null);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isCreateCategoryModalOpen, setIsCreateCategoryModalOpen] = useState(false);
+  const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
 
   // Renaming Template State
   const [renamingTemplate, setRenamingTemplate] = useState(null);
   const [newName, setNewName] = useState("");
   const [isRenamingLoading, setIsRenamingLoading] = useState(false);
+
+  const handleSelectType = (editorType) => {
+    setIsTypeModalOpen(false);
+    const catId = selectedCategory?.id || "forms";
+    if (editorType === "sheet") {
+      router.push(`/templates/new?categoryId=${catId}&editorType=sheet`);
+    } else {
+      const preset = editorType === "slide" ? "slide-16-9" : "a4-portrait";
+      router.push(`/templates/new?categoryId=${catId}&editorType=${editorType}&canvasPreset=${preset}`);
+    }
+  };
 
   // Load Categories & Templates from API dynamically
   const loadData = async () => {
@@ -474,13 +489,14 @@ export default function TemplatesHubPage() {
             </div>
 
             {/* Action: Create New Template in this Category */}
-            <Link
-              href={`/templates/new?categoryId=${selectedCategory.id}`}
+            <button
+              type="button"
+              onClick={() => setIsTypeModalOpen(true)}
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#5542F6] hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
             >
               <Plus size={15} />
               <span>สร้างเทมเพลตใหม่ในหมวดนี้</span>
-            </Link>
+            </button>
           </div>
 
           {/* Search in this category */}
@@ -507,13 +523,14 @@ export default function TemplatesHubPage() {
               <p className="text-xs text-gray-500">
                 คุณสามารถสร้างแม่แบบเทมเพลตใหม่สำหรับหมวด {selectedCategory.name} ได้ทันที
               </p>
-              <Link
-                href={`/templates/new?categoryId=${selectedCategory.id}`}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#5542F6] text-white text-xs font-bold cursor-pointer"
+              <button
+                type="button"
+                onClick={() => setIsTypeModalOpen(true)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#5542F6] hover:bg-[#4332D6] text-white text-xs font-bold cursor-pointer transition-colors"
               >
                 <Plus size={14} />
                 <span>สร้างเทมเพลตใหม่</span>
-              </Link>
+              </button>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -670,6 +687,14 @@ export default function TemplatesHubPage() {
           onClose={() => setPreviewTemplate(null)}
         />
       )}
+
+      {/* New Template Type Picker Modal (Docs / Slides / Sheets) */}
+      <NewTemplateTypeModal
+        isOpen={isTypeModalOpen}
+        onClose={() => setIsTypeModalOpen(false)}
+        onSelect={handleSelectType}
+        categoryName={selectedCategory?.name}
+      />
     </div>
   );
 }

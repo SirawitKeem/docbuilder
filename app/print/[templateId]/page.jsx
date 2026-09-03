@@ -6,6 +6,7 @@ import { DocumentFieldsProvider } from "@/context/DocumentFieldsContext";
 import { templateRegistry } from "@/lib/templates/registry";
 import DocumentHeader from "@/components/document/DocumentHeader";
 import DocumentFooter from "@/components/document/DocumentFooter";
+import FabricPrintRenderer from "@/components/document/FabricPrintRenderer";
 import "@/app/print/print.css";
 
 function decodeValues(encoded) {
@@ -40,11 +41,12 @@ function PrintContent() {
   const searchParams = useSearchParams();
 
   const [injectedData, setInjectedData] = useState(null);
+  const [customTemplate, setCustomTemplate] = useState(null);
   const [isReady, setIsReady] = useState(false);
+  const [loadingCustom, setLoadingCustom] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined" && window.__PRINT_DATA__) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setInjectedData(window.__PRINT_DATA__);
     }
   }, []);
@@ -53,18 +55,60 @@ function PrintContent() {
   const activeWatermark = values.watermark || searchParams.get("watermark");
   const entry = templateRegistry[templateId];
 
+  // If not in static registry, fetch custom template from API
+  useEffect(() => {
+    if (!entry && templateId) {
+      setLoadingCustom(true);
+      fetch(`/api/templates/${templateId}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data) {
+            setCustomTemplate(data);
+          }
+        })
+        .catch((err) => console.error("Error fetching custom template:", err))
+        .finally(() => setLoadingCustom(false));
+    }
+  }, [entry, templateId]);
+
   useEffect(() => {
     if (typeof document !== "undefined" && document.fonts) {
       document.fonts.ready.then(() => {
-        setIsReady(true);
+        if (entry) setIsReady(true);
       });
     } else {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setIsReady(true);
+      if (entry) setIsReady(true);
     }
-  }, []);
+  }, [entry]);
 
-  if (!entry) return <p>ไม่พบเทมเพลต: {templateId}</p>;
+  // 1. Custom Studio Template Rendering (Docs / Slides)
+  if (!entry && customTemplate) {
+    const isSlide = customTemplate?.canvasPreset === "slide-16-9" || customTemplate?.editorType === "slide";
+    const pageWidth = isSlide ? 1280 : 794;
+
+    return (
+      <div id="print-root" className="bg-white relative" style={{ width: `${pageWidth}px` }}>
+        <FabricPrintRenderer
+          template={customTemplate}
+          values={values}
+          onReady={() => setIsReady(true)}
+        />
+      </div>
+    );
+  }
+
+  if (!entry && loadingCustom) {
+    return (
+      <div className="p-8 text-center text-xs text-gray-500 font-sans">
+        กำลังโหลดเทมเพลตสำหรับพิมพ์...
+      </div>
+    );
+  }
+
+  if (!entry && !customTemplate) {
+    return <p className="p-8 text-red-500 font-sans">ไม่พบเทมเพลต: {templateId}</p>;
+  }
+
   const { schema, pages, DocumentComponent } = entry;
 
   if (schema?.type === "quotation" || DocumentComponent) {
@@ -121,12 +165,10 @@ function PrintContent() {
               box-sizing: border-box !important;
               position: relative !important;
             }
-            /* Page break BEFORE page 2, 3, ... only — never AFTER the last page */
             .quotation-document-wrapper > div + div {
               page-break-before: always !important;
               break-before: page !important;
             }
-            /* Remove Tailwind space-y-8 margin gaps between page cards in print/Puppeteer */
             .quotation-document-wrapper > :not([hidden]) ~ :not([hidden]) {
               --tw-space-y-reverse: 0 !important;
               margin-top: 0 !important;

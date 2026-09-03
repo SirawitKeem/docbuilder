@@ -9,9 +9,15 @@ export const SUMMARY_HEIGHT = 84;
 
 export const CUSTOM_CANVAS_PROPS = [
   "id",
+  "name",
   "isDocTable",
   "docTableData",
+  "rawItems",
   "isPageFooterNumber",
+  "isTokenField",
+  "tokenKey",
+  "rawTemplateText",
+  "tokenDefaultValue",
   "lockMovementX",
   "lockMovementY",
   "lockRotation",

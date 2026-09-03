@@ -1,164 +1,187 @@
 # 📚 DocBuilder (Ally Doc) - Project Context & Architecture Guide
 
-> **จุดประสงค์ของเอกสารนี้**: เอกสารสรุปบริบทและโครงสร้างทั้งหมดของโปรเจกต์ **DocBuilder (Ally Doc)** เพื่อให้ AI หรือนักพัฒนาคนใหม่สามารถทำความเข้าใจสถาปัตยกรรม, โค้ด, ดีไซน์ซิสเต็ม, และสถานะของโปรเจกต์ได้อย่างรวดเร็วและแม่นยำ 100%
+> **จุดประสงค์ของเอกสารนี้**: เอกสารสรุปบริบท สถาปัตยกรรม โครงสร้างโค้ด ดีไซน์ซิสเต็ม และสถานะการพัฒนาของโปรเจกต์ **DocBuilder (Ally Doc)** ครอบคลุมทั้งระบบเดิมและ **A4 Document Studio (Canva-like Engine Phase 1–7)** เพื่อให้นักพัฒนาหรือ AI Agent สามารถทำความเข้าใจและทำงานต่อได้อย่างถูกต้อง แม่นยำ 100%
 
 ---
 
 ## 1. 🌟 ภาพรวมโปรเจกต์ (Project Overview)
 
-* **ชื่อโปรเจกต์**: `DocBuilder` / `Ally Doc` (AI-Powered Document Automation & Management System)
-* **เป้าหมาย**: ระบบสร้าง, จัดการ, ออกเอกสารสัญญา และใบเสนอราคาออนไลน์ระดับองค์กร รองรับการซิงค์ข้อมูลส่วนกลาง (Central Profile Data), การคำนวณภาษี/ส่วนลดหลายหน้ากระดาษ (Multi-Page Quotation), การแสดงตัวอย่างแบบ A4 (Live A4 Preview), การส่งออก/พิมพ์ PDF, และการส่งอีเมลพร้อมประวัติติดตามสถานะ
+* **ชื่อโปรเจกต์**: `DocBuilder` / `Ally Doc` (AI-Powered Document Automation & Visual Studio)
+* **เป้าหมายหลัก**:
+  1. **Document Workspaces**: ออกเอกสารสัญญา ใบเสนอราคา ใบเสร็จรับเงิน ประกาศ และแบบฟอร์มองค์กรแบบอัตโนมัติ
+  2. **A4 Document Studio (Canva-like Editor)**: เครื่องมือออกแบบและแก้ไขเทมเพลตเอกสารขนาด A4 เสมือนจริง ทำงานด้วย Fabric.js v6 แบบ Native Multi-Page, Dual mm Rulers, Dynamic Pricing Table, Text Tokenization, และ True Vector PDF Export
 * **เทคโนโลยีหลัก (Tech Stack)**:
   * **Framework**: Next.js 16+ (App Router, Turbopack)
-  * **Language & Files**: React 19 (ไฟล์ทั้งหมดในโปรเจกต์ถูกแปลงเป็น `.jsx` เพื่อความเรียบง่ายและเป็นมาตรฐานเดียวกัน)
-  * **Styling**: Tailwind CSS, PostCSS, Lucide React Icons
-  * **3D Graphics & Physics**: Three.js (WebGL Canvas สำหรับ 3D Particle Animation ในหน้า Auth)
-  * **State & Data**: React Context (`DocumentFieldsContext.jsx`), RESTful API Handlers (`app/api/`)
+  * **Frontend Engine**: React 19 (`.jsx`), Fabric.js v6 (HTML5 Canvas & Vector SVG Engine)
+  * **PDF & Printing**: Puppeteer Headless (Chromium PDF Generator), SVG Vector Layer, Google Fonts (`Noto Sans Thai`, `Noto Sans Thai Looped`, `Sarabun`)
+  * **Styling**: Tailwind CSS v4, PostCSS, Lucide React Icons
+  * **3D Animation**: Three.js (WebGL Conic Particles ในหน้า Auth)
+  * **Database & Persistence**: JSON-based Database Adapter (`data/db.json`, `lib/db/adapters/json/`)
 
 ---
 
-## 2. 🗂️ โครงสร้างโฟลเดอร์และเส้นทางของระบบ (Project Structure & Routing)
+## 2. 🗂️ โครงสร้างโฟลเดอร์หลักของระบบ (Project Architecture)
 
 ```
 docbuilder/
 ├── app/
-│   ├── (auth)/                          # ระบบยืนยันตัวตน (Authentication)
-│   │   ├── login/page.jsx               # หน้าเข้าสู่ระบบ
-│   │   ├── sign-up/page.jsx             # หน้าลงทะเบียนบัญชีใหม่
-│   │   ├── reset-password/page.jsx      # หน้ารีเซ็ตรหัสผ่าน
-│   │   └── two-step-verification/       # หน้ายืนยันรหัส OTP 2 ขั้นตอน (2FA)
+│   ├── (auth)/                          # ระบบยืนยันตัวตน (Login, Register, 2FA, 3D Canvas)
+│   ├── (main)/                          # หน้าหลักแอปพลิเคชัน
+│   │   ├── page.jsx                     # Dashboard หน้าแรก
+│   │   ├── create/                      # หน้ารวมฟอร์มสร้างสัญญา (NDA, Quotation, Distributor, Partner)
+│   │   ├── documents/page.jsx           # คลังจัดการเอกสารของฉัน (My Documents)
+│   │   ├── profile-data/                # จัดการโปรไฟล์ข้อมูลส่วนกลาง (Shared Profiles)
+│   │   ├── templates/                   # แคตตาล็อกเทมเพลต และตัวเปิด Studio Editor
+│   │   │   ├── page.jsx                 # หน้ารายการเทมเพลตทั้งหมด
+│   │   │   └── new/                     # 🎨 A4 Document Studio (Canva-like Editor)
+│   │   │       ├── page.jsx             # Template Builder Shell & API Sync
+│   │   │       └── components/editor/   # องค์ประกอบของ A4 Studio Engine
+│   │   │           ├── DocumentEditor.jsx       # Main Studio Coordinator & State Manager
+│   │   │           ├── CanvasStage.jsx          # Fabric Canvas Stage, mm Rulers & Snapping
+│   │   │           ├── TopToolbar.jsx           # Toolbar, Zoom, Preview Mode, Undo/Redo
+│   │   │           ├── LeftSidebar.jsx          # Tool Sidebar (Text, Shape, Image, Table, Tokens)
+│   │   │           ├── RightSidebar.jsx         # Properties & Layers Panel (Colors, Fonts, Align)
+│   │   │           ├── PagePaginationBar.jsx    # Multi-Page Bottom Bar (Add, Dup, Delete, Move)
+│   │   │           ├── Ruler.jsx                # SVG Metric (mm) Rulers with Mouse Cursor Tracker
+│   │   │           ├── elements/
+│   │   │           │   ├── DocTable.js          # Custom DocTable Fabric Group Class
+│   │   │           │   ├── HeaderBlock.js       # Company Header & Party Info Grid Builders
+│   │   │           │   └── SignatureBlock.js    # Single & Dual Signature Block Builders
+│   │   │           └── hooks/
+│   │   │               └── useHistory.js        # Scoped Undo/Redo History Stack
+│   │   ├── history/page.jsx             # ประวัติการส่งเอกสารและสถานะอีเมล
+│   │   └── settings/page.jsx            # ตั้งค่าระบบและโปรไฟล์บริษัท
 │   │
-│   ├── (main)/                          # หน้าหลักและเมนูการทำงานของแอปพลิเคชัน
-│   │   ├── page.jsx                     # หน้าหลักแดชบอร์ด (Home Dashboard - http://localhost:3000/)
-│   │   ├── create/                      # หน้ารวมตัวเลือกสร้างเอกสารใหม่
-│   │   │   ├── nda/page.jsx             # หน้าฟอร์มสร้างสัญญา NDA
-│   │   │   ├── quotation/page.jsx       # หน้าฟอร์มสร้างใบเสนอราคา (Quotation)
-│   │   │   ├── distributor/page.jsx     # หน้าฟอร์มสร้างสัญญาแต่งตั้งผู้จัดจำหน่าย
-│   │   │   └── partner/page.jsx         # หน้าฟอร์มสร้างสัญญาพันธมิตร
-│   │   ├── documents/page.jsx           # หน้าจัดการเอกสารของฉัน (My Documents Hub)
-│   │   ├── profile-data/                # หน้าจัดการข้อมูลส่วนกลาง (Shared Profiles)
-│   │   │   ├── page.jsx                 # หน้ารายการโปรไฟล์ข้อมูล
-│   │   │   ├── new/page.jsx             # หน้าสร้างโปรไฟล์ใหม่
-│   │   │   └── [id]/page.jsx            # หน้าแก้ไขโปรไฟล์
-│   │   ├── templates/page.jsx           # หน้าแคตตาล็อกเทมเพลตทั้งหมด
-│   │   ├── history/page.jsx             # หน้าประวัติการส่งเอกสารและสถานะอีเมล
-│   │   └── settings/page.jsx            # หน้าตั้งค่าระบบ
+│   ├── api/                             # RESTful Backend Endpoints
+│   │   ├── templates/                   # CRUD Custom Templates (Multi-Page JSON)
+│   │   ├── export-pdf/route.js          # Puppeteer Headless PDF Export Pipeline
+│   │   ├── documents/                   # CRUD User Documents
+│   │   ├── quotations/                  # จัดการใบเสนอราคา และรันเลขที่เอกสาร
+│   │   └── send-email/                  # จัดการส่งเอกสารทางอีเมลผ่าน SMTP
 │   │
-│   ├── api/                             # Backend API Routes
-│   │   ├── documents/route.js           # CRUD เอกสาร
-│   │   ├── quotations/                  # จัดการใบเสนอราคา, รันเลขที่เอกสาร, สร้าง Revision
-│   │   ├── field-profiles/              # จัดการ Profile Data กลาง
-│   │   ├── send-email/route.js          # API ส่งอีเมลเอกสาร
-│   │   ├── email-status/route.js        # API ตรวจสอบสถานะอีเมล
-│   │   ├── sent-history/route.js        # API ประวัติการส่ง
-│   │   └── export-pdf/route.js          # API ส่งออก PDF
-│   │
-│   ├── print/[templateId]/page.jsx      # หน้าสำหรับการพิมพ์/Preview A4 PDF คมชัดสูง
-│   ├── globals.css                      # Global Styles, Custom Animations, Fonts
-│   └── layout.jsx                       # Root HTML Layout
+│   └── print/[templateId]/page.jsx      # หน้า Dedicated Print/Puppeteer Vector Rendering
 │
 ├── components/
-│   ├── auth/                            # คอมโพเนนต์ของระบบ Auth
-│   │   ├── AuthLayoutShell.jsx          # โครงสร้าง Layout 2 ฝั่ง (Form + Right Brand Panel)
-│   │   ├── Antigravity.jsx              # Three.js 3D Conic Gradient Particle Canvas
-│   │   ├── LoginForm.jsx                # ฟอร์มเข้าสู่ระบบ
-│   │   ├── SignUpForm.jsx               # ฟอร์มลงทะเบียน
-│   │   ├── ResetPasswordForm.jsx        # ฟอร์มรีเซ็ตรหัสผ่าน
-│   │   └── TwoStepVerificationForm.jsx  # ฟอร์มกรอก OTP 6 หลัก
-│   │
-│   ├── layout/                          # คอมโพเนนต์ Layout หลัก
-│   │   ├── LayoutShell.jsx              # โครงหน้าแอปพลิเคชัน
-│   │   ├── Sidebar.jsx                  # Sidebar เมนูด้านซ้าย (Header, Menu, NEW Badge, Profile)
-│   │   └── Header.jsx                   # Topbar แถบเมนูด้านบน
-│   │
-│   ├── home/                            # คอมโพเนนต์ของหน้าหลัก (Home)
-│   │   ├── HeroSection.jsx              # แบนเนอร์ทักทายและปุ่ม Action
-│   │   ├── TemplateGrid.jsx             # กริดแสดงการ์ดเทมเพลตเริ่มต้น
-│   │   └── RecentDocumentsTable.jsx     # ตารางแสดงเอกสารล่าสุด
-│   │
-│   ├── document/                        # คอมโพเนนต์สร้างและแสดงเอกสาร
-│   │   ├── ContractFormSidebar.jsx      # แถบฟอร์มกรอกข้อมูลสัญญา (2-Column Split View)
-│   │   ├── quotation/                   # ฟอร์มและหน้ากระดาษใบเสนอราคา
-│   │   ├── nda/                         # ฟอร์มและหน้ากระดาษสัญญา NDA (4 หน้า)
-│   │   ├── DocumentHeader.jsx           # ส่วนหัวกระดาษเอกสาร
-│   │   └── DocumentFooter.jsx           # ส่วนท้ายกระดาษเอกสาร
-│   │
-│   └── documents/
-│       └── DocumentsTable.jsx           # ตารางจัดการเอกสาร (Preview, Delete, Bulk Delete, Edit)
+│   ├── document/
+│   │   ├── FabricPrintRenderer.jsx      # 🖨️ True Vector SVG Multi-Page PDF Renderer
+│   │   ├── DocumentHeader.jsx           # หัวกระดาษเอกสารมาตรฐาน
+│   │   └── DocumentFooter.jsx           # ท้ายกระดาษและเลขหน้า
+│   └── layout/
+│       ├── LayoutShell.jsx              # โครงหน้าแดชบอร์ด
+│       └── Sidebar.jsx                  # Sidebar เมนูซ้ายพร้อม Badge NEW
 │
-├── context/
-│   └── DocumentFieldsContext.jsx        # Context ผูกข้อมูลฟิลด์ระหว่าง Form และ Live Preview
+├── lib/
+│   ├── tokens/
+│   │   └── tokenEngine.js               # 🏷️ Text Token Engine, Replacement & Safe JSON Reversion
+│   ├── db/
+│   │   └── adapters/json/index.js       # Database Adapter & Seed Data (data/db.json)
+│   └── templates/registry.js            # ทะเบียน Schema ของเทมเพลตมาตรฐาน
 │
-└── lib/
-    ├── templates/registry.js            # ทะเบียน Schema และการตั้งค่าของทุกเทมเพลต
-    ├── quotationHelpers.js              # ตรรกะคำนวณและตัดแบ่งหน้ากระดาษใบเสนอราคา
-    └── data/                            # Mock Data และ Data Fetching Helpers
+└── data/
+    └── db.json                          # JSON Persistence Store (Custom Templates & Documents)
 ```
 
 ---
 
-## 3. 🎨 มาตรฐานการออกแบบและดีไซน์ซิสเต็ม (Design System & UI Rules)
+## 3. 🎨 A4 Document Studio Engine (Canva-like Editor: Phase 1 – 7)
 
-### 3.1 โทนสีหลัก (Color Palette)
-* **Primary Brand Purple**: `#5542F6` / `#7C4DFF` (สีม่วงแบรนด์หลัก)
-* **Secondary Indigo / Blue Accent**: `#4F46E5` / `#38BDF8` (สีครามและฟ้าไฮไลต์)
-* **Gradient Theme**: การไล่เฉดสีฟ้า ➔ น้ำเงิน ➔ ม่วง ➔ ชมพูมาเจนต้า (`from-[#2563EB] via-[#6366F1] to-[#A855F7]`)
-* **Backgrounds & Surfaces**:
-  * ขาวสะอาดตา (`bg-white`), พื้นหลังเพจ (`bg-[#F8F9FB]`), เส้นขอบตัดโปร่งบาง (`border-[#EAEAEF]` หรือ `border-[#F0F0F3]`)
-  * การ์ดขอบมนนุ่มนวล (`rounded-2xl` หรือ `rounded-[14px]`) พร้อมเงาละมุน (`shadow-xs` / `shadow-2xs`)
-
-### 3.2 ปุ่มกด Animated Gradient Button
-* **Class**: `.animate-gradient-button` (กำหนด Animation ใน `app/globals.css` ด้วยคีย์เฟรม `buttonGradientFlow 4s ease infinite`)
-* **ข้อกำหนดสำคัญ**: ตัวหนังสือภายในปุ่มต้องเป็น **สีขาวทึบ 100% (`text-white font-bold`)** พร้อมไอคอนประกายดาว **`✦ SparkleStar` สีขาว (`fill-white`)** เสมอ
-
-### 3.3 แอนิเมชัน 3D Antigravity Particle (`components/auth/Antigravity.jsx`)
-* ใช้ Three.js `InstancedMesh` บันทึกอนุภาคแคปซูล 3D จำนวน 280 ชิ้น
-* **Conic 360° Gradient**: คำนวณองศา atan2(y, x) รอบจุดศูนย์กลาง เพื่อไล่เฉดสีรุ้งหมุนวน 360° ตลอดเวลา
-* **Left-Half Screen Detection**: เมื่อเคอร์เซอร์เมาส์อยู่ฝั่งซ้ายของหน้าจอ (`e.clientX < window.innerWidth / 2`) แอนิเมชันจะตัดเข้าสู่โหมด **Auto-Orbit Floating ทันที** อย่างลื่นไหล
-
-### 3.4 Sidebar Menu (`components/layout/Sidebar.jsx`)
-* **Header**: โลโก้ `Ally Doc` + ตัวหนังสือ `DocBuilder font-extrabold text-[18px]` + ประกายดาว `✦ SparkleStar` (4-Point Diamond Sparkle SVG)
-* **Category Labels**: `WORKSPACE`, `CATALOG`, `SYSTEM` ฟอนต์ `text-[10px] font-bold text-[#9CA3AF] tracking-[0.14em] uppercase`
-* **Active State Indicator**: แถบ Indicator ซ้ายมือ `w-[3.5px] bg-[#5542F6] rounded-r-md` พร้อมพื้นหลัง `bg-[#F5F1FF] text-[#5542F6] font-bold`
-* **Badge `NEW`**: กล่องทรงรีแนวนอน ขอบโค้งมน (`rounded-full`) โดย **ภายในกล่องเป็นสีขาวมน (`bg-white`)** และ **ขอบกล่องเป็นการไล่เฉดสีฟ้า-ม่วง (`p-[1px] bg-gradient-to-r from-[#60A5FA] via-[#818CF8] to-[#C084FC]`)** พร้อมตัวหนังสือ `NEW` สีม่วงครามเข้ม `#5542F6 font-black`
+### 📐 Phase 1: Native A4 Canvas & Metric SVG Rulers
+* **A4 Dimensions**: กว้าง `794px` × สูง `1,123px` (อัตราส่วน 1:1.414 เสมือนกระดาษ A4 จริง ที่ 96 DPI)
+* **Printable Margin**: ขอบกระดาษพิมพ์ `56px` (~15mm) แสดงเส้นประสีชมพูพร้อมป้ายระบุ
+* **Native Zooming**: ใช้ `canvas.setZoom(zoom)` และ `canvas.setDimensions(...)` โดยตรง ไม่ใช้ CSS Scale Transform ทำให้ตัวอักษรและเวกเตอร์คมชัดทุกระดับซูม
+* **Metric Dual Rulers (`Ruler.jsx`)**: ไม้บรรทัดมิลลิเมตร (mm) ด้านบนและซ้าย คำนวณขีดมิลลิเมตรด้วย `useMemo` อัตโนมัติ พร้อมเส้นขีดสีแดงติดตามตำแหน่งเมาส์แบบเรียลไทม์
 
 ---
 
-## 4. ⚙️ ตรรกะการทำงานสำคัญ (Core Business Logic)
-
-1. **Dynamic Template Architecture**:
-   - ระบบเทมเพลตถูกออกแบบเป็น Dynamic Registry (`lib/templates/registry.js`) รองรับการเพิ่มเทมเพลตใหม่ๆ ได้ไม่จำกัด โดยแต่ละเทมเพลตจะมี `schema`, `fields`, `defaultValues`, และ `pages` (A4 Pages) ของตนเอง
-2. **Central Profile Data Sync**:
-   - ข้อมูลกลาง (เช่น ชื่อบริษัทผู้ให้บริการ, เลขผู้เสียภาษี, ผู้มีอำนาจลงนาม, ที่อยู่) ที่ถูกบันทึกใน `/profile-data` จะถูกซิงค์อัตโนมัติเข้ากับฟิลด์ที่มี `sharedKey` เดียวกันในทุกเทมเพลต
-3. **Quotation Engine & Auto-Pagination**:
-   - ตรรกะ `lib/quotationHelpers.js` จะคำนวณภาษี VAT (7%), ส่วนลด (Discount), ยอดรวมสุทธิ และ **ตัดแบ่งหน้ากระดาษ A4 อัตโนมัติ (Pagination)** หากมีรายการสินค้าจำนวนมากเกิน 1 หน้ากระดาษ
-4. **Document Revision System**:
-   - สำหรับใบเสนอราคา รองรับการกด **"สร้างฉบับปรับปรุง (New Rev)"** ผ่าน `/api/quotations/[id]/revision` ซึ่งจะสร้างเอกสารชุดใหม่ที่คงข้อมูลเดิมไว้ พร้อมอัปเดตเลข Revision (`-Rev.01`, `-Rev.02`) ทันที
+### 🧰 Phase 2: Toolbar + History Pipeline
+* **Top Toolbar (`TopToolbar.jsx`)**: ปุ่มควบคุมชื่อเทมเพลต, Zoom In/Out/Reset, สลับแสดง/ซ่อนไม้บรรทัดและเส้นมาร์จิน, Undo/Redo, ปุ่มพรีวิวข้อมูลจริง, และปุ่มบันทึก
+* **Scoped Undo/Redo (`useHistory.js`)**:
+  * บันทึกสถานะ Canvas Snapshot ด้วย `canvas.toJSON(CUSTOM_CANVAS_PROPS)`
+  * ป้องกัน Race Condition ขณะ Restore ด้วย Flag `isExecutingRef`
+  * ดักจับคีย์ลัดระดับสากล: `Ctrl+Z` (Undo), `Ctrl+Y` / `Ctrl+Shift+Z` (Redo), และ `Delete` / `Backspace` (ลบวัตถุที่เลือก)
+  * **Editing Safety**: ไม่ทำงานเมื่อเคอร์เซอร์กำลังพิมพ์ข้อความอยู่ใน Textbox (`activeObj.isEditing`)
 
 ---
 
-## 5. 🚀 แผนการพัฒนาปัจจุบันและขั้นตอนถัดไป (Current Roadmap)
-
-* ✅ **Auth Module**: เสร็จสมบูรณ์ 100% (Login, Sign Up, Reset Password, 2FA, Three.js 3D Conic Particles)
-* ✅ **Sidebar Modernization**: เสร็จสมบูรณ์ 100% (Header Brand, SparkleStar `✦`, Active States, Gradient Border `NEW` Pill Badge)
-* ✅ **All Contract Workspaces (`/create/nda`, `/create/distributor`, `/create/partner`)**: เสร็จสมบูรณ์ 100% (2-Column Split Workspace, Form Sidebar ปรับตามประเภทสัญญา, วันที่อัตโนมัติ, Multi-Page PDF Export 4-5 หน้า)
-* ✅ **Digital Signature Pad & E-Sign**: เสร็จสมบูรณ์ 100% (วาดลายเซ็นสดด้วย Canvas หรืออัปโหลดรูป PNG, ประทับลงในหน้า A4 และไฟล์ PDF ทุกสัญญา)
-* ✅ **1-Click Duplicate & Status Workflow**: เสร็จสมบูรณ์ 100% (ปุ่มคัดลอกสร้างซ้ำใน 1 คลิก พร้อมปุ่มลัดเปิดแก้ไขทันที, ป๊อปอัปเปลี่ยนสถานะได้โดยตรง 4 สถานะหลัก)
-* ✅ **Corporate Red Seal & PDF Watermark**: เสร็จสมบูรณ์ 100% (ตราประทับสีแดงบริษัท เครสท์ เซนโด จำกัด, ลายน้ำ PDF 4 รูปแบบ: DRAFT, COPY, CONFIDENTIAL, None)
-* ✅ **Quotation ➔ Receipt in 1-Click**: เสร็จสมบูรณ์ 100% (ปุ่มแปลงใบเสนอราคาเป็นใบเสร็จรับเงิน/ใบกำกับภาษี รันเลข REC อัตโนมัติ)
-* ✅ **Systematic Architecture Realignment**: เสร็จสมบูรณ์ 100% (แยกคลังเอกสาร `/documents` กับประวัติการจัดส่ง `/history` อย่างถูกต้องตามหลักวิศวกรรมซอฟต์แวร์ ไม่สร้างเอกสารซ้ำซ้อนเมื่อส่งอีเมล)
-* ✅ **Templates Catalog Hub (`/templates`)**: เสร็จสมบูรณ์ 100% (Search Bar, Category Tabs, Structure Preview Modal, Modern Cards)
-* ✅ **Home Dashboard Clean Focus (`/`)**: เสร็จสมบูรณ์ 100% (Hero Banner ทักทายตามเวลาจริง + 3D Document Stack, Dynamic Template Cards, Recent Documents Hub มุ่งเน้นการจัดการเอกสาร 100%)
-* ✅ **Document Management & Renaming (`/documents`)**: เสร็จสมบูรณ์ 100% (ระบบเปลี่ยนชื่อเอกสารแบบ Pop-up และ Inline Toolbar, กรองสถานะ, ค้นหา, ลบเดี่ยว/กลุ่ม)
-* ✅ **Sent History (`/history`) & Central Field Profiles (`/profile-data`)**: เสร็จสมบูรณ์ 100%
-* ✅ **Settings & Organization Profile (`/settings`)**: เสร็จสมบูรณ์ 100% (Company Info, Default Signatory, SMTP Status)
-* 🎯 **เป้าหมายหลักถัดไป (Core Vision)**: เพิ่มเทมเพลตประกาศและแบบฟอร์มบริษัท (*Company Announcement & Request Form*) และพัฒนาระบบสร้างเทมเพลตเอง (*Custom Template Builder*)
+### 🎨 Phase 3: Properties & Layers Panel
+* **Right Sidebar (`RightSidebar.jsx`)**:
+  * **Typography Control**: ฟอนต์ (`Noto Sans Thai`, `Sarabun`), ขนาดตัวอักษร, ตัวหนา, ตัวเอียง, ขีดเส้นใต้, จัดชิดซ้าย/กึ่งกลาง/ขวา, ระยะห่างบรรทัด (Line Height)
+  * **Fill & Stroke Styling**: เลือกสีพื้นหลัง, สีเส้นขอบ, ความหนาเส้นขอบ, ความโค้งมนขอบ (`rx/ry`), และความโปร่งใส (Opacity)
+  * **Alignment Grid**: ปุ่มจัดกึ่งกลางหน้ากระดาษ A4 (กึ่งกลางแนวนอน, กึ่งกลางแนวตั้ง, ชิดขอบมาร์จิน 15mm) คำนวณแบบ Zoom-Independent จากค่าคงที่ `A4_WIDTH / A4_HEIGHT`
+  * **Layer Stacking**: ส่งวัตถุไปหน้าสุด (`bringToFront`), ถอยหลัง 1 ชั้น (`sendBackwards`), เดินหน้า 1 ชั้น (`bringForward`), และส่งไปหลังสุด (`sendToBack`)
+  * **Lock & Visibility**: ล็อกตำแหน่ง (`lockMovementX`, `lockMovementY`, `hasControls: false`) และเปิด/ปิดการแสดงผล (`visible`)
 
 ---
 
-## 💡 แนวทางการเขียนโค้ดและกฎประจำโปรเจกต์ (Code Conventions)
-1. รักษาความสะอาดและโครงสร้างแบบ Component-Driven
-2. ใช้ `.jsx` เสมอ (ไม่มี TypeScript `.tsx`)
-3. ใช้ Tailwind CSS Utility Classes ในการตกแต่ง
-4. ห้ามลบคอมเมนต์และ Docstrings เดิมที่ไม่เกี่ยวข้องกับการแก้ไข
-5. เมื่อทำการแก้ไขโค้ด ให้ตรวจสอบความสมบูรณ์ด้วยการรัน `npm run build` เสมอ
+### 📊 Phase 4: Document Blocks & Custom `DocTable` Class
+* **Custom `DocTable` Class (`elements/DocTable.js`)**:
+  * สืบทอดจาก `fabric.Group` พร้อมลงทะเบียนใน Fabric v6 ผ่าน `fabric.classRegistry.setClass(DocTable, "DocTable")`
+  * **Dynamic Row Management**: ฟังก์ชัน `addRow(item)` และ `removeRow(index)` คำนวณตำแหน่งแถวและอัปเดตความสูงของตารางอัตโนมัติ
+  * **Automatic VAT Calculation**: คำนวณยอด Subtotal, ภาษีมูลค่าเพิ่ม (VAT 7%), และ Grand Total รวมทั้งสิ้นอัตโนมัติจาก `items`
+  * **Serialization Architecture**: Override `toObject()` และ `fromObject()` ให้เก็บก้อน `docTableData` ครบถ้วน 100%
+* **Pre-built Document Blocks**:
+  * `createCompanyHeaderBlock`: หัวกระดาษบริษัทพร้อมโลโก้และข้อมูลนิติบุคคล
+  * `createPartyInfoGrid`: ตารางข้อมูลคู่สัญญาและเลขที่เอกสาร
+  * `createTermsBox`: กล่องเงื่อนไขและข้อกำหนดสัญญา
+  * `createSignatureBlock`: บล็อกลงนามสัญญาแบบเดี่ยวและแบบคู่ (Dual Signatures)
+
+---
+
+### 📑 Phase 5: Multi-Page Support & Pagination
+* **Bottom Pagination Bar (`PagePaginationBar.jsx`)**:
+  * เพิ่มหน้าเปล่า (`handleAddPage`), สลับหน้า (`handleSelectPage`), ลบหน้า (`handleDeletePage`), และย้ายลำดับหน้า (`handleMovePage`)
+  * **Deep Clone Duplication**: คัดลอกหน้าด้วย `JSON.parse(JSON.stringify(sourceJson))` ป้องกัน Memory Reference รั่วไหลระหว่างหน้า
+* **Isolated History per Page**: เมื่อสลับหน้า ระบบจะล้าง Stack และบันทึก Snapshot เริ่มต้นของหน้าเป้าหมาย ทำให้การ Undo/Redo ไม่ข้ามหน้า
+* **Dynamic Page Numbering (`syncPageNumberOnCanvas`)**: ตัวนับเลขหน้าอัตโนมัติ `"หน้า {X} จาก {Y}"` ที่มุมล่างขวาของทุกหน้ากระดาษ พร้อมระบบ Deduplication ลบเลขหน้าซ้ำซ้อน
+
+---
+
+### 🏷️ Phase 6: Dynamic Token Engine & Database Sync
+* **Token Engine (`lib/tokens/tokenEngine.js`)**:
+  * รองรับตัวแปรมาตรฐาน `{{company_name}}`, `{{customer_name}}`, `{{customer_company}}`, `{{doc_no}}`, `{{authorized_signatory_name}}` ฯลฯ
+  * แถบ **"🏷️ ตัวแปรไดนามิก (Tokens)"** ใน LeftSidebar กดแทรกตัวแปรเข้า Textbox หรือแถวของ `DocTable` ได้ใน 1 คลิก
+* **Live Data Preview**: ปุ่มสลับดูตัวอย่างข้อมูลจริงบนหน้าจอ Editor
+* **🛡️ Zero-Leakage Architecture (`revertTokensInPageJson`)**:
+  * กวาดล้าง Mock Preview Data และบังคับคืนค่า Raw Token `{{...}}` ในทุกหน้าของ `pages` array แบบ Deep Recursive ก่อนบันทึกลงฐานข้อมูล
+  * ข้อมูลที่บันทึกลง `data/db.json` จึงคงความเป็นตัวแปรต้นฉบับ 100% ไม่ปนเปื้อนข้อมูลทดสอบ
+
+---
+
+### 🖨️ Phase 7: True Vector PDF Export, Snapping & Polish
+* **True Vector SVG PDF Pipeline (`components/document/FabricPrintRenderer.jsx`)**:
+  * เรนเดอร์หน้ากระดาษผ่าน `fabricCanvas.toSVG()` ส่งต่อให้ Puppeteer สร้างไฟล์ PDF แบบ **Native Vector Text 100%**
+  * **Selectable & Searchable**: ผู้ใช้สามารถใช้เมาส์ลากคลุม คัดลอกตัวอักษร และกด `Ctrl+F` ค้นหาข้อความภาษาไทยในไฟล์ PDF ได้สมบูรณ์
+  * **🛡️ Smart Style-Grouping Algorithm (`patchFabricSvgTextForThai`)**:
+    * แก้ไขปัญหาตัวอักษรภาษาไทยซ้ำซ้อน (เช่น `บริษัริ ษัท`) ใน Text Stream ของ SVG
+    * รวมกลุ่มตัวอักษรที่มี Style เหมือนกันติดกันเป็น `<tspan>` ชิ้นเดียว ทำให้คง Rich Text Formatting (ตัวหนา, สีน้ำเงิน) ไว้ครบถ้วน
+  * **Font Readiness**: ฝัง Google Fonts (`Noto Sans Thai`, `Sarabun`) พร้อมรอ `document.fonts.ready` ก่อนเริ่มพิมพ์ PDF
+* **Smart Snapping Guides (`CanvasStage.jsx`)**:
+  * เมื่อลากวัตถุเข้าใกล้กึ่งกลางกระดาษหรือเส้นมาร์จิน 15mm (Threshold 6px) ระบบจะดูดวัตถุเข้าตำแหน่งพอดี พร้อมแสดงเส้นประไกด์สีชมพู (`#D946EF`)
+  * เส้นไกด์มี `excludeFromExport: true` และถูกลบทิ้งอัตโนมัติเมื่อปล่อยเมาส์
+* **Unsaved-Changes Warning**: แจ้งเตือนยืนยันก่อนปิดหรือรีเฟรชหน้าเว็บหากมีการแก้ไขที่ยังไม่ได้กดบันทึก
+
+---
+
+## 4. 📜 กฎเหล็กประจำสถาปัตยกรรม (Architectural Rules & Directives)
+
+1. **Serialization Props Rule**: วัตถุหรือคุณสมบัติใหม่ใดๆ ที่สร้างขึ้น (`isDocTable`, `docTableData`, `rawItems`, `isPageFooterNumber`, `isTokenField`, `tokenKey`, `rawTemplateText`, `tokenDefaultValue`, `name`) **ต้องเพิ่มเข้าใน `CUSTOM_CANVAS_PROPS` เสมอ**
+2. **Fast Refresh Guard Rule**: การ Patch Prototype บน Fabric.js ต้องมี Guard ตรวจสอบ `if (!targetProto.__customPropsPatched)` หรือ `if (!targetProto.__thaiSvgPatched)` เพื่อป้องกัน Function Wrapping ซ้ำซ้อนใน Next.js Hot Reload
+3. **DocTable Single Source of Truth**: การแทนที่ Token ในตาราง ต้องแทนที่ใน `docTableData.items` และเรียก `updateTableData()` เพื่อ Rebuild โครงสร้างตารางใหม่เสมอ ห้ามแก้ไข Textbox ย่อยตรงๆ
+4. **Clean Code & No TypeScript**: ใช้ไฟล์นามสกุล `.jsx` และ `.js` เท่านั้น และรักษาความสะอาดของคอมเมนต์ดั้งเดิม
+5. **Build Verification**: ทุกครั้งที่มีการเปลี่ยนแปลงโค้ด ต้องรันตรวจสอบผ่าน `npm run build` โดยต้องได้ Exit Code 0 ครบทุก 32 routes เสมอ
+
+---
+
+## 5. 🎯 สถานะการพัฒนาปัจจุบัน (Project Status)
+
+| ระบบงาน | สถานะ | หมายเหตุ |
+|---|:---:|---|
+| **Auth & 3D Antigravity Particles** | ✅ 100% | Login, Sign Up, 2FA, Three.js Conic Mesh |
+| **Contract Workspaces (NDA, Quotation, Distributor, Partner)** | ✅ 100% | 2-Column Split View, Auto-Fill, Digital Signatures |
+| **A4 Document Studio (Canva-like Engine: Phase 1–7)** | ✅ 100% | Native A4, Rulers, Undo/Redo, Properties, DocTable, Multi-Page, Tokens, Vector PDF |
+| **Puppeteer PDF Export Integration** | ✅ 100% | True Vector PDF, Smart Style-Grouping, Selectable Thai Text |
+| **Central Field Profiles & Sent History** | ✅ 100% | Shared Profiles Sync, SMTP Email Tracking |
+
+---
+
+*เอกสารฉบับนี้อัปเดตล่าสุด: กันยายน 2569 (Phase 1–7 Complete & Production Verified)* 🚀🏛️

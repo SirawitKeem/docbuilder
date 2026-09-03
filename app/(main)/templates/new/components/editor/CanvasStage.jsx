@@ -4,26 +4,30 @@ import React, { useEffect, useRef, useState } from "react";
 import * as fabric from "fabric";
 import { CornerRuler, TopRuler, LeftRuler } from "./Ruler";
 import { CUSTOM_CANVAS_PROPS } from "./elements/DocTable";
+import { getCanvasPreset } from "@/lib/editor/canvasPresets";
 
 export const A4_WIDTH = 794;
 export const A4_HEIGHT = 1123;
 export const MARGIN_PX = 56; // ~15mm printable margin
+const SNAP_THRESHOLD = 6; // px distance to snap
 
 export default function CanvasStage({
   zoom = 1,
   showRuler = true,
   showMargin = true,
+  canvasPreset = "a4-portrait",
   onCanvasReady,
   onHistoryPush,
   onSelectionChange,
 }) {
+  const preset = getCanvasPreset(canvasPreset);
   const canvasContainerRef = useRef(null);
   const canvasElRef = useRef(null);
   const fabricCanvasRef = useRef(null);
   const [isReady, setIsReady] = useState(false);
   const [mousePos, setMousePos] = useState({ x: null, y: null });
 
-  // Initialize Fabric Canvas with Native Dimensions
+  // Initialize Fabric Canvas with Dynamic Preset Dimensions
   useEffect(() => {
     if (!canvasElRef.current) return;
 
@@ -43,8 +47,8 @@ export default function CanvasStage({
     }
 
     const canvas = new fabric.Canvas(canvasElRef.current, {
-      width: A4_WIDTH * zoom,
-      height: A4_HEIGHT * zoom,
+      width: preset.width * zoom,
+      height: preset.height * zoom,
       backgroundColor: "#FFFFFF",
       selection: true,
       preserveObjectStacking: true,
@@ -55,94 +59,141 @@ export default function CanvasStage({
     canvas.setZoom(zoom);
     fabricCanvasRef.current = canvas;
 
+    // 🧲 Smart Snapping Guidelines Helper
+    const clearSnapGuides = () => {
+      const guides = canvas.getObjects().filter((obj) => obj.isSnapGuide);
+      guides.forEach((g) => canvas.remove(g));
+    };
+
+    const drawSnapGuide = (points, orientation = "vertical") => {
+      const line = new fabric.Line(points, {
+        stroke: "#D946EF",
+        strokeWidth: 1.2,
+        strokeDashArray: [4, 4],
+        selectable: false,
+        evented: false,
+        isSnapGuide: true,
+        excludeFromExport: true,
+      });
+      canvas.add(line);
+    };
+
+    // 🧲 Snapping Event Listener (object:moving)
+    canvas.on("object:moving", (opt) => {
+      const target = opt.target;
+      if (!target || target.isSnapGuide) return;
+
+      clearSnapGuides();
+
+      const targetWidth = target.getScaledWidth();
+      const targetHeight = target.getScaledHeight();
+
+      const targetLeft = target.left;
+      const targetCenterX = targetLeft + targetWidth / 2;
+      const targetRight = targetLeft + targetWidth;
+
+      const targetTop = target.top;
+      const targetCenterY = targetTop + targetHeight / 2;
+      const targetBottom = targetTop + targetHeight;
+
+      // Vertical Snap Points: Left Margin, Center, Right Margin
+      const vSnapPoints = [
+        { x: preset.marginPx, type: "margin-left" },
+        { x: preset.width / 2, type: "center-x" },
+        { x: preset.width - preset.marginPx, type: "margin-right" },
+      ];
+
+      // Horizontal Snap Points: Top Margin, Center, Bottom Margin
+      const hSnapPoints = [
+        { y: preset.marginPx, type: "margin-top" },
+        { y: preset.height / 2, type: "center-y" },
+        { y: preset.height - preset.marginPx, type: "margin-bottom" },
+      ];
+
+      // Check Vertical Snapping
+      for (const p of vSnapPoints) {
+        if (Math.abs(targetCenterX - p.x) <= SNAP_THRESHOLD) {
+          target.set("left", p.x - targetWidth / 2);
+          drawSnapGuide([p.x, 0, p.x, preset.height], "vertical");
+          break;
+        } else if (Math.abs(targetLeft - p.x) <= SNAP_THRESHOLD) {
+          target.set("left", p.x);
+          drawSnapGuide([p.x, 0, p.x, preset.height], "vertical");
+          break;
+        } else if (Math.abs(targetRight - p.x) <= SNAP_THRESHOLD) {
+          target.set("left", p.x - targetWidth);
+          drawSnapGuide([p.x, 0, p.x, preset.height], "vertical");
+          break;
+        }
+      }
+
+      // Check Horizontal Snapping
+      for (const p of hSnapPoints) {
+        if (Math.abs(targetCenterY - p.y) <= SNAP_THRESHOLD) {
+          target.set("top", p.y - targetHeight / 2);
+          drawSnapGuide([0, p.y, preset.width, p.y], "horizontal");
+          break;
+        } else if (Math.abs(targetTop - p.y) <= SNAP_THRESHOLD) {
+          target.set("top", p.y);
+          drawSnapGuide([0, p.y, preset.width, p.y], "horizontal");
+          break;
+        } else if (Math.abs(targetBottom - p.y) <= SNAP_THRESHOLD) {
+          target.set("top", p.y - targetHeight);
+          drawSnapGuide([0, p.y, preset.width, p.y], "horizontal");
+          break;
+        }
+      }
+    });
+
+    // Clear guidelines when mouse is released
+    canvas.on("mouse:up", clearSnapGuides);
+    canvas.on("object:modified", clearSnapGuides);
+
     // Mouse tracking for Ruler indicators
     canvas.on("mouse:move", (opt) => {
-      const e = opt.e;
-      if (e) {
-        const rect = canvas.lowerCanvasEl.getBoundingClientRect();
-        setMousePos({
-          x: e.clientX - rect.left,
-          y: e.clientY - rect.top,
-        });
-      }
+      if (!opt.e) return;
+      const pointer = canvas.getPointer(opt.e);
+      setMousePos({ x: pointer.x * zoom, y: pointer.y * zoom });
     });
 
     canvas.on("mouse:out", () => {
       setMousePos({ x: null, y: null });
     });
 
-    // History event triggers: object modified & text editing finished
-    canvas.on("object:modified", () => {
-      if (onHistoryPush) onHistoryPush(canvas);
-    });
-
-    canvas.on("text:editing:exited", () => {
-      if (onHistoryPush) onHistoryPush(canvas);
-    });
-
-    // Selection tracking for Properties Panel
-    const updateSelection = (opt) => {
-      const selected = opt?.selected?.[0] || canvas.getActiveObject() || null;
+    // Selection Change Events
+    const handleSelection = (e) => {
+      const selected = e.selected && e.selected.length > 0 ? e.selected[0] : null;
       if (onSelectionChange) onSelectionChange(selected);
     };
 
-    canvas.on("selection:created", updateSelection);
-    canvas.on("selection:updated", updateSelection);
-    canvas.on("selection:cleared", () => {
+    const handleClearSelection = () => {
       if (onSelectionChange) onSelectionChange(null);
+    };
+
+    canvas.on("selection:created", handleSelection);
+    canvas.on("selection:updated", handleSelection);
+    canvas.on("selection:cleared", handleClearSelection);
+
+    // History Mutation Events
+    const handleMutation = (e) => {
+      if (e && e.target && e.target.isSnapGuide) return;
+      if (onHistoryPush) onHistoryPush(canvas);
+    };
+
+    canvas.on("object:modified", handleMutation);
+    canvas.on("object:added", (e) => {
+      if (e && e.target && e.target.isSnapGuide) return;
+      if (onHistoryPush) onHistoryPush(canvas);
+    });
+    canvas.on("object:removed", (e) => {
+      if (e && e.target && e.target.isSnapGuide) return;
+      if (onHistoryPush) onHistoryPush(canvas);
     });
 
-    // Add Phase 1 Test Objects
-    const testCard = new fabric.Rect({
-      left: MARGIN_PX + 20,
-      top: MARGIN_PX + 20,
-      width: 360,
-      height: 150,
-      fill: "#F5F3FF",
-      stroke: "#7C3AED",
-      strokeWidth: 2,
-      rx: 12,
-      ry: 12,
-      shadow: new fabric.Shadow({
-        color: "rgba(124, 58, 237, 0.18)",
-        blur: 18,
-        offsetX: 0,
-        offsetY: 8,
-      }),
-    });
-
-    const testHeading = new fabric.Textbox("✨ A4 Document Studio", {
-      left: MARGIN_PX + 42,
-      top: MARGIN_PX + 40,
-      width: 316,
-      fontSize: 16,
-      fontWeight: "bold",
-      fill: "#5B21B6",
-      fontFamily: "'Noto Sans Thai', 'Noto Sans', sans-serif",
-      editable: true,
-    });
-
-    const testDesc = new fabric.Textbox(
-      "ระบบเครื่องมือสร้างเทมเพลต (Canva-like):\n• เมนูด้านซ้าย: เพิ่มข้อความ รูปทรง ตาราง อัปโหลดโลโก้\n• เมนูด้านขวา: ปรับแต่งสี ฟอนต์ แถวตาราง เลเยอร์\n• เมนูด้านล่าง: ระบบจัดการหลายหน้า (Multi-Page A4)",
-      {
-        left: MARGIN_PX + 42,
-        top: MARGIN_PX + 72,
-        width: 316,
-        fontSize: 11.5,
-        lineHeight: 1.45,
-        fill: "#6D28D9",
-        fontFamily: "'Noto Sans Thai', 'Noto Sans', sans-serif",
-        editable: true,
-      }
-    );
-
-    canvas.add(testCard, testHeading, testDesc);
-    canvas.setActiveObject(testCard);
-    canvas.renderAll();
-
+    if (onCanvasReady) {
+      onCanvasReady(canvas);
+    }
     setIsReady(true);
-    if (onCanvasReady) onCanvasReady(canvas);
-    if (onSelectionChange) onSelectionChange(testCard);
 
     return () => {
       try {
@@ -151,7 +202,7 @@ export default function CanvasStage({
         console.warn("Canvas dispose:", err);
       }
     };
-  }, []);
+  }, [preset.id]);
 
   // Native Zoom without CSS distortion
   useEffect(() => {
@@ -160,29 +211,29 @@ export default function CanvasStage({
 
     canvas.setZoom(zoom);
     canvas.setDimensions({
-      width: A4_WIDTH * zoom,
-      height: A4_HEIGHT * zoom,
+      width: preset.width * zoom,
+      height: preset.height * zoom,
     });
     canvas.requestRenderAll();
-  }, [zoom]);
+  }, [zoom, preset.width, preset.height]);
 
-  const currentWidth = A4_WIDTH * zoom;
-  const currentHeight = A4_HEIGHT * zoom;
-  const currentMargin = MARGIN_PX * zoom;
+  const currentWidth = preset.width * zoom;
+  const currentHeight = preset.height * zoom;
+  const currentMargin = preset.marginPx * zoom;
 
   return (
     <div className="relative flex flex-col items-center justify-start select-none py-6">
       <div className="flex flex-col bg-white border border-gray-300 shadow-2xl rounded-xs overflow-hidden">
         {showRuler && (
           <div className="flex items-center bg-[#F8FAFC]">
-            <CornerRuler />
-            <TopRuler width={currentWidth} zoom={zoom} mousePos={mousePos} />
+            <CornerRuler canvasPreset={preset} />
+            <TopRuler width={currentWidth} zoom={zoom} mousePos={mousePos} canvasPreset={preset} />
           </div>
         )}
 
         <div className="flex items-start">
           {showRuler && (
-            <LeftRuler height={currentHeight} zoom={zoom} mousePos={mousePos} />
+            <LeftRuler height={currentHeight} zoom={zoom} mousePos={mousePos} canvasPreset={preset} />
           )}
 
           <div
@@ -196,7 +247,7 @@ export default function CanvasStage({
                 style={{ margin: `${currentMargin}px` }}
               >
                 <span className="absolute top-1 left-2 text-[10px] font-mono text-rose-500 font-semibold select-none bg-rose-50/80 px-1 rounded-xs">
-                  Margin (15mm)
+                  Margin ({preset.mmWidth ? "15mm" : `${preset.marginPx}px`})
                 </span>
               </div>
             )}

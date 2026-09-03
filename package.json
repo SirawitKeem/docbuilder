@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "node scripts/patch-fortune-sheet.mjs"
   },
   "dependencies": {
+    "@fortune-sheet/core": "^1.0.4",
+    "@fortune-sheet/react": "^1.0.4",
     "@heroui/react": "^3.2.4",
     "@hugeicons/react-native": "^1.0.15",
     "@radix-ui/react-select": "^2.3.7",
@@ -27,7 +30,8 @@
     "react-dom": "19.2.8",
     "react-native-web": "^0.21.2",
     "tailwind-merge": "^3.6.0",
-    "three": "^0.185.1"
+    "three": "^0.185.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

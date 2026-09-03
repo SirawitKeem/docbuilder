@@ -12,6 +12,8 @@ import { A4_WIDTH, A4_HEIGHT, MARGIN_PX } from "./CanvasStage";
 import { createDocTable, CUSTOM_CANVAS_PROPS } from "./elements/DocTable";
 import { createSignatureBlock } from "./elements/SignatureBlock";
 import { createCompanyHeaderBlock, createPartyInfoGrid, createTermsBox } from "./elements/HeaderBlock";
+import { applyTokensToCanvas, replaceTokens, revertTokensInPageJson } from "@/lib/tokens/tokenEngine";
+import { getCanvasPreset } from "@/lib/editor/canvasPresets";
 
 // Dynamically import CanvasStage with SSR disabled
 const CanvasStage = dynamic(() => import("./CanvasStage"), {
@@ -20,28 +22,37 @@ const CanvasStage = dynamic(() => import("./CanvasStage"), {
     <div className="flex items-center justify-center h-[800px]">
       <div className="text-center space-y-3">
         <div className="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-sm font-medium text-gray-500">กำลังโหลด A4 Studio Engine...</p>
+        <p className="text-sm font-medium text-gray-500">กำลังโหลด Studio Engine...</p>
       </div>
     </div>
   ),
 });
 
 /**
- * Automatically updates or adds the dynamic Page Number indicator at the bottom right of the A4 page
+ * Automatically updates or adds the dynamic Page Number indicator at the bottom right of the page/slide
  */
-function syncPageNumberOnCanvas(canvas, pageIdx, totalPages) {
+function syncPageNumberOnCanvas(canvas, pageIdx, totalPages, editorType = "document", preset = null) {
   if (!canvas) return;
+  const p = preset || { width: 794, height: 1123, marginPx: 56 };
   const objs = canvas.getObjects();
-  let pageNumObj = objs.find((o) => o.isPageFooterNumber);
+  const pageNumObjs = objs.filter((o) => o.isPageFooterNumber || o.name === "pageFooterNumber");
 
-  const textVal = `หน้า ${pageIdx + 1} จาก ${totalPages}`;
+  const isSlide = editorType === "slide";
+  const textVal = isSlide ? `สไลด์ ${pageIdx + 1} / ${totalPages}` : `หน้า ${pageIdx + 1} จาก ${totalPages}`;
 
-  if (pageNumObj) {
-    pageNumObj.set({ text: textVal });
+  if (pageNumObjs.length > 0) {
+    pageNumObjs[0].set({
+      text: textVal,
+      isPageFooterNumber: true,
+      name: "pageFooterNumber",
+    });
+    for (let i = 1; i < pageNumObjs.length; i++) {
+      canvas.remove(pageNumObjs[i]);
+    }
   } else {
-    pageNumObj = new fabric.Textbox(textVal, {
-      left: A4_WIDTH - MARGIN_PX - 120,
-      top: A4_HEIGHT - 32,
+    const pageNumObj = new fabric.Textbox(textVal, {
+      left: p.width - p.marginPx - 120,
+      top: p.height - (isSlide ? 28 : 32),
       width: 120,
       fontSize: 10,
       fill: "#94A3B8",
@@ -51,6 +62,7 @@ function syncPageNumberOnCanvas(canvas, pageIdx, totalPages) {
       hasControls: false,
     });
     pageNumObj.isPageFooterNumber = true;
+    pageNumObj.name = "pageFooterNumber";
     canvas.add(pageNumObj);
   }
   canvas.requestRenderAll();
@@ -61,19 +73,66 @@ export default function DocumentEditor({
   categoryName = "Notification Letter",
   onSave,
   saving = false,
+  initialPages = null,
+  editorType = "document",
+  canvasPreset = "a4-portrait",
 }) {
+  const preset = getCanvasPreset(canvasPreset);
+  const mainContainerRef = useRef(null);
   const [currentTitle, setCurrentTitle] = useState(templateName);
-  const [zoom, setZoom] = useState(0.85);
+  const [zoom, setZoom] = useState(preset.defaultZoom || (editorType === "slide" ? 0.65 : 0.85));
   const [showRuler, setShowRuler] = useState(true);
   const [showMargin, setShowMargin] = useState(true);
   const [activeObject, setActiveObject] = useState(null);
   const [canvasInstance, setCanvasInstance] = useState(null);
+  const [isPreviewTokens, setIsPreviewTokens] = useState(false);
   const fabricCanvasRef = useRef(null);
+  const hasUnsavedChangesRef = useRef(false);
+
+  // Sync title when loaded from async fetch (e.g. edit mode)
+  useEffect(() => {
+    if (templateName) {
+      setCurrentTitle(templateName);
+    }
+  }, [templateName]);
+
+  // 📐 REAL Dynamic Fit-to-Screen Zoom Calculation (Measures actual viewport container)
+  const calculateFitZoom = useCallback(() => {
+    if (!mainContainerRef.current) return preset.defaultZoom || (editorType === "slide" ? 0.65 : 0.85);
+    const containerWidth = mainContainerRef.current.clientWidth;
+    const containerHeight = mainContainerRef.current.clientHeight;
+
+    const availableWidth = Math.max(200, containerWidth - 48);
+    const availableHeight = Math.max(200, containerHeight - 48);
+
+    const scaleX = availableWidth / preset.width;
+    const scaleY = availableHeight / preset.height;
+    const fitScale = Math.min(scaleX, scaleY) * 0.92;
+
+    return Math.min(1.4, Math.max(0.3, Number(fitScale.toFixed(2))));
+  }, [preset.width, preset.height, preset.defaultZoom, editorType]);
+
+  // Dynamic zoom adjustment ONLY on initial mount or when template preset changes
+  useEffect(() => {
+    const fit = calculateFitZoom();
+    setZoom(fit);
+
+    // Run once after initial DOM render pass to ensure accurate container dimensions
+    const timer = setTimeout(() => {
+      const refinedFit = calculateFitZoom();
+      setZoom(refinedFit);
+    }, 60);
+
+    return () => clearTimeout(timer);
+  }, [preset.id, editorType]);
 
   // 📄 Multi-Page State
-  const [pages, setPages] = useState([
-    { id: "page-1", json: null },
-  ]);
+  const [pages, setPages] = useState(() => {
+    if (initialPages && Array.isArray(initialPages) && initialPages.length > 0) {
+      return initialPages;
+    }
+    return [{ id: "page-1", json: null }];
+  });
   const [activePageIndex, setActivePageIndex] = useState(0);
 
   const {
@@ -85,28 +144,131 @@ export default function DocumentEditor({
     canRedo,
   } = useHistory();
 
+  // 🛡️ Unsaved-Changes Warning on Tab/Window Close (Phase 7)
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (hasUnsavedChangesRef.current) {
+        e.preventDefault();
+        e.returnValue = "คุณมีการแก้ไขที่ยังไม่ได้บันทึก ต้องการออกจากหน้านี้หรือไม่?";
+        return e.returnValue;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
+
+  // Load initialPages when provided (e.g. from API edit mode)
+  useEffect(() => {
+    if (initialPages && Array.isArray(initialPages) && initialPages.length > 0) {
+      setPages(initialPages);
+      if (fabricCanvasRef.current && initialPages[0]?.json) {
+        fabricCanvasRef.current.loadFromJSON(initialPages[0].json).then(() => {
+          syncPageNumberOnCanvas(fabricCanvasRef.current, 0, initialPages.length, editorType, preset);
+          fabricCanvasRef.current.renderAll();
+          initHistory(fabricCanvasRef.current);
+          hasUnsavedChangesRef.current = false;
+        });
+      }
+    }
+  }, [initialPages, initHistory, editorType, preset.id]);
+
   // Canvas Ready Callback
   const handleCanvasReady = useCallback((canvas) => {
     fabricCanvasRef.current = canvas;
     setCanvasInstance(canvas);
 
-    // Embed initial page footer number
-    syncPageNumberOnCanvas(canvas, 0, 1);
-
-    // Initialize history and save initial snapshot into page 1
-    initHistory(canvas);
-    const initialJson = canvas.toJSON(CUSTOM_CANVAS_PROPS);
-    setPages([{ id: "page-1", json: initialJson }]);
-  }, [initHistory]);
+    if (initialPages && Array.isArray(initialPages) && initialPages.length > 0 && initialPages[0]?.json) {
+      canvas.loadFromJSON(initialPages[0].json).then(() => {
+        syncPageNumberOnCanvas(canvas, 0, initialPages.length, editorType, preset);
+        canvas.renderAll();
+        initHistory(canvas);
+        hasUnsavedChangesRef.current = false;
+      });
+    } else {
+      // Embed initial page footer number
+      syncPageNumberOnCanvas(canvas, 0, 1, editorType, preset);
+      initHistory(canvas);
+      const initialJson = canvas.toJSON(CUSTOM_CANVAS_PROPS);
+      setPages([{ id: "page-1", json: initialJson }]);
+      hasUnsavedChangesRef.current = false;
+    }
+  }, [initialPages, initHistory, editorType, preset.id]);
 
   const handleHistoryPush = useCallback((canvas) => {
     pushState(canvas);
+    hasUnsavedChangesRef.current = true;
   }, [pushState]);
 
   // Zoom handlers
   const handleZoomIn = () => setZoom((z) => Math.min(1.5, Number((z + 0.1).toFixed(2))));
-  const handleZoomOut = () => setZoom((z) => Math.max(0.4, Number((z - 0.1).toFixed(2))));
-  const handleZoomReset = () => setZoom(0.85);
+  const handleZoomOut = () => setZoom((z) => Math.max(0.3, Number((z - 0.1).toFixed(2))));
+  const handleZoomReset = () => {
+    const fit = calculateFitZoom();
+    setZoom(fit);
+  };
+
+  // 🏷️ Toggle Live Data Preview
+  const handleTogglePreviewTokens = useCallback(() => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
+
+    const nextPreviewState = !isPreviewTokens;
+    setIsPreviewTokens(nextPreviewState);
+    applyTokensToCanvas(canvas, nextPreviewState);
+  }, [isPreviewTokens]);
+
+  // 🏷️ Insert Token into Active Textbox or create new Token field
+  const handleInsertToken = useCallback((tokenKey, exampleVal) => {
+    const canvas = fabricCanvasRef.current;
+    if (!canvas) return;
+
+    const activeObj = canvas.getActiveObject();
+
+    // 1. If currently selecting a Textbox
+    if (activeObj && (activeObj.type === "textbox" || activeObj.type === "i-text" || activeObj.type === "text")) {
+      const currentText = activeObj.text || "";
+      const newText = currentText ? `${currentText} ${tokenKey}` : tokenKey;
+      activeObj.set("text", newText);
+      activeObj.rawTemplateText = newText;
+      activeObj.isTokenField = true;
+      activeObj.tokenKey = tokenKey;
+      canvas.requestRenderAll();
+      handleHistoryPush(canvas);
+      return;
+    }
+
+    // 2. If currently selecting a DocTable
+    if (activeObj && activeObj.isDocTable && activeObj.addRow) {
+      activeObj.addRow({
+        desc: `บริการตามสัญญาสำหรับ ${tokenKey}`,
+        qty: 1,
+        price: 50000,
+      });
+      handleHistoryPush(canvas);
+      return;
+    }
+
+    // 3. Otherwise add new standalone dynamic token textbox
+    const tokenBox = new fabric.Textbox(tokenKey, {
+      left: MARGIN_PX + 20,
+      top: MARGIN_PX + 60,
+      width: 280,
+      fontSize: 13,
+      fontWeight: "bold",
+      fill: "#4338CA",
+      fontFamily: "'Noto Sans Thai', 'Noto Sans', sans-serif",
+      editable: true,
+    });
+    tokenBox.isTokenField = true;
+    tokenBox.tokenKey = tokenKey;
+    tokenBox.rawTemplateText = tokenKey;
+
+    canvas.add(tokenBox);
+    canvas.setActiveObject(tokenBox);
+    canvas.requestRenderAll();
+    handleHistoryPush(canvas);
+  }, [handleHistoryPush]);
 
   // 📄 Multi-Page Actions
 
@@ -117,7 +279,12 @@ export default function DocumentEditor({
       return;
     }
 
-    // Save current active page state
+    // Always restore raw tokens before capturing snapshot
+    if (isPreviewTokens) {
+      applyTokensToCanvas(canvas, false);
+      setIsPreviewTokens(false);
+    }
+
     const currentJson = canvas.toJSON(CUSTOM_CANVAS_PROPS);
     const updatedPages = pages.map((p, idx) =>
       idx === activePageIndex ? { ...p, json: currentJson } : p
@@ -131,23 +298,28 @@ export default function DocumentEditor({
     const targetPageJson = updatedPages[targetIndex].json;
     if (targetPageJson) {
       canvas.loadFromJSON(targetPageJson).then(() => {
-        syncPageNumberOnCanvas(canvas, targetIndex, updatedPages.length);
+        syncPageNumberOnCanvas(canvas, targetIndex, updatedPages.length, editorType, preset);
         canvas.renderAll();
-        initHistory(canvas); // Clean history stack isolation for target page
+        initHistory(canvas);
       });
     } else {
       canvas.clear();
       canvas.backgroundColor = "#FFFFFF";
-      syncPageNumberOnCanvas(canvas, targetIndex, updatedPages.length);
+      syncPageNumberOnCanvas(canvas, targetIndex, updatedPages.length, editorType, preset);
       canvas.renderAll();
       initHistory(canvas);
     }
-  }, [activePageIndex, pages, initHistory]);
+  }, [activePageIndex, pages, initHistory, isPreviewTokens, editorType, preset.id]);
 
   // 2. Add Blank Page
   const handleAddPage = useCallback(() => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
+
+    if (isPreviewTokens) {
+      applyTokensToCanvas(canvas, false);
+      setIsPreviewTokens(false);
+    }
 
     const currentJson = canvas.toJSON(CUSTOM_CANVAS_PROPS);
     const newPageId = `page-${Date.now()}`;
@@ -165,21 +337,26 @@ export default function DocumentEditor({
 
     canvas.clear();
     canvas.backgroundColor = "#FFFFFF";
-    syncPageNumberOnCanvas(canvas, newIndex, updatedPages.length);
+    syncPageNumberOnCanvas(canvas, newIndex, updatedPages.length, editorType, preset);
     canvas.renderAll();
     initHistory(canvas);
-  }, [activePageIndex, pages, initHistory]);
+    hasUnsavedChangesRef.current = true;
+  }, [activePageIndex, pages, initHistory, isPreviewTokens, editorType, preset.id]);
 
   // 3. Duplicate Page (Deep JSON Clone)
   const handleDuplicatePage = useCallback((indexToDuplicate) => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
+    if (isPreviewTokens) {
+      applyTokensToCanvas(canvas, false);
+      setIsPreviewTokens(false);
+    }
+
     const currentJson = canvas.toJSON(CUSTOM_CANVAS_PROPS);
     const sourcePage = pages[indexToDuplicate];
     const sourceJson = indexToDuplicate === activePageIndex ? currentJson : sourcePage.json;
 
-    // Deep clone with zero shared memory references
     const duplicatedPage = {
       id: `page-${Date.now()}`,
       json: JSON.parse(JSON.stringify(sourceJson)),
@@ -197,17 +374,23 @@ export default function DocumentEditor({
     setActiveObject(null);
 
     canvas.loadFromJSON(duplicatedPage.json).then(() => {
-      syncPageNumberOnCanvas(canvas, newIndex, updatedPages.length);
+      syncPageNumberOnCanvas(canvas, newIndex, updatedPages.length, editorType, preset);
       canvas.renderAll();
       initHistory(canvas);
+      hasUnsavedChangesRef.current = true;
     });
-  }, [activePageIndex, pages, initHistory]);
+  }, [activePageIndex, pages, initHistory, isPreviewTokens, editorType, preset.id]);
 
   // 4. Delete Page
   const handleDeletePage = useCallback((indexToDelete) => {
     if (pages.length <= 1) return;
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
+
+    if (isPreviewTokens) {
+      applyTokensToCanvas(canvas, false);
+      setIsPreviewTokens(false);
+    }
 
     const remainingPages = pages.filter((_, idx) => idx !== indexToDelete);
     const newActiveIndex = Math.min(
@@ -222,18 +405,20 @@ export default function DocumentEditor({
     const targetJson = remainingPages[newActiveIndex].json;
     if (targetJson) {
       canvas.loadFromJSON(targetJson).then(() => {
-        syncPageNumberOnCanvas(canvas, newActiveIndex, remainingPages.length);
+        syncPageNumberOnCanvas(canvas, newActiveIndex, remainingPages.length, editorType, preset);
         canvas.renderAll();
         initHistory(canvas);
+        hasUnsavedChangesRef.current = true;
       });
     } else {
       canvas.clear();
       canvas.backgroundColor = "#FFFFFF";
-      syncPageNumberOnCanvas(canvas, newActiveIndex, remainingPages.length);
+      syncPageNumberOnCanvas(canvas, newActiveIndex, remainingPages.length, editorType, preset);
       canvas.renderAll();
       initHistory(canvas);
+      hasUnsavedChangesRef.current = true;
     }
-  }, [activePageIndex, pages, initHistory]);
+  }, [activePageIndex, pages, initHistory, isPreviewTokens, editorType, preset.id]);
 
   // 5. Move Page Order
   const handleMovePage = useCallback((currentIndex, direction) => {
@@ -254,9 +439,10 @@ export default function DocumentEditor({
     setActivePageIndex(targetIndex);
 
     if (canvas) {
-      syncPageNumberOnCanvas(canvas, targetIndex, updatedPages.length);
+      syncPageNumberOnCanvas(canvas, targetIndex, updatedPages.length, editorType, preset);
     }
-  }, [activePageIndex, pages]);
+    hasUnsavedChangesRef.current = true;
+  }, [activePageIndex, pages, editorType, preset.id]);
 
   // 🔤 Add Text
   const handleAddText = useCallback((options) => {
@@ -277,8 +463,8 @@ export default function DocumentEditor({
     canvas.add(textbox);
     canvas.setActiveObject(textbox);
     canvas.renderAll();
-    pushState(canvas);
-  }, [pushState]);
+    handleHistoryPush(canvas);
+  }, [handleHistoryPush]);
 
   // 🔷 Add Shape
   const handleAddShape = useCallback((options) => {
@@ -321,9 +507,9 @@ export default function DocumentEditor({
       canvas.add(shapeObj);
       canvas.setActiveObject(shapeObj);
       canvas.renderAll();
-      pushState(canvas);
+      handleHistoryPush(canvas);
     }
-  }, [pushState]);
+  }, [handleHistoryPush]);
 
   // 📁 Add Image / Logo
   const handleAddImage = useCallback((imageUrl) => {
@@ -344,7 +530,7 @@ export default function DocumentEditor({
       canvas.add(img);
       canvas.setActiveObject(img);
       canvas.renderAll();
-      pushState(canvas);
+      handleHistoryPush(canvas);
     };
 
     if (fabric.FabricImage && fabric.FabricImage.fromURL) {
@@ -358,7 +544,7 @@ export default function DocumentEditor({
         { crossOrigin: "anonymous" }
       );
     }
-  }, [pushState]);
+  }, [handleHistoryPush]);
 
   // 📊 Add Quotation / Pricing Table
   const handleAddTable = useCallback(() => {
@@ -376,8 +562,8 @@ export default function DocumentEditor({
     canvas.add(tableGroup);
     canvas.setActiveObject(tableGroup);
     canvas.renderAll();
-    pushState(canvas);
-  }, [pushState]);
+    handleHistoryPush(canvas);
+  }, [handleHistoryPush]);
 
   // ✍️ Add Signature Block
   const handleAddSignature = useCallback((type = "dual") => {
@@ -395,8 +581,8 @@ export default function DocumentEditor({
     canvas.add(sigGroup);
     canvas.setActiveObject(sigGroup);
     canvas.renderAll();
-    pushState(canvas);
-  }, [pushState]);
+    handleHistoryPush(canvas);
+  }, [handleHistoryPush]);
 
   // 📑 Add Preset Block
   const handleAddPreset = useCallback((presetKey) => {
@@ -429,9 +615,9 @@ export default function DocumentEditor({
       canvas.add(group);
       canvas.setActiveObject(group);
       canvas.renderAll();
-      pushState(canvas);
+      handleHistoryPush(canvas);
     }
-  }, [pushState]);
+  }, [handleHistoryPush]);
 
   // Keyboard Shortcuts: Ctrl+Z, Ctrl+Y, Delete
   useEffect(() => {
@@ -453,6 +639,7 @@ export default function DocumentEditor({
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !e.shiftKey) {
         e.preventDefault();
         undo(canvas);
+        hasUnsavedChangesRef.current = true;
       }
       // Redo: Ctrl+Y or Ctrl+Shift+Z
       else if (
@@ -461,6 +648,7 @@ export default function DocumentEditor({
       ) {
         e.preventDefault();
         redo(canvas);
+        hasUnsavedChangesRef.current = true;
       }
       // Delete / Backspace active object
       else if (e.key === "Delete" || e.key === "Backspace") {
@@ -470,28 +658,45 @@ export default function DocumentEditor({
           canvas.discardActiveObject();
           canvas.renderAll();
           setActiveObject(null);
-          pushState(canvas);
+          handleHistoryPush(canvas);
         }
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [undo, redo, pushState]);
+  }, [undo, redo, handleHistoryPush]);
 
-  // Full Multi-Page Save Payload
+  // 🛡️ Full Multi-Page Save Payload with 100% Guaranteed Raw Token Preservation Across ALL Pages
   const handleSaveAll = () => {
     if (!onSave) return;
     const canvas = fabricCanvasRef.current;
+
+    // 1. Always force-restore raw tokens on active canvas before capturing final JSON
+    if (canvas) {
+      applyTokensToCanvas(canvas, false);
+      setIsPreviewTokens(false);
+    }
+
     const currentJson = canvas ? canvas.toJSON(CUSTOM_CANVAS_PROPS) : null;
 
-    const allPages = pages.map((p, idx) =>
-      idx === activePageIndex ? { ...p, json: currentJson } : p
-    );
+    // 2. 🛡️ CRITICAL MULTI-PAGE GUARD:
+    // Strip mock preview values and force raw tokens across EVERY SINGLE PAGE in the document tree
+    const allPages = pages.map((p, idx) => {
+      const pageJson = idx === activePageIndex ? currentJson : p.json;
+      return {
+        ...p,
+        json: revertTokensInPageJson(pageJson),
+      };
+    });
+
+    hasUnsavedChangesRef.current = false;
 
     onSave({
       name: currentTitle,
       categoryName,
+      editorType: editorType || "document",
+      canvasPreset: canvasPreset || (editorType === "slide" ? "slide-16-9" : "a4-portrait"),
       pageCount: allPages.length,
       pages: allPages,
     });
@@ -502,7 +707,10 @@ export default function DocumentEditor({
       {/* ── TOP TOOLBAR ── */}
       <TopToolbar
         templateName={currentTitle}
-        onUpdateTemplateName={setCurrentTitle}
+        onUpdateTemplateName={(newTitle) => {
+          setCurrentTitle(newTitle);
+          hasUnsavedChangesRef.current = true;
+        }}
         categoryName={categoryName}
         zoom={zoom}
         onZoomIn={handleZoomIn}
@@ -514,10 +722,18 @@ export default function DocumentEditor({
         onToggleMargin={() => setShowMargin(!showMargin)}
         canUndo={canUndo}
         canRedo={canRedo}
-        onUndo={() => undo(fabricCanvasRef.current)}
-        onRedo={() => redo(fabricCanvasRef.current)}
+        onUndo={() => {
+          undo(fabricCanvasRef.current);
+          hasUnsavedChangesRef.current = true;
+        }}
+        onRedo={() => {
+          redo(fabricCanvasRef.current);
+          hasUnsavedChangesRef.current = true;
+        }}
         onSave={handleSaveAll}
         saving={saving}
+        isPreviewTokens={isPreviewTokens}
+        onTogglePreviewTokens={handleTogglePreviewTokens}
       />
 
       {/* ── MAIN STUDIO BODY: LEFT SIDEBAR + CANVAS + RIGHT SIDEBAR ── */}
@@ -530,15 +746,17 @@ export default function DocumentEditor({
           onAddPreset={handleAddPreset}
           onAddTable={handleAddTable}
           onAddSignature={handleAddSignature}
+          onInsertToken={handleInsertToken}
         />
 
         {/* Center Canvas Stage + Bottom Pagination Bar */}
         <div className="flex-1 flex flex-col overflow-hidden bg-[#F1F3F6]">
-          <main className="flex-1 overflow-auto flex items-start justify-center p-6">
+          <main ref={mainContainerRef} className="flex-1 overflow-auto flex items-start justify-center p-6">
             <CanvasStage
               zoom={zoom}
               showRuler={showRuler}
               showMargin={showMargin}
+              canvasPreset={preset}
               onCanvasReady={handleCanvasReady}
               onHistoryPush={handleHistoryPush}
               onSelectionChange={setActiveObject}
@@ -549,6 +767,7 @@ export default function DocumentEditor({
           <PagePaginationBar
             pages={pages}
             activePageIndex={activePageIndex}
+            editorType={editorType}
             onSelectPage={handleSelectPage}
             onAddPage={handleAddPage}
             onDuplicatePage={handleDuplicatePage}
@@ -561,6 +780,7 @@ export default function DocumentEditor({
         <RightSidebar
           canvas={canvasInstance}
           activeObject={activeObject}
+          canvasPreset={preset}
           onPushHistory={handleHistoryPush}
         />
       </div>
