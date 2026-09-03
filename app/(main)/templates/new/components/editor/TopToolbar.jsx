@@ -20,6 +20,8 @@ export default function TopToolbar({
   templateName,
   onUpdateTemplateName,
   categoryName,
+  editorType = "document",
+  canvasPreset = "a4-portrait",
   zoom,
   onZoomIn,
   onZoomOut,
@@ -37,6 +39,7 @@ export default function TopToolbar({
   isPreviewTokens = false,
   onTogglePreviewTokens,
 }) {
+  const isSlide = editorType === "slide";
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleInput, setTitleInput] = useState(templateName);
 
@@ -71,7 +74,7 @@ export default function TopToolbar({
           <div>
             <div className="flex items-center gap-1.5 mb-0.5">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100">
-                {categoryName || "A4 Template"}
+                {isSlide ? `${categoryName} • Presentation (16:9)` : categoryName || "A4 Template"}
               </span>
             </div>
 
@@ -95,14 +98,14 @@ export default function TopToolbar({
             ) : (
               <div
                 onClick={() => {
-                  setTitleInput(templateName);
+                  setTitleInput(templateName || (isSlide ? "เทมเพลตสไลด์ใหม่ (16:9)" : "เทมเพลตเอกสารใหม่ (A4)"));
                   setIsEditingTitle(true);
                 }}
                 className="group flex items-center gap-1.5 cursor-pointer hover:bg-gray-50 px-1 py-0.5 rounded -ml-1 transition-colors"
                 title="คลิกเพื่อเปลี่ยนชื่อเทมเพลต"
               >
                 <h1 className="text-sm font-bold text-gray-900 leading-tight">
-                  {templateName}
+                  {templateName || (isSlide ? "เทมเพลตสไลด์ใหม่ (16:9)" : "เทมเพลตเอกสารใหม่ (A4)")}
                 </h1>
                 <Edit2 className="w-3.5 h-3.5 text-gray-400 group-hover:text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>

@@ -13,71 +13,84 @@ import { getCanvasPreset } from "@/lib/editor/canvasPresets";
  * 3. Eliminates duplicate character glyphs in Thai text extraction
  */
 function patchFabricSvgTextForThai() {
-  const targetProto = fabric.FabricText ? fabric.FabricText.prototype : fabric.Text ? fabric.Text.prototype : null;
-  if (targetProto && !targetProto.__thaiSvgPatched) {
-    targetProto._renderTextLines = function (mainX, mainY) {
-      const textLines = this._textLines || (typeof this.text === "string" ? this.text.split("\n") : [""]);
-      const fontSize = this.fontSize || 14;
-      const lineHeight = this.lineHeight || 1.16;
-      const styles = this.styles || {};
+  const targetProtos = [
+    fabric.FabricText ? fabric.FabricText.prototype : null,
+    fabric.IText ? fabric.IText.prototype : null,
+    fabric.Textbox ? fabric.Textbox.prototype : null,
+  ].filter(Boolean);
 
-      return textLines
-        .map((line, lineIndex) => {
-          const lineY = mainY + (lineIndex * fontSize * lineHeight);
-          const lineStyles = styles[lineIndex];
+  targetProtos.forEach((proto) => {
+    if (proto && !proto.__thaiSvgPatched) {
+      const origSetSVGTextLineText = proto._setSVGTextLineText;
 
-          // 1. If no per-character styles on this line, emit a single clean line tspan
-          if (!lineStyles || Object.keys(lineStyles).length === 0) {
-            const escaped = fabric.util && fabric.util.escapeXml ? fabric.util.escapeXml(line) : line;
-            return `<tspan x="${mainX}" y="${lineY}">${escaped}</tspan>`;
-          }
+      proto._setSVGTextLineText = function (textSpans, lineIndex, textLeftOffset, textTopOffset) {
+        const lineHeight = this.getHeightOfLine(lineIndex);
+        const line = this._textLines[lineIndex];
+        if (!line || line.length === 0) return;
 
-          // 2. Group consecutive characters with identical styles into coherent chunks
-          const chunks = [];
-          let currentChunkText = "";
-          let currentStyleKey = null;
-          let currentStyleObj = null;
+        textTopOffset += (lineHeight * (1 - this._fontSizeFraction)) / this.lineHeight;
 
-          for (let i = 0; i < line.length; i++) {
-            const char = line[i];
-            const charStyle = lineStyles[i] || {};
-            const styleKey = JSON.stringify(charStyle);
+        const lineStyles = this.styles && this.styles[lineIndex];
+        const hasLineStyles = lineStyles && Object.keys(lineStyles).length > 0;
 
-            if (styleKey === currentStyleKey) {
-              currentChunkText += char;
-            } else {
-              if (currentChunkText.length > 0) {
-                chunks.push({ text: currentChunkText, style: currentStyleObj });
-              }
-              currentChunkText = char;
-              currentStyleKey = styleKey;
-              currentStyleObj = charStyle;
+        // 1. If no per-character styles on this line, emit a SINGLE clean <tspan> for the entire line!
+        // This completely eliminates character-by-character tspan splintering and duplicate Thai characters in PDF!
+        if (!hasLineStyles && !this.charSpacing && !this.path) {
+          const fullLineText = Array.isArray(line) ? line.join("") : String(line);
+          const style = this._getStyleDeclaration(lineIndex, 0) || {};
+          const firstCharBox =
+            this.__charBounds && this.__charBounds[lineIndex] && this.__charBounds[lineIndex][0]
+              ? this.__charBounds[lineIndex][0]
+              : {};
+          textSpans.push(this._createTextCharSpan(fullLineText, style, textLeftOffset, textTopOffset, firstCharBox));
+          return;
+        }
+
+        // 2. If line has per-character styles, group consecutive characters with identical styles into chunks
+        const chunks = [];
+        let currentChunkText = "";
+        let currentStyleKey = null;
+        let currentStyleObj = null;
+
+        for (let i = 0; i < line.length; i++) {
+          const char = line[i];
+          const charStyle = (lineStyles && lineStyles[i]) || {};
+          const styleKey = JSON.stringify(charStyle);
+
+          if (styleKey === currentStyleKey) {
+            currentChunkText += char;
+          } else {
+            if (currentChunkText.length > 0) {
+              chunks.push({ text: currentChunkText, style: currentStyleObj, idx: i - currentChunkText.length });
             }
+            currentChunkText = char;
+            currentStyleKey = styleKey;
+            currentStyleObj = charStyle;
           }
-          if (currentChunkText.length > 0) {
-            chunks.push({ text: currentChunkText, style: currentStyleObj });
+        }
+        if (currentChunkText.length > 0) {
+          chunks.push({ text: currentChunkText, style: currentStyleObj, idx: line.length - currentChunkText.length });
+        }
+
+        let currLeft = textLeftOffset;
+        for (const chunk of chunks) {
+          const charBox =
+            this.__charBounds && this.__charBounds[lineIndex] && this.__charBounds[lineIndex][chunk.idx]
+              ? this.__charBounds[lineIndex][chunk.idx]
+              : {};
+          textSpans.push(this._createTextCharSpan(chunk.text, chunk.style, currLeft, textTopOffset, charBox));
+
+          let chunkWidth = 0;
+          for (let cIdx = chunk.idx; cIdx < chunk.idx + chunk.text.length; cIdx++) {
+            const b = this.__charBounds && this.__charBounds[lineIndex] ? this.__charBounds[lineIndex][cIdx] : null;
+            chunkWidth += b ? b.kernedWidth || b.width || 0 : 0;
           }
-
-          // 3. Render grouped styled tspans
-          return chunks
-            .map((chunk, chunkIdx) => {
-              const s = chunk.style || {};
-              let styleAttrs = chunkIdx === 0 ? ` x="${mainX}" y="${lineY}"` : "";
-              if (s.fill) styleAttrs += ` fill="${s.fill}"`;
-              if (s.fontWeight) styleAttrs += ` font-weight="${s.fontWeight}"`;
-              if (s.fontStyle) styleAttrs += ` font-style="${s.fontStyle}"`;
-              if (s.fontSize) styleAttrs += ` font-size="${s.fontSize}"`;
-              if (s.fontFamily) styleAttrs += ` font-family="${s.fontFamily}"`;
-
-              const escaped = fabric.util && fabric.util.escapeXml ? fabric.util.escapeXml(chunk.text) : chunk.text;
-              return `<tspan${styleAttrs}>${escaped}</tspan>`;
-            })
-            .join("");
-        })
-        .join("");
-    };
-    targetProto.__thaiSvgPatched = true;
-  }
+          currLeft += chunkWidth;
+        }
+      };
+      proto.__thaiSvgPatched = true;
+    }
+  });
 }
 
 export default function FabricPrintRenderer({

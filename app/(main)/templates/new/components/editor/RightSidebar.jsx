@@ -262,7 +262,7 @@ export default function RightSidebar({
               </div>
               <div>
                 <p className="font-bold text-gray-800 text-sm">ยังไม่ได้เลือกวัตถุ</p>
-                <p className="text-gray-400 text-[11px] mt-0.5">คลิกที่วัตถุบนหน้ากระดาษ A4 เพื่อปรับแต่ง</p>
+                <p className="text-gray-400 text-[11px] mt-0.5">คลิกที่วัตถุบน{preset.id === "slide-16-9" ? "สไลด์" : "หน้าเอกสาร"}เพื่อปรับแต่ง</p>
               </div>
 
               <div className="bg-gray-50 rounded-xl p-3 border border-gray-100 text-left space-y-1.5 mt-4">

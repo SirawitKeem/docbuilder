@@ -609,6 +609,44 @@ export default function DocumentEditor({
         top: 680,
         width: A4_WIDTH - MARGIN_PX * 2,
       });
+    } else if (presetKey === "slide_title_subtitle") {
+      const title = new fabric.IText("หัวข้อการนำเสนอหลัก (Presentation Title)", {
+        left: 80,
+        top: 220,
+        fontSize: 42,
+        fontFamily: "'Noto Sans Thai', sans-serif",
+        fontWeight: "bold",
+        fill: "#0F172A",
+      });
+      const subtitle = new fabric.IText("คำอธิบายหรือสาระสำคัญสำหรับการบรรยายในสไลด์นี้", {
+        left: 80,
+        top: 290,
+        fontSize: 22,
+        fontFamily: "'Noto Sans Thai', sans-serif",
+        fill: "#64748B",
+      });
+      group = new fabric.Group([title, subtitle], { left: 80, top: 220 });
+    } else if (presetKey === "slide_two_column") {
+      const card1Bg = new fabric.Rect({ left: 80, top: 180, width: 520, height: 420, fill: "#F8FAFC", stroke: "#CBD5E1", rx: 16, ry: 16 });
+      const card1Title = new fabric.IText("ประเด็นที่ 1 (Topic A)", { left: 110, top: 210, fontSize: 24, fontWeight: "bold", fill: "#1E293B" });
+      const card1Body = new fabric.IText("• รายละเอียดและข้อสังเกตสำคัญ\n• ปัจจัยที่ส่งผลต่อการดำเนินการ\n• ผลลัพธ์เชิงบวกที่คาดว่าจะได้รับ", { left: 110, top: 260, fontSize: 18, fill: "#475569", lineHeight: 1.5 });
+
+      const card2Bg = new fabric.Rect({ left: 660, top: 180, width: 520, height: 420, fill: "#F8FAFC", stroke: "#CBD5E1", rx: 16, ry: 16 });
+      const card2Title = new fabric.IText("ประเด็นที่ 2 (Topic B)", { left: 690, top: 210, fontSize: 24, fontWeight: "bold", fill: "#1E293B" });
+      const card2Body = new fabric.IText("• แผนงานและขั้นตอนการทดสอบ\n• การบริหารความเสี่ยงในโครงการ\n• กำหนดการส่งมอบงานขั้นสุดท้าย", { left: 690, top: 260, fontSize: 18, fill: "#475569", lineHeight: 1.5 });
+
+      group = new fabric.Group([card1Bg, card1Title, card1Body, card2Bg, card2Title, card2Body], { left: 80, top: 180 });
+    } else if (presetKey === "slide_stat_callout") {
+      const cardBg = new fabric.Rect({ left: 340, top: 200, width: 600, height: 320, fill: "#EEF2FF", stroke: "#C7D2FE", strokeWidth: 2, rx: 24, ry: 24 });
+      const statNum = new fabric.IText("+185%", { left: 490, top: 240, fontSize: 72, fontWeight: "bold", fill: "#4F46E5" });
+      const statLabel = new fabric.IText("อัตราการเติบโตของยอดขายรายไตรมาส (Quarterly Growth)", { left: 400, top: 350, fontSize: 20, fill: "#3730A3" });
+      const statSub = new fabric.IText("เปรียบเทียบกับเป้าหมายประจำปี 2026", { left: 470, top: 400, fontSize: 16, fill: "#6366F1" });
+      group = new fabric.Group([cardBg, statNum, statLabel, statSub], { left: 340, top: 200 });
+    } else if (presetKey === "slide_bullets") {
+      const t1 = new fabric.IText("✔ 1. สรุปภาพรวมและกลยุทธ์สำคัญขององค์กร", { left: 120, top: 200, fontSize: 24, fontWeight: "bold", fill: "#1E293B" });
+      const t2 = new fabric.IText("✔ 2. ทิศทางการพัฒนาเทคโนโลยีและระบบอัตโนมัติ", { left: 120, top: 280, fontSize: 24, fontWeight: "bold", fill: "#1E293B" });
+      const t3 = new fabric.IText("✔ 3. แผนการวัดผลและการรักษาเสถียรภาพระบบ 24/7", { left: 120, top: 360, fontSize: 24, fontWeight: "bold", fill: "#1E293B" });
+      group = new fabric.Group([t1, t2, t3], { left: 120, top: 200 });
     }
 
     if (group) {
@@ -712,6 +750,8 @@ export default function DocumentEditor({
           hasUnsavedChangesRef.current = true;
         }}
         categoryName={categoryName}
+        editorType={editorType}
+        canvasPreset={preset.id}
         zoom={zoom}
         onZoomIn={handleZoomIn}
         onZoomOut={handleZoomOut}
@@ -740,6 +780,7 @@ export default function DocumentEditor({
       <div className="flex-1 flex overflow-hidden">
         {/* Left Tool Sidebar */}
         <LeftSidebar
+          editorType={editorType}
           onAddText={handleAddText}
           onAddShape={handleAddShape}
           onAddImage={handleAddImage}
@@ -756,7 +797,7 @@ export default function DocumentEditor({
               zoom={zoom}
               showRuler={showRuler}
               showMargin={showMargin}
-              canvasPreset={preset}
+              canvasPreset={preset.id}
               onCanvasReady={handleCanvasReady}
               onHistoryPush={handleHistoryPush}
               onSelectionChange={setActiveObject}
@@ -780,7 +821,7 @@ export default function DocumentEditor({
         <RightSidebar
           canvas={canvasInstance}
           activeObject={activeObject}
-          canvasPreset={preset}
+          canvasPreset={preset.id}
           onPushHistory={handleHistoryPush}
         />
       </div>

@@ -20,6 +20,7 @@ import {
 import { AVAILABLE_TOKEN_CATEGORIES } from "@/lib/tokens/tokenEngine";
 
 export default function LeftSidebar({
+  editorType = "document",
   onAddText,
   onAddShape,
   onAddImage,
@@ -28,7 +29,8 @@ export default function LeftSidebar({
   onAddSignature,
   onInsertToken,
 }) {
-  const [activeTab, setActiveTab] = useState("blocks"); // "blocks" | "tokens" | "text" | "shapes" | "uploads"
+  const isSlide = editorType === "slide";
+  const [activeTab, setActiveTab] = useState(isSlide ? "text" : "blocks"); // "blocks" | "tokens" | "text" | "shapes" | "uploads"
   const fileInputRef = useRef(null);
 
   // Handle local image file upload
@@ -58,10 +60,10 @@ export default function LeftSidebar({
               ? "bg-indigo-600 text-white shadow-sm font-semibold"
               : "text-gray-600 hover:bg-gray-200/70 hover:text-gray-900"
           }`}
-          title="บล็อกโครงสร้างเอกสาร"
+          title={isSlide ? "โครงร่างสไลด์ (Slide Layouts)" : "บล็อกโครงสร้างเอกสาร"}
         >
           <LayoutTemplate className="w-5 h-5" />
-          <span className="text-[10px]">บล็อกเอกสาร</span>
+          <span className="text-[10px]">{isSlide ? "โครงร่างสไลด์" : "บล็อกเอกสาร"}</span>
         </button>
 
         {/* 🏷️ TAB: TOKENS / DYNAMIC VARIABLES (Phase 6) */}
@@ -120,84 +122,144 @@ export default function LeftSidebar({
 
       {/* ── TAB CONTENT PANEL ── */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* ── TAB 1: DOCUMENT BLOCKS (Phase 4) ── */}
+        {/* ── TAB 1: BLOCKS / SLIDE LAYOUTS ── */}
         {activeTab === "blocks" && (
           <div className="space-y-4">
             <div>
               <h2 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                บล็อกเฉพาะทางเอกสาร A4
+                {isSlide ? "โครงร่างสไลด์นำเสนอ (16:9)" : "บล็อกเฉพาะทางเอกสาร A4"}
               </h2>
-              <div className="space-y-2">
-                {/* 1. Quotation Table */}
-                <button
-                  onClick={() => onAddTable && onAddTable()}
-                  className="w-full text-left p-3 rounded-xl border border-blue-200 bg-blue-50/40 hover:bg-blue-50 hover:border-blue-300 transition-all cursor-pointer group"
-                >
-                  <div className="flex items-center gap-2 mb-1 text-blue-700 font-bold text-xs">
-                    <Table className="w-4 h-4" />
-                    <span>ตารางใบเสนอราคา (Pricing Table)</span>
-                  </div>
-                  <p className="text-[11px] text-gray-500">
-                    ตาราง 5 คอลัมน์พร้อมคำนวณ VAT 7% และยอดรวมอัตโนมัติ
-                  </p>
-                </button>
+              {isSlide ? (
+                <div className="space-y-2">
+                  {/* Slide Preset 1: Title & Subtitle */}
+                  <button
+                    onClick={() => onAddPreset && onAddPreset("slide_title_subtitle")}
+                    className="w-full text-left p-3 rounded-xl border border-indigo-200 bg-indigo-50/40 hover:bg-indigo-50 hover:border-indigo-300 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2 mb-1 text-indigo-700 font-bold text-xs">
+                      <LayoutTemplate className="w-4 h-4" />
+                      <span>หัวข้อและคำอธิบาย (Title & Subtitle)</span>
+                    </div>
+                    <p className="text-[11px] text-gray-500">
+                      กล่องข้อความหัวเรื่องหลักขนาด 44px พร้อมคำอธิบายย่อยจัดกึ่งกลาง
+                    </p>
+                  </button>
 
-                {/* 2. Signature Dual Block */}
-                <button
-                  onClick={() => onAddSignature && onAddSignature("dual")}
-                  className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
-                >
-                  <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
-                    <PenTool className="w-4 h-4 text-indigo-600" />
-                    <span>บล็อกลงนามคู่ (ผู้เสนอราคา + ลูกค้า)</span>
-                  </div>
-                  <p className="text-[11px] text-gray-500">
-                    ช่องลงลายมือชื่อ 2 ฝั่งซ้าย-ขวา พร้อมวันที่และตำแหน่ง
-                  </p>
-                </button>
+                  {/* Slide Preset 2: Two Column Cards */}
+                  <button
+                    onClick={() => onAddPreset && onAddPreset("slide_two_column")}
+                    className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
+                      <Table className="w-4 h-4 text-emerald-600" />
+                      <span>เนื้อหา 2 คอลัมน์ (Comparison Cards)</span>
+                    </div>
+                    <p className="text-[11px] text-gray-500">
+                      การ์ดเนื้อหาเปรียบเทียบซ้าย-ขวา 2 ฝั่ง พร้อมหัวข้อย่อย
+                    </p>
+                  </button>
 
-                {/* 3. Company Header Block */}
-                <button
-                  onClick={() => onAddPreset && onAddPreset("company_header")}
-                  className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
-                >
-                  <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
-                    <Building className="w-4 h-4 text-emerald-600" />
-                    <span>หัวกระดาษบริษัท (Company Header)</span>
-                  </div>
-                  <p className="text-[11px] text-gray-500">
-                    ชื่อบริษัท, เลขประจำตัวผู้เสียภาษี, ที่อยู่, เบอร์โทร
-                  </p>
-                </button>
+                  {/* Slide Preset 3: Key Metric / Stat Callout */}
+                  <button
+                    onClick={() => onAddPreset && onAddPreset("slide_stat_callout")}
+                    className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
+                      <Sparkles className="w-4 h-4 text-purple-600" />
+                      <span>สถิติสำคัญ (KPI / Key Metric Card)</span>
+                    </div>
+                    <p className="text-[11px] text-gray-500">
+                      ตัวเลขไฮไลท์ขนาดใหญ่พร้อมข้อความระบุผลลัพธ์
+                    </p>
+                  </button>
 
-                {/* 4. Party Info Grid */}
-                <button
-                  onClick={() => onAddPreset && onAddPreset("party_info")}
-                  className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
-                >
-                  <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
-                    <FileCheck2 className="w-4 h-4 text-purple-600" />
-                    <span>ข้อมูลคู่สัญญา / เลขที่เอกสาร (Info Grid)</span>
-                  </div>
-                  <p className="text-[11px] text-gray-500">
-                    กล่อง Bill To และช่องเลขที่/วันที่เอกสารแบบ 2 คอลัมน์
-                  </p>
-                </button>
+                  {/* Slide Preset 4: Bullet Points */}
+                  <button
+                    onClick={() => onAddPreset && onAddPreset("slide_bullets")}
+                    className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
+                      <ScrollText className="w-4 h-4 text-amber-600" />
+                      <span>รายการจุดเด่น (Key Takeaways)</span>
+                    </div>
+                    <p className="text-[11px] text-gray-500">
+                      รายการสรุปข้อคิดและจุดเด่น 3 ข้อพร้อมไอคอนนำ
+                    </p>
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {/* 1. Quotation Table */}
+                  <button
+                    onClick={() => onAddTable && onAddTable()}
+                    className="w-full text-left p-3 rounded-xl border border-blue-200 bg-blue-50/40 hover:bg-blue-50 hover:border-blue-300 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2 mb-1 text-blue-700 font-bold text-xs">
+                      <Table className="w-4 h-4" />
+                      <span>ตารางใบเสนอราคา (Pricing Table)</span>
+                    </div>
+                    <p className="text-[11px] text-gray-500">
+                      ตาราง 5 คอลัมน์พร้อมคำนวณ VAT 7% และยอดรวมอัตโนมัติ
+                    </p>
+                  </button>
 
-                {/* 5. Terms & Conditions Box */}
-                <button
-                  onClick={() => onAddPreset && onAddPreset("terms_box")}
-                  className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
-                >
-                  <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
-                    <ScrollText className="w-4 h-4 text-amber-600" />
-                    <span>เงื่อนไขและข้อตกลง (Terms & Conditions)</span>
-                  </div>
-                  <p className="text-[11px] text-gray-500">
-                    กล่องข้อกำหนดการชำระเงินและเงื่อนไขการส่งมอบ
-                  </p>
-                </button>
-              </div>
+                  {/* 2. Signature Dual Block */}
+                  <button
+                    onClick={() => onAddSignature && onAddSignature("dual")}
+                    className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
+                      <PenTool className="w-4 h-4 text-indigo-600" />
+                      <span>บล็อกลงนามคู่ (ผู้เสนอราคา + ลูกค้า)</span>
+                    </div>
+                    <p className="text-[11px] text-gray-500">
+                      ช่องลงลายมือชื่อ 2 ฝั่งซ้าย-ขวา พร้อมวันที่และตำแหน่ง
+                    </p>
+                  </button>
+
+                  {/* 3. Company Header Block */}
+                  <button
+                    onClick={() => onAddPreset && onAddPreset("company_header")}
+                    className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
+                      <Building className="w-4 h-4 text-emerald-600" />
+                      <span>หัวกระดาษบริษัท (Company Header)</span>
+                    </div>
+                    <p className="text-[11px] text-gray-500">
+                      ชื่อบริษัท, เลขประจำตัวผู้เสียภาษี, ที่อยู่, เบอร์โทร
+                    </p>
+                  </button>
+
+                  {/* 4. Party Info Grid */}
+                  <button
+                    onClick={() => onAddPreset && onAddPreset("party_info")}
+                    className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
+                      <FileCheck2 className="w-4 h-4 text-purple-600" />
+                      <span>ข้อมูลคู่สัญญา / เลขที่เอกสาร (Info Grid)</span>
+                    </div>
+                    <p className="text-[11px] text-gray-500">
+                      กล่อง Bill To และช่องเลขที่/วันที่เอกสารแบบ 2 คอลัมน์
+                    </p>
+                  </button>
+
+                  {/* 5. Terms & Conditions Box */}
+                  <button
+                    onClick={() => onAddPreset && onAddPreset("terms_box")}
+                    className="w-full text-left p-3 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-gray-100 transition-all cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-2 mb-1 text-gray-800 font-bold text-xs">
+                      <ScrollText className="w-4 h-4 text-amber-600" />
+                      <span>เงื่อนไขและข้อตกลง (Terms & Conditions)</span>
+                    </div>
+                    <p className="text-[11px] text-gray-500">
+                      กล่องข้อกำหนดการชำระเงินและเงื่อนไขการส่งมอบ
+                    </p>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}

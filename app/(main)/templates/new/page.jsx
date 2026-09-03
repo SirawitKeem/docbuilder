@@ -48,10 +48,30 @@ function TemplateBuilderContent() {
   const [editorType, setEditorType] = useState(editorTypeParam);
   const [canvasPreset, setCanvasPreset] = useState(canvasPresetParam);
   const [categoryName, setCategoryName] = useState("Notification Letter");
-  const [templateName, setTemplateName] = useState(editorTypeParam === "sheet" ? "New Spreadsheet Template" : "เทมเพลตเอกสารใหม่ (A4)");
+  const [templateName, setTemplateName] = useState(() => {
+    if (editorTypeParam === "sheet") return "New Spreadsheet Template";
+    if (editorTypeParam === "slide") return "เทมเพลตสไลด์ใหม่ (16:9)";
+    return "เทมเพลตเอกสารใหม่ (A4)";
+  });
   const [initialPages, setInitialPages] = useState(null);
   const [initialSheetData, setInitialSheetData] = useState(null);
   const [saving, setSaving] = useState(false);
+
+  // Sync state when query parameters change (new template creation)
+  useEffect(() => {
+    if (!editId) {
+      if (editorTypeParam) setEditorType(editorTypeParam);
+      if (canvasPresetParam) setCanvasPreset(canvasPresetParam);
+      if (categoryIdParam) setCategoryId(categoryIdParam);
+      if (editorTypeParam === "slide") {
+        setTemplateName("เทมเพลตสไลด์ใหม่ (16:9)");
+      } else if (editorTypeParam === "sheet") {
+        setTemplateName("New Spreadsheet Template");
+      } else {
+        setTemplateName("เทมเพลตเอกสารใหม่ (A4)");
+      }
+    }
+  }, [editorTypeParam, canvasPresetParam, categoryIdParam, editId]);
 
   useEffect(() => {
     // 1. If edit mode (load existing template from Database)
@@ -104,22 +124,33 @@ function TemplateBuilderContent() {
     try {
       const activeEditorType = editorData?.editorType || editorType || "document";
       const isSheet = activeEditorType === "sheet";
+      const isSlide = activeEditorType === "slide";
+
+      const defaultName = isSheet
+        ? "New Spreadsheet Template"
+        : isSlide
+        ? "เทมเพลตสไลด์ใหม่ (16:9)"
+        : "เทมเพลตใหม่";
 
       const payload = {
-        name: editorData?.name || templateName || (isSheet ? "New Spreadsheet Template" : "เทมเพลตใหม่"),
+        name: editorData?.name || templateName || defaultName,
         categoryId: categoryId || categoryIdParam,
         editorType: activeEditorType,
-        canvasPreset: isSheet ? null : editorData?.canvasPreset || canvasPreset || "a4-portrait",
-        description: isSheet ? `เทมเพลตสเปรดชีต ${categoryName}` : `เทมเพลต ${categoryName} จำนวน ${editorData?.pageCount || 1} หน้า`,
-        icon: isSheet ? "Table" : "FileText",
-        badge: "กำหนดเอง",
+        canvasPreset: isSheet ? null : editorData?.canvasPreset || canvasPreset || (isSlide ? "slide-16-9" : "a4-portrait"),
+        description: isSheet
+          ? `เทมเพลตสเปรดชีต ${categoryName}`
+          : isSlide
+          ? `เทมเพลตสไลด์นำเสนอ ${categoryName} จำนวน ${editorData?.pageCount || 1} สไลด์`
+          : `เทมเพลต ${categoryName} จำนวน ${editorData?.pageCount || 1} หน้า`,
+        icon: isSheet ? "Table" : isSlide ? "Presentation" : "FileText",
+        badge: isSlide ? "สไลด์" : "กำหนดเอง",
         status: "published",
-        orientation: isSheet ? "landscape" : "portrait",
+        orientation: isSheet ? "landscape" : isSlide ? "landscape" : "portrait",
         pageCount: isSheet ? 0 : editorData?.pageCount || 1,
         pages: isSheet ? [] : editorData?.pages || [],
         sheetData: isSheet ? editorData?.sheetData || [] : [],
         theme: {
-          primaryColor: isSheet ? "#059669" : "#5542F6",
+          primaryColor: isSheet ? "#059669" : isSlide ? "#6366F1" : "#5542F6",
           backgroundColor: "#FFFFFF",
           hasWatermark: false,
         },
