@@ -19,9 +19,12 @@ import {
   ArrowDown,
   Square,
   Plus,
+  Minus,
   Table as TableIcon,
 } from "lucide-react";
 import { getCanvasPreset } from "@/lib/editor/canvasPresets";
+import { DEFAULT_FONTS, buildGoogleFontsUrl } from "@/lib/fonts/fontRegistry";
+import GoogleFontPickerModal from "./GoogleFontPickerModal";
 
 export default function RightSidebar({
   canvas,
@@ -32,6 +35,36 @@ export default function RightSidebar({
   const preset = getCanvasPreset(canvasPreset);
   const [activeTab, setActiveTab] = useState("properties");
   const [layersList, setLayersList] = useState([]);
+  const [allFonts, setAllFonts] = useState(DEFAULT_FONTS);
+  const [isFontPickerOpen, setIsFontPickerOpen] = useState(false);
+
+  // 🔤 Load Registered Fonts from API and Preload Google Fonts Stylesheet
+  const loadFonts = async () => {
+    try {
+      const res = await fetch("/api/fonts");
+      const data = await res.json();
+      if (data.success && Array.isArray(data.allFonts)) {
+        setAllFonts(data.allFonts);
+        const url = buildGoogleFontsUrl(data.allFonts);
+        if (url && typeof document !== "undefined") {
+          let link = document.getElementById("gfonts-docbuilder-registry");
+          if (!link) {
+            link = document.createElement("link");
+            link.id = "gfonts-docbuilder-registry";
+            link.rel = "stylesheet";
+            document.head.appendChild(link);
+          }
+          link.href = url;
+        }
+      }
+    } catch (e) {
+      console.error("Failed to load fonts:", e);
+    }
+  };
+
+  useEffect(() => {
+    loadFonts();
+  }, []);
 
   const [propsState, setPropsState] = useState({
     left: 0,
@@ -128,6 +161,16 @@ export default function RightSidebar({
     setPropsState((prev) => ({ ...prev, [key]: value }));
     canvas.requestRenderAll();
     if (onPushHistory) onPushHistory(canvas);
+  };
+
+  const handleFontFromPicker = (selectedFont) => {
+    if (!selectedFont) return;
+    setAllFonts((prev) => {
+      if (prev.some((f) => f.id === selectedFont.id)) return prev;
+      return [...prev, selectedFont];
+    });
+    applyProperty("fontFamily", selectedFont.cssStack);
+    loadFonts();
   };
 
   // 100% Zoom-Independent Alignment using getScaledWidth() / getScaledHeight()
@@ -392,23 +435,47 @@ export default function RightSidebar({
                 <div className="space-y-3">
                   <h3 className="font-bold text-gray-700 uppercase tracking-wider text-[10px]">แบบอักษรและการจัดวาง</h3>
                   <div>
-                    <label className="text-[11px] text-gray-500 mb-1 block">ฟอนต์ (Font Family)</label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[11px] text-gray-500 block">แบบอักษร</label>
+                      <button
+                        type="button"
+                        onClick={() => setIsFontPickerOpen(true)}
+                        className="text-[10px] font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-0.5 cursor-pointer"
+                        title="ค้นหาฟอนต์จาก Google Fonts"
+                      >
+                        <Plus size={11} /> เพิ่มฟอนต์
+                      </button>
+                    </div>
                     <select
                       value={propsState.fontFamily}
-                      onChange={(e) => applyProperty("fontFamily", e.target.value)}
+                      onChange={(e) => {
+                        if (e.target.value === "__ADD_CUSTOM_FONT__") {
+                          setIsFontPickerOpen(true);
+                          return;
+                        }
+                        applyProperty("fontFamily", e.target.value);
+                      }}
+                      style={{ fontFamily: propsState.fontFamily }}
                       className="w-full bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs font-medium text-gray-800 outline-none focus:border-indigo-500 cursor-pointer"
                     >
-                      <option value="'Noto Sans Thai', sans-serif">Noto Sans Thai (มาตรฐาน)</option>
-                      <option value="'Noto Sans Thai Looped', sans-serif">Noto Sans Thai Looped (ทางการ)</option>
-                      <option value="'Sarabun', sans-serif">Sarabun (สารบรรณ)</option>
-                      <option value="'Inter', sans-serif">Inter (Modern Sans)</option>
-                      <option value="monospace">Monospace (รหัส/ตัวเลข)</option>
+                      {allFonts.map((font) => (
+                        <option
+                          key={font.id}
+                          value={font.cssStack}
+                          style={{ fontFamily: font.cssStack }}
+                        >
+                          {(font.name || font.family || "").replace(/\s*\([^)]*\)/g, "").trim()}
+                        </option>
+                      ))}
+                      <option value="__ADD_CUSTOM_FONT__" className="text-indigo-600 font-semibold bg-indigo-50">
+                        + เพิ่มฟอนต์ Google Fonts...
+                      </option>
                     </select>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="text-[11px] text-gray-500 mb-1 block">ขนาด (Size)</label>
+                      <label className="text-[11px] text-gray-500 mb-1 block">ขนาด</label>
                       <input
                         type="number"
                         min="8"
@@ -420,7 +487,7 @@ export default function RightSidebar({
                     </div>
 
                     <div>
-                      <label className="text-[11px] text-gray-500 mb-1 block">สีตัวอักษร (Color)</label>
+                      <label className="text-[11px] text-gray-500 mb-1 block">สีตัวอักษร</label>
                       <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg p-1">
                         <input
                           type="color"
@@ -746,6 +813,14 @@ export default function RightSidebar({
           )}
         </div>
       )}
+
+      {/* 🔤 Google Fonts Picker & Live Preview Modal */}
+      <GoogleFontPickerModal
+        isOpen={isFontPickerOpen}
+        onClose={() => setIsFontPickerOpen(false)}
+        onFontSelect={handleFontFromPicker}
+        installedFonts={allFonts}
+      />
     </aside>
   );
 }

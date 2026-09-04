@@ -1,10 +1,15 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import * as fabric from "fabric";
-import { DocTable, CUSTOM_CANVAS_PROPS } from "@/app/(main)/templates/new/components/editor/elements/DocTable";
 import { replaceTokens, DEFAULT_SAMPLE_TOKEN_MAP } from "@/lib/tokens/tokenEngine";
 import { getCanvasPreset } from "@/lib/editor/canvasPresets";
+import {
+  DEFAULT_FONTS,
+  CURATED_THAI_FONTS,
+  buildGoogleFontsUrl,
+  findFontByFamily,
+} from "@/lib/fonts/fontRegistry";
 
 /**
  * 🛡️ Patch FabricText SVG renderer with Smart Style-Grouping
@@ -21,8 +26,6 @@ function patchFabricSvgTextForThai() {
 
   targetProtos.forEach((proto) => {
     if (proto && !proto.__thaiSvgPatched) {
-      const origSetSVGTextLineText = proto._setSVGTextLineText;
-
       proto._setSVGTextLineText = function (textSpans, lineIndex, textLeftOffset, textTopOffset) {
         const lineHeight = this.getHeightOfLine(lineIndex);
         const line = this._textLines[lineIndex];
@@ -212,6 +215,40 @@ export default function FabricPrintRenderer({
     };
   }, [template, JSON.stringify(values), preset.id]);
 
+  // Extract all unique fonts used across template pages
+  const googleFontsUrl = useMemo(() => {
+    const fontsToLoad = new Map();
+
+    // Always include default fonts with Google Fonts
+    DEFAULT_FONTS.forEach((f) => {
+      if (f.googleFont) fontsToLoad.set(f.id, f);
+    });
+
+    // Scan template pages for any custom fonts
+    if (template && Array.isArray(template.pages)) {
+      template.pages.forEach((page) => {
+        if (!page || !page.json) return;
+        try {
+          const pageData = typeof page.json === "string" ? JSON.parse(page.json) : page.json;
+          if (pageData && Array.isArray(pageData.objects)) {
+            pageData.objects.forEach((obj) => {
+              if (obj.fontFamily) {
+                const matched = findFontByFamily(obj.fontFamily, CURATED_THAI_FONTS);
+                if (matched && matched.googleFont) {
+                  fontsToLoad.set(matched.id, matched);
+                }
+              }
+            });
+          }
+        } catch {
+          // ignore parsing error
+        }
+      });
+    }
+
+    return buildGoogleFontsUrl(Array.from(fontsToLoad.values()));
+  }, [template]);
+
   return (
     <div
       ref={containerRef}
@@ -220,10 +257,9 @@ export default function FabricPrintRenderer({
       style={{ width: `${preset.width}px` }}
       data-ready={isRendered ? "true" : "false"}
     >
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&family=Noto+Sans+Thai+Looped:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap"
-      />
+      {googleFontsUrl && (
+        <link rel="stylesheet" href={googleFontsUrl} />
+      )}
 
       <style>{`
         @page {

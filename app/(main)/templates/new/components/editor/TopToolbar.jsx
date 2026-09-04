@@ -14,6 +14,8 @@ import {
   Edit2,
   Check,
   Sparkles,
+  Download,
+  Loader2,
 } from "lucide-react";
 
 export default function TopToolbar({
@@ -21,7 +23,6 @@ export default function TopToolbar({
   onUpdateTemplateName,
   categoryName,
   editorType = "document",
-  canvasPreset = "a4-portrait",
   zoom,
   onZoomIn,
   onZoomOut,
@@ -38,6 +39,10 @@ export default function TopToolbar({
   saving,
   isPreviewTokens = false,
   onTogglePreviewTokens,
+  onExportPptx,
+  isExportingPptx = false,
+  onExportPdf,
+  isExportingPdf = false,
 }) {
   const isSlide = editorType === "slide";
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -208,6 +213,40 @@ export default function TopToolbar({
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>{isPreviewTokens ? "พรีวิวข้อมูลจริง (ON)" : "พรีวิวข้อมูลจริง"}</span>
+          </button>
+        )}
+
+        {/* ── PPTX Export Button: STRICTLY rendered ONLY when editorType === 'slide' ── */}
+        {isSlide && onExportPptx && (
+          <button
+            onClick={onExportPptx}
+            disabled={isExportingPptx}
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs sm:text-sm font-semibold shadow-xs hover:shadow transition-all disabled:opacity-50 cursor-pointer"
+            title="ดาวน์โหลดงานนำเสนอเป็นไฟล์ Microsoft PowerPoint (.pptx)"
+          >
+            {isExportingPptx ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Download className="w-4 h-4" />
+            )}
+            <span>{isExportingPptx ? "กำลังสร้าง .pptx..." : "ดาวน์โหลด .pptx"}</span>
+          </button>
+        )}
+
+        {/* ── Optional PDF Export Button: ONLY when editorType !== 'slide' ── */}
+        {!isSlide && onExportPdf && (
+          <button
+            onClick={onExportPdf}
+            disabled={isExportingPdf}
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs sm:text-sm font-semibold shadow-xs hover:shadow transition-all disabled:opacity-50 cursor-pointer"
+            title="ดาวน์โหลดเอกสารเป็นไฟล์ PDF"
+          >
+            {isExportingPdf ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Download className="w-4 h-4" />
+            )}
+            <span>{isExportingPdf ? "กำลังสร้าง PDF..." : "ดาวน์โหลด PDF"}</span>
           </button>
         )}
 

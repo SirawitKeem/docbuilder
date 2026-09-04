@@ -189,6 +189,10 @@ export default function CanvasStage({
       if (onHistoryPush) onHistoryPush(canvas);
     });
 
+    if (typeof window !== "undefined") {
+      window.__FABRIC_CANVAS__ = canvas;
+      window.__FABRIC__ = fabric;
+    }
     if (onCanvasReady) {
       onCanvasReady(canvas);
     }

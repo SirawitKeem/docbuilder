@@ -8,11 +8,12 @@ import LeftSidebar from "./LeftSidebar";
 import RightSidebar from "./RightSidebar";
 import PagePaginationBar from "./PagePaginationBar";
 import { useHistory } from "./hooks/useHistory";
-import { A4_WIDTH, A4_HEIGHT, MARGIN_PX } from "./CanvasStage";
+import { A4_WIDTH, MARGIN_PX } from "./CanvasStage";
 import { createDocTable, CUSTOM_CANVAS_PROPS } from "./elements/DocTable";
+import { cloneFabricObject } from "./utils/clipboard";
 import { createSignatureBlock } from "./elements/SignatureBlock";
 import { createCompanyHeaderBlock, createPartyInfoGrid, createTermsBox } from "./elements/HeaderBlock";
-import { applyTokensToCanvas, replaceTokens, revertTokensInPageJson } from "@/lib/tokens/tokenEngine";
+import { applyTokensToCanvas, revertTokensInPageJson } from "@/lib/tokens/tokenEngine";
 import { getCanvasPreset } from "@/lib/editor/canvasPresets";
 
 // Dynamically import CanvasStage with SSR disabled
@@ -86,8 +87,11 @@ export default function DocumentEditor({
   const [activeObject, setActiveObject] = useState(null);
   const [canvasInstance, setCanvasInstance] = useState(null);
   const [isPreviewTokens, setIsPreviewTokens] = useState(false);
+  const [isExportingPptx, setIsExportingPptx] = useState(false);
   const fabricCanvasRef = useRef(null);
   const hasUnsavedChangesRef = useRef(false);
+  const clipboardRef = useRef(null);
+  const nudgeTimerRef = useRef(null);
 
   // Sync title when loaded from async fetch (e.g. edit mode)
   useEffect(() => {
@@ -219,7 +223,7 @@ export default function DocumentEditor({
   }, [isPreviewTokens]);
 
   // 🏷️ Insert Token into Active Textbox or create new Token field
-  const handleInsertToken = useCallback((tokenKey, exampleVal) => {
+  const handleInsertToken = useCallback((tokenKey) => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
@@ -657,52 +661,262 @@ export default function DocumentEditor({
     }
   }, [handleHistoryPush]);
 
-  // Keyboard Shortcuts: Ctrl+Z, Ctrl+Y, Delete
+  // Keyboard Shortcuts: Copy, Paste, Duplicate, Select All, Nudge, Escape, Undo, Redo, Delete
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = async (e) => {
       const canvas = fabricCanvasRef.current;
       if (!canvas) return;
 
       const activeEl = document.activeElement;
-      if (activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA")) {
-        return;
-      }
+      const isInputActive =
+        activeEl &&
+        (activeEl.tagName === "INPUT" ||
+          activeEl.tagName === "TEXTAREA" ||
+          activeEl.isContentEditable);
 
       const activeObj = canvas.getActiveObject();
-      if (activeObj && activeObj.isEditing) {
+      const isTextEditing = activeObj && activeObj.isEditing;
+
+      const isModifier = e.ctrlKey || e.metaKey;
+      const key = e.key.toLowerCase();
+
+      // ── 1. Copy (Ctrl+C / Cmd+C) ──
+      if (isModifier && key === "c" && !e.shiftKey) {
+        if (isInputActive || isTextEditing) {
+          return; // Allow standard browser text copying
+        }
+        if (!activeObj) return;
+
+        // Clone active object and reset cascading paste counter
+        const copiedClone = await activeObj.clone(CUSTOM_CANVAS_PROPS);
+        clipboardRef.current = {
+          sourceObj: copiedClone,
+          pasteCount: 0,
+        };
         return;
       }
 
-      // Undo: Ctrl+Z
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z" && !e.shiftKey) {
+      // ── 2. Paste (Ctrl+V / Cmd+V) ──
+      if (isModifier && key === "v" && !e.shiftKey) {
+        if (isInputActive || isTextEditing) {
+          return; // Allow standard browser text pasting into input
+        }
+        if (!clipboardRef.current || !clipboardRef.current.sourceObj) return;
+
+        e.preventDefault();
+        clipboardRef.current.pasteCount += 1;
+        const offset = 20 * clipboardRef.current.pasteCount;
+
+        const pastedObj = await cloneFabricObject(
+          clipboardRef.current.sourceObj,
+          offset,
+          offset
+        );
+
+        if (!pastedObj) return;
+
+        canvas.discardActiveObject();
+
+        if (pastedObj.type?.toLowerCase() === "activeselection") {
+          pastedObj.canvas = canvas;
+          pastedObj.forEachObject((obj) => {
+            canvas.add(obj);
+          });
+          pastedObj.setCoords();
+          canvas.setActiveObject(pastedObj);
+          setActiveObject(pastedObj);
+        } else {
+          canvas.add(pastedObj);
+          canvas.setActiveObject(pastedObj);
+          setActiveObject(pastedObj);
+        }
+
+        canvas.requestRenderAll();
+        handleHistoryPush(canvas);
+        hasUnsavedChangesRef.current = true;
+        return;
+      }
+
+      // ── 3. Duplicate (Ctrl+D / Cmd+D) ──
+      if (isModifier && key === "d" && !e.shiftKey) {
+        if (isInputActive || isTextEditing) {
+          return;
+        }
+        if (!activeObj) return;
+
+        e.preventDefault();
+        const duplicatedObj = await cloneFabricObject(activeObj, 20, 20);
+        if (!duplicatedObj) return;
+
+        canvas.discardActiveObject();
+
+        if (duplicatedObj.type?.toLowerCase() === "activeselection") {
+          duplicatedObj.canvas = canvas;
+          duplicatedObj.forEachObject((obj) => {
+            canvas.add(obj);
+          });
+          duplicatedObj.setCoords();
+          canvas.setActiveObject(duplicatedObj);
+          setActiveObject(duplicatedObj);
+        } else {
+          canvas.add(duplicatedObj);
+          canvas.setActiveObject(duplicatedObj);
+          setActiveObject(duplicatedObj);
+        }
+
+        canvas.requestRenderAll();
+        handleHistoryPush(canvas);
+        hasUnsavedChangesRef.current = true;
+        return;
+      }
+
+      // ── 4. Select All (Ctrl+A / Cmd+A) ──
+      if (isModifier && key === "a" && !e.shiftKey) {
+        if (isInputActive || isTextEditing) {
+          return; // Allow native text select all in inputs/textboxes
+        }
+
+        e.preventDefault();
+        const selectableObjects = canvas.getObjects().filter((obj) => {
+          if (
+            obj.locked ||
+            obj.lockMovementX ||
+            obj.lockMovementY ||
+            obj.selectable === false
+          ) {
+            return false;
+          }
+          if (obj.isPageFooterNumber || obj.isSnapGuide || obj.excludeFromExport) {
+            return false;
+          }
+          return true;
+        });
+
+        if (selectableObjects.length === 0) {
+          canvas.discardActiveObject();
+          canvas.requestRenderAll();
+          setActiveObject(null);
+        } else if (selectableObjects.length === 1) {
+          canvas.setActiveObject(selectableObjects[0]);
+          canvas.requestRenderAll();
+          setActiveObject(selectableObjects[0]);
+        } else {
+          canvas.discardActiveObject();
+          const selection = new fabric.ActiveSelection(selectableObjects, { canvas });
+          canvas.setActiveObject(selection);
+          canvas.requestRenderAll();
+          setActiveObject(selection);
+        }
+        return;
+      }
+
+      // ── 5. Arrow Key Nudge (ArrowUp, ArrowDown, ArrowLeft, ArrowRight) ──
+      if (
+        e.key === "ArrowUp" ||
+        e.key === "ArrowDown" ||
+        e.key === "ArrowLeft" ||
+        e.key === "ArrowRight"
+      ) {
+        if (isInputActive || isTextEditing) {
+          return; // Allow cursor navigation inside text
+        }
+        if (!activeObj) return;
+
+        e.preventDefault();
+        const step = e.shiftKey ? 10 : 1;
+        let dx = 0;
+        let dy = 0;
+
+        if (e.key === "ArrowUp") dy = -step;
+        else if (e.key === "ArrowDown") dy = step;
+        else if (e.key === "ArrowLeft") dx = -step;
+        else if (e.key === "ArrowRight") dx = step;
+
+        activeObj.set({
+          left: (activeObj.left ?? 0) + dx,
+          top: (activeObj.top ?? 0) + dy,
+        });
+        activeObj.setCoords();
+        canvas.requestRenderAll();
+        hasUnsavedChangesRef.current = true;
+
+        // Debounce history push (350ms) to avoid cluttering undo stack during rapid nudging
+        if (nudgeTimerRef.current) {
+          clearTimeout(nudgeTimerRef.current);
+        }
+        nudgeTimerRef.current = setTimeout(() => {
+          handleHistoryPush(canvas);
+          nudgeTimerRef.current = null;
+        }, 350);
+        return;
+      }
+
+      // ── 6. Escape (Esc) ──
+      if (e.key === "Escape") {
+        if (activeObj) {
+          if (activeObj.isEditing) {
+            activeObj.exitEditing();
+            canvas.requestRenderAll();
+          } else {
+            canvas.discardActiveObject();
+            canvas.requestRenderAll();
+            setActiveObject(null);
+          }
+        }
+        return;
+      }
+
+      // ── 7. Undo (Ctrl+Z / Cmd+Z) ──
+      if (isModifier && key === "z" && !e.shiftKey) {
+        if (isInputActive || isTextEditing) return;
         e.preventDefault();
         undo(canvas);
         hasUnsavedChangesRef.current = true;
+        return;
       }
-      // Redo: Ctrl+Y or Ctrl+Shift+Z
-      else if (
-        ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "y") ||
-        ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "z")
+
+      // ── 8. Redo (Ctrl+Y / Cmd+Y or Ctrl+Shift+Z / Cmd+Shift+Z) ──
+      if (
+        (isModifier && key === "y") ||
+        (isModifier && e.shiftKey && key === "z")
       ) {
+        if (isInputActive || isTextEditing) return;
         e.preventDefault();
         redo(canvas);
         hasUnsavedChangesRef.current = true;
+        return;
       }
-      // Delete / Backspace active object
-      else if (e.key === "Delete" || e.key === "Backspace") {
+
+      // ── 9. Delete / Backspace ──
+      if (e.key === "Delete" || e.key === "Backspace") {
+        if (isInputActive || isTextEditing) {
+          return; // Allow typing backspace in inputs and textboxes
+        }
         if (activeObj) {
           e.preventDefault();
-          canvas.remove(activeObj);
-          canvas.discardActiveObject();
+          if (activeObj.type?.toLowerCase() === "activeselection") {
+            activeObj.forEachObject((obj) => canvas.remove(obj));
+            canvas.discardActiveObject();
+          } else {
+            canvas.remove(activeObj);
+            canvas.discardActiveObject();
+          }
           canvas.renderAll();
           setActiveObject(null);
           handleHistoryPush(canvas);
+          hasUnsavedChangesRef.current = true;
         }
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      if (nudgeTimerRef.current) {
+        clearTimeout(nudgeTimerRef.current);
+        nudgeTimerRef.current = null;
+      }
+    };
   }, [undo, redo, handleHistoryPush]);
 
   // 🛡️ Full Multi-Page Save Payload with 100% Guaranteed Raw Token Preservation Across ALL Pages
@@ -740,6 +954,56 @@ export default function DocumentEditor({
     });
   };
 
+  // 🚀 Export Native Microsoft PowerPoint (.pptx) Handler
+  const handleExportPptx = async () => {
+    try {
+      setIsExportingPptx(true);
+      const canvas = fabricCanvasRef.current;
+      const currentJson = canvas ? canvas.toJSON(CUSTOM_CANVAS_PROPS) : null;
+
+      // Ensure active page is updated in pages list
+      const allPages = pages.map((p, idx) => {
+        const pageJson = idx === activePageIndex ? currentJson : p.json;
+        return {
+          ...p,
+          json: pageJson,
+        };
+      });
+
+      const res = await fetch("/api/export-pptx", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: currentTitle || "Presentation",
+          canvasPreset: preset.id,
+          editorType: "slide",
+          pages: allPages,
+          fileName: `${currentTitle || "presentation"}.pptx`,
+        }),
+      });
+
+      if (!res.ok) {
+        const errJson = await res.json().catch(() => ({}));
+        throw new Error(errJson.error || "สร้างไฟล์ PowerPoint ไม่สำเร็จ");
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${(currentTitle || "presentation").replace(/[/\\?%*:|"<>]/g, "_")}.pptx`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Export PPTX error:", err);
+      alert(err.message || "เกิดข้อผิดพลาดในการดาวน์โหลด .pptx");
+    } finally {
+      setIsExportingPptx(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F1F3F6] flex flex-col overflow-hidden">
       {/* ── TOP TOOLBAR ── */}
@@ -774,6 +1038,8 @@ export default function DocumentEditor({
         saving={saving}
         isPreviewTokens={isPreviewTokens}
         onTogglePreviewTokens={handleTogglePreviewTokens}
+        onExportPptx={handleExportPptx}
+        isExportingPptx={isExportingPptx}
       />
 
       {/* ── MAIN STUDIO BODY: LEFT SIDEBAR + CANVAS + RIGHT SIDEBAR ── */}
