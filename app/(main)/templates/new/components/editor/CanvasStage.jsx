@@ -24,7 +24,6 @@ export default function CanvasStage({
   const canvasContainerRef = useRef(null);
   const canvasElRef = useRef(null);
   const fabricCanvasRef = useRef(null);
-  const [isReady, setIsReady] = useState(false);
   const [mousePos, setMousePos] = useState({ x: null, y: null });
 
   // Initialize Fabric Canvas with Dynamic Preset Dimensions
@@ -65,7 +64,7 @@ export default function CanvasStage({
       guides.forEach((g) => canvas.remove(g));
     };
 
-    const drawSnapGuide = (points, orientation = "vertical") => {
+    const drawSnapGuide = (points) => {
       const line = new fabric.Line(points, {
         stroke: "#D946EF",
         strokeWidth: 1.2,
@@ -193,7 +192,6 @@ export default function CanvasStage({
     if (onCanvasReady) {
       onCanvasReady(canvas);
     }
-    setIsReady(true);
 
     return () => {
       try {

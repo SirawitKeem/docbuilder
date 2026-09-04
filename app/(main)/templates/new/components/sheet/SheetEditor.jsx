@@ -3,14 +3,11 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   Save,
   ArrowLeft,
-  FileSpreadsheet,
   Download,
   Braces,
-  HelpCircle,
   Table,
   Check,
   ChevronDown,
@@ -101,7 +98,6 @@ export default function SheetEditor({
   onSave,
   saving = false,
 }) {
-  const router = useRouter();
   const [currentTitle, setCurrentTitle] = useState(templateName);
   const [sheetData, setSheetData] = useState(() => {
     if (Array.isArray(initialSheetData) && initialSheetData.length > 0) {

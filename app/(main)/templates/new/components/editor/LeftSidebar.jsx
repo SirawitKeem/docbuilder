@@ -7,7 +7,6 @@ import {
   Circle,
   Minus,
   UploadCloud,
-  FileText,
   LayoutTemplate,
   Table,
   PenTool,

@@ -1,22 +1,18 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   ChevronLeft,
   Save,
-  Download,
   Send,
   Printer,
   FileText,
   Building2,
-  Calendar,
-  Layers,
   MapPin,
   CheckCircle2,
   Eye,
-  Sparkles,
 } from "lucide-react";
 import UniversalTemplateRenderer from "@/components/document/UniversalTemplateRenderer";
 import NotificationRelocationDocument from "@/components/document/notification/NotificationRelocationDocument";
