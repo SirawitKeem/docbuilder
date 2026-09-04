@@ -19,7 +19,6 @@ import {
   Briefcase,
   GraduationCap,
   Sparkles,
-  Check,
 } from "lucide-react";
 import { EXTENDED_ICON_MAP } from "./CreateCategoryModal";
 

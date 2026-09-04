@@ -1,22 +1,13 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import {
   X,
   Eye,
-  ArrowRight,
-  Sparkles,
   CheckCircle2,
-  Calendar,
   Layers,
-  FileSignature,
-  Stamp,
-  Building2,
-  Tag,
-  Clock,
   Edit3,
-  FileText,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -44,7 +35,6 @@ import PartnerPage2 from "@/components/document/partner/PartnerPage2";
 import PartnerPage3 from "@/components/document/partner/PartnerPage3";
 import PartnerPage4 from "@/components/document/partner/PartnerPage4";
 import PartnerPage5 from "@/components/document/partner/PartnerPage5";
-import NotificationPage1 from "@/components/document/notification/NotificationPage1";
 import NotificationRelocationDocument from "@/components/document/notification/NotificationRelocationDocument";
 
 const emptyQuotationPreviewData = {

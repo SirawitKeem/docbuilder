@@ -8,7 +8,6 @@ import {
   ArrowRight,
   FileText,
   Search,
-  Filter,
   Info,
   CheckCircle2,
 } from "lucide-react";
@@ -171,7 +170,6 @@ export default function TemplateSelectModal({ category, onClose }) {
   const router = useRouter();
 
   const [subTemplates, setSubTemplates] = useState([]);
-  const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTemplate, setSelectedTemplate] = useState(null);
 
@@ -179,17 +177,14 @@ export default function TemplateSelectModal({ category, onClose }) {
   useEffect(() => {
     if (!category?.id) {
       setSubTemplates([]);
-      setLoadingTemplates(false);
       return;
     }
-    setLoadingTemplates(true);
     Promise.resolve(getTemplatesByCategory(category.id)).then((data) => {
       const list = Array.isArray(data) ? data : [];
       setSubTemplates(list);
       if (list.length > 0) {
         setSelectedTemplate(list[0]);
       }
-      setLoadingTemplates(false);
     });
   }, [category]);
 

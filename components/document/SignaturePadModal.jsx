@@ -7,16 +7,12 @@ import {
   Upload,
   RotateCcw,
   Check,
-  Building2,
   Trash2,
-  Sparkles,
-  ShieldCheck,
 } from "lucide-react";
 
 export default function SignaturePadModal({
   title = "ลงลายมือชื่อดิจิทัล",
   partyName = "ผู้มีอำนาจลงนาม",
-  initialImage = null,
   onSave,
   onClose,
 }) {

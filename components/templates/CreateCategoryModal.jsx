@@ -22,11 +22,9 @@ import {
   CreditCard,
   Folder,
   Sparkles,
-  Check,
   FolderOpen,
   ChevronRight,
 } from "lucide-react";
-import { COLOR_MAP } from "./CategoryManagerModal";
 
 export const EXTENDED_ICON_MAP = {
   FileText: { icon: FileText, label: "เอกสารทั่วไป" },

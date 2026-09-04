@@ -5,35 +5,18 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Folder,
-  Layers,
   Search,
   Plus,
   Settings,
   Eye,
-  ArrowRight,
-  Sparkles,
   Copy,
   Trash2,
-  Lock,
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
   FileText,
-  FileSignature,
-  Megaphone,
-  Users,
-  ClipboardList,
-  Receipt,
-  Building2,
-  Handshake,
-  Briefcase,
-  GraduationCap,
-  Shield,
   FolderOpen,
-  FolderPlus,
   Edit3,
   X,
-  Save,
   Check,
 } from "lucide-react";
 import CategoryManagerModal, { ICON_MAP, COLOR_MAP } from "@/components/templates/CategoryManagerModal";
@@ -49,7 +32,6 @@ import DocumentFooter from "@/components/document/DocumentFooter";
 import NdaPage1 from "@/components/document/nda/NdaPage1";
 import DistributorPage1 from "@/components/document/distributor/DistributorPage1";
 import PartnerPage1 from "@/components/document/partner/PartnerPage1";
-import NotificationPage1 from "@/components/document/notification/NotificationPage1";
 import NotificationRelocationDocument from "@/components/document/notification/NotificationRelocationDocument";
 
 const emptyQuotationPreviewData = {
