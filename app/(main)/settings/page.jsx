@@ -7,9 +7,7 @@ import {
   Mail,
   User,
   Building2,
-  ShieldCheck,
   Settings,
-  Sparkles,
   Save,
 } from "lucide-react";
 import { currentUser } from "@/lib/mock-data/user";

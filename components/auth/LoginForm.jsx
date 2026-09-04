@@ -41,14 +41,6 @@ export default function LoginForm() {
     }, 600);
   };
 
-  const handleGoogleSignIn = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      router.push("/");
-    }, 500);
-  };
-
   return (
     <div className="w-full">
       {/* Top Logo */}

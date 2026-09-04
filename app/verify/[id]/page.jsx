@@ -7,13 +7,8 @@ import {
   ShieldCheck,
   ShieldAlert,
   Building2,
-  Calendar,
   UserCheck,
-  CheckCircle2,
-  FileText,
   Lock,
-  ArrowLeft,
-  ExternalLink,
 } from "lucide-react";
 import CorporateSeal from "@/components/document/CorporateSeal";
 
