@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { Eye, MoreVertical, Search, X, Send } from "lucide-react";
+import { Eye, Search, X } from "lucide-react";
 import { templateRegistry } from "@/lib/templates/registry";
 import { getFieldProfile } from "@/lib/data/fieldProfile";
 import { DocumentFieldsProvider } from "@/context/DocumentFieldsContext";
@@ -9,7 +9,6 @@ import { paginateQuotationLineItems } from "@/lib/quotationHelpers";
 import QuotationDocument from "@/components/document/quotation/QuotationDocument";
 import DocumentHeader from "@/components/document/DocumentHeader";
 import DocumentFooter from "@/components/document/DocumentFooter";
-import EmailScreen from "@/components/document/EmailScreen";
 
 const statusStyles = {
   sent: "bg-success-100 text-success-600",
@@ -28,19 +27,6 @@ function PdfIcon({ className = "w-8 h-9" }) {
   );
 }
 
-function getContractFullName(doc) {
-  if (doc.templateId === "nda" || doc.name?.startsWith("NDA")) {
-    return "หนังสือสัญญาไม่เปิดเผยข้อมูล";
-  }
-  if (doc.templateId === "distributor" || doc.name?.includes("Distributor")) {
-    return "สัญญาแต่งตั้งและจัดจำหน่ายซอฟต์แวร์";
-  }
-  if (doc.templateId === "partner" || doc.name?.includes("Partner")) {
-    return "สัญญาแต่งตั้งพันธมิตรตัวแทนจำหน่าย";
-  }
-  return doc.templateName || "หนังสือสัญญา";
-}
-
 function formatDateTime(dateString) {
   if (!dateString) return { dateStr: "-", timeStr: "" };
   const d = new Date(dateString);
@@ -55,11 +41,9 @@ export default function DocumentsTable({
   documents,
   showSentTo = false,
   emptyMessage = "ยังไม่มีเอกสาร",
-  onRefresh,
 }) {
   const [query, setQuery] = useState("");
   const [previewDoc, setPreviewDoc] = useState(null);
-  const [emailDoc, setEmailDoc] = useState(null);
 
   const filtered = useMemo(() => {
     if (!query.trim()) return documents;

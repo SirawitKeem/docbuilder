@@ -1,7 +1,6 @@
 import Field from "../Field";
 import { distributorTemplate } from "@/lib/templates/distributor/schema";
 import { useDocumentFields } from "@/context/DocumentFieldsContext";
-import CorporateSeal from "../CorporateSeal";
 
 export default function DistributorPage5() {
   const { distributorParty } = distributorTemplate;

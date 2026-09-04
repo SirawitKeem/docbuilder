@@ -1,7 +1,6 @@
 import Field from "../Field";
 import { partnerTemplate } from "@/lib/templates/partner/schema";
 import { useDocumentFields } from "@/context/DocumentFieldsContext";
-import CorporateSeal from "../CorporateSeal";
 
 export default function PartnerPage5() {
   const { distributorParty } = partnerTemplate;

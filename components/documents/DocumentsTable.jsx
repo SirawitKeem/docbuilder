@@ -15,7 +15,6 @@ import {
   Copy,
   CheckCircle2,
   ArrowRight,
-  Sparkles,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -128,7 +127,6 @@ export default function DocumentsTable({
   const [previewDoc, setPreviewDoc] = useState(null);
   const [emailDoc, setEmailDoc] = useState(null);
   const [renameDoc, setRenameDoc] = useState(null);
-  const [duplicatingId, setDuplicatingId] = useState(null);
   const [toast, setToast] = useState(null);
   
   // Custom Delete Confirmation Modal State (null | { type: 'single', id, docName } | { type: 'bulk', count })
@@ -174,7 +172,6 @@ export default function DocumentsTable({
 
   // 1-Click Duplicate Document
   const handleDuplicate = async (doc) => {
-    setDuplicatingId(doc.id);
     try {
       const duplicateName = `[สำเนา] ${doc.name || "เอกสาร"}`;
       let newDoc;
@@ -238,8 +235,6 @@ export default function DocumentsTable({
     } catch (err) {
       console.error("Duplicate error:", err);
       alert("เกิดข้อผิดพลาดในการคัดลอกเอกสาร");
-    } finally {
-      setDuplicatingId(null);
     }
   };
 

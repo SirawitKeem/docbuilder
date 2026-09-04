@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Globe, MapPin, Phone, Mail } from "lucide-react";
+import { Globe } from "lucide-react";
 import { quotationTemplate } from "@/lib/templates/quotation/schema";
 import { QuotationDataContext } from "@/context/QuotationDataContext";
 import InlineTextField from "./InlineTextField";

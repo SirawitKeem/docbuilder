@@ -408,7 +408,6 @@ export default function QuotationDocument({ quotation: propQuotation, currentPag
     billTo = {},
     lineItems: rawLineItems = [],
     vatRate = 7,
-    remarks = "Payment: Annually",
     senderName = "Narin Rattanavajij (PoP)",
     senderPhone = "+6682-44-686-95",
   } = quotation;
