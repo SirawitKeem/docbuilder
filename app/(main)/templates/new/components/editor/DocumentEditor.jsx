@@ -177,6 +177,11 @@ export default function DocumentEditor({
     }
   }, [initialPages, initHistory, editorType, preset.id]);
 
+  const handleHistoryPush = useCallback((canvas) => {
+    pushState(canvas);
+    hasUnsavedChangesRef.current = true;
+  }, [pushState]);
+
   // Canvas Ready Callback
   const handleCanvasReady = useCallback((canvas) => {
     fabricCanvasRef.current = canvas;
@@ -197,12 +202,12 @@ export default function DocumentEditor({
       setPages([{ id: "page-1", json: initialJson }]);
       hasUnsavedChangesRef.current = false;
     }
-  }, [initialPages, initHistory, editorType, preset.id]);
 
-  const handleHistoryPush = useCallback((canvas) => {
-    pushState(canvas);
-    hasUnsavedChangesRef.current = true;
-  }, [pushState]);
+    if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
+      window.__DOC_EDITOR_INIT_HISTORY__ = initHistory;
+      window.__DOC_EDITOR_PUSH_HISTORY__ = handleHistoryPush;
+    }
+  }, [initialPages, initHistory, editorType, preset.id, handleHistoryPush]);
 
   // Zoom handlers
   const handleZoomIn = () => setZoom((z) => Math.min(1.5, Number((z + 0.1).toFixed(2))));
@@ -678,10 +683,10 @@ export default function DocumentEditor({
       const isTextEditing = activeObj && activeObj.isEditing;
 
       const isModifier = e.ctrlKey || e.metaKey;
-      const key = e.key.toLowerCase();
+      const code = e.code;
 
       // ── 1. Copy (Ctrl+C / Cmd+C) ──
-      if (isModifier && key === "c" && !e.shiftKey) {
+      if (isModifier && code === "KeyC" && !e.shiftKey) {
         if (isInputActive || isTextEditing) {
           return; // Allow standard browser text copying
         }
@@ -697,7 +702,7 @@ export default function DocumentEditor({
       }
 
       // ── 2. Paste (Ctrl+V / Cmd+V) ──
-      if (isModifier && key === "v" && !e.shiftKey) {
+      if (isModifier && code === "KeyV" && !e.shiftKey) {
         if (isInputActive || isTextEditing) {
           return; // Allow standard browser text pasting into input
         }
@@ -738,7 +743,7 @@ export default function DocumentEditor({
       }
 
       // ── 3. Duplicate (Ctrl+D / Cmd+D) ──
-      if (isModifier && key === "d" && !e.shiftKey) {
+      if (isModifier && code === "KeyD" && !e.shiftKey) {
         if (isInputActive || isTextEditing) {
           return;
         }
@@ -771,7 +776,7 @@ export default function DocumentEditor({
       }
 
       // ── 4. Select All (Ctrl+A / Cmd+A) ──
-      if (isModifier && key === "a" && !e.shiftKey) {
+      if (isModifier && code === "KeyA" && !e.shiftKey) {
         if (isInputActive || isTextEditing) {
           return; // Allow native text select all in inputs/textboxes
         }
@@ -810,7 +815,72 @@ export default function DocumentEditor({
         return;
       }
 
-      // ── 5. Arrow Key Nudge (ArrowUp, ArrowDown, ArrowLeft, ArrowRight) ──
+      // ── 5. Group (Ctrl+G / Cmd+G without Shift) ──
+      if (isModifier && code === "KeyG" && !e.shiftKey) {
+        if (isInputActive || isTextEditing) return;
+        if (!activeObj || activeObj.type?.toLowerCase() !== "activeselection") return;
+
+        const selectionObjects = activeObj.getObjects();
+        if (selectionObjects.length < 2) return;
+
+        // Custom Class Guard: reject grouping if DocTable or SignatureBlock is present
+        const hasCustomClass = selectionObjects.some(
+          (o) =>
+            o.isDocTable ||
+            o.type === "DocTable" ||
+            o.type === "doctable" ||
+            o.isSignatureBlock ||
+            o.type === "SignatureBlock"
+        );
+        if (hasCustomClass) {
+          alert("ไม่สามารถรวมกลุ่ม (Group) ตารางหรือบล็อกลงนามร่วมกับวัตถุอื่นได้");
+          return;
+        }
+
+        e.preventDefault();
+        canvas.discardActiveObject();
+        selectionObjects.forEach((obj) => canvas.remove(obj));
+
+        const newGroup = new fabric.Group(selectionObjects, {
+          isUserGroup: true,
+        });
+
+        canvas.add(newGroup);
+        canvas.setActiveObject(newGroup);
+        setActiveObject(newGroup);
+        canvas.requestRenderAll();
+        handleHistoryPush(canvas);
+        hasUnsavedChangesRef.current = true;
+        return;
+      }
+
+      // ── 6. Ungroup (Ctrl+Shift+G / Cmd+Shift+G) ──
+      if (isModifier && code === "KeyG" && e.shiftKey) {
+        if (isInputActive || isTextEditing) return;
+        if (!activeObj || !activeObj.isUserGroup || activeObj.type !== "group") return;
+
+        e.preventDefault();
+        const childObjects = [...activeObj.getObjects()];
+
+        canvas.discardActiveObject();
+        activeObj.removeAll();
+        canvas.remove(activeObj);
+
+        childObjects.forEach((child) => {
+          child.setCoords();
+          canvas.add(child);
+        });
+
+        const activeSelection = new fabric.ActiveSelection(childObjects, { canvas });
+        canvas.setActiveObject(activeSelection);
+        setActiveObject(activeSelection);
+        canvas.requestRenderAll();
+        handleHistoryPush(canvas);
+        hasUnsavedChangesRef.current = true;
+        return;
+      }
+
+      // ── 7. Arrow Key Nudge (ArrowUp, ArrowDown, ArrowLeft, ArrowRight) ──
       if (
         e.key === "ArrowUp" ||
         e.key === "ArrowDown" ||
@@ -851,8 +921,8 @@ export default function DocumentEditor({
         return;
       }
 
-      // ── 6. Escape (Esc) ──
-      if (e.key === "Escape") {
+      // ── 8. Escape (Esc) ──
+      if (e.key === "Escape" || e.code === "Escape") {
         if (activeObj) {
           if (activeObj.isEditing) {
             activeObj.exitEditing();
@@ -866,8 +936,8 @@ export default function DocumentEditor({
         return;
       }
 
-      // ── 7. Undo (Ctrl+Z / Cmd+Z) ──
-      if (isModifier && key === "z" && !e.shiftKey) {
+      // ── 9. Undo (Ctrl+Z / Cmd+Z) ──
+      if (isModifier && code === "KeyZ" && !e.shiftKey) {
         if (isInputActive || isTextEditing) return;
         e.preventDefault();
         undo(canvas);
@@ -875,10 +945,10 @@ export default function DocumentEditor({
         return;
       }
 
-      // ── 8. Redo (Ctrl+Y / Cmd+Y or Ctrl+Shift+Z / Cmd+Shift+Z) ──
+      // ── 10. Redo (Ctrl+Y / Cmd+Y or Ctrl+Shift+Z / Cmd+Shift+Z) ──
       if (
-        (isModifier && key === "y") ||
-        (isModifier && e.shiftKey && key === "z")
+        (isModifier && code === "KeyY" && !e.shiftKey) ||
+        (isModifier && e.shiftKey && code === "KeyZ")
       ) {
         if (isInputActive || isTextEditing) return;
         e.preventDefault();
@@ -887,7 +957,7 @@ export default function DocumentEditor({
         return;
       }
 
-      // ── 9. Delete / Backspace ──
+      // ── 11. Delete / Backspace ──
       if (e.key === "Delete" || e.key === "Backspace") {
         if (isInputActive || isTextEditing) {
           return; // Allow typing backspace in inputs and textboxes

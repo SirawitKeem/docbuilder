@@ -6,6 +6,8 @@ import { CUSTOM_CANVAS_PROPS } from "../elements/DocTable";
 export function useHistory() {
   const [historyStack, setHistoryStack] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(-1);
+  const historyStackRef = useRef([]);
+  const currentIndexRef = useRef(-1);
   const isExecutingRef = useRef(false);
 
   // Initialize or Reset History with initial canvas state
@@ -13,6 +15,8 @@ export function useHistory() {
     if (!canvas) return;
     try {
       const json = canvas.toJSON(CUSTOM_CANVAS_PROPS);
+      historyStackRef.current = [json];
+      currentIndexRef.current = 0;
       setHistoryStack([json]);
       setCurrentIndex(0);
     } catch (err) {
@@ -25,27 +29,29 @@ export function useHistory() {
     if (!canvas || isExecutingRef.current) return;
     try {
       const json = canvas.toJSON(CUSTOM_CANVAS_PROPS);
-      setHistoryStack((prev) => {
-        // Truncate any future redo states
-        const updated = prev.slice(0, currentIndex + 1);
-        return [...updated, json];
-      });
-      setCurrentIndex((prev) => prev + 1);
+      const nextIndex = currentIndexRef.current + 1;
+      const nextStack = historyStackRef.current.slice(0, nextIndex);
+      nextStack.push(json);
+      historyStackRef.current = nextStack;
+      currentIndexRef.current = nextIndex;
+      setHistoryStack(nextStack);
+      setCurrentIndex(nextIndex);
     } catch (err) {
       console.warn("pushState error:", err);
     }
-  }, [currentIndex]);
+  }, []);
 
   // Undo action
   const undo = useCallback((canvas) => {
-    if (!canvas || currentIndex <= 0) return;
+    if (!canvas || currentIndexRef.current <= 0 || isExecutingRef.current) return;
     isExecutingRef.current = true;
-    const targetIndex = currentIndex - 1;
-    const targetState = historyStack[targetIndex];
+    const targetIndex = currentIndexRef.current - 1;
+    const targetState = historyStackRef.current[targetIndex];
 
     if (targetState) {
       canvas.loadFromJSON(targetState).then(() => {
         canvas.renderAll();
+        currentIndexRef.current = targetIndex;
         setCurrentIndex(targetIndex);
         isExecutingRef.current = false;
       }).catch((err) => {
@@ -55,18 +61,19 @@ export function useHistory() {
     } else {
       isExecutingRef.current = false;
     }
-  }, [currentIndex, historyStack]);
+  }, []);
 
   // Redo action
   const redo = useCallback((canvas) => {
-    if (!canvas || currentIndex >= historyStack.length - 1) return;
+    if (!canvas || currentIndexRef.current >= historyStackRef.current.length - 1 || isExecutingRef.current) return;
     isExecutingRef.current = true;
-    const targetIndex = currentIndex + 1;
-    const targetState = historyStack[targetIndex];
+    const targetIndex = currentIndexRef.current + 1;
+    const targetState = historyStackRef.current[targetIndex];
 
     if (targetState) {
       canvas.loadFromJSON(targetState).then(() => {
         canvas.renderAll();
+        currentIndexRef.current = targetIndex;
         setCurrentIndex(targetIndex);
         isExecutingRef.current = false;
       }).catch((err) => {
@@ -76,7 +83,7 @@ export function useHistory() {
     } else {
       isExecutingRef.current = false;
     }
-  }, [currentIndex, historyStack]);
+  }, []);
 
   const canUndo = currentIndex > 0;
   const canRedo = currentIndex < historyStack.length - 1;

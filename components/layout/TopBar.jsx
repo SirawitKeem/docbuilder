@@ -83,7 +83,7 @@ export function TopBar() {
   // Handle Cmd+K / Ctrl+K keyboard shortcut
   useEffect(() => {
     const down = (e) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+      if (e.code === "KeyK" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setOpenCommand((open) => !open);
       }

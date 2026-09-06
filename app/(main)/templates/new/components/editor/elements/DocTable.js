@@ -27,7 +27,20 @@ export const CUSTOM_CANVAS_PROPS = [
   "selectable",
   "opacity",
   "visible",
+  "isUserGroup",
 ];
+
+// Ensure FabricObject & Group serialize custom properties even with toJSON()
+if (fabric && fabric.FabricObject) {
+  fabric.FabricObject.customProperties = Array.from(
+    new Set([...(fabric.FabricObject.customProperties || []), ...CUSTOM_CANVAS_PROPS])
+  );
+}
+if (fabric && fabric.Group) {
+  fabric.Group.customProperties = Array.from(
+    new Set([...(fabric.Group.customProperties || []), ...CUSTOM_CANVAS_PROPS])
+  );
+}
 
 /**
  * Builds the array of Fabric objects for DocTable
