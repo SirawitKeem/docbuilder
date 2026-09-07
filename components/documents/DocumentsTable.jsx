@@ -15,6 +15,10 @@ import {
   Copy,
   CheckCircle2,
   ArrowRight,
+  FileText,
+  Globe,
+  Image as ImageIcon,
+  Loader2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -383,8 +387,42 @@ export default function DocumentsTable({
     }
   };
 
+  const [downloadingDocId, setDownloadingDocId] = useState(null);
+
   const handlePrintOrExport = (doc) => {
     window.open(`/print/${doc.templateId || "nda"}?id=${doc.id}`, "_blank");
+  };
+
+  const handleDirectExport = async (doc, format = "pdf") => {
+    setDownloadingDocId(`${doc.id}_${format}`);
+    try {
+      const res = await fetch("/api/export-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          templateId: doc.templateId || "nda",
+          values: doc.values || {},
+          quotationData: doc.values || {},
+          fileName: doc.name || "document",
+          format,
+        }),
+      });
+      if (!res.ok) throw new Error("ส่งออกไฟล์ไม่สำเร็จ");
+      const blob = await res.blob();
+      const baseName = (doc.name || "document").replace(/\.(pdf|html|webp)$/i, "");
+      const downloadFileName = `${baseName}.${format}`;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = downloadFileName;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Export error:", err);
+      alert("เกิดข้อผิดพลาดในการดาวน์โหลดเอกสาร");
+    } finally {
+      setDownloadingDocId(null);
+    }
   };
 
   return (
@@ -698,6 +736,7 @@ export default function DocumentsTable({
                                 </button>
                               </>
                             )}
+                            {/* Export Options (PDF, HTML, WebP) */}
                             <button
                               onClick={() => {
                                 setOpenMenuId(null);
@@ -705,8 +744,38 @@ export default function DocumentsTable({
                               }}
                               className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
                             >
-                              <Download size={14} className="text-muted-foreground" />
+                              <FileText size={14} className="text-red-500" />
                               <span>Export PDF / พิมพ์</span>
+                            </button>
+                            <button
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                handleDirectExport(doc, "html");
+                              }}
+                              disabled={downloadingDocId === `${doc.id}_html`}
+                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer disabled:opacity-50"
+                            >
+                              {downloadingDocId === `${doc.id}_html` ? (
+                                <Loader2 size={14} className="animate-spin text-blue-500" />
+                              ) : (
+                                <Globe size={14} className="text-blue-500" />
+                              )}
+                              <span>Export HTML (.html)</span>
+                            </button>
+                            <button
+                              onClick={() => {
+                                setOpenMenuId(null);
+                                handleDirectExport(doc, "webp");
+                              }}
+                              disabled={downloadingDocId === `${doc.id}_webp`}
+                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer disabled:opacity-50"
+                            >
+                              {downloadingDocId === `${doc.id}_webp` ? (
+                                <Loader2 size={14} className="animate-spin text-purple-500" />
+                              ) : (
+                                <ImageIcon size={14} className="text-purple-500" />
+                              )}
+                              <span>Export WebP (.webp)</span>
                             </button>
                             <button
                               onClick={() => {

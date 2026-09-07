@@ -112,7 +112,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
     if (categoryId === "notification") {
       return (
         <div style={{ width: 794, height: 1123 }} className="bg-white overflow-hidden text-left font-noto-looped select-none">
-          <NotificationRelocationDocument data={notificationTemplate.defaultValues} />
+          <NotificationRelocationDocument data={notificationTemplate.previewData} />
         </div>
       );
     }

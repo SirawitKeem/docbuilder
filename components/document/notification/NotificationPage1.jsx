@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Field from "../Field";
@@ -68,10 +68,10 @@ export default function NotificationPage1({ content = defaultContent }) {
           </p>
         </div>
 
-        {/* 3. DATE right-aligned */}
-        <div className="flex justify-end text-[14.5px] text-gray-800 my-5">
+        {/* 3. DATE right-aligned (Unbolded / Normal weight) */}
+        <div className="flex justify-end text-[14.5px] text-gray-900 font-normal my-5">
           <div className="flex items-center gap-2">
-            <span>{c.labels?.dateLabel}</span>
+            <span className="text-gray-900 font-normal">{c.labels?.dateLabel}</span>
             <Field id="doc_date" placeholder="01 กันยายน 2569 / September 01, 2026" minWidth={35} />
           </div>
         </div>
@@ -151,19 +151,19 @@ export default function NotificationPage1({ content = defaultContent }) {
       <div className="-mx-12 -mb-0 mt-0 overflow-hidden pointer-events-none">
         <svg viewBox="0 0 1000 48" className="w-full h-[36px] block" preserveAspectRatio="none">
           <defs>
-            <linearGradient id="btmHeaderRedRibbon1" x1="1" y1="0" x2="0" y2="0">
+            <linearGradient id="btmHeaderRedRibbon1" x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor="#7f1d1d" />
               <stop offset="25%" stopColor="#b91c1c" />
               <stop offset="65%" stopColor="#dc2626" />
               <stop offset="100%" stopColor="#ef4444" />
             </linearGradient>
-            <linearGradient id="btmHeaderRedShadow1" x1="1" y1="0" x2="0" y2="0">
+            <linearGradient id="btmHeaderRedShadow1" x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor="#450a0a" />
               <stop offset="100%" stopColor="#991b1b" />
             </linearGradient>
           </defs>
-          <path d="M 380 0 C 355 0, 340 34, 315 34 L 0 34 L 0 0 Z" fill="url(#btmHeaderRedShadow1)" opacity="0.45" />
-          <path d="M 370 0 C 345 0, 330 34, 305 34 L 0 34 L 0 0 Z" fill="url(#btmHeaderRedRibbon1)" />
+          <path d="M 0 0 L 320 0 C 345 0, 365 34, 390 34 L 0 34 Z" fill="url(#btmHeaderRedShadow1)" opacity="0.45" />
+          <path d="M 0 0 L 305 0 C 330 0, 350 34, 375 34 L 0 34 Z" fill="url(#btmHeaderRedRibbon1)" />
           <rect x="0" y="34" width="1000" height="14" fill="#242b35" />
         </svg>
       </div>

@@ -15,6 +15,8 @@ import {
   Loader2,
   Send,
   X,
+  Globe,
+  Image as ImageIcon,
 } from "lucide-react";
 import { templateRegistry } from "@/lib/templates/registry";
 import { DocumentFieldsProvider } from "@/context/DocumentFieldsContext";
@@ -43,8 +45,17 @@ export default function EmailScreen({
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const [showFullPreview, setShowFullPreview] = useState(false);
+  const [selectedFormat, setSelectedFormat] = useState("pdf");
+  const [formatAttachments, setFormatAttachments] = useState({
+    pdf: attachmentBase64 || pdfBase64,
+    html: null,
+    webp: null,
+  });
+  const [loadingFormat, setLoadingFormat] = useState(false);
 
-  const activeAttachment = attachmentBase64 || pdfBase64;
+  const baseFileName = (fileName || schema?.fullName || "document").replace(/\.(pdf|html|webp)$/i, "");
+  const currentAttachmentName = `${baseFileName}.${selectedFormat}`;
+  const activeAttachment = formatAttachments[selectedFormat];
   const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to);
 
   const entry = templateRegistry[templateId] || templateRegistry["nda"];
@@ -54,10 +65,51 @@ export default function EmailScreen({
   const pageCount = isQuotation ? (quotationPages.length || 1) : (pages ? pages.length : 4);
   const Page1Component = pages ? pages[0] : null;
 
+  const handleSelectFormat = async (fmt) => {
+    setSelectedFormat(fmt);
+    setError("");
+    if (!formatAttachments[fmt]) {
+      setLoadingFormat(true);
+      try {
+        const res = await fetch("/api/export-pdf", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            templateId,
+            values,
+            quotationData: values,
+            fileName: `${baseFileName}.${fmt}`,
+            format: fmt,
+          }),
+        });
+        if (!res.ok) throw new Error(`ไม่สามารถเตรียมไฟล์ .${fmt} ได้`);
+        const blob = await res.blob();
+        const base64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const result = reader.result;
+            resolve(typeof result === "string" ? result.split(",")[1] : "");
+          };
+          reader.readAsDataURL(blob);
+        });
+        setFormatAttachments((prev) => ({ ...prev, [fmt]: base64 }));
+      } catch (err) {
+        console.error("Generate format error:", err);
+        setError(`ไม่สามารถสร้างไฟล์แนบ .${fmt} ได้: ${err.message}`);
+      } finally {
+        setLoadingFormat(false);
+      }
+    }
+  };
+
   const handleSend = async () => {
     setError("");
     if (!isValidEmail) {
       setError("กรุณากรอกอีเมลผู้รับให้ถูกต้อง");
+      return;
+    }
+    if (!activeAttachment) {
+      setError("ไฟล์แนบยังเตรียมไม่เสร็จ กรุณารอสักครู่");
       return;
     }
     setSending(true);
@@ -71,7 +123,13 @@ export default function EmailScreen({
           subject,
           message,
           attachmentBase64: activeAttachment,
-          attachmentName: fileName,
+          attachmentName: currentAttachmentName,
+          contentType:
+            selectedFormat === "webp"
+              ? "image/webp"
+              : selectedFormat === "html"
+              ? "text/html"
+              : "application/pdf",
           templateId,
           templateName: schema?.fullName || templateName,
           values,
@@ -79,7 +137,7 @@ export default function EmailScreen({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "ส่งไม่สำเร็จ");
-      onSent?.({ to, fileName });
+      onSent?.({ to, fileName: currentAttachmentName });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -173,25 +231,124 @@ export default function EmailScreen({
               </div>
             </div>
 
-            {/* Step 4: Attachment Badge */}
+            {/* Step 4: Attachment Format Selector & Card */}
             <div>
               <div className="mb-2">
-                <h3 className="text-sm font-bold text-gray-900">4. ไฟล์แนบ (Attachment)</h3>
-                <p className="text-xs text-gray-500 mt-0.5">ไฟล์เอกสารที่จะแนบไปกับอีเมล</p>
+                <h3 className="text-sm font-bold text-gray-900">
+                  4. รูปแบบไฟล์แนบ (Attachment Format) <span className="text-red-500">*</span>
+                </h3>
+                <p className="text-xs text-gray-500 mt-0.5">เลือกรูปแบบเอกสารที่ต้องการแนบไปกับอีเมล</p>
               </div>
+
+              {/* Format Selector 3 Cards */}
+              <div className="grid grid-cols-3 gap-2.5 mb-3">
+                {/* 1. PDF */}
+                <button
+                  type="button"
+                  onClick={() => handleSelectFormat("pdf")}
+                  className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                    selectedFormat === "pdf"
+                      ? "border-red-500 bg-red-50/50 shadow-xs ring-2 ring-red-500/20"
+                      : "border-gray-200 bg-white hover:bg-gray-50/80"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${
+                      selectedFormat === "pdf" ? "bg-red-500 text-white" : "bg-red-50 text-red-600"
+                    }`}>
+                      <FileText size={15} />
+                    </div>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-red-100/80 text-red-700">.PDF</span>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-gray-900">PDF Document</p>
+                    <p className="text-[10px] text-gray-500 mt-0.5">เอกสารทางการ / พิมพ์</p>
+                  </div>
+                </button>
+
+                {/* 2. HTML */}
+                <button
+                  type="button"
+                  onClick={() => handleSelectFormat("html")}
+                  className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                    selectedFormat === "html"
+                      ? "border-blue-500 bg-blue-50/50 shadow-xs ring-2 ring-blue-500/20"
+                      : "border-gray-200 bg-white hover:bg-gray-50/80"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${
+                      selectedFormat === "html" ? "bg-blue-500 text-white" : "bg-blue-50 text-blue-600"
+                    }`}>
+                      <Globe size={15} />
+                    </div>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100/80 text-blue-700">.HTML</span>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-gray-900">HTML Webpage</p>
+                    <p className="text-[10px] text-gray-500 mt-0.5">หน้าเว็บ Standalone</p>
+                  </div>
+                </button>
+
+                {/* 3. WebP */}
+                <button
+                  type="button"
+                  onClick={() => handleSelectFormat("webp")}
+                  className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                    selectedFormat === "webp"
+                      ? "border-purple-500 bg-purple-50/50 shadow-xs ring-2 ring-purple-500/20"
+                      : "border-gray-200 bg-white hover:bg-gray-50/80"
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${
+                      selectedFormat === "webp" ? "bg-purple-500 text-white" : "bg-purple-50 text-purple-600"
+                    }`}>
+                      <ImageIcon size={15} />
+                    </div>
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100/80 text-purple-700">.WEBP</span>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-gray-900">WebP Image</p>
+                    <p className="text-[10px] text-gray-500 mt-0.5">รูปคมชัด 2x / แชท</p>
+                  </div>
+                </button>
+              </div>
+
+              {/* Attachment File Card */}
               <div className="flex items-center justify-between p-3.5 rounded-xl border border-gray-200 bg-gray-50/60">
                 <div className="flex items-center gap-3 overflow-hidden pr-2">
-                  <div className="w-10 h-10 rounded-lg bg-red-100 text-red-600 flex items-center justify-center shrink-0">
-                    <FileText size={20} />
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
+                    selectedFormat === "pdf" ? "bg-red-100 text-red-600" :
+                    selectedFormat === "html" ? "bg-blue-100 text-blue-600" :
+                    "bg-purple-100 text-purple-600"
+                  }`}>
+                    {selectedFormat === "pdf" ? <FileText size={20} /> :
+                     selectedFormat === "html" ? <Globe size={20} /> :
+                     <ImageIcon size={20} />}
                   </div>
                   <div className="truncate">
-                    <p className="text-xs font-bold text-gray-900 truncate">{fileName}</p>
-                    <p className="text-[11px] text-gray-500 mt-0.5">245 KB • PDF</p>
+                    <p className="text-xs font-bold text-gray-900 truncate">{currentAttachmentName}</p>
+                    <p className="text-[11px] text-gray-500 mt-0.5 flex items-center gap-1.5">
+                      {loadingFormat ? (
+                        <>
+                          <Loader2 size={12} className="animate-spin text-purple-600" />
+                          <span>กำลังเตรียมไฟล์ {selectedFormat.toUpperCase()}...</span>
+                        </>
+                      ) : (
+                        <span>
+                          {selectedFormat === "pdf" ? "PDF Document • พร้อมแนบส่ง" :
+                           selectedFormat === "html" ? "HTML Webpage (Standalone) • พร้อมแนบส่ง" :
+                           "WebP High-Res Image • พร้อมแนบส่ง"}
+                        </span>
+                      )}
+                    </p>
                   </div>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setShowFullPreview(true)}
-                  className="px-3.5 py-2 rounded-lg bg-white border border-gray-200 text-xs font-semibold text-gray-700 hover:bg-gray-100 flex items-center gap-1.5 shrink-0 transition-colors shadow-2xs"
+                  className="px-3.5 py-2 rounded-lg bg-white border border-gray-200 text-xs font-semibold text-gray-700 hover:bg-gray-100 flex items-center gap-1.5 shrink-0 transition-colors shadow-2xs cursor-pointer"
                 >
                   <Eye size={14} />
                   ดูไฟล์
@@ -213,8 +370,8 @@ export default function EmailScreen({
               </div>
               <button
                 onClick={handleSend}
-                disabled={sending || !activeAttachment}
-                className="w-full sm:w-auto px-7 h-11 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-sm font-semibold hover:opacity-95 disabled:opacity-50 flex items-center justify-center gap-2 shrink-0 transition-opacity"
+                disabled={sending || loadingFormat || !activeAttachment}
+                className="w-full sm:w-auto px-7 h-11 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-sm font-semibold hover:opacity-95 disabled:opacity-50 flex items-center justify-center gap-2 shrink-0 transition-opacity cursor-pointer"
               >
                 {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                 {sending ? "กำลังส่ง..." : "ส่งอีเมล"}
@@ -233,13 +390,19 @@ export default function EmailScreen({
                 <p className="text-xs text-gray-500 mt-0.5">ตัวอย่างเอกสารที่จะถูกส่งไปยังผู้รับ</p>
               </div>
 
-              {/* PDF Preview Frame Container */}
+              {/* Preview Frame Container */}
               <div className="bg-gray-100/90 border border-gray-200 rounded-xl p-3 flex flex-col items-center relative overflow-hidden">
-                {/* PDF Header Tag */}
+                {/* Header Tag */}
                 <div className="w-full flex items-center justify-between pb-2.5 mb-2 border-b border-gray-200 px-1">
                   <div className="flex items-center gap-2 text-xs font-semibold text-gray-800 truncate pr-2">
-                    <FileText size={15} className="text-red-500 shrink-0" />
-                    <span className="truncate">{fileName}</span>
+                    {selectedFormat === "pdf" ? (
+                      <FileText size={15} className="text-red-500 shrink-0" />
+                    ) : selectedFormat === "html" ? (
+                      <Globe size={15} className="text-blue-500 shrink-0" />
+                    ) : (
+                      <ImageIcon size={15} className="text-purple-500 shrink-0" />
+                    )}
+                    <span className="truncate">{currentAttachmentName}</span>
                   </div>
                   <button
                     onClick={() => setShowFullPreview(true)}
@@ -303,14 +466,14 @@ export default function EmailScreen({
                   </div>
                 </div>
 
-                {/* PDF Footer Status Bar */}
+                {/* Footer Status Bar */}
                 <div className="w-full flex items-center justify-between pt-3 mt-2 border-t border-gray-200 px-1 text-xs">
                   <span className="text-gray-500 font-medium">
-                    PDF • 245 KB • {pageCount} หน้า
+                    {selectedFormat.toUpperCase()} • {pageCount} หน้า
                   </span>
                   <span className="flex items-center gap-1 text-success-600 font-bold text-[11px] bg-success-100 px-2.5 py-0.5 rounded-full">
-                    <CheckCircle2 size={13} />
-                    พร้อมส่ง
+                    {loadingFormat ? <Loader2 size={13} className="animate-spin text-purple-600" /> : <CheckCircle2 size={13} />}
+                    {loadingFormat ? "กำลังเตรียมไฟล์..." : "พร้อมส่ง"}
                   </span>
                 </div>
               </div>
@@ -322,7 +485,7 @@ export default function EmailScreen({
               <div>
                 <p className="font-bold mb-0.5">หมายเหตุ</p>
                 <p className="leading-relaxed text-primary-800">
-                  เมื่อกดส่งอีเมล ระบบจะส่งเอกสาร PDF ไปยังอีเมลผู้รับที่ระบุไว้ทันที พร้อมบันทึกประวัติไว้ในหน้าประวัติการส่ง
+                  เมื่อกดส่งอีเมล ระบบจะส่งไฟล์แนบรูปแบบ {selectedFormat.toUpperCase()} ({currentAttachmentName}) ไปยังอีเมลผู้รับที่ระบุไว้ทันที พร้อมบันทึกประวัติไว้ในหน้าประวัติการส่ง
                 </p>
               </div>
             </div>

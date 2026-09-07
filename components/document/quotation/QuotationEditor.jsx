@@ -101,7 +101,7 @@ function QuotationEditorContent({ docId }) {
     }
   };
 
-  const generatePdf = async () => {
+  const generateExport = async (format = "pdf") => {
     setGenerating(true);
     try {
       const res = await fetch("/api/export-pdf", {
@@ -111,37 +111,60 @@ function QuotationEditorContent({ docId }) {
           templateId: "quotation",
           quotationData: quotation,
           fileName,
+          format,
         }),
       });
 
-      if (!res.ok) throw new Error("สร้าง PDF ไม่สำเร็จ");
+      if (!res.ok) throw new Error(`สร้าง ${format.toUpperCase()} ไม่สำเร็จ`);
       const blob = await res.blob();
       const base64 = await blobToBase64(blob);
-      setPdfBase64(base64);
+      if (format === "pdf") {
+        setPdfBase64(base64);
+      }
       return { blob, base64 };
     } finally {
       setGenerating(false);
     }
   };
 
-  const handleDownload = async () => {
+  const handleDownload = async (format = "pdf") => {
     if (!validation.isValid) {
       setShowToast({ type: "error", message: `กรุณากรอกข้อมูลให้ครบถ้วน: ${validation.errors.join(", ")}` });
       setTimeout(() => setShowToast(null), 4000);
       return;
     }
-    const { blob } = await generatePdf();
+
+    const baseName = (fileName || `QUOTATION-${quotation.quotationNo || "document"}`).replace(/\.(pdf|html|webp)$/i, "");
+    const downloadFileName = `${baseName}.${format}`;
+
+    let blob;
+    if (format === "pdf" && pdfBase64) {
+      blob = await (await fetch(`data:application/pdf;base64,${pdfBase64}`)).blob();
+    } else {
+      const result = await generateExport(format);
+      blob = result.blob;
+    }
+
+    const typeConfigs = {
+      pdf: {
+        description: "PDF Document (.pdf)",
+        accept: { "application/pdf": [".pdf"] },
+      },
+      html: {
+        description: "HTML Document (.html)",
+        accept: { "text/html": [".html"] },
+      },
+      webp: {
+        description: "WebP Image (.webp)",
+        accept: { "image/webp": [".webp"] },
+      },
+    };
 
     if ("showSaveFilePicker" in window) {
       try {
         const handle = await window.showSaveFilePicker({
-          suggestedName: fileName,
-          types: [
-            {
-              description: "PDF Document",
-              accept: { "application/pdf": [".pdf"] },
-            },
-          ],
+          suggestedName: downloadFileName,
+          types: [typeConfigs[format] || typeConfigs.pdf],
         });
         const writable = await handle.createWritable();
         await writable.write(blob);
@@ -155,7 +178,7 @@ function QuotationEditorContent({ docId }) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = fileName;
+    a.download = downloadFileName;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -166,7 +189,7 @@ function QuotationEditorContent({ docId }) {
       setTimeout(() => setShowToast(null), 4000);
       return;
     }
-    if (!pdfBase64) await generatePdf();
+    if (!pdfBase64) await generateExport("pdf");
     setMode("email");
   };
 

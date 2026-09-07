@@ -1,23 +1,27 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import defaultContent from "@/lib/templates/notification/content.json";
+import { notificationSamplePreview } from "@/lib/templates/notification/schema";
 
 export default function NotificationRelocationDocument({ data, values, quotation, content = defaultContent }) {
   const c = content || defaultContent;
-  const d = data || values || quotation || {};
-  const docDate = d.doc_date || "01 กันยายน 2569 / September 01, 2026";
-  const recipient = d.recipient || "ท่านคู่ค้าและลูกค้าผู้มีอุปการคุณ / Valued Business Partners";
-  const subject = d.subject || "แจ้งเปลี่ยนแปลงที่อยู่สำนักงานใหญ่ / Change of Head Office Address";
-  const effectiveDate = d.effective_date || "16 กันยายน 2569";
-  const effectiveDateEn = d.effective_date_en || "September 16, 2026";
-  const effectiveDateBadge = d.effective_date_badge || "(มีผล 16 ก.ย. 2569 / Effective Sept 16, 2026):";
-  const oldAddressTh = d.old_address_th || "45 ซอยโกสุมรวมใจ 37 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210";
-  const oldAddressEn = d.old_address_en || "45 Soi Kosum Ruam Chai 37, Don Mueang, Don Mueang, Bangkok 10210, Thailand";
-  const newAddressTh = d.new_address_th || "18 ซอยโกสุมรวมใจ 35 แยก 4 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210";
-  const newAddressEn = d.new_address_en || "18 Soi Kosum Ruam Chai 35 Yaek 4, Don Mueang, Don Mueang, Bangkok 10210, Thailand";
-  const signatoryName = d.signatory_name || "นายศรายุทธ  โกสิยารักษ์";
-  const signatoryPosition = d.signatory_position || "กรรมการผู้จัดการ / CEO";
+  const isPreview = !data && !values && !quotation;
+  const sample = isPreview ? notificationSamplePreview : {};
+  const d = data || values || quotation || sample;
+
+  const docDate = d.doc_date || sample.doc_date || "";
+  const recipient = d.recipient || sample.recipient || "";
+  const subject = d.subject || sample.subject || "";
+  const effectiveDate = d.effective_date || sample.effective_date || "";
+  const effectiveDateEn = d.effective_date_en || sample.effective_date_en || "";
+  const effectiveDateBadge = d.effective_date_badge || sample.effective_date_badge || (effectiveDate ? `(มีผล ${effectiveDate} / Effective ${effectiveDateEn || effectiveDate}):` : "");
+  const oldAddressTh = d.old_address_th || sample.old_address_th || "";
+  const oldAddressEn = d.old_address_en || sample.old_address_en || "";
+  const newAddressTh = d.new_address_th || sample.new_address_th || "";
+  const newAddressEn = d.new_address_en || sample.new_address_en || "";
+  const signatoryName = d.signatory_name || sample.signatory_name || "";
+  const signatoryPosition = d.signatory_position || sample.signatory_position || "";
 
   return (
     <div
@@ -83,11 +87,11 @@ export default function NotificationRelocationDocument({ data, values, quotation
           </p>
         </div>
 
-        {/* 3. DATE right-aligned */}
-        <div className="flex justify-end text-[14.5px] text-gray-800 my-5">
+        {/* 3. DATE right-aligned (Unbolded / Normal weight) */}
+        <div className="flex justify-end text-[14.5px] text-gray-900 font-normal my-5">
           <div className="flex items-center gap-2">
-            <span>{c.labels?.dateLabel}</span>
-            <span className="font-semibold text-gray-950">{docDate}</span>
+            <span className="text-gray-900 font-normal">{c.labels?.dateLabel}</span>
+            <span className="text-gray-950 font-normal">{docDate}</span>
           </div>
         </div>
 
@@ -158,19 +162,19 @@ export default function NotificationRelocationDocument({ data, values, quotation
       <div className="-mx-12 -mb-0 mt-0 overflow-hidden pointer-events-none">
         <svg viewBox="0 0 1000 48" className="w-full h-[36px] block" preserveAspectRatio="none">
           <defs>
-            <linearGradient id="btmHeaderRedRibbon2" x1="1" y1="0" x2="0" y2="0">
+            <linearGradient id="btmHeaderRedRibbon2" x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor="#7f1d1d" />
               <stop offset="25%" stopColor="#b91c1c" />
               <stop offset="65%" stopColor="#dc2626" />
               <stop offset="100%" stopColor="#ef4444" />
             </linearGradient>
-            <linearGradient id="btmHeaderRedShadow2" x1="1" y1="0" x2="0" y2="0">
+            <linearGradient id="btmHeaderRedShadow2" x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor="#450a0a" />
               <stop offset="100%" stopColor="#991b1b" />
             </linearGradient>
           </defs>
-          <path d="M 380 0 C 355 0, 340 34, 315 34 L 0 34 L 0 0 Z" fill="url(#btmHeaderRedShadow2)" opacity="0.45" />
-          <path d="M 370 0 C 345 0, 330 34, 305 34 L 0 34 L 0 0 Z" fill="url(#btmHeaderRedRibbon2)" />
+          <path d="M 0 0 L 320 0 C 345 0, 365 34, 390 34 L 0 34 Z" fill="url(#btmHeaderRedShadow2)" opacity="0.45" />
+          <path d="M 0 0 L 305 0 C 330 0, 350 34, 375 34 L 0 34 Z" fill="url(#btmHeaderRedRibbon2)" />
           <rect x="0" y="34" width="1000" height="14" fill="#242b35" />
         </svg>
       </div>

@@ -25,15 +25,26 @@ async function getAccessToken() {
   return data.access_token;
 }
 
-async function sendGraphMail({ to, subject, message, attachmentBase64, attachmentName }) {
+function resolveContentType(fileName, defaultType = "application/pdf") {
+  if (!fileName) return defaultType;
+  const lower = fileName.toLowerCase();
+  if (lower.endsWith(".webp")) return "image/webp";
+  if (lower.endsWith(".html") || lower.endsWith(".htm")) return "text/html";
+  if (lower.endsWith(".png")) return "image/png";
+  if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) return "image/jpeg";
+  return "application/pdf";
+}
+
+async function sendGraphMail({ to, subject, message, attachmentBase64, attachmentName, contentType }) {
   const token = await getAccessToken();
+  const resolvedType = contentType || resolveContentType(attachmentName);
 
   const attachments = attachmentBase64
     ? [
         {
           "@odata.type": "#microsoft.graph.fileAttachment",
           name: attachmentName || "document.pdf",
-          contentType: "application/pdf",
+          contentType: resolvedType,
           contentBytes: attachmentBase64,
         },
       ]
@@ -69,7 +80,7 @@ async function sendGraphMail({ to, subject, message, attachmentBase64, attachmen
 
 export async function POST(request) {
   try {
-    const { documentId, to, subject, message, attachmentBase64, attachmentName, templateId, templateName, values } =
+    const { documentId, to, subject, message, attachmentBase64, attachmentName, contentType, templateId, templateName, values } =
       await request.json();
 
     if (!to || !subject) {
@@ -78,6 +89,8 @@ export async function POST(request) {
         { status: 400 }
       );
     }
+
+    const resolvedType = contentType || resolveContentType(attachmentName);
 
     const historyPayload = {
       documentId: documentId || null,
@@ -114,7 +127,7 @@ export async function POST(request) {
 
     // If Microsoft Graph API credentials are set, use Microsoft Graph
     if (process.env.CLIENT_ID && process.env.CLIENT_SECRET && process.env.TENANT_ID) {
-      await sendGraphMail({ to, subject, message, attachmentBase64, attachmentName });
+      await sendGraphMail({ to, subject, message, attachmentBase64, attachmentName, contentType: resolvedType });
       await recordTransmission();
       return Response.json({ success: true, provider: "Microsoft Graph" });
     }
@@ -134,7 +147,7 @@ export async function POST(request) {
             {
               filename: attachmentName || "document.pdf",
               content: Buffer.from(attachmentBase64, "base64"),
-              contentType: "application/pdf",
+              contentType: resolvedType,
             },
           ]
         : [];
