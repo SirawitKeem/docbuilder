@@ -14,7 +14,7 @@ import { cloneFabricObject } from "./utils/clipboard";
 import { createSignatureBlock } from "./elements/SignatureBlock";
 import { createCompanyHeaderBlock, createPartyInfoGrid, createTermsBox } from "./elements/HeaderBlock";
 import { applyTokensToCanvas, revertTokensInPageJson } from "@/lib/tokens/tokenEngine";
-import { getCanvasPreset } from "@/lib/editor/canvasPresets";
+import { getCanvasPreset, mmToPx, pxToMm } from "@/lib/editor/canvasPresets";
 
 // Dynamically import CanvasStage with SSR disabled
 const CanvasStage = dynamic(() => import("./CanvasStage"), {
@@ -75,10 +75,57 @@ export default function DocumentEditor({
   onSave,
   saving = false,
   initialPages = null,
+  initialMarginMm = null,
+  initialMarginPx = null,
   editorType = "document",
-  canvasPreset = "a4-portrait",
+  canvasPreset = null,
 }) {
-  const preset = getCanvasPreset(canvasPreset);
+  const effectivePresetKey = canvasPreset || (editorType === "slide" ? "slide-16-9" : "a4-portrait");
+  const preset = getCanvasPreset(effectivePresetKey);
+  const isMetric = Boolean(preset.mmWidth);
+
+  // 📐 Dynamic Margin State (mm for Docs, px for Slides)
+  const [marginMm, setMarginMm] = useState(() => {
+    if (initialMarginMm !== null && initialMarginMm !== undefined) {
+      return Number(initialMarginMm);
+    }
+    return isMetric ? 15 : null;
+  });
+
+  const [marginPx, setMarginPx] = useState(() => {
+    if (initialMarginPx !== null && initialMarginPx !== undefined) {
+      return Number(initialMarginPx);
+    }
+    if (isMetric) {
+      return mmToPx(initialMarginMm ?? 15);
+    }
+    return preset.marginPx || 40;
+  });
+
+  useEffect(() => {
+    if (initialMarginMm !== null && initialMarginMm !== undefined) {
+      setMarginMm(Number(initialMarginMm));
+      setMarginPx(mmToPx(Number(initialMarginMm)));
+    } else if (initialMarginPx !== null && initialMarginPx !== undefined) {
+      setMarginPx(Number(initialMarginPx));
+      if (isMetric) setMarginMm(pxToMm(Number(initialMarginPx)));
+    }
+  }, [initialMarginMm, initialMarginPx, isMetric]);
+
+  const handleUpdateMargin = useCallback((value, unit = isMetric ? "mm" : "px") => {
+    const num = Math.max(0, Number(value) || 0);
+    if (unit === "mm") {
+      setMarginMm(num);
+      setMarginPx(mmToPx(num));
+    } else {
+      setMarginPx(num);
+      if (isMetric) {
+        setMarginMm(pxToMm(num));
+      }
+    }
+    hasUnsavedChangesRef.current = true;
+  }, [isMetric]);
+
   const mainContainerRef = useRef(null);
   const [currentTitle, setCurrentTitle] = useState(templateName);
   const [zoom, setZoom] = useState(preset.defaultZoom || (editorType === "slide" ? 0.65 : 0.85));
@@ -560,10 +607,13 @@ export default function DocumentEditor({
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
+    const currentMargin = marginPx !== null && marginPx !== undefined ? marginPx : preset.marginPx;
+    const currentWidth = Math.max(300, preset.width - currentMargin * 2);
+
     const tableGroup = createDocTable({
-      left: MARGIN_PX,
+      left: currentMargin,
       top: 320,
-      width: A4_WIDTH - MARGIN_PX * 2,
+      width: currentWidth,
       primaryColor: "#2563EB",
       rowCount: 3,
     });
@@ -572,18 +622,22 @@ export default function DocumentEditor({
     canvas.setActiveObject(tableGroup);
     canvas.renderAll();
     handleHistoryPush(canvas);
-  }, [handleHistoryPush]);
+  }, [handleHistoryPush, marginPx, preset.width, preset.marginPx]);
 
   // ✍️ Add Signature Block
   const handleAddSignature = useCallback((type = "dual") => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
+    const currentMargin = marginPx !== null && marginPx !== undefined ? marginPx : preset.marginPx;
+    const currentWidth = Math.max(300, preset.width - currentMargin * 2);
+    const topPos = Math.max(300, preset.height - currentMargin - 220);
+
     const sigGroup = createSignatureBlock({
       type,
-      left: MARGIN_PX,
-      top: 860,
-      width: A4_WIDTH - MARGIN_PX * 2,
+      left: currentMargin,
+      top: topPos,
+      width: currentWidth,
       primaryColor: "#1E293B",
     });
 
@@ -591,32 +645,35 @@ export default function DocumentEditor({
     canvas.setActiveObject(sigGroup);
     canvas.renderAll();
     handleHistoryPush(canvas);
-  }, [handleHistoryPush]);
+  }, [handleHistoryPush, marginPx, preset.width, preset.height, preset.marginPx]);
 
   // 📑 Add Preset Block
   const handleAddPreset = useCallback((presetKey) => {
     const canvas = fabricCanvasRef.current;
     if (!canvas) return;
 
+    const currentMargin = marginPx !== null && marginPx !== undefined ? marginPx : preset.marginPx;
+    const currentWidth = Math.max(300, preset.width - currentMargin * 2);
+
     let group = null;
 
     if (presetKey === "company_header") {
       group = createCompanyHeaderBlock({
-        left: MARGIN_PX,
-        top: MARGIN_PX,
-        width: A4_WIDTH - MARGIN_PX * 2,
+        left: currentMargin,
+        top: currentMargin,
+        width: currentWidth,
       });
     } else if (presetKey === "party_info") {
       group = createPartyInfoGrid({
-        left: MARGIN_PX,
-        top: 150,
-        width: A4_WIDTH - MARGIN_PX * 2,
+        left: currentMargin,
+        top: currentMargin + 90,
+        width: currentWidth,
       });
     } else if (presetKey === "terms_box") {
       group = createTermsBox({
-        left: MARGIN_PX,
-        top: 680,
-        width: A4_WIDTH - MARGIN_PX * 2,
+        left: currentMargin,
+        top: Math.max(400, preset.height - currentMargin - 380),
+        width: currentWidth,
       });
     } else if (presetKey === "slide_title_subtitle") {
       const title = new fabric.IText("หัวข้อการนำเสนอหลัก (Presentation Title)", {
@@ -861,19 +918,20 @@ export default function DocumentEditor({
 
         e.preventDefault();
         const childObjects = [...activeObj.getObjects()];
+        const absTransforms = childObjects.map((child) => child.calcTransformMatrix());
 
         canvas.discardActiveObject();
-        activeObj.removeAll();
         canvas.remove(activeObj);
 
-        childObjects.forEach((child) => {
+        childObjects.forEach((child, i) => {
+          child.group = undefined;
+          fabric.util.applyTransformToObject(child, absTransforms[i]);
           child.setCoords();
           canvas.add(child);
         });
 
-        const activeSelection = new fabric.ActiveSelection(childObjects, { canvas });
-        canvas.setActiveObject(activeSelection);
-        setActiveObject(activeSelection);
+        canvas.discardActiveObject();
+        setActiveObject(null);
         canvas.requestRenderAll();
         handleHistoryPush(canvas);
         hasUnsavedChangesRef.current = true;
@@ -1021,6 +1079,8 @@ export default function DocumentEditor({
       canvasPreset: canvasPreset || (editorType === "slide" ? "slide-16-9" : "a4-portrait"),
       pageCount: allPages.length,
       pages: allPages,
+      marginMm,
+      marginPx,
     });
   };
 
@@ -1094,6 +1154,9 @@ export default function DocumentEditor({
         onToggleRuler={() => setShowRuler(!showRuler)}
         showMargin={showMargin}
         onToggleMargin={() => setShowMargin(!showMargin)}
+        marginMm={marginMm}
+        marginPx={marginPx}
+        onUpdateMargin={handleUpdateMargin}
         canUndo={canUndo}
         canRedo={canRedo}
         onUndo={() => {
@@ -1133,6 +1196,8 @@ export default function DocumentEditor({
               zoom={zoom}
               showRuler={showRuler}
               showMargin={showMargin}
+              marginPx={marginPx}
+              marginMm={marginMm}
               canvasPreset={preset.id}
               onCanvasReady={handleCanvasReady}
               onHistoryPush={handleHistoryPush}
@@ -1158,6 +1223,9 @@ export default function DocumentEditor({
           canvas={canvasInstance}
           activeObject={activeObject}
           canvasPreset={preset.id}
+          marginMm={marginMm}
+          marginPx={marginPx}
+          onUpdateMargin={handleUpdateMargin}
           onPushHistory={handleHistoryPush}
         />
       </div>

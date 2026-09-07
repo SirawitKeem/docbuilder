@@ -41,7 +41,8 @@ function TemplateBuilderContent() {
   const searchParams = useSearchParams();
   const categoryIdParam = searchParams.get("categoryId") || "notification";
   const editorTypeParam = searchParams.get("editorType") || "document";
-  const canvasPresetParam = searchParams.get("canvasPreset") || "a4-portrait";
+  const defaultPreset = editorTypeParam === "slide" ? "slide-16-9" : "a4-portrait";
+  const canvasPresetParam = searchParams.get("canvasPreset") || defaultPreset;
   const editId = searchParams.get("edit");
 
   const [categoryId, setCategoryId] = useState(categoryIdParam);
@@ -55,13 +56,16 @@ function TemplateBuilderContent() {
   });
   const [initialPages, setInitialPages] = useState(null);
   const [initialSheetData, setInitialSheetData] = useState(null);
+  const [initialMarginMm, setInitialMarginMm] = useState(null);
+  const [initialMarginPx, setInitialMarginPx] = useState(null);
   const [saving, setSaving] = useState(false);
 
   // Sync state when query parameters change (new template creation)
   useEffect(() => {
     if (!editId) {
       if (editorTypeParam) setEditorType(editorTypeParam);
-      if (canvasPresetParam) setCanvasPreset(canvasPresetParam);
+      const effectivePreset = searchParams.get("canvasPreset") || (editorTypeParam === "slide" ? "slide-16-9" : "a4-portrait");
+      setCanvasPreset(effectivePreset);
       if (categoryIdParam) setCategoryId(categoryIdParam);
       if (editorTypeParam === "slide") {
         setTemplateName("เทมเพลตสไลด์ใหม่ (16:9)");
@@ -90,6 +94,11 @@ function TemplateBuilderContent() {
             if (tmpl.sheetData && Array.isArray(tmpl.sheetData) && tmpl.sheetData.length > 0) {
               setInitialSheetData(tmpl.sheetData);
             }
+
+            const savedMarginMm = tmpl.margin?.mm ?? tmpl.theme?.marginMm ?? null;
+            const savedMarginPx = tmpl.margin?.px ?? tmpl.theme?.marginPx ?? null;
+            if (savedMarginMm !== null && savedMarginMm !== undefined) setInitialMarginMm(savedMarginMm);
+            if (savedMarginPx !== null && savedMarginPx !== undefined) setInitialMarginPx(savedMarginPx);
 
             // Fetch category details based on the template's actual category
             const targetCat = tmpl.categoryId || categoryIdParam;
@@ -153,6 +162,12 @@ function TemplateBuilderContent() {
           primaryColor: isSheet ? "#059669" : isSlide ? "#6366F1" : "#5542F6",
           backgroundColor: "#FFFFFF",
           hasWatermark: false,
+          marginMm: editorData?.marginMm,
+          marginPx: editorData?.marginPx,
+        },
+        margin: {
+          mm: editorData?.marginMm,
+          px: editorData?.marginPx,
         },
       };
 
@@ -199,6 +214,8 @@ function TemplateBuilderContent() {
       editorType={editorType}
       canvasPreset={canvasPreset}
       initialPages={initialPages}
+      initialMarginMm={initialMarginMm}
+      initialMarginPx={initialMarginPx}
       onSave={handleSave}
       saving={saving}
     />

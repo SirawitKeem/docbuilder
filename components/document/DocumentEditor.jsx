@@ -264,7 +264,11 @@ export default function DocumentEditor({ templateId, profileId, docId }) {
           const res = await fetch(`/api/documents?id=${docId}`);
           if (res.ok) {
             const doc = await res.json();
-            setInitialValues(doc.values || {});
+            const mergedValues = {
+              ...(schema.defaultValues || {}),
+              ...(doc.values || {}),
+            };
+            setInitialValues(mergedValues);
             setLoadedDocId(doc.id);
             setLoadedDocName(doc.name || null);
             return;

@@ -29,6 +29,11 @@ export function useHistory() {
     if (!canvas || isExecutingRef.current) return;
     try {
       const json = canvas.toJSON(CUSTOM_CANVAS_PROPS);
+      const jsonString = JSON.stringify(json);
+      const lastState = historyStackRef.current[currentIndexRef.current];
+      if (lastState && JSON.stringify(lastState) === jsonString) {
+        return; // Ignore duplicate identical state
+      }
       const nextIndex = currentIndexRef.current + 1;
       const nextStack = historyStackRef.current.slice(0, nextIndex);
       nextStack.push(json);

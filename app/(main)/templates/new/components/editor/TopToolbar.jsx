@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -16,7 +16,10 @@ import {
   Sparkles,
   Download,
   Loader2,
+  Minus,
+  Plus,
 } from "lucide-react";
+import { getCanvasPreset } from "@/lib/editor/canvasPresets";
 
 export default function TopToolbar({
   templateName,
@@ -31,6 +34,10 @@ export default function TopToolbar({
   onToggleRuler,
   showMargin,
   onToggleMargin,
+  marginMm = 15,
+  marginPx = 56,
+  onUpdateMargin,
+  canvasPreset = "a4-portrait",
   canUndo,
   canRedo,
   onUndo,
@@ -44,9 +51,70 @@ export default function TopToolbar({
   onExportPdf,
   isExportingPdf = false,
 }) {
+  const preset = getCanvasPreset(canvasPreset);
   const isSlide = editorType === "slide";
+  const isMetric = Boolean(preset?.mmWidth);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleInput, setTitleInput] = useState(templateName);
+
+  const currentVal = isMetric
+    ? (marginMm !== null && marginMm !== undefined ? marginMm : 15)
+    : (marginPx !== null && marginPx !== undefined ? marginPx : 40);
+
+  const [inputStr, setInputStr] = useState(String(currentVal));
+
+  useEffect(() => {
+    setInputStr(String(currentVal));
+  }, [currentVal]);
+
+  const handleStep = (delta) => {
+    if (!onUpdateMargin) return;
+    const stepSize = isMetric ? 1 : 5;
+    const nextVal = Math.max(0, currentVal + delta * stepSize);
+    onUpdateMargin(nextVal, isMetric ? "mm" : "px");
+    if (!showMargin && nextVal > 0 && onToggleMargin) {
+      onToggleMargin();
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const raw = e.target.value;
+    setInputStr(raw);
+    if (!onUpdateMargin) return;
+    if (raw === "") return;
+    const val = parseInt(raw, 10);
+    if (!isNaN(val)) {
+      const clamped = Math.max(0, Math.min(isMetric ? 60 : 200, val));
+      onUpdateMargin(clamped, isMetric ? "mm" : "px");
+      if (!showMargin && clamped > 0 && onToggleMargin) {
+        onToggleMargin();
+      }
+    }
+  };
+
+  const handleInputBlur = () => {
+    if (!onUpdateMargin) return;
+    if (inputStr === "" || isNaN(parseInt(inputStr, 10))) {
+      onUpdateMargin(0, isMetric ? "mm" : "px");
+      setInputStr("0");
+    } else {
+      const clamped = Math.max(0, Math.min(isMetric ? 60 : 200, parseInt(inputStr, 10)));
+      onUpdateMargin(clamped, isMetric ? "mm" : "px");
+      setInputStr(String(clamped));
+    }
+  };
+
+  const handleInputKeyDown = (e) => {
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      handleStep(1);
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      handleStep(-1);
+    } else if (e.key === "Enter") {
+      e.target.blur();
+    }
+  };
 
   const handleSaveTitle = () => {
     if (titleInput.trim()) {
@@ -178,23 +246,89 @@ export default function TopToolbar({
                 ? "bg-slate-800 text-white border-slate-800 shadow-xs"
                 : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
             }`}
-            title="เปิด/ปิด ไม้บรรทัดหน่วยมิลลิเมตร (mm)"
+            title={isMetric ? "เปิด/ปิด ไม้บรรทัดหน่วยมิลลิเมตร (mm)" : "เปิด/ปิด ไม้บรรทัดพิกเซล (px)"}
           >
             <Ruler className="w-3.5 h-3.5" />
-            <span>ไม้บรรทัด (mm)</span>
+            <span>{isMetric ? "ไม้บรรทัด (mm)" : "ไม้บรรทัด (px)"}</span>
           </button>
 
-          <button
-            onClick={onToggleMargin}
-            className={`px-2.5 py-1.5 text-xs font-medium rounded-lg border transition-colors cursor-pointer ${
-              showMargin
-                ? "bg-rose-50 text-rose-700 border-rose-200 font-semibold"
-                : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+          {/* ── Direct Inline Margin Control (No Dropdown) ── */}
+          <div
+            className={`flex items-center gap-1.5 px-2 py-1 rounded-lg border transition-all ${
+              currentVal > 0 && showMargin
+                ? "bg-rose-50/70 border-rose-200 text-rose-800"
+                : "bg-white border-gray-200 text-gray-600"
             }`}
-            title="เปิด/ปิด เส้นไกด์ระยะขอบ 15mm"
+            title={
+              currentVal === 0
+                ? "ไม่มีเส้นขอบ (ระยะขอบเป็น 0)"
+                : `ระยะขอบ: ${currentVal} ${isMetric ? "mm" : "px"} (ใส่ 0 เพื่อไม่มีเส้นขอบ)`
+            }
           >
-            Margin (15mm)
-          </button>
+            {/* Margin Toggle / Label */}
+            <button
+              type="button"
+              data-testid="margin-badge-btn"
+              onClick={onToggleMargin}
+              className={`text-xs select-none cursor-pointer flex items-center gap-1 transition-colors ${
+                currentVal > 0 && showMargin
+                  ? "text-rose-700 hover:text-rose-900 font-semibold"
+                  : "text-gray-500 hover:text-gray-800 font-medium"
+              }`}
+              title={
+                currentVal === 0
+                  ? "ระยะขอบเป็น 0 (ไม่มีเส้นขอบ)"
+                  : showMargin
+                  ? "คลิกเพื่อซ่อนเส้นไกด์ระยะขอบ"
+                  : "คลิกเพื่อเปิดเส้นไกด์ระยะขอบ"
+              }
+            >
+              <span>Margin:</span>
+            </button>
+
+            {/* Stepper Minus */}
+            <button
+              type="button"
+              data-testid="margin-minus-btn"
+              onClick={() => handleStep(-1)}
+              className="w-5 h-5 flex items-center justify-center rounded text-gray-500 hover:text-gray-900 hover:bg-gray-100 cursor-pointer transition-colors"
+              title={isMetric ? "ลดระยะขอบ 1 mm" : "ลดระยะขอบ 5 px"}
+            >
+              <Minus className="w-3.5 h-3.5" />
+            </button>
+
+            {/* Direct Number Input */}
+            <div className="flex items-center">
+              <input
+                type="number"
+                data-testid="margin-input"
+                min={0}
+                max={isMetric ? 60 : 200}
+                value={inputStr}
+                onChange={handleInputChange}
+                onBlur={handleInputBlur}
+                onKeyDown={handleInputKeyDown}
+                onFocus={(e) => e.target.select()}
+                className="w-10 h-6 text-center font-mono font-bold text-xs bg-white border border-gray-300 rounded focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none text-gray-900 shadow-2xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                title="คลิกเพื่อพิมพ์ตัวเลขระยะขอบที่ต้องการ (0 = ไม่มีเส้นขอบ)"
+              />
+            </div>
+
+            <span className="text-[11px] font-bold text-gray-500 select-none">
+              {isMetric ? "mm" : "px"}
+            </span>
+
+            {/* Stepper Plus */}
+            <button
+              type="button"
+              data-testid="margin-plus-btn"
+              onClick={() => handleStep(1)}
+              className="w-5 h-5 flex items-center justify-center rounded text-gray-500 hover:text-gray-900 hover:bg-gray-100 cursor-pointer transition-colors"
+              title={isMetric ? "เพิ่มระยะขอบ 1 mm" : "เพิ่มระยะขอบ 5 px"}
+            >
+              <Plus className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
       </div>
 

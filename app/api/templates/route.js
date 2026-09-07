@@ -32,6 +32,7 @@ export async function POST(req) {
       editorType,
       canvasPreset,
       sheetData,
+      margin,
     } = body;
 
     if (!name?.trim()) {
@@ -52,6 +53,7 @@ export async function POST(req) {
       badge: badge || "กำหนดเอง",
       status: status || "published",
       orientation: orientation || "portrait",
+      margin: margin || null,
       theme: theme || {
         primaryColor: "#5542F6",
         backgroundColor: "#FFFFFF",

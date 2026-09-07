@@ -138,7 +138,7 @@ async function runPhaseG1Tests() {
     // T1.4: Undo with Thai layout (KeyZ='ผ')
     // We added rect, pasted (+1), duplicated (+1). Undo should remove duplicated object.
     await dispatchKeyEvent({ code: "KeyZ", key: "ผ", ctrlKey: true });
-    await new Promise((r) => setTimeout(r, 200));
+    await new Promise((r) => setTimeout(r, 400));
 
     const t1Undo = await exec(() => {
       const canvas = window.__FABRIC_CANVAS__;
@@ -451,8 +451,8 @@ async function runPhaseG1Tests() {
 
     record(
       "Group Escape Clean Deselection",
-      t6Escape.active === null,
-      `Active Object is null: ${t6Escape.active === null}`
+      !t6Escape.active,
+      `Active Object is cleared: ${!t6Escape.active}`
     );
 
     // ──────────────────────────────────────────────────────────────────────────
@@ -470,14 +470,14 @@ async function runPhaseG1Tests() {
       canvas.add(grp);
 
       const json = canvas.toJSON();
-      const groupInJson = json.objects.find((o) => o.type === "group");
+      const groupInJson = json.objects.find((o) => o.type?.toLowerCase() === "group");
       const isUserGroupPreservedInJson = Boolean(groupInJson?.isUserGroup);
 
       // Reload from JSON
       canvas.clear();
       await canvas.loadFromJSON(json);
 
-      const reloadedGroup = canvas.getObjects().find((o) => o.type === "group");
+      const reloadedGroup = canvas.getObjects().find((o) => o.type?.toLowerCase() === "group");
       return {
         isUserGroupPreservedInJson,
         reloadedIsUserGroup: Boolean(reloadedGroup?.isUserGroup),

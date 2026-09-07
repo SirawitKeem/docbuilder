@@ -31,6 +31,9 @@ export default function RightSidebar({
   activeObject,
   onPushHistory,
   canvasPreset = "a4-portrait",
+  marginMm = 15,
+  marginPx = 56,
+  onUpdateMargin,
 }) {
   const preset = getCanvasPreset(canvasPreset);
   const [activeTab, setActiveTab] = useState("properties");
@@ -181,24 +184,26 @@ export default function RightSidebar({
     const objWidth = activeObject.getScaledWidth ? activeObject.getScaledWidth() : (activeObject.width || 0) * (activeObject.scaleX || 1);
     const objHeight = activeObject.getScaledHeight ? activeObject.getScaledHeight() : (activeObject.height || 0) * (activeObject.scaleY || 1);
 
+    const effectiveMargin = marginPx !== null && marginPx !== undefined ? marginPx : preset.marginPx;
+
     switch (type) {
       case "left":
-        activeObject.set("left", preset.marginPx);
+        activeObject.set("left", effectiveMargin);
         break;
       case "center":
         activeObject.set("left", (preset.width - objWidth) / 2);
         break;
       case "right":
-        activeObject.set("left", preset.width - preset.marginPx - objWidth);
+        activeObject.set("left", preset.width - effectiveMargin - objWidth);
         break;
       case "top":
-        activeObject.set("top", preset.marginPx);
+        activeObject.set("top", effectiveMargin);
         break;
       case "middle":
         activeObject.set("top", (preset.height - objHeight) / 2);
         break;
       case "bottom":
-        activeObject.set("top", preset.height - preset.marginPx - objHeight);
+        activeObject.set("top", preset.height - effectiveMargin - objHeight);
         break;
     }
 
@@ -317,9 +322,52 @@ export default function RightSidebar({
                   <span>พิกเซล (96 DPI):</span>
                   <span className="font-mono font-semibold text-gray-800">{preset.width} × {preset.height} px</span>
                 </div>
-                <div className="flex justify-between text-gray-500">
-                  <span>ระยะขอบ (Margin):</span>
-                  <span className="font-mono font-semibold text-rose-500">{preset.mmWidth ? `15 mm (${preset.marginPx} px)` : `${preset.marginPx} px`}</span>
+                <div className="pt-2 border-t border-gray-200/60">
+                  <div className="flex justify-between items-center text-gray-600 mb-1.5">
+                    <span className="text-xs font-medium">ระยะขอบ (Margin):</span>
+                    <span className="font-mono font-semibold text-rose-600 text-xs">
+                      {preset.mmWidth
+                        ? ((marginMm ?? 15) === 0
+                            ? "ไม่มีเส้นขอบ (0 mm)"
+                            : `${marginMm ?? Math.round((marginPx * 25.4) / 96)} mm (${marginPx} px)`)
+                        : (marginPx === 0
+                            ? "ไม่มีเส้นขอบ (0 px)"
+                            : `${marginPx} px`)}
+                    </span>
+                  </div>
+                  {onUpdateMargin && (
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <input
+                        type="number"
+                        min={0}
+                        max={preset.mmWidth ? 60 : 200}
+                        value={preset.mmWidth ? (marginMm ?? 15) : marginPx}
+                        onFocus={(e) => e.target.select()}
+                        onChange={(e) => {
+                          const val = Math.max(0, parseInt(e.target.value) || 0);
+                          onUpdateMargin(val, preset.mmWidth ? "mm" : "px");
+                        }}
+                        className="w-16 font-mono text-center text-xs font-bold bg-white border border-gray-300 rounded-md px-1.5 py-1 outline-none focus:border-rose-500"
+                      />
+                      <span className="text-[11px] text-gray-400 font-medium">{preset.mmWidth ? "mm" : "px"}</span>
+                      <div className="flex items-center gap-1 ml-auto">
+                        {(preset.mmWidth ? [0, 10, 15, 20] : [0, 20, 40, 60]).map((m) => (
+                          <button
+                            key={m}
+                            type="button"
+                            onClick={() => onUpdateMargin(m, preset.mmWidth ? "mm" : "px")}
+                            className={`px-1.5 py-0.5 text-[10px] font-mono rounded border cursor-pointer transition-colors ${
+                              (preset.mmWidth ? marginMm : marginPx) === m
+                                ? "bg-rose-50 border-rose-300 text-rose-700 font-bold"
+                                : "bg-white border-gray-200 text-gray-600 hover:bg-gray-100"
+                            }`}
+                          >
+                            {m}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

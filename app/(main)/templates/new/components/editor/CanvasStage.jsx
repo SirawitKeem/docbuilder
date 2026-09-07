@@ -15,12 +15,21 @@ export default function CanvasStage({
   zoom = 1,
   showRuler = true,
   showMargin = true,
+  marginPx = null,
+  marginMm = null,
   canvasPreset = "a4-portrait",
   onCanvasReady,
   onHistoryPush,
   onSelectionChange,
 }) {
   const preset = getCanvasPreset(canvasPreset);
+  const effectiveMarginPx = marginPx !== null && marginPx !== undefined ? marginPx : preset.marginPx;
+  const marginPxRef = useRef(effectiveMarginPx);
+
+  useEffect(() => {
+    marginPxRef.current = effectiveMarginPx;
+  }, [effectiveMarginPx]);
+
   const canvasContainerRef = useRef(null);
   const canvasElRef = useRef(null);
   const fabricCanvasRef = useRef(null);
@@ -63,6 +72,24 @@ export default function CanvasStage({
         return origGroupToObject.call(this, [...CUSTOM_CANVAS_PROPS, ...propertiesToInclude]);
       };
       fabric.Group.prototype.__customPropsPatched = true;
+    }
+
+    if (fabric.StaticCanvas && fabric.StaticCanvas.prototype && !fabric.StaticCanvas.prototype.__customPropsPatched) {
+      const origStaticToObject = fabric.StaticCanvas.prototype.toObject;
+      fabric.StaticCanvas.prototype.toObject = function (propertiesToInclude = []) {
+        return origStaticToObject.call(this, [...CUSTOM_CANVAS_PROPS, ...propertiesToInclude]);
+      };
+      fabric.StaticCanvas.prototype.toJSON = function (propertiesToInclude = []) {
+        return this.toObject([...CUSTOM_CANVAS_PROPS, ...propertiesToInclude]);
+      };
+      fabric.StaticCanvas.prototype.__customPropsPatched = true;
+    }
+
+    if (fabric.Canvas && fabric.Canvas.prototype && !fabric.Canvas.prototype.__customPropsPatched) {
+      fabric.Canvas.prototype.toJSON = function (propertiesToInclude = []) {
+        return this.toObject([...CUSTOM_CANVAS_PROPS, ...propertiesToInclude]);
+      };
+      fabric.Canvas.prototype.__customPropsPatched = true;
     }
 
     const canvas = new fabric.Canvas(canvasElRef.current, {
@@ -154,10 +181,18 @@ export default function CanvasStage({
 
       // Vertical Snap Points: Left Margin, Center, Right Margin (only if not vertically locked)
       if (!isAxisLockedVertical) {
+        const activeMargin = marginPxRef.current ?? preset.marginPx;
         const vSnapPoints = [
-          { x: preset.marginPx, type: "margin-left" },
+          ...(activeMargin > 0
+            ? [
+                { x: activeMargin, type: "margin-left" },
+                { x: preset.width - activeMargin, type: "margin-right" },
+              ]
+            : [
+                { x: 0, type: "edge-left" },
+                { x: preset.width, type: "edge-right" },
+              ]),
           { x: preset.width / 2, type: "center-x" },
-          { x: preset.width - preset.marginPx, type: "margin-right" },
         ];
 
         for (const p of vSnapPoints) {
@@ -179,10 +214,18 @@ export default function CanvasStage({
 
       // Horizontal Snap Points: Top Margin, Center, Bottom Margin (only if not horizontally locked)
       if (!isAxisLockedHorizontal) {
+        const activeMargin = marginPxRef.current ?? preset.marginPx;
         const hSnapPoints = [
-          { y: preset.marginPx, type: "margin-top" },
+          ...(activeMargin > 0
+            ? [
+                { y: activeMargin, type: "margin-top" },
+                { y: preset.height - activeMargin, type: "margin-bottom" },
+              ]
+            : [
+                { y: 0, type: "edge-top" },
+                { y: preset.height, type: "edge-bottom" },
+              ]),
           { y: preset.height / 2, type: "center-y" },
-          { y: preset.height - preset.marginPx, type: "margin-bottom" },
         ];
 
         for (const p of hSnapPoints) {
@@ -345,7 +388,12 @@ export default function CanvasStage({
 
   const currentWidth = preset.width * zoom;
   const currentHeight = preset.height * zoom;
-  const currentMargin = preset.marginPx * zoom;
+  const currentMargin = effectiveMarginPx * zoom;
+  const marginLabel = preset.mmWidth
+    ? `${marginMm !== null && marginMm !== undefined ? marginMm : Math.round((effectiveMarginPx * 25.4) / 96)}mm`
+    : `${effectiveMarginPx}px`;
+
+  const isMarginActive = showMargin && effectiveMarginPx > 0;
 
   return (
     <div className="relative flex flex-col items-center justify-start select-none py-6">
@@ -367,17 +415,25 @@ export default function CanvasStage({
             className="relative bg-white"
             style={{ width: currentWidth, height: currentHeight }}
           >
-            {showMargin && (
-              <div
-                className="absolute inset-0 pointer-events-none z-10 border border-dashed border-rose-400/70"
-                style={{ margin: `${currentMargin}px` }}
-              >
-                <span className="absolute top-1 left-2 text-[10px] font-mono text-rose-500 font-semibold select-none bg-rose-50/80 px-1 rounded-xs">
-                  Margin ({preset.mmWidth ? "15mm" : `${preset.marginPx}px`})
+            {/* Margin Guide: Keep in DOM with CSS visibility to prevent React reconciliation insertBefore error with Fabric */}
+            <div
+              data-testid="margin-guide"
+              className={`absolute inset-0 pointer-events-none z-10 border border-dashed border-rose-400/70 transition-opacity duration-150 ${
+                isMarginActive ? "opacity-100" : "opacity-0 pointer-events-none invisible"
+              }`}
+              style={{ margin: `${currentMargin}px` }}
+            >
+              {isMarginActive && (
+                <span className="absolute top-1 left-2 text-[10px] font-mono text-rose-500 font-semibold select-none bg-rose-50/90 px-1 rounded-xs shadow-2xs">
+                  Margin ({marginLabel})
                 </span>
-              </div>
-            )}
-            <canvas ref={canvasElRef} />
+              )}
+            </div>
+
+            {/* Isolate Fabric Canvas in its own wrapper to prevent DOM manipulation collisions */}
+            <div className="absolute inset-0 pointer-events-auto">
+              <canvas ref={canvasElRef} />
+            </div>
           </div>
         </div>
       </div>

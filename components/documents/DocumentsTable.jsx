@@ -941,7 +941,7 @@ function PreviewModal({ doc, onClose }) {
 
   if (!entry) return null;
   const { schema, pages, DocumentComponent } = entry;
-  const isQuotation = doc.templateId === "quotation" || schema?.type === "quotation" || Boolean(DocumentComponent);
+  const isQuotation = doc.templateId === "quotation" || schema?.type === "quotation";
   const quotationPageCount = isQuotation ? (paginateQuotationLineItems(modalValues.lineItems || []).length || 1) : 1;
 
   return (
@@ -977,6 +977,10 @@ function PreviewModal({ doc, onClose }) {
                 <QuotationDocument quotation={modalValues} currentPage={i + 1} />
               </div>
             ))
+          ) : DocumentComponent ? (
+            <div className="shrink-0 shadow-document">
+              <DocumentComponent data={modalValues} values={modalValues} quotation={modalValues} />
+            </div>
           ) : (
             <DocumentFieldsProvider key={JSON.stringify(modalValues)} initialValues={modalValues} defaultReadOnly>
               {(pages || []).map((PageContent, i) => (
