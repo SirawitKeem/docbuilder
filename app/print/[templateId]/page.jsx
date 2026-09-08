@@ -91,6 +91,7 @@ function PrintContent() {
         <FabricPrintRenderer
           template={customTemplate}
           values={values}
+          watermark={activeWatermark}
           onReady={() => setIsReady(true)}
         />
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import * as fabric from "fabric";
 import {
   Sliders,
   Layers,
@@ -21,9 +22,18 @@ import {
   Plus,
   Minus,
   Table as TableIcon,
+  RotateCw,
+  Sparkles,
+  Palette,
+  X as XIcon,
 } from "lucide-react";
 import { getCanvasPreset } from "@/lib/editor/canvasPresets";
-import { DEFAULT_FONTS, buildGoogleFontsUrl } from "@/lib/fonts/fontRegistry";
+import {
+  DEFAULT_FONTS,
+  buildGoogleFontsUrl,
+  FONT_WEIGHT_LABELS,
+  getAvailableWeights,
+} from "@/lib/fonts/fontRegistry";
 import GoogleFontPickerModal from "./GoogleFontPickerModal";
 
 export default function RightSidebar({
@@ -69,6 +79,14 @@ export default function RightSidebar({
     loadFonts();
   }, []);
 
+  // 🎨 Fill & Gradient States for Shapes
+  const [fillType, setFillType] = useState("solid"); // "solid" | "linear" | "radial"
+  const [gradientAngle, setGradientAngle] = useState(90); // 0 to 360 degrees
+  const [colorStops, setColorStops] = useState([
+    { offset: 0, color: "#4F46E5" },
+    { offset: 1, color: "#06B6D4" },
+  ]);
+
   const [propsState, setPropsState] = useState({
     left: 0,
     top: 0,
@@ -83,7 +101,7 @@ export default function RightSidebar({
     text: "",
     fontSize: 14,
     fontFamily: "'Noto Sans Thai', sans-serif",
-    fontWeight: "normal",
+    fontWeight: 400,
     fontStyle: "normal",
     underline: false,
     textAlign: "left",
@@ -91,6 +109,57 @@ export default function RightSidebar({
     locked: false,
     visible: true,
   });
+
+  // 🌈 Fabric.js Gradient Factory
+  const buildFabricGradient = (type, angleDeg, stops) => {
+    const sortedStops = [...stops].sort((a, b) => Number(a.offset) - Number(b.offset));
+    const fabricStops = sortedStops.map((s) => ({
+      offset: Math.max(0, Math.min(1, Number(s.offset))),
+      color: s.color || "#000000",
+    }));
+
+    if (type === "radial") {
+      return new fabric.Gradient({
+        type: "radial",
+        gradientUnits: "percentage",
+        coords: {
+          r1: 0,
+          r2: 0.5,
+          x1: 0.5,
+          y1: 0.5,
+          x2: 0.5,
+          y2: 0.5,
+        },
+        colorStops: fabricStops,
+      });
+    }
+
+    // Linear gradient (percentage coords based on angle)
+    const angleRad = ((angleDeg - 90) * Math.PI) / 180;
+    const dx = Math.cos(angleRad) * 0.5;
+    const dy = Math.sin(angleRad) * 0.5;
+
+    return new fabric.Gradient({
+      type: "linear",
+      gradientUnits: "percentage",
+      coords: {
+        x1: 0.5 - dx,
+        y1: 0.5 - dy,
+        x2: 0.5 + dx,
+        y2: 0.5 + dy,
+      },
+      colorStops: fabricStops,
+    });
+  };
+
+  const applyGradientFill = (type, angle, stops) => {
+    if (!canvas || !activeObject) return;
+    const grad = buildFabricGradient(type, angle, stops);
+    activeObject.set("fill", grad);
+    activeObject.dirty = true;
+    canvas.requestRenderAll();
+    if (onPushHistory) onPushHistory(canvas);
+  };
 
   // Sync state when activeObject changes
   useEffect(() => {
@@ -100,6 +169,41 @@ export default function RightSidebar({
     const scaledWidth = activeObject.getScaledWidth ? activeObject.getScaledWidth() : (activeObject.width || 0) * (activeObject.scaleX || 1);
     const scaledHeight = activeObject.getScaledHeight ? activeObject.getScaledHeight() : (activeObject.height || 0) * (activeObject.scaleY || 1);
 
+    // 1. Font weight extraction (300 - 800)
+    let parsedWeight = 400;
+    if (isText && activeObject.fontWeight) {
+      if (activeObject.fontWeight === "bold") parsedWeight = 700;
+      else if (activeObject.fontWeight === "normal") parsedWeight = 400;
+      else parsedWeight = Number(activeObject.fontWeight) || 400;
+    }
+
+    // 2. Fill & Gradient extraction
+    let currentFillHex = "#4F46E5";
+    if (typeof activeObject.fill === "string") {
+      currentFillHex = activeObject.fill;
+      setFillType("solid");
+    } else if (activeObject.fill && typeof activeObject.fill === "object") {
+      const gType = activeObject.fill.type || "linear";
+      setFillType(gType === "radial" ? "radial" : "linear");
+      if (Array.isArray(activeObject.fill.colorStops) && activeObject.fill.colorStops.length >= 2) {
+        setColorStops(
+          activeObject.fill.colorStops.map((cs) => ({
+            offset: Number(cs.offset) !== undefined ? Number(cs.offset) : 0,
+            color: cs.color || "#4F46E5",
+          }))
+        );
+        currentFillHex = activeObject.fill.colorStops[0]?.color || "#4F46E5";
+      }
+      if (gType === "linear" && activeObject.fill.coords) {
+        const c = activeObject.fill.coords;
+        const dx = (c.x2 ?? 1) - (c.x1 ?? 0);
+        const dy = (c.y2 ?? 0) - (c.y1 ?? 0);
+        let deg = Math.round((Math.atan2(dy, dx) * 180) / Math.PI + 90);
+        if (deg < 0) deg += 360;
+        setGradientAngle(deg % 360);
+      }
+    }
+
     setPropsState({
       left: Math.round(activeObject.left || 0),
       top: Math.round(activeObject.top || 0),
@@ -107,14 +211,14 @@ export default function RightSidebar({
       height: Math.round(scaledHeight),
       angle: Math.round(activeObject.angle || 0),
       opacity: activeObject.opacity !== undefined ? activeObject.opacity : 1,
-      fill: typeof activeObject.fill === "string" ? activeObject.fill : "#4F46E5",
+      fill: currentFillHex,
       stroke: activeObject.stroke || "#000000",
       strokeWidth: activeObject.strokeWidth || 0,
       rx: activeObject.rx || 0,
       text: isText ? activeObject.text : "",
       fontSize: isText ? activeObject.fontSize || 14 : 14,
       fontFamily: isText ? activeObject.fontFamily || "'Noto Sans Thai', sans-serif" : "'Noto Sans Thai', sans-serif",
-      fontWeight: isText ? (activeObject.fontWeight === "bold" || activeObject.fontWeight >= 700 ? "bold" : "normal") : "normal",
+      fontWeight: parsedWeight,
       fontStyle: isText ? activeObject.fontStyle || "normal" : "normal",
       underline: isText ? Boolean(activeObject.underline) : false,
       textAlign: isText ? activeObject.textAlign || "left" : "left",
@@ -157,6 +261,10 @@ export default function RightSidebar({
         if (key === "width") activeObject.scaleToWidth(Number(value));
         if (key === "height") activeObject.scaleToHeight(Number(value));
       }
+    } else if (key === "fontWeight") {
+      // ⚖️ Support numeric weights (300, 400, 500, 600, 700, 800)
+      activeObject.set("fontWeight", Number(value) || value);
+      activeObject.dirty = true;
     } else {
       activeObject.set(key, value);
     }
@@ -174,6 +282,58 @@ export default function RightSidebar({
     });
     applyProperty("fontFamily", selectedFont.cssStack);
     loadFonts();
+  };
+
+  // 🎨 Fill & Gradient Actions
+  const handleFillTypeChange = (newType) => {
+    setFillType(newType);
+    if (newType === "solid") {
+      const solidColor = colorStops[0]?.color || propsState.fill || "#4F46E5";
+      applyProperty("fill", solidColor);
+    } else if (newType === "linear") {
+      applyGradientFill("linear", gradientAngle, colorStops);
+    } else if (newType === "radial") {
+      applyGradientFill("radial", gradientAngle, colorStops);
+    }
+  };
+
+  const handleUpdateStop = (index, field, value) => {
+    const nextStops = [...colorStops];
+    nextStops[index] = { ...nextStops[index], [field]: value };
+    setColorStops(nextStops);
+    if (fillType !== "solid") {
+      applyGradientFill(fillType, gradientAngle, nextStops);
+    }
+  };
+
+  const handleAddStop = () => {
+    const sorted = [...colorStops].sort((a, b) => a.offset - b.offset);
+    const newOffset = sorted.length > 0 ? (sorted[0].offset + sorted[sorted.length - 1].offset) / 2 : 0.5;
+    const newColor = sorted[1]?.color || "#06B6D4";
+    const nextStops = [...colorStops, { offset: Number(newOffset.toFixed(2)), color: newColor }].sort(
+      (a, b) => a.offset - b.offset
+    );
+    setColorStops(nextStops);
+    if (fillType !== "solid") {
+      applyGradientFill(fillType, gradientAngle, nextStops);
+    }
+  };
+
+  const handleRemoveStop = (index) => {
+    if (colorStops.length <= 2) return;
+    const nextStops = colorStops.filter((_, i) => i !== index);
+    setColorStops(nextStops);
+    if (fillType !== "solid") {
+      applyGradientFill(fillType, gradientAngle, nextStops);
+    }
+  };
+
+  const handleAngleChange = (newAngle) => {
+    const norm = Math.max(0, Math.min(360, Number(newAngle) || 0));
+    setGradientAngle(norm);
+    if (fillType === "linear") {
+      applyGradientFill("linear", norm, colorStops);
+    }
   };
 
   // 100% Zoom-Independent Alignment using getScaledWidth() / getScaledHeight()
@@ -548,14 +708,54 @@ export default function RightSidebar({
                     </div>
                   </div>
 
+                  {/* ⚖️ Font Weight Selector */}
+                  {(() => {
+                    const currentAvailableWeights = getAvailableWeights(propsState.fontFamily, allFonts);
+                    return (
+                      <div className="space-y-1.5 p-2 bg-gray-50/80 rounded-lg border border-gray-200/70">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-semibold text-gray-700 block">
+                            น้ำหนักตัวอักษร (Weight)
+                          </label>
+                          <span className="text-[10px] font-mono font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">
+                            {propsState.fontWeight}
+                          </span>
+                        </div>
+                        <select
+                          value={propsState.fontWeight}
+                          onChange={(e) => applyProperty("fontWeight", Number(e.target.value))}
+                          className="w-full bg-white border border-gray-200 rounded-md px-2 py-1.5 text-xs font-semibold text-gray-800 outline-none focus:border-indigo-500 cursor-pointer shadow-xs"
+                        >
+                          {currentAvailableWeights.map((w) => (
+                            <option key={w} value={w}>
+                              {FONT_WEIGHT_LABELS[w] || `${w}`}
+                            </option>
+                          ))}
+                        </select>
+                        {preset.id?.includes("slide") && (
+                          <p className="text-[9.5px] text-gray-400 italic">
+                            * PowerPoint แสดงผล: &lt;600 = ปกติ, &ge;600 = ตัวหนา
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })()}
+
                   <div className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg p-1">
                     <div className="flex items-center gap-0.5">
                       <button
-                        onClick={() => applyProperty("fontWeight", propsState.fontWeight === "bold" ? "normal" : "bold")}
-                        className={`p-1.5 rounded cursor-pointer ${
-                          propsState.fontWeight === "bold" ? "bg-indigo-600 text-white" : "text-gray-600 hover:bg-gray-200"
+                        onClick={() => {
+                          const currentAvailableWeights = getAvailableWeights(propsState.fontFamily, allFonts);
+                          const isCurrentlyBold = Number(propsState.fontWeight) >= 600;
+                          const targetWeight = isCurrentlyBold
+                            ? (currentAvailableWeights.includes(400) ? 400 : currentAvailableWeights[0])
+                            : (currentAvailableWeights.includes(700) ? 700 : currentAvailableWeights[currentAvailableWeights.length - 1]);
+                          applyProperty("fontWeight", targetWeight);
+                        }}
+                        className={`p-1.5 rounded cursor-pointer transition-colors ${
+                          Number(propsState.fontWeight) >= 600 ? "bg-indigo-600 text-white" : "text-gray-600 hover:bg-gray-200"
                         }`}
-                        title="ตัวหนา (Bold)"
+                        title={Number(propsState.fontWeight) >= 600 ? "เปลี่ยนเป็นตัวปกติ (Normal)" : "เปลี่ยนเป็นตัวหนา (Bold)"}
                       >
                         <Bold className="w-3.5 h-3.5" />
                       </button>
@@ -615,21 +815,219 @@ export default function RightSidebar({
               )}
 
               {isShape && (
-                <div className="space-y-3">
-                  <h3 className="font-bold text-gray-700 uppercase tracking-wider text-[10px]">สีพื้นหลังและเส้นขอบ</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="text-[11px] text-gray-500 mb-1 block">สีพื้นหลัง (Fill)</label>
-                      <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg p-1">
-                        <input
-                          type="color"
-                          value={propsState.fill}
-                          onChange={(e) => applyProperty("fill", e.target.value)}
-                          className="w-6 h-6 rounded cursor-pointer border-0 bg-transparent"
-                        />
-                        <span className="font-mono text-[11px] text-gray-600 uppercase truncate">{propsState.fill}</span>
-                      </div>
+                <div className="space-y-3.5">
+                  <h3 className="font-bold text-gray-700 uppercase tracking-wider text-[10px]">
+                    สีพื้นหลังและเส้นขอบ
+                  </h3>
+
+                  {/* 🎨 Fill Type Picker (Solid / Linear / Radial) */}
+                  <div className="space-y-2 p-2.5 bg-gray-50/90 rounded-xl border border-gray-200">
+                    <div className="flex items-center justify-between mb-0.5">
+                      <span className="text-[11px] font-bold text-gray-700 flex items-center gap-1.5">
+                        <Palette className="w-3.5 h-3.5 text-indigo-600" />
+                        <span>รูปแบบสีพื้น (Fill)</span>
+                      </span>
+                      <span className="text-[10px] font-mono font-semibold text-indigo-600 bg-indigo-50 px-1.5 py-0.2 rounded border border-indigo-100 uppercase">
+                        {fillType}
+                      </span>
                     </div>
+
+                    {/* Mode Tabs */}
+                    <div className="grid grid-cols-3 gap-1 p-0.5 bg-gray-200/70 rounded-lg text-xs font-semibold">
+                      <button
+                        type="button"
+                        onClick={() => handleFillTypeChange("solid")}
+                        className={`py-1 rounded-md text-[11px] transition-all cursor-pointer ${
+                          fillType === "solid"
+                            ? "bg-white text-indigo-600 shadow-xs font-bold"
+                            : "text-gray-600 hover:text-gray-900"
+                        }`}
+                      >
+                        สีเดี่ยว
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleFillTypeChange("linear")}
+                        className={`py-1 rounded-md text-[11px] transition-all cursor-pointer ${
+                          fillType === "linear"
+                            ? "bg-white text-indigo-600 shadow-xs font-bold"
+                            : "text-gray-600 hover:text-gray-900"
+                        }`}
+                      >
+                        ไล่สีเส้นตรง
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleFillTypeChange("radial")}
+                        className={`py-1 rounded-md text-[11px] transition-all cursor-pointer ${
+                          fillType === "radial"
+                            ? "bg-white text-indigo-600 shadow-xs font-bold"
+                            : "text-gray-600 hover:text-gray-900"
+                        }`}
+                      >
+                        ไล่สีวงกลม
+                      </button>
+                    </div>
+
+                    {/* SOLID FILL */}
+                    {fillType === "solid" && (
+                      <div className="pt-0.5">
+                        <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-1.5 shadow-2xs">
+                          <input
+                            type="color"
+                            value={propsState.fill}
+                            onChange={(e) => {
+                              applyProperty("fill", e.target.value);
+                              handleUpdateStop(0, "color", e.target.value);
+                            }}
+                            className="w-7 h-7 rounded-md cursor-pointer border-0 bg-transparent"
+                          />
+                          <input
+                            type="text"
+                            value={propsState.fill}
+                            onChange={(e) => {
+                              applyProperty("fill", e.target.value);
+                              handleUpdateStop(0, "color", e.target.value);
+                            }}
+                            className="font-mono text-xs text-gray-800 uppercase font-semibold outline-none flex-1"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* GRADIENT FILL (Linear / Radial) */}
+                    {fillType !== "solid" && (
+                      <div className="space-y-2 pt-0.5">
+                        {/* Live Preview Bar */}
+                        <div
+                          className="w-full h-7 rounded-lg border border-gray-300/80 shadow-inner"
+                          style={{
+                            background:
+                              fillType === "radial"
+                                ? `radial-gradient(circle, ${[...colorStops]
+                                    .sort((a, b) => a.offset - b.offset)
+                                    .map((s) => `${s.color} ${Math.round(s.offset * 100)}%`)
+                                    .join(", ")})`
+                                : `linear-gradient(${gradientAngle}deg, ${[...colorStops]
+                                    .sort((a, b) => a.offset - b.offset)
+                                    .map((s) => `${s.color} ${Math.round(s.offset * 100)}%`)
+                                    .join(", ")})`,
+                          }}
+                        />
+
+                        {/* Angle Controls for Linear Gradient */}
+                        {fillType === "linear" && (
+                          <div className="space-y-1.5 p-2 bg-white rounded-lg border border-gray-200/80 shadow-2xs">
+                            <div className="flex items-center justify-between text-[11px]">
+                              <span className="text-gray-600 font-medium flex items-center gap-1">
+                                <RotateCw className="w-3 h-3 text-gray-500" />
+                                <span>มุมองศา (Angle)</span>
+                              </span>
+                              <div className="flex items-center gap-0.5">
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max="360"
+                                  value={gradientAngle}
+                                  onChange={(e) => handleAngleChange(e.target.value)}
+                                  className="w-12 text-center font-mono text-xs font-bold text-gray-800 bg-gray-50 border border-gray-200 rounded px-1 py-0.5 outline-none"
+                                />
+                                <span className="text-gray-400 text-xs">°</span>
+                              </div>
+                            </div>
+                            <input
+                              type="range"
+                              min="0"
+                              max="360"
+                              value={gradientAngle}
+                              onChange={(e) => handleAngleChange(e.target.value)}
+                              className="w-full accent-indigo-600 h-1.5 bg-gray-200 rounded-lg cursor-pointer"
+                            />
+                            <div className="grid grid-cols-4 gap-1 pt-0.5">
+                              {[
+                                { label: "0° บน", deg: 0 },
+                                { label: "90° ขวา", deg: 90 },
+                                { label: "180° ล่าง", deg: 180 },
+                                { label: "45° ทแยง", deg: 45 },
+                              ].map((presetAngle) => (
+                                <button
+                                  key={presetAngle.deg}
+                                  type="button"
+                                  onClick={() => handleAngleChange(presetAngle.deg)}
+                                  className={`py-0.5 text-[10px] rounded border transition-colors cursor-pointer ${
+                                    gradientAngle === presetAngle.deg
+                                      ? "bg-indigo-50 border-indigo-300 text-indigo-700 font-bold"
+                                      : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100"
+                                  }`}
+                                >
+                                  {presetAngle.label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Color Stops List */}
+                        <div className="space-y-1.5 p-2 bg-white rounded-lg border border-gray-200/80 shadow-2xs">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] font-semibold text-gray-700">
+                              จุดสี (Color Stops: {colorStops.length})
+                            </span>
+                            <button
+                              type="button"
+                              onClick={handleAddStop}
+                              className="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-0.5 cursor-pointer"
+                            >
+                              <Plus className="w-3 h-3" /> เพิ่มจุดสี
+                            </button>
+                          </div>
+
+                          <div className="space-y-1.5 max-h-36 overflow-y-auto pr-0.5">
+                            {colorStops.map((stop, idx) => (
+                              <div
+                                key={idx}
+                                className="flex items-center gap-1.5 p-1 bg-gray-50 rounded-md border border-gray-200/60 text-xs"
+                              >
+                                <input
+                                  type="color"
+                                  value={stop.color}
+                                  onChange={(e) => handleUpdateStop(idx, "color", e.target.value)}
+                                  className="w-5 h-5 rounded cursor-pointer border-0 bg-transparent shrink-0"
+                                />
+                                <span className="font-mono text-[10px] text-gray-600 uppercase w-14 truncate shrink-0">
+                                  {stop.color}
+                                </span>
+                                <input
+                                  type="range"
+                                  min="0"
+                                  max="1"
+                                  step="0.01"
+                                  value={stop.offset}
+                                  onChange={(e) => handleUpdateStop(idx, "offset", Number(e.target.value))}
+                                  className="flex-1 accent-indigo-600 h-1 bg-gray-200 rounded cursor-pointer min-w-10"
+                                />
+                                <span className="font-mono text-[10px] text-gray-500 w-7 text-right shrink-0">
+                                  {Math.round(stop.offset * 100)}%
+                                </span>
+                                {colorStops.length > 2 && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRemoveStop(idx)}
+                                    className="p-0.5 text-gray-400 hover:text-red-600 rounded transition-colors cursor-pointer shrink-0"
+                                    title="ลบจุดสี"
+                                  >
+                                    <XIcon className="w-3 h-3" />
+                                  </button>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2">
 
                     <div>
                       <label className="text-[11px] text-gray-500 mb-1 block">สีเส้นขอบ (Stroke)</label>

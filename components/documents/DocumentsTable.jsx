@@ -19,6 +19,9 @@ import {
   Globe,
   Image as ImageIcon,
   Loader2,
+  Receipt,
+  Mail,
+  ChevronRight,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -135,6 +138,7 @@ export default function DocumentsTable({
   
   // Custom Delete Confirmation Modal State (null | { type: 'single', id, docName } | { type: 'bulk', count })
   const [deleteModalState, setDeleteModalState] = useState(null);
+  const [expandedExportDocId, setExpandedExportDocId] = useState(null);
 
   const menuRef = useRef(null);
   const statusMenuRef = useRef(null);
@@ -143,6 +147,7 @@ export default function DocumentsTable({
     function handleClickOutside(e) {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setOpenMenuId(null);
+        setExpandedExportDocId(null);
       }
       if (statusMenuRef.current && !statusMenuRef.current.contains(e.target)) {
         setOpenStatusMenuId(null);
@@ -557,10 +562,11 @@ export default function DocumentsTable({
                               <Link
                                 href="/history"
                                 onClick={(e) => e.stopPropagation()}
-                                className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded-md bg-blue-50 text-blue-700 text-[10px] font-bold border border-blue-200/80 hover:bg-blue-100 transition-colors"
+                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-700 text-[10px] font-bold border border-blue-200/80 hover:bg-blue-100 transition-colors"
                                 title={`มีประวัติส่งออกแล้วเมื่อ ${doc.lastSentAt || ""} - คลิกเพื่อดูประวัติการส่ง`}
                               >
-                                <span>✉️ เคยส่งแล้ว</span>
+                                <Mail size={11} className="text-blue-600" />
+                                <span>เคยส่งแล้ว</span>
                               </Link>
                             )}
                           </div>
@@ -650,7 +656,13 @@ export default function DocumentsTable({
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            setOpenMenuId(openMenuId === doc.id ? null : doc.id);
+                            if (openMenuId === doc.id) {
+                              setOpenMenuId(null);
+                              setExpandedExportDocId(null);
+                            } else {
+                              setOpenMenuId(doc.id);
+                              setExpandedExportDocId(null);
+                            }
                           }}
                           className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                           title="การดำเนินการเพิ่มเติม"
@@ -661,7 +673,7 @@ export default function DocumentsTable({
                         {openMenuId === doc.id && (
                           <div
                             ref={menuRef}
-                            className={`absolute right-4 ${isNearBottom ? "bottom-10" : "top-11"} w-52 bg-surface text-foreground rounded-xl shadow-xl border border-border py-1 z-50 animate-in fade-in zoom-in-95 duration-100 opacity-100 text-left`}
+                            className={`absolute right-4 ${isNearBottom ? "bottom-10" : "top-11"} w-56 bg-surface text-foreground rounded-xl shadow-xl border border-border py-1 z-50 animate-in fade-in zoom-in-95 duration-100 opacity-100 text-left`}
                           >
                             <button
                               onClick={() => {
@@ -714,7 +726,7 @@ export default function DocumentsTable({
                                   onClick={() => handleCreateReceiptFromQuotation(doc)}
                                   className="w-full text-left px-3.5 py-2 text-xs font-medium text-purple-700 hover:bg-purple-50 flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
                                 >
-                                  <span className="text-sm leading-none">🧾</span>
+                                  <Receipt size={14} className="text-purple-600" />
                                   <span>ออกใบเสร็จรับเงิน (Receipt)</span>
                                 </button>
                                 <button
@@ -736,47 +748,83 @@ export default function DocumentsTable({
                                 </button>
                               </>
                             )}
-                            {/* Export Options (PDF, HTML, WebP) */}
-                            <button
-                              onClick={() => {
-                                setOpenMenuId(null);
-                                handlePrintOrExport(doc);
-                              }}
-                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
-                            >
-                              <FileText size={14} className="text-red-500" />
-                              <span>Export PDF / พิมพ์</span>
-                            </button>
-                            <button
-                              onClick={() => {
-                                setOpenMenuId(null);
-                                handleDirectExport(doc, "html");
-                              }}
-                              disabled={downloadingDocId === `${doc.id}_html`}
-                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer disabled:opacity-50"
-                            >
-                              {downloadingDocId === `${doc.id}_html` ? (
-                                <Loader2 size={14} className="animate-spin text-blue-500" />
-                              ) : (
-                                <Globe size={14} className="text-blue-500" />
+
+                            {/* 📥 Unified Export Item (Click to expand 3 formats) */}
+                            <div className="border-t border-border/50 my-1 pt-1">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setExpandedExportDocId(expandedExportDocId === doc.id ? null : doc.id);
+                                }}
+                                className={`w-full text-left px-3.5 py-2 text-xs font-medium flex items-center justify-between transition-colors whitespace-nowrap cursor-pointer ${
+                                  expandedExportDocId === doc.id
+                                    ? "bg-primary/10 text-primary font-semibold"
+                                    : "text-foreground hover:bg-muted"
+                                }`}
+                              >
+                                <div className="flex items-center gap-2.5">
+                                  <Download
+                                    size={14}
+                                    className={expandedExportDocId === doc.id ? "text-primary" : "text-muted-foreground"}
+                                  />
+                                  <span>ส่งออกเอกสาร (Export)</span>
+                                </div>
+                                <ChevronRight
+                                  size={13}
+                                  className={`text-muted-foreground transition-transform duration-200 ${
+                                    expandedExportDocId === doc.id ? "rotate-90 text-primary" : ""
+                                  }`}
+                                />
+                              </button>
+
+                              {expandedExportDocId === doc.id && (
+                                <div className="mx-2 my-1 p-1 bg-muted/60 rounded-lg border border-border/60 space-y-0.5 animate-in fade-in slide-in-from-top-1 duration-150">
+                                  <button
+                                    onClick={() => {
+                                      setOpenMenuId(null);
+                                      setExpandedExportDocId(null);
+                                      handlePrintOrExport(doc);
+                                    }}
+                                    className="w-full text-left px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-background hover:shadow-xs rounded-md flex items-center gap-2 transition-all whitespace-nowrap cursor-pointer"
+                                  >
+                                    <FileText size={13} className="text-red-500 shrink-0" />
+                                    <span>Export PDF / พิมพ์</span>
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      setOpenMenuId(null);
+                                      setExpandedExportDocId(null);
+                                      handleDirectExport(doc, "html");
+                                    }}
+                                    disabled={downloadingDocId === `${doc.id}_html`}
+                                    className="w-full text-left px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-background hover:shadow-xs rounded-md flex items-center gap-2 transition-all whitespace-nowrap cursor-pointer disabled:opacity-50"
+                                  >
+                                    {downloadingDocId === `${doc.id}_html` ? (
+                                      <Loader2 size={13} className="animate-spin text-blue-500 shrink-0" />
+                                    ) : (
+                                      <Globe size={13} className="text-blue-500 shrink-0" />
+                                    )}
+                                    <span>Export HTML (.html)</span>
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      setOpenMenuId(null);
+                                      setExpandedExportDocId(null);
+                                      handleDirectExport(doc, "webp");
+                                    }}
+                                    disabled={downloadingDocId === `${doc.id}_webp`}
+                                    className="w-full text-left px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-background hover:shadow-xs rounded-md flex items-center gap-2 transition-all whitespace-nowrap cursor-pointer disabled:opacity-50"
+                                  >
+                                    {downloadingDocId === `${doc.id}_webp` ? (
+                                      <Loader2 size={13} className="animate-spin text-purple-500 shrink-0" />
+                                    ) : (
+                                      <ImageIcon size={13} className="text-purple-500 shrink-0" />
+                                    )}
+                                    <span>Export WebP (.webp)</span>
+                                  </button>
+                                </div>
                               )}
-                              <span>Export HTML (.html)</span>
-                            </button>
-                            <button
-                              onClick={() => {
-                                setOpenMenuId(null);
-                                handleDirectExport(doc, "webp");
-                              }}
-                              disabled={downloadingDocId === `${doc.id}_webp`}
-                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer disabled:opacity-50"
-                            >
-                              {downloadingDocId === `${doc.id}_webp` ? (
-                                <Loader2 size={14} className="animate-spin text-purple-500" />
-                              ) : (
-                                <ImageIcon size={14} className="text-purple-500" />
-                              )}
-                              <span>Export WebP (.webp)</span>
-                            </button>
+                            </div>
                             <button
                               onClick={() => {
                                 setOpenMenuId(null);

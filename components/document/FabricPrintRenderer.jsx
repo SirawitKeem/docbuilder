@@ -96,9 +96,45 @@ function patchFabricSvgTextForThai() {
   });
 }
 
+const WATERMARK_LABELS = {
+  draft: "ฉบับร่าง (DRAFT)",
+  copy: "สำเนาถูกต้อง (COPY)",
+  confidential: "ลับเฉพาะ (CONFIDENTIAL)",
+  DRAFT: "ฉบับร่าง (DRAFT)",
+  COPY: "สำเนาถูกต้อง (COPY)",
+  CONFIDENTIAL: "ลับเฉพาะ (CONFIDENTIAL)",
+};
+
+function replaceTokensInObject(obj, tokenMap) {
+  if (!obj) return;
+  // 1. Textbox / Text: Dynamic Token Replacement
+  if (obj.type === "textbox" || obj.type === "i-text" || obj.type === "text") {
+    const raw = obj.rawTemplateText || obj.text || "";
+    obj.set("text", replaceTokens(raw, tokenMap));
+  }
+  // 2. DocTable Custom Object: Dynamic Token Replacement & Rebuild
+  if (obj.isDocTable && obj.docTableData && obj.updateTableData) {
+    const rawItems = obj.rawItems || obj.docTableData.items || [];
+    const replacedItems = rawItems.map((item) => ({
+      ...item,
+      desc: replaceTokens(item.desc || "", tokenMap),
+    }));
+    obj.updateTableData({ items: replacedItems });
+  }
+  // 3. Respect visibility: Hide hidden objects from Vector SVG
+  if (obj.visible === false) {
+    obj.set({ visible: false, opacity: 0 });
+  }
+  // 4. Nested groups
+  if (obj.type === "group" && Array.isArray(obj._objects)) {
+    obj._objects.forEach((child) => replaceTokensInObject(child, tokenMap));
+  }
+}
+
 export default function FabricPrintRenderer({
   template,
   values = {},
+  watermark = "none",
   onReady,
 }) {
   const containerRef = useRef(null);
@@ -152,29 +188,7 @@ export default function FabricPrintRenderer({
           await new Promise((resolve) => {
             fabricCanvas.loadFromJSON(pageJson).then(() => {
               const objects = fabricCanvas.getObjects();
-
-              objects.forEach((obj) => {
-                // 1. Textbox / Text: Dynamic Token Replacement
-                if (obj.type === "textbox" || obj.type === "i-text" || obj.type === "text") {
-                  const raw = obj.rawTemplateText || obj.text || "";
-                  obj.set("text", replaceTokens(raw, tokenMap));
-                }
-
-                // 2. DocTable Custom Object: Dynamic Token Replacement & Rebuild
-                if (obj.isDocTable && obj.docTableData && obj.updateTableData) {
-                  const rawItems = obj.rawItems || obj.docTableData.items || [];
-                  const replacedItems = rawItems.map((item) => ({
-                    ...item,
-                    desc: replaceTokens(item.desc || "", tokenMap),
-                  }));
-                  obj.updateTableData({ items: replacedItems });
-                }
-
-                // 3. Respect visibility: Hide hidden objects from Vector SVG
-                if (obj.visible === false) {
-                  obj.set({ visible: false, opacity: 0 });
-                }
-              });
+              objects.forEach((obj) => replaceTokensInObject(obj, tokenMap));
 
               fabricCanvas.renderAll();
               resolve();
@@ -266,7 +280,7 @@ export default function FabricPrintRenderer({
           ${preset.mmWidth ? `size: ${preset.mmWidth}mm ${preset.mmHeight}mm;` : `size: ${preset.width}px ${preset.height}px;`}
           margin: 0mm;
         }
-        @media print, all {
+        @media print {
           html, body {
             background: #ffffff !important;
             margin: 0 !important;
@@ -305,8 +319,28 @@ export default function FabricPrintRenderer({
           className="fabric-vector-page print-page relative bg-white overflow-hidden"
           style={{ width: `${preset.width}px`, height: `${preset.height}px` }}
           data-ready={isRendered ? "true" : "false"}
-          dangerouslySetInnerHTML={{ __html: svgHtml }}
-        />
+        >
+          <div
+            className="w-full h-full"
+            dangerouslySetInnerHTML={{ __html: svgHtml }}
+          />
+          {watermark && watermark !== "none" && WATERMARK_LABELS[watermark] && (
+            <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-30 select-none overflow-hidden">
+              <div
+                className="font-black uppercase border-4 px-8 py-4 rounded-3xl"
+                style={{
+                  transform: "rotate(-35deg)",
+                  fontSize: "52px",
+                  letterSpacing: "0.15em",
+                  color: "rgba(100, 116, 139, 0.14)",
+                  borderColor: "rgba(100, 116, 139, 0.16)",
+                }}
+              >
+                {WATERMARK_LABELS[watermark]}
+              </div>
+            </div>
+          )}
+        </div>
       ))}
     </div>
   );

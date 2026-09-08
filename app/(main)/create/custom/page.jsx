@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import UniversalTemplateRenderer from "@/components/document/UniversalTemplateRenderer";
 import NotificationRelocationDocument from "@/components/document/notification/NotificationRelocationDocument";
+import FabricPrintRenderer from "@/components/document/FabricPrintRenderer";
+import { extractTokensFromTemplate, DEFAULT_SAMPLE_TOKEN_MAP } from "@/lib/tokens/tokenEngine";
 import EmailScreen from "@/components/document/EmailScreen";
 
 const WATERMARK_OPTIONS = [
@@ -39,6 +41,7 @@ function UniversalDocumentContent() {
 
   // Dynamic values state
   const [values, setValues] = useState({});
+  const [detectedTokens, setDetectedTokens] = useState([]);
   const [watermark, setWatermark] = useState("none");
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -62,8 +65,17 @@ function UniversalDocumentContent() {
 
         setDocumentName(tmplData.name || "เอกสารใหม่");
 
-        // Extract initial values from blocks or fields
+        // 1. Extract dynamic tokens from template (Fabric canvas or blocks)
+        const extracted = extractTokensFromTemplate(tmplData);
+        setDetectedTokens(extracted);
+
+        // 2. Extract initial values from blocks or fields or tokens
         const initialVals = {};
+
+        // Default sample values for detected tokens
+        extracted.forEach((t) => {
+          initialVals[t.key] = DEFAULT_SAMPLE_TOKEN_MAP[t.key] || t.example || "";
+        });
 
         if (Array.isArray(tmplData.blocks)) {
           tmplData.blocks.forEach((b) => {
@@ -111,8 +123,6 @@ function UniversalDocumentContent() {
           initialVals.signatory_position = initialVals.signatory_position || "กรรมการผู้จัดการ / CEO";
         }
 
-        setValues(initialVals);
-
         // If editing existing document
         if (documentId) {
           const docRes = await fetch("/api/documents");
@@ -122,12 +132,17 @@ function UniversalDocumentContent() {
             if (existingDoc) {
               setDocumentName(existingDoc.name || tmplData.name);
               setDocumentStatus(existingDoc.status || "draft");
+              if (existingDoc.watermark) {
+                setWatermark(existingDoc.watermark);
+              }
               if (existingDoc.values) {
-                setValues((prev) => ({ ...prev, ...existingDoc.values }));
+                Object.assign(initialVals, existingDoc.values);
               }
             }
           }
         }
+
+        setValues(initialVals);
       } catch (err) {
         console.error("Error loading template:", err);
         setErrorMsg(err.message || "เกิดข้อผิดพลาดในการโหลดเทมเพลต");
@@ -147,6 +162,13 @@ function UniversalDocumentContent() {
     template?.id === "tmpl-notification-relocation" ||
     template?.categoryId === "notification" ||
     (template?.name || "").includes("เปลี่ยนแปลงที่ตั้ง");
+
+  const isFabricTemplate = Boolean(
+    template?.pages &&
+    Array.isArray(template.pages) &&
+    template.pages.length > 0 &&
+    template.pages[0]?.json
+  );
 
   // Save Document to JSON API
   const handleSave = async (status = "draft") => {
@@ -406,6 +428,72 @@ function UniversalDocumentContent() {
                   </div>
                 </div>
               </div>
+            ) : isFabricTemplate ? (
+              /* Fabric Studio Dynamic Form */
+              <div className="space-y-4">
+                {detectedTokens.length > 0 ? (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between text-[11px] text-gray-500 bg-gray-50 p-2.5 rounded-xl border border-gray-200/60">
+                      <span className="font-semibold">ตัวแปรไดนามิกที่ตรวจพบในเทมเพลต</span>
+                      <span className="font-bold px-2 py-0.5 rounded-full bg-purple-100 text-[#5542F6]">
+                        {detectedTokens.length} ตัวแปร
+                      </span>
+                    </div>
+
+                    {Object.entries(
+                      detectedTokens.reduce((acc, t) => {
+                        const cat = t.category || "ข้อมูลทั่วไป (General)";
+                        if (!acc[cat]) acc[cat] = [];
+                        acc[cat].push(t);
+                        return acc;
+                      }, {})
+                    ).map(([category, tokens]) => (
+                      <div key={category} className="space-y-3 pt-2 first:pt-0">
+                        <div className="text-[11px] font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#5542F6]" />
+                          <span>{category}</span>
+                        </div>
+                        {tokens.map((t) => (
+                          <div key={t.key} className="space-y-1">
+                            <div className="flex items-center justify-between">
+                              <label className="font-bold text-gray-700 text-xs">
+                                {t.label}
+                              </label>
+                              <span className="text-[10px] font-mono text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded border border-purple-100">
+                                {t.rawKey}
+                              </span>
+                            </div>
+                            <input
+                              type="text"
+                              value={values[t.key] ?? ""}
+                              onChange={(e) => handleFieldChange(t.key, e.target.value)}
+                              placeholder={t.example || `ระบุ ${t.label}...`}
+                              className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6] transition-colors"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="p-4 bg-purple-50/60 rounded-xl border border-purple-100 text-xs space-y-2">
+                    <div className="flex items-center gap-2 font-bold text-purple-900">
+                      <CheckCircle2 size={16} className="text-purple-600" />
+                      <span>เทมเพลตพร้อมใช้งาน (Static Design)</span>
+                    </div>
+                    <p className="text-purple-700 leading-relaxed">
+                      เทมเพลตนี้ไม่มีตัวแปรแบบไดนามิก (เช่น <code className="bg-purple-100 px-1 py-0.5 rounded text-[11px] font-mono">{"{{company_name}}"}</code>) คุณสามารถพิมพ์หรือส่งออกเอกสารได้ทันที
+                    </p>
+                    <Link
+                      href={`/templates/new?edit=${template.id}`}
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5542F6] hover:underline pt-1"
+                    >
+                      <span>แก้ไขเลย์เอาต์ใน Studio</span>
+                      <span>→</span>
+                    </Link>
+                  </div>
+                )}
+              </div>
             ) : (
               /* Generic Block Form */
               <div className="space-y-3">
@@ -460,10 +548,16 @@ function UniversalDocumentContent() {
           </div>
 
           {/* A4 Paper Output Container */}
-          <div className="bg-gray-100/70 p-4 sm:p-6 rounded-2xl border border-gray-200/80 flex justify-center overflow-x-auto shadow-inner">
-            <div className="origin-top shadow-xl border border-gray-300 rounded-sm overflow-hidden bg-white">
+          <div className="bg-gray-100/70 p-4 sm:p-6 rounded-2xl border border-gray-200/80 flex justify-center overflow-x-auto shadow-inner print-container-wrapper">
+            <div className="origin-top shadow-xl border border-gray-300 rounded-sm overflow-hidden bg-white print-paper-shadow">
               {isNotification ? (
                 <NotificationRelocationDocument values={values} />
+              ) : isFabricTemplate ? (
+                <FabricPrintRenderer
+                  template={template}
+                  values={values}
+                  watermark={watermark}
+                />
               ) : (
                 <UniversalTemplateRenderer template={template} scale={1} />
               )}
@@ -471,6 +565,38 @@ function UniversalDocumentContent() {
           </div>
         </div>
       </div>
+
+      <style jsx global>{`
+        @media print {
+          body {
+            background: white !important;
+          }
+          aside, nav, header, [data-sidebar], .no-print, .lg\\:col-span-5, button, input {
+            display: none !important;
+          }
+          main {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: none !important;
+          }
+          .grid {
+            display: block !important;
+          }
+          .lg\\:col-span-7 {
+            width: 100% !important;
+          }
+          .print-container-wrapper {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+          }
+          .print-paper-shadow {
+            box-shadow: none !important;
+            border: none !important;
+          }
+        }
+      `}</style>
 
       {/* Email Modal */}
       {isEmailModalOpen && (

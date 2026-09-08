@@ -1,0 +1,4313 @@
+{
+  "fieldProfiles": [
+    {
+      "id": "profile-1787103435257",
+      "name": "บริษัท เครสท์ เซนโด จำกัด",
+      "values": {
+        "counterparty_name": "บริษัท เน็กซ์เจน เทคโนโลยี แอนด์ ดิจิทัล โซลูชันส์ จำกัด",
+        "counterparty_address": "888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
+        "counterparty_signatory_name": "นายวิทวัส อัครเดชากุล",
+        "counterparty_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท",
+        "counterparty_signature_text": "นายวิทวัส อัครเดชากุล",
+        "our_signature_text": "นายศรายุทธ โกสิยารักษ์",
+        "our_signatory_position": "CEO/Founder",
+        "our_signatory_name": "นายศรายุทธ โกสิยารักษ์",
+        "our_company_name": "บริษัท เครสท์ เซนโด จำกัด",
+        "contract_location": "บริษัท เครสท์ เซนโด จำกัด",
+        "contract_date_day": "16",
+        "contract_date_month": "กันยายน",
+        "contract_date_year": "2564",
+        "counterparty_registration_number": "0107544000108"
+      },
+      "createdAt": "2026-08-19T01:37:15.258Z",
+      "updatedAt": "2026-08-20T01:39:02.771Z"
+    },
+    {
+      "id": "profile-1787103657141",
+      "name": "บริษัท เดอะ รีโคฟเวอรี่ แอดไวเซอร์ จำกัด",
+      "values": {
+        "counterparty_signatory_name": "นายศรายุทธ โกสิยารักษ์",
+        "counterparty_address": "45 ซอย โกสุมรวมใจ 37 แขวงดอนเมือง ดอนเมือง กรุงเทพมหานคร 10210",
+        "counterparty_name": "บริษัท เดอะ รีโคฟเวอรี่ แอดไวเซอร์ จำกัด",
+        "contract_location": "บริษัท เดอะ รีโคฟเวอรี่ แอดไวเซอร์ จำกัด",
+        "our_signatory_name": "นายศรายุทธ โกสิยารักษ์",
+        "our_signatory_position": "CEO/Founder",
+        "our_company_name": "บริษัท เครสท์ เซนโด จำกัด",
+        "our_signature_text": "นายศรายุทธ โกสิยารักษ์",
+        "counterparty_signature_text": "นายศรายุทธ โกสิยารักษ์",
+        "counterparty_signatory_position": "CEO/Founder",
+        "contract_date_day": "20",
+        "contract_date_month": "สิงหาคม",
+        "contract_date_year": "2566"
+      },
+      "createdAt": "2026-08-19T01:40:57.141Z",
+      "updatedAt": "2026-08-19T02:21:04.407Z"
+    },
+    {
+      "id": "profile-1787275130685",
+      "name": "CS LoxInfo Public Company Limited.",
+      "profileType": "quotation",
+      "values": {
+        "bill_to_company": "CS LoxInfo Public Company Limited.",
+        "attn_name": "Sarun Phongpodchanan",
+        "end_user": " P.R. Foodland Co., Ltd.",
+        "subject": "CDNetworks Annual Services (WAF+DDoS+BOT)",
+        "am_name": " Narin Rattanavijai / Channel Manager ",
+        "am_phone": "+6682-44-666-95"
+      },
+      "createdAt": "2026-08-21T01:18:50.686Z",
+      "updatedAt": "2026-08-21T01:18:50.686Z"
+    }
+  ],
+  "documents": [
+    {
+      "id": "doc-1788773092573",
+      "verificationToken": "VRF-MTR1BBOD-4ZOVC",
+      "name": "เทมเพลตเอกสารใหม่ (A4)",
+      "templateId": "tmpl-1788768026462",
+      "createdBy": "นายสมชาย ใจดี (ผู้จัดทำ)",
+      "createdAt": "2026-09-07T09:24:52.573Z",
+      "updatedAt": "2026-09-07T09:24:52.573Z",
+      "status": "draft",
+      "sentTo": null,
+      "values": {
+        "company_name": "บริษัท แอดวานซ์ ด็อกคิวเมนท์ ซิสเต็มส์ จำกัด",
+        "company_name_en": "THE RECOVERY ADVISOR CO., LTD."
+      },
+      "activityLogs": [
+        {
+          "id": "act-1788773092573",
+          "action": "create",
+          "performedBy": "นายสมชาย ใจดี (ผู้จัดทำ)",
+          "timestamp": "2026-09-07T09:24:52.573Z",
+          "details": "สร้างเอกสารฉบับร่าง"
+        }
+      ],
+      "approvalChain": [
+        {
+          "id": "step-1",
+          "stepName": "ผู้จัดทำ / ผู้ยื่นเอกสาร",
+          "assignedRole": "ผู้จัดทำ",
+          "assignedUser": "นายสมชาย ใจดี (ผู้จัดทำ)",
+          "status": "approved",
+          "signedAt": "2026-09-07T09:24:52.573Z"
+        },
+        {
+          "id": "step-2",
+          "stepName": "ผู้มีอำนาจอนุมัติ / กรรมการ",
+          "assignedRole": "กรรมการผู้จัดการ",
+          "assignedUser": "นายศรายุทธ โกสิยารักษ์",
+          "status": "pending",
+          "signedAt": null
+        }
+      ]
+    },
+    {
+      "id": "doc-1788331547618",
+      "verificationToken": "VRF-MTJQFHEQ-T2D3O",
+      "name": "NotificationLetter_02-09-2569.pdf",
+      "templateId": "notification",
+      "templateName": "หนังสือแจ้งเปลี่ยนแปลงที่ตั้งสำนักงานใหญ่",
+      "createdBy": "นายสมชาย ใจดี (ผู้จัดทำ)",
+      "createdAt": "2026-09-02T06:45:47.617Z",
+      "updatedAt": "2026-09-02T06:45:47.617Z",
+      "status": "draft",
+      "sentTo": null,
+      "values": {
+        "doc_no": "TRAC-2609001",
+        "doc_date": "01 กันยายน 2569 / September 01, 2026",
+        "recipient": "ท่านคู่ค้าและลูกค้าผู้มีอุปการคุณ / Valued Business Partners",
+        "subject": "แจ้งเปลี่ยนแปลงที่อยู่สำนักงานใหญ่ / Change of Head Office Address",
+        "effective_date": "16 กันยายน 2569",
+        "old_address_th": "45 ซอยโกสุมรวมใจ 37 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210",
+        "old_address_en": "45 Soi Kosum Ruam Chai 37, Don Mueang, Don Mueang, Bangkok 10210, Thailand",
+        "new_address_th": "18 ซอยโกสุมรวมใจ 35 แยก 4 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210",
+        "new_address_en": "18 Soi Kosum Ruam Chai 35 Yaek 4, Don Mueang, Don Mueang, Bangkok 10210, Thailand",
+        "signatory_name": "นายศรายุทธ  โกสิยารักษ์",
+        "signatory_position": "กรรมการผู้จัดการ / CEO",
+        "effective_date_en": "September 16, 2026",
+        "effective_date_badge": "(มีผล 16 ก.ย. 2569 / Effective Sept 16, 2026):"
+      },
+      "activityLogs": [
+        {
+          "id": "act-1788331547618",
+          "action": "create",
+          "performedBy": "นายสมชาย ใจดี (ผู้จัดทำ)",
+          "timestamp": "2026-09-02T06:45:47.617Z",
+          "details": "สร้างเอกสารฉบับร่าง"
+        }
+      ],
+      "approvalChain": [
+        {
+          "id": "step-1",
+          "stepName": "ผู้จัดทำ / ผู้ยื่นเอกสาร",
+          "assignedRole": "ผู้จัดทำ",
+          "assignedUser": "นายสมชาย ใจดี (ผู้จัดทำ)",
+          "status": "approved",
+          "signedAt": "2026-09-02T06:45:47.617Z"
+        },
+        {
+          "id": "step-2",
+          "stepName": "ผู้มีอำนาจอนุมัติ / กรรมการ",
+          "assignedRole": "กรรมการผู้จัดการ",
+          "assignedUser": "นายศรายุทธ โกสิยารักษ์",
+          "status": "pending",
+          "signedAt": null
+        }
+      ]
+    },
+    {
+      "id": "doc-1787812462153",
+      "name": "CZ26080001.pdf",
+      "templateId": "quotation",
+      "templateName": "ใบเสนอราคา (Quotation)",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-27T06:34:22.153Z",
+      "updatedAt": "2026-08-27T06:34:22.153Z",
+      "status": "sent",
+      "sentTo": "sirawit.pec@gmail.com",
+      "values": {
+        "id": "qt-1787638573675",
+        "quotationNo": "CZ26080001",
+        "name": "ใบเสนอราคา CZ2608063",
+        "templateId": "quotation",
+        "templateName": "ใบเสนอราคา (Quotation)",
+        "quotationDate": "25 Aug 2026",
+        "priceValidity": "24 Sept 2026",
+        "deliveryTerm": "7 days",
+        "creditTerm": "30 days",
+        "billTo": {
+          "companyName": "CS LoxInfo Public Company Limited.",
+          "attn": "Sarun Phongpodchanan",
+          "endUser": " P.R. Foodland Co., Ltd.",
+          "subject": "CDNetworks Annual Services (WAF+DDoS+BOT)",
+          "am": " Narin Rattanavijai / Channel Manager "
+        },
+        "lineItems": [
+          {
+            "id": "item-1",
+            "title": "CDNetworks Annual Services",
+            "qty": "",
+            "unitPrice": "",
+            "groups": [
+              {
+                "id": "group-1-1",
+                "heading": "Application Shield Services",
+                "qty": 1,
+                "unitPrice": 204000,
+                "bullets": [
+                  {
+                    "id": "b1-1",
+                    "text": "Protected Top-Level-Domain up to 5, and Unlimited Sub-Domain",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-2",
+                    "text": "Dynamic Web Acceleration Platform Fee/month",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-3",
+                    "text": "Application Shield Platform Fee/month",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-4",
+                    "text": "Commit traffic up to 500Gbps/month",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-5",
+                    "text": "Cloud Security 2.0 Fee/month",
+                    "subBullets": [
+                      {
+                        "id": "sb1-1",
+                        "text": "Web Application Firewall (WAF)"
+                      },
+                      {
+                        "id": "sb1-2",
+                        "text": "DDoS Protection"
+                      },
+                      {
+                        "id": "sb1-3",
+                        "text": "BOT Management"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "b1-6",
+                    "text": "Contract Term: One (1) Year",
+                    "subBullets": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "item-3",
+            "title": "Managed Service",
+            "qty": "",
+            "unitPrice": "",
+            "groups": [
+              {
+                "id": "group-3-1",
+                "heading": "",
+                "bullets": [
+                  {
+                    "id": "b7-1",
+                    "text": "Service Level Agreement (SLA) 24x7x4",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-2",
+                    "text": "Level 2 Support",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-3",
+                    "text": "Unlimited Phone, email support",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-4",
+                    "text": "Implementation Service",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-5",
+                    "text": "Monthly Report",
+                    "subBullets": []
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "vatRate": 7,
+        "remarks": "Payment: Annually",
+        "senderName": "Narin Rattanavijai(PoP)",
+        "senderPhone": "082 44 666 95",
+        "createdBy": "Admin",
+        "createdAt": "2026-08-25T06:16:13.675Z",
+        "updatedAt": "2026-08-27T02:05:21.118Z",
+        "status": "draft",
+        "sentTo": null,
+        "issuer": {
+          "address": "The Connect 37, 8/40 Soi Chang Akat Uthit 10 Yaek 1-2, Donmueang, Donmueang, Bangkok 10210",
+          "tagline": "",
+          "phone": "082-446-6695"
+        },
+        "remarksList": [
+          "Payment: Annually"
+        ],
+        "specialDiscount": 0,
+        "senderPosition": "Executive Assistant - Technology & Governance",
+        "senderEmail": "narin@crestzendo.com"
+      }
+    },
+    {
+      "id": "qt-1787638573675",
+      "name": "ใบเสนอราคา CZ2608063",
+      "templateId": "quotation",
+      "templateName": "ใบเสนอราคา (Quotation)",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-25T06:16:13.675Z",
+      "updatedAt": "2026-08-27T02:05:21.118Z",
+      "status": "draft",
+      "sentTo": null,
+      "values": {
+        "id": "qt-1787638573675",
+        "quotationNo": "CZ26080001",
+        "name": "ใบเสนอราคา CZ2608063",
+        "templateId": "quotation",
+        "templateName": "ใบเสนอราคา (Quotation)",
+        "quotationDate": "25 Aug 2026",
+        "priceValidity": "24 Sept 2026",
+        "deliveryTerm": "7 days",
+        "creditTerm": "30 days",
+        "billTo": {
+          "companyName": "CS LoxInfo Public Company Limited.",
+          "attn": "Sarun Phongpodchanan",
+          "endUser": " P.R. Foodland Co., Ltd.",
+          "subject": "CDNetworks Annual Services (WAF+DDoS+BOT)",
+          "am": " Narin Rattanavijai / Channel Manager "
+        },
+        "lineItems": [
+          {
+            "id": "item-1",
+            "title": "CDNetworks Annual Services",
+            "qty": "",
+            "unitPrice": "",
+            "groups": [
+              {
+                "id": "group-1-1",
+                "heading": "Application Shield Services",
+                "qty": 1,
+                "unitPrice": 204000,
+                "bullets": [
+                  {
+                    "id": "b1-1",
+                    "text": "Protected Top-Level-Domain up to 5, and Unlimited Sub-Domain",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-2",
+                    "text": "Dynamic Web Acceleration Platform Fee/month",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-3",
+                    "text": "Application Shield Platform Fee/month",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-4",
+                    "text": "Commit traffic up to 500Gbps/month",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-5",
+                    "text": "Cloud Security 2.0 Fee/month",
+                    "subBullets": [
+                      {
+                        "id": "sb1-1",
+                        "text": "Web Application Firewall (WAF)"
+                      },
+                      {
+                        "id": "sb1-2",
+                        "text": "DDoS Protection"
+                      },
+                      {
+                        "id": "sb1-3",
+                        "text": "BOT Management"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "b1-6",
+                    "text": "Contract Term: One (1) Year",
+                    "subBullets": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "item-3",
+            "title": "Managed Service",
+            "qty": "",
+            "unitPrice": "",
+            "groups": [
+              {
+                "id": "group-3-1",
+                "heading": "",
+                "bullets": [
+                  {
+                    "id": "b7-1",
+                    "text": "Service Level Agreement (SLA) 24x7x4",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-2",
+                    "text": "Level 2 Support",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-3",
+                    "text": "Unlimited Phone, email support",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-4",
+                    "text": "Implementation Service",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-5",
+                    "text": "Monthly Report",
+                    "subBullets": []
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "vatRate": 7,
+        "remarks": "Payment: Annually",
+        "senderName": "Narin Rattanavijai(PoP)",
+        "senderPhone": "082 44 666 95",
+        "createdBy": "Admin",
+        "createdAt": "2026-08-25T06:16:13.675Z",
+        "updatedAt": "2026-08-27T02:05:21.118Z",
+        "status": "draft",
+        "sentTo": null,
+        "issuer": {
+          "address": "The Connect 37, 8/40 Soi Chang Akat Uthit 10 Yaek 1-2, Donmueang, Donmueang, Bangkok 10210",
+          "tagline": "",
+          "phone": "082-446-6695"
+        },
+        "remarksList": [
+          "Payment: Annually"
+        ],
+        "specialDiscount": 0,
+        "senderPosition": "Executive Assistant - Technology & Governance",
+        "senderEmail": "narin@crestzendo.com"
+      }
+    },
+    {
+      "id": "qt-1787631227758",
+      "name": "ใบเสนอราคา CZ2608063",
+      "templateId": "quotation",
+      "templateName": "ใบเสนอราคา (Quotation)",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-25T04:13:47.758Z",
+      "updatedAt": "2026-08-25T04:13:47.758Z",
+      "status": "draft",
+      "sentTo": null,
+      "values": {
+        "id": "qt-1787631227758",
+        "quotationNo": "CZ2608063",
+        "name": "ใบเสนอราคา CZ2608063",
+        "templateId": "quotation",
+        "templateName": "ใบเสนอราคา (Quotation)",
+        "quotationDate": "25 Aug 2026",
+        "priceValidity": "24 Sept 2026",
+        "deliveryTerm": "7 days",
+        "creditTerm": "30 days",
+        "billTo": {
+          "companyName": "CS LoxInfo Public Company Limited.",
+          "attn": "Sarun Phongpodchanan",
+          "endUser": " P.R. Foodland Co., Ltd.",
+          "subject": "CDNetworks Annual Services (WAF+DDoS+BOT)",
+          "am": " Narin Rattanavijai / Channel Manager "
+        },
+        "lineItems": [
+          {
+            "id": "item-1",
+            "title": "CDNetworks Annual Services",
+            "qty": "",
+            "unitPrice": "",
+            "groups": [
+              {
+                "id": "group-1-1",
+                "heading": "Application Shield Services",
+                "qty": 1,
+                "unitPrice": 204000,
+                "bullets": [
+                  {
+                    "id": "b1-1",
+                    "text": "Protected Top-Level-Domain up to 5, and Unlimited Sub-Domain",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-2",
+                    "text": "Dynamic Web Acceleration Platform Fee/month",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-3",
+                    "text": "Application Shield Platform Fee/month",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-4",
+                    "text": "Commit traffic up to 500Gbps/month",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-5",
+                    "text": "Cloud Security 2.0 Fee/month",
+                    "subBullets": [
+                      {
+                        "id": "sb1-1",
+                        "text": "Web Application Firewall (WAF)"
+                      },
+                      {
+                        "id": "sb1-2",
+                        "text": "DDoS Protection"
+                      },
+                      {
+                        "id": "sb1-3",
+                        "text": "BOT Management"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "b1-6",
+                    "text": "Contract Term: One (1) Year",
+                    "subBullets": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "item-2",
+            "title": "Application Shield Including Services",
+            "qty": "",
+            "unitPrice": "",
+            "groups": [
+              {
+                "id": "group-2-1",
+                "heading": "Onboarding Assistance & Advanced Customer Support",
+                "bullets": [
+                  {
+                    "id": "b2-1",
+                    "text": "New domain onboarding assistance",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b2-2",
+                    "text": "Security configuration assistance and customization",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b2-3",
+                    "text": "Security policies analysis",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b2-4",
+                    "text": "24/7/365 email/Group Chat and phone hotline support",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b2-5",
+                    "text": "Advanced 100% SLA Guarantee",
+                    "subBullets": []
+                  }
+                ]
+              },
+              {
+                "id": "group-2-2",
+                "heading": "Web Application Firewall (WAF)",
+                "bullets": [
+                  {
+                    "id": "b3-1",
+                    "text": "Advanced Access Control",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b3-2",
+                    "text": "Advanced Rate Limiting",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b3-3",
+                    "text": "IP Repeated Violations",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b3-4",
+                    "text": "HTTP Protocol Validation",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b3-5",
+                    "text": "Built-In WAF Rules",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b3-6",
+                    "text": "OWASP Core Rulesets",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b3-7",
+                    "text": "Zero Day Protection",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b3-8",
+                    "text": "Flexible Response Actions",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b3-9",
+                    "text": "Rule tempate Management",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b3-10",
+                    "text": "Log & Incident investigation tools_Baisc",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b3-11",
+                    "text": "Custom Block Page",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b3-12",
+                    "text": "WAF Dashboard",
+                    "subBullets": []
+                  }
+                ]
+              },
+              {
+                "id": "group-2-3",
+                "heading": "DDoS Protection",
+                "bullets": [
+                  {
+                    "id": "b4-1",
+                    "text": "Advance Access Control",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b4-2",
+                    "text": "Advance Rate Limiting",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b4-3",
+                    "text": "L3/L4 DDoS Mitigation",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b4-4",
+                    "text": "L7 DDoS Dashboard",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b4-5",
+                    "text": "Present Protection Policies",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b4-6",
+                    "text": "Log & Incident Investigation Tools Basic",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b4-7",
+                    "text": "Deploy History",
+                    "subBullets": []
+                  }
+                ]
+              },
+              {
+                "id": "group-2-4",
+                "heading": "BOT Management",
+                "bullets": [
+                  {
+                    "id": "b5-1",
+                    "text": "Transparent Challenges",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b5-2",
+                    "text": "Human Behavior Detection",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b5-3",
+                    "text": "Customized Actions",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b5-4",
+                    "text": "Advanced Rate Limiting",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b5-5",
+                    "text": "Visual Dashboard",
+                    "subBullets": []
+                  }
+                ]
+              },
+              {
+                "id": "group-2-5",
+                "heading": "General Features",
+                "bullets": [
+                  {
+                    "id": "b6-1",
+                    "text": "Multiple Protocol support [HTTP/HTTPS/Websocket/HTTP2]",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b6-2",
+                    "text": "Email Notification of Attack Event",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b6-3",
+                    "text": "Security Analysis and Basic Report",
+                    "subBullets": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "item-3",
+            "title": "Managed Service",
+            "qty": "",
+            "unitPrice": "",
+            "groups": [
+              {
+                "id": "group-3-1",
+                "heading": "",
+                "bullets": [
+                  {
+                    "id": "b7-1",
+                    "text": "Service Level Agreement (SLA) 24x7x4",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-2",
+                    "text": "Level 2 Support",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-3",
+                    "text": "Unlimited Phone, email support",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-4",
+                    "text": "Implementation Service",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-5",
+                    "text": "Monthly Report",
+                    "subBullets": []
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "vatRate": 7,
+        "remarks": "Payment: Annually",
+        "senderName": "Narin Rattanavajij (PoP)",
+        "senderPhone": "+6682-44-666-95",
+        "createdBy": "Admin",
+        "createdAt": "2026-08-25T04:13:47.758Z",
+        "updatedAt": "2026-08-25T04:13:47.758Z",
+        "status": "draft",
+        "sentTo": null
+      }
+    },
+    {
+      "id": "doc-1787207517799",
+      "name": "PartnerAgreement_20-08-2569.pdf",
+      "templateId": "partner",
+      "templateName": "Partner Agreement",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-20T06:31:57.799Z",
+      "updatedAt": "2026-08-20T06:31:57.799Z",
+      "status": "sent",
+      "sentTo": "sirawit.pec@gmail.com",
+      "values": {
+        "contract_date_day": "16",
+        "contract_date_month": "กันยายน",
+        "contract_date_year": "2564",
+        "reseller_name": "บริษัท เน็กซ์เจน เทคโนโลยี แอนด์ ดิจิทัล โซลูชันส์ จำกัด",
+        "reseller_registration_number": "0107544000108",
+        "reseller_address": "888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
+        "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
+        "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
+      }
+    },
+    {
+      "id": "doc-1787192788708",
+      "name": "PartnerAgreement_20-08-2569.pdf",
+      "templateId": "partner",
+      "templateName": "Partner Agreement",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-20T02:26:28.708Z",
+      "updatedAt": "2026-08-20T02:26:28.709Z",
+      "status": "draft",
+      "sentTo": null,
+      "values": {
+        "contract_date_day": "16",
+        "contract_date_month": "กันยายน",
+        "contract_date_year": "2564",
+        "reseller_name": "บริษัท เน็กซ์เจน เทคโนโลยี แอนด์ ดิจิทัล โซลูชันส์ จำกัด",
+        "reseller_registration_number": "0107544000108",
+        "reseller_address": "888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
+        "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
+        "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
+      }
+    },
+    {
+      "id": "doc-1787128888165",
+      "name": "PartnerAgreement_19-08-2569.pdf",
+      "templateId": "partner",
+      "templateName": "Partner Agreement",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-19T08:41:28.165Z",
+      "status": "sent",
+      "sentTo": "sirawit.pec@gmail.com",
+      "values": {
+        "contract_date_day": "16",
+        "contract_date_month": "กันยายน",
+        "contract_date_year": "2564",
+        "reseller_name": "บริษัท เน็กซ์เจน เทคโนโลยี แอนด์ ดิจิทัล โซลูชันส์ จำกัด",
+        "reseller_registration_number": "0107544000108",
+        "reseller_address": "เลขที่ 888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
+        "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
+        "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
+      }
+    }
+  ],
+  "sentHistory": [
+    {
+      "id": "history-1787812462439",
+      "name": "CZ26080001.pdf",
+      "templateId": "quotation",
+      "templateName": "ใบเสนอราคา (Quotation)",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-27T06:34:22.439Z",
+      "status": "sent",
+      "sentTo": "sirawit.pec@gmail.com",
+      "values": {
+        "id": "qt-1787638573675",
+        "quotationNo": "CZ26080001",
+        "name": "ใบเสนอราคา CZ2608063",
+        "templateId": "quotation",
+        "templateName": "ใบเสนอราคา (Quotation)",
+        "quotationDate": "25 Aug 2026",
+        "priceValidity": "24 Sept 2026",
+        "deliveryTerm": "7 days",
+        "creditTerm": "30 days",
+        "billTo": {
+          "companyName": "CS LoxInfo Public Company Limited.",
+          "attn": "Sarun Phongpodchanan",
+          "endUser": " P.R. Foodland Co., Ltd.",
+          "subject": "CDNetworks Annual Services (WAF+DDoS+BOT)",
+          "am": " Narin Rattanavijai / Channel Manager "
+        },
+        "lineItems": [
+          {
+            "id": "item-1",
+            "title": "CDNetworks Annual Services",
+            "qty": "",
+            "unitPrice": "",
+            "groups": [
+              {
+                "id": "group-1-1",
+                "heading": "Application Shield Services",
+                "qty": 1,
+                "unitPrice": 204000,
+                "bullets": [
+                  {
+                    "id": "b1-1",
+                    "text": "Protected Top-Level-Domain up to 5, and Unlimited Sub-Domain",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-2",
+                    "text": "Dynamic Web Acceleration Platform Fee/month",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-3",
+                    "text": "Application Shield Platform Fee/month",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-4",
+                    "text": "Commit traffic up to 500Gbps/month",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b1-5",
+                    "text": "Cloud Security 2.0 Fee/month",
+                    "subBullets": [
+                      {
+                        "id": "sb1-1",
+                        "text": "Web Application Firewall (WAF)"
+                      },
+                      {
+                        "id": "sb1-2",
+                        "text": "DDoS Protection"
+                      },
+                      {
+                        "id": "sb1-3",
+                        "text": "BOT Management"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "b1-6",
+                    "text": "Contract Term: One (1) Year",
+                    "subBullets": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "item-3",
+            "title": "Managed Service",
+            "qty": "",
+            "unitPrice": "",
+            "groups": [
+              {
+                "id": "group-3-1",
+                "heading": "",
+                "bullets": [
+                  {
+                    "id": "b7-1",
+                    "text": "Service Level Agreement (SLA) 24x7x4",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-2",
+                    "text": "Level 2 Support",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-3",
+                    "text": "Unlimited Phone, email support",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-4",
+                    "text": "Implementation Service",
+                    "subBullets": []
+                  },
+                  {
+                    "id": "b7-5",
+                    "text": "Monthly Report",
+                    "subBullets": []
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "vatRate": 7,
+        "remarks": "Payment: Annually",
+        "senderName": "Narin Rattanavijai(PoP)",
+        "senderPhone": "082 44 666 95",
+        "createdBy": "Admin",
+        "createdAt": "2026-08-25T06:16:13.675Z",
+        "updatedAt": "2026-08-27T02:05:21.118Z",
+        "status": "draft",
+        "sentTo": null,
+        "issuer": {
+          "address": "The Connect 37, 8/40 Soi Chang Akat Uthit 10 Yaek 1-2, Donmueang, Donmueang, Bangkok 10210",
+          "tagline": "",
+          "phone": "082-446-6695"
+        },
+        "remarksList": [
+          "Payment: Annually"
+        ],
+        "specialDiscount": 0,
+        "senderPosition": "Executive Assistant - Technology & Governance",
+        "senderEmail": "narin@crestzendo.com"
+      }
+    },
+    {
+      "id": "history-1787207517811",
+      "name": "PartnerAgreement_20-08-2569.pdf",
+      "templateId": "partner",
+      "templateName": "Partner Agreement",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-20T06:31:57.811Z",
+      "status": "sent",
+      "sentTo": "sirawit.pec@gmail.com",
+      "values": {
+        "contract_date_day": "16",
+        "contract_date_month": "กันยายน",
+        "contract_date_year": "2564",
+        "reseller_name": "บริษัท เน็กซ์เจน เทคโนโลยี แอนด์ ดิจิทัล โซลูชันส์ จำกัด",
+        "reseller_registration_number": "0107544000108",
+        "reseller_address": "888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
+        "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
+        "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
+      }
+    },
+    {
+      "id": "history-1787128888176",
+      "name": "PartnerAgreement_19-08-2569.pdf",
+      "templateId": "partner",
+      "templateName": "Partner Agreement",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-19T08:41:28.176Z",
+      "status": "sent",
+      "sentTo": "sirawit.pec@gmail.com",
+      "values": {
+        "contract_date_day": "16",
+        "contract_date_month": "กันยายน",
+        "contract_date_year": "2564",
+        "reseller_name": "บริษัท เน็กซ์เจน เทคโนโลยี แอนด์ ดิจิทัล โซลูชันส์ จำกัด",
+        "reseller_registration_number": "0107544000108",
+        "reseller_address": "เลขที่ 888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
+        "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
+        "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
+      }
+    },
+    {
+      "id": "history-1787128342315",
+      "name": "PartnerAgreement_19-08-2569.pdf",
+      "templateId": "partner",
+      "templateName": "Partner Agreement",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-19T08:32:22.315Z",
+      "status": "sent",
+      "sentTo": "sirawit.pec@gmail.com",
+      "values": {
+        "contract_date_day": "16",
+        "contract_date_month": "กันยายน",
+        "contract_date_year": "2564",
+        "reseller_name": "บริษัท เน็กซ์เจน เทคโนโลยี แอนด์ ดิจิทัล โซลูชันส์ จำกัด",
+        "reseller_registration_number": "0107544000108",
+        "reseller_address": "เลขที่ 888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
+        "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
+        "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
+      }
+    },
+    {
+      "id": "history-1787125902243",
+      "name": "PartnerAgreement_19-08-2569.pdf",
+      "templateId": "partner",
+      "templateName": "Partner Agreement",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-19T07:51:42.243Z",
+      "status": "sent",
+      "sentTo": "sirawit.pec@gmail.com",
+      "values": {
+        "contract_date_day": "16",
+        "contract_date_month": "กันยายน",
+        "contract_date_year": "2564",
+        "reseller_name": "บริษัท เน็กซ์เจน เทคโนโลยี แอนด์ ดิจิทัล โซลูชันส์ จำกัด",
+        "reseller_registration_number": "0107544000108",
+        "reseller_address": "เลขที่ 888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
+        "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
+        "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
+      }
+    },
+    {
+      "id": "history-1787125495740",
+      "name": "PartnerAgreement_19-08-2569.pdf",
+      "templateId": "partner",
+      "templateName": "Partner Agreement",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-19T07:44:55.740Z",
+      "status": "sent",
+      "sentTo": "sirawit.pec@gmail.com",
+      "values": {
+        "contract_date_day": "16",
+        "contract_date_month": "กันยายน",
+        "contract_date_year": "2564",
+        "reseller_name": "บริษัท เน็กซ์เจน เทคโนโลยี แอนด์ ดิจิทัล โซลูชันส์ จำกัด",
+        "reseller_registration_number": "0107544000108",
+        "reseller_address": "เลขที่ 888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
+        "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
+        "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
+      }
+    },
+    {
+      "id": "history-1787122422801",
+      "name": "PartnerAgreement_19-08-2569.pdf",
+      "templateId": "partner",
+      "templateName": "Partner Agreement",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-19T06:53:42.801Z",
+      "status": "sent",
+      "sentTo": "sirawit.pec@gmail.com",
+      "values": {
+        "contract_date_day": "16",
+        "contract_date_month": "กันยายน",
+        "contract_date_year": "2564",
+        "reseller_name": "บริษัท เน็กซ์เจน เทคโนโลยี แอนด์ ดิจิทัล โซลูชันส์ จำกัด",
+        "reseller_registration_number": "0107544000108",
+        "reseller_address": "เลขที่ 888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
+        "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
+        "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
+      }
+    },
+    {
+      "id": "history-1787120846132",
+      "name": "PartnerAgreement_19-08-2569.pdf",
+      "templateId": "partner",
+      "templateName": "Partner Agreement",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-19T06:27:26.132Z",
+      "status": "sent",
+      "sentTo": "sirawit.pec@gmail.com",
+      "values": {
+        "contract_date_day": "16",
+        "contract_date_month": "กันยายน",
+        "contract_date_year": "2564",
+        "reseller_name": "บริษัท เน็กซ์เจน เทคโนโลยี แอนด์ ดิจิทัล โซลูชันส์ จำกัด",
+        "reseller_registration_number": "0107544000108",
+        "reseller_address": "เลขที่ 888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
+        "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
+        "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
+      }
+    }
+  ],
+  "quotations": [
+    {
+      "id": "qt-1787638573675",
+      "quotationNo": "CZ26080001",
+      "name": "ใบเสนอราคา CZ2608063",
+      "templateId": "quotation",
+      "templateName": "ใบเสนอราคา (Quotation)",
+      "quotationDate": "25 Aug 2026",
+      "priceValidity": "24 Sept 2026",
+      "deliveryTerm": "7 days",
+      "creditTerm": "30 days",
+      "billTo": {
+        "companyName": "CS LoxInfo Public Company Limited.",
+        "attn": "Sarun Phongpodchanan",
+        "endUser": " P.R. Foodland Co., Ltd.",
+        "subject": "CDNetworks Annual Services (WAF+DDoS+BOT)",
+        "am": " Narin Rattanavijai / Channel Manager "
+      },
+      "lineItems": [
+        {
+          "id": "item-1",
+          "title": "CDNetworks Annual Services",
+          "qty": "",
+          "unitPrice": "",
+          "groups": [
+            {
+              "id": "group-1-1",
+              "heading": "Application Shield Services",
+              "qty": 1,
+              "unitPrice": 204000,
+              "bullets": [
+                {
+                  "id": "b1-1",
+                  "text": "Protected Top-Level-Domain up to 5, and Unlimited Sub-Domain",
+                  "subBullets": []
+                },
+                {
+                  "id": "b1-2",
+                  "text": "Dynamic Web Acceleration Platform Fee/month",
+                  "subBullets": []
+                },
+                {
+                  "id": "b1-3",
+                  "text": "Application Shield Platform Fee/month",
+                  "subBullets": []
+                },
+                {
+                  "id": "b1-4",
+                  "text": "Commit traffic up to 500Gbps/month",
+                  "subBullets": []
+                },
+                {
+                  "id": "b1-5",
+                  "text": "Cloud Security 2.0 Fee/month",
+                  "subBullets": [
+                    {
+                      "id": "sb1-1",
+                      "text": "Web Application Firewall (WAF)"
+                    },
+                    {
+                      "id": "sb1-2",
+                      "text": "DDoS Protection"
+                    },
+                    {
+                      "id": "sb1-3",
+                      "text": "BOT Management"
+                    }
+                  ]
+                },
+                {
+                  "id": "b1-6",
+                  "text": "Contract Term: One (1) Year",
+                  "subBullets": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "item-3",
+          "title": "Managed Service",
+          "qty": "",
+          "unitPrice": "",
+          "groups": [
+            {
+              "id": "group-3-1",
+              "heading": "",
+              "bullets": [
+                {
+                  "id": "b7-1",
+                  "text": "Service Level Agreement (SLA) 24x7x4",
+                  "subBullets": []
+                },
+                {
+                  "id": "b7-2",
+                  "text": "Level 2 Support",
+                  "subBullets": []
+                },
+                {
+                  "id": "b7-3",
+                  "text": "Unlimited Phone, email support",
+                  "subBullets": []
+                },
+                {
+                  "id": "b7-4",
+                  "text": "Implementation Service",
+                  "subBullets": []
+                },
+                {
+                  "id": "b7-5",
+                  "text": "Monthly Report",
+                  "subBullets": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vatRate": 7,
+      "remarks": "Payment: Annually",
+      "senderName": "Narin Rattanavijai(PoP)",
+      "senderPhone": "082 44 666 95",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-25T06:16:13.675Z",
+      "updatedAt": "2026-08-27T02:05:21.118Z",
+      "status": "draft",
+      "sentTo": null,
+      "issuer": {
+        "address": "The Connect 37, 8/40 Soi Chang Akat Uthit 10 Yaek 1-2, Donmueang, Donmueang, Bangkok 10210",
+        "tagline": "",
+        "phone": "082-446-6695"
+      },
+      "remarksList": [
+        "Payment: Annually"
+      ],
+      "specialDiscount": 0,
+      "senderPosition": "Executive Assistant - Technology & Governance",
+      "senderEmail": "narin@crestzendo.com"
+    },
+    {
+      "id": "qt-1787631227758",
+      "quotationNo": "CZ2608063",
+      "name": "ใบเสนอราคา CZ2608063",
+      "templateId": "quotation",
+      "templateName": "ใบเสนอราคา (Quotation)",
+      "quotationDate": "25 Aug 2026",
+      "priceValidity": "24 Sept 2026",
+      "deliveryTerm": "7 days",
+      "creditTerm": "30 days",
+      "billTo": {
+        "companyName": "CS LoxInfo Public Company Limited.",
+        "attn": "Sarun Phongpodchanan",
+        "endUser": " P.R. Foodland Co., Ltd.",
+        "subject": "CDNetworks Annual Services (WAF+DDoS+BOT)",
+        "am": " Narin Rattanavijai / Channel Manager "
+      },
+      "lineItems": [
+        {
+          "id": "item-1",
+          "title": "CDNetworks Annual Services",
+          "qty": "",
+          "unitPrice": "",
+          "groups": [
+            {
+              "id": "group-1-1",
+              "heading": "Application Shield Services",
+              "qty": 1,
+              "unitPrice": 204000,
+              "bullets": [
+                {
+                  "id": "b1-1",
+                  "text": "Protected Top-Level-Domain up to 5, and Unlimited Sub-Domain",
+                  "subBullets": []
+                },
+                {
+                  "id": "b1-2",
+                  "text": "Dynamic Web Acceleration Platform Fee/month",
+                  "subBullets": []
+                },
+                {
+                  "id": "b1-3",
+                  "text": "Application Shield Platform Fee/month",
+                  "subBullets": []
+                },
+                {
+                  "id": "b1-4",
+                  "text": "Commit traffic up to 500Gbps/month",
+                  "subBullets": []
+                },
+                {
+                  "id": "b1-5",
+                  "text": "Cloud Security 2.0 Fee/month",
+                  "subBullets": [
+                    {
+                      "id": "sb1-1",
+                      "text": "Web Application Firewall (WAF)"
+                    },
+                    {
+                      "id": "sb1-2",
+                      "text": "DDoS Protection"
+                    },
+                    {
+                      "id": "sb1-3",
+                      "text": "BOT Management"
+                    }
+                  ]
+                },
+                {
+                  "id": "b1-6",
+                  "text": "Contract Term: One (1) Year",
+                  "subBullets": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "item-2",
+          "title": "Application Shield Including Services",
+          "qty": "",
+          "unitPrice": "",
+          "groups": [
+            {
+              "id": "group-2-1",
+              "heading": "Onboarding Assistance & Advanced Customer Support",
+              "bullets": [
+                {
+                  "id": "b2-1",
+                  "text": "New domain onboarding assistance",
+                  "subBullets": []
+                },
+                {
+                  "id": "b2-2",
+                  "text": "Security configuration assistance and customization",
+                  "subBullets": []
+                },
+                {
+                  "id": "b2-3",
+                  "text": "Security policies analysis",
+                  "subBullets": []
+                },
+                {
+                  "id": "b2-4",
+                  "text": "24/7/365 email/Group Chat and phone hotline support",
+                  "subBullets": []
+                },
+                {
+                  "id": "b2-5",
+                  "text": "Advanced 100% SLA Guarantee",
+                  "subBullets": []
+                }
+              ]
+            },
+            {
+              "id": "group-2-2",
+              "heading": "Web Application Firewall (WAF)",
+              "bullets": [
+                {
+                  "id": "b3-1",
+                  "text": "Advanced Access Control",
+                  "subBullets": []
+                },
+                {
+                  "id": "b3-2",
+                  "text": "Advanced Rate Limiting",
+                  "subBullets": []
+                },
+                {
+                  "id": "b3-3",
+                  "text": "IP Repeated Violations",
+                  "subBullets": []
+                },
+                {
+                  "id": "b3-4",
+                  "text": "HTTP Protocol Validation",
+                  "subBullets": []
+                },
+                {
+                  "id": "b3-5",
+                  "text": "Built-In WAF Rules",
+                  "subBullets": []
+                },
+                {
+                  "id": "b3-6",
+                  "text": "OWASP Core Rulesets",
+                  "subBullets": []
+                },
+                {
+                  "id": "b3-7",
+                  "text": "Zero Day Protection",
+                  "subBullets": []
+                },
+                {
+                  "id": "b3-8",
+                  "text": "Flexible Response Actions",
+                  "subBullets": []
+                },
+                {
+                  "id": "b3-9",
+                  "text": "Rule tempate Management",
+                  "subBullets": []
+                },
+                {
+                  "id": "b3-10",
+                  "text": "Log & Incident investigation tools_Baisc",
+                  "subBullets": []
+                },
+                {
+                  "id": "b3-11",
+                  "text": "Custom Block Page",
+                  "subBullets": []
+                },
+                {
+                  "id": "b3-12",
+                  "text": "WAF Dashboard",
+                  "subBullets": []
+                }
+              ]
+            },
+            {
+              "id": "group-2-3",
+              "heading": "DDoS Protection",
+              "bullets": [
+                {
+                  "id": "b4-1",
+                  "text": "Advance Access Control",
+                  "subBullets": []
+                },
+                {
+                  "id": "b4-2",
+                  "text": "Advance Rate Limiting",
+                  "subBullets": []
+                },
+                {
+                  "id": "b4-3",
+                  "text": "L3/L4 DDoS Mitigation",
+                  "subBullets": []
+                },
+                {
+                  "id": "b4-4",
+                  "text": "L7 DDoS Dashboard",
+                  "subBullets": []
+                },
+                {
+                  "id": "b4-5",
+                  "text": "Present Protection Policies",
+                  "subBullets": []
+                },
+                {
+                  "id": "b4-6",
+                  "text": "Log & Incident Investigation Tools Basic",
+                  "subBullets": []
+                },
+                {
+                  "id": "b4-7",
+                  "text": "Deploy History",
+                  "subBullets": []
+                }
+              ]
+            },
+            {
+              "id": "group-2-4",
+              "heading": "BOT Management",
+              "bullets": [
+                {
+                  "id": "b5-1",
+                  "text": "Transparent Challenges",
+                  "subBullets": []
+                },
+                {
+                  "id": "b5-2",
+                  "text": "Human Behavior Detection",
+                  "subBullets": []
+                },
+                {
+                  "id": "b5-3",
+                  "text": "Customized Actions",
+                  "subBullets": []
+                },
+                {
+                  "id": "b5-4",
+                  "text": "Advanced Rate Limiting",
+                  "subBullets": []
+                },
+                {
+                  "id": "b5-5",
+                  "text": "Visual Dashboard",
+                  "subBullets": []
+                }
+              ]
+            },
+            {
+              "id": "group-2-5",
+              "heading": "General Features",
+              "bullets": [
+                {
+                  "id": "b6-1",
+                  "text": "Multiple Protocol support [HTTP/HTTPS/Websocket/HTTP2]",
+                  "subBullets": []
+                },
+                {
+                  "id": "b6-2",
+                  "text": "Email Notification of Attack Event",
+                  "subBullets": []
+                },
+                {
+                  "id": "b6-3",
+                  "text": "Security Analysis and Basic Report",
+                  "subBullets": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "item-3",
+          "title": "Managed Service",
+          "qty": "",
+          "unitPrice": "",
+          "groups": [
+            {
+              "id": "group-3-1",
+              "heading": "",
+              "bullets": [
+                {
+                  "id": "b7-1",
+                  "text": "Service Level Agreement (SLA) 24x7x4",
+                  "subBullets": []
+                },
+                {
+                  "id": "b7-2",
+                  "text": "Level 2 Support",
+                  "subBullets": []
+                },
+                {
+                  "id": "b7-3",
+                  "text": "Unlimited Phone, email support",
+                  "subBullets": []
+                },
+                {
+                  "id": "b7-4",
+                  "text": "Implementation Service",
+                  "subBullets": []
+                },
+                {
+                  "id": "b7-5",
+                  "text": "Monthly Report",
+                  "subBullets": []
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "vatRate": 7,
+      "remarks": "Payment: Annually",
+      "senderName": "Narin Rattanavajij (PoP)",
+      "senderPhone": "+6682-44-666-95",
+      "createdBy": "Admin",
+      "createdAt": "2026-08-25T04:13:47.758Z",
+      "updatedAt": "2026-08-25T04:13:47.758Z",
+      "status": "draft",
+      "sentTo": null
+    }
+  ],
+  "categories": [
+    {
+      "id": "quotation",
+      "name": "Quotation",
+      "fullName": "ใบเสนอราคา",
+      "description": "ใบเสนอราคาพร้อมรายการสินค้า/บริการ คำนวณภาษี VAT 7% และยอดรวมอัตโนมัติ",
+      "icon": "Receipt",
+      "color": "purple",
+      "badge": "มาตรฐาน",
+      "order": 1,
+      "createdAt": "2026-09-01T00:00:00.000Z",
+      "updatedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "nda",
+      "name": "NDA",
+      "fullName": "หนังสือสัญญาไม่เปิดเผยข้อมูล",
+      "description": "Non-Disclosure Agreement สัญญามาตรฐานสำหรับการรักษาความลับทางการค้า",
+      "icon": "FileSignature",
+      "color": "blue",
+      "badge": "มาตรฐาน",
+      "order": 2,
+      "createdAt": "2026-09-01T00:00:00.000Z",
+      "updatedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "partner",
+      "name": "Partner Agreement",
+      "fullName": "สัญญาแต่งตั้งพันธมิตรตัวแทนจำหน่าย",
+      "description": "สัญญาแต่งตั้งพันธมิตร พร้อมเงื่อนไข Deal Registration และอัตราแลกเปลี่ยน",
+      "icon": "Handshake",
+      "color": "emerald",
+      "badge": "มาตรฐาน",
+      "order": 3,
+      "createdAt": "2026-09-01T00:00:00.000Z",
+      "updatedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "distributor",
+      "name": "Distributor Agreement",
+      "fullName": "สัญญาแต่งตั้งและจัดจำหน่ายซอฟต์แวร์",
+      "description": "สัญญาแต่งตั้งตัวแทนจำหน่ายและจัดจำหน่ายซอฟต์แวร์",
+      "icon": "Building2",
+      "color": "indigo",
+      "badge": "มาตรฐาน",
+      "order": 4,
+      "createdAt": "2026-09-01T00:00:00.000Z",
+      "updatedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "notification",
+      "name": "Notification Letter",
+      "fullName": "หนังสือแจ้งและประกาศทางการ",
+      "description": "หนังสือแจ้งการ, จดหมายแจ้งเปลี่ยนแปลงข้อมูลองค์กร และประกาศทางการ",
+      "icon": "Megaphone",
+      "color": "rose",
+      "badge": "มาตรฐาน",
+      "order": 5,
+      "createdAt": "2026-09-01T00:00:00.000Z",
+      "updatedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "5616",
+      "name": "5616",
+      "fullName": "56184",
+      "description": "ๆ5ก6ๆห",
+      "icon": "Handshake",
+      "color": "cyan",
+      "badge": "หมวดใหม่",
+      "order": 1,
+      "createdAt": "2026-09-04T02:39:28.275Z",
+      "updatedAt": "2026-09-04T02:39:28.276Z"
+    },
+    {
+      "id": "asdasd",
+      "name": "asdasd",
+      "fullName": "asd",
+      "description": "คลังรวบรวมเทมเพลตสำหรับ asdasd",
+      "icon": "FileText",
+      "color": "purple",
+      "badge": "หมวดใหม่",
+      "order": 1,
+      "createdAt": "2026-09-07T09:45:55.515Z",
+      "updatedAt": "2026-09-07T09:45:55.518Z"
+    }
+  ],
+  "customTemplates": [
+    {
+      "id": "tmpl-1788774473750",
+      "name": "เทมเพลตเอกสารใหม่ (A4)",
+      "categoryId": "asdasd",
+      "editorType": "document",
+      "canvasPreset": "a4-portrait",
+      "version": 1,
+      "description": "เทมเพลต asdasd จำนวน 2 หน้า",
+      "icon": "FileText",
+      "badge": "กำหนดเอง",
+      "status": "published",
+      "orientation": "portrait",
+      "theme": {
+        "primaryColor": "#5542F6",
+        "backgroundColor": "#FFFFFF",
+        "hasWatermark": false,
+        "marginMm": 15,
+        "marginPx": 57
+      },
+      "margin": {
+        "mm": 15,
+        "px": 57
+      },
+      "pageCount": 2,
+      "pages": [
+        {
+          "id": "page-1",
+          "json": {
+            "version": "6.9.1",
+            "objects": [
+              {
+                "name": "pageFooterNumber",
+                "isPageFooterNumber": true,
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": false,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "fontSize": 10,
+                "fontWeight": "normal",
+                "fontFamily": "'Noto Sans Thai', 'Noto Sans', sans-serif",
+                "fontStyle": "normal",
+                "lineHeight": 1.16,
+                "text": "หน้า 1 จาก 1",
+                "charSpacing": 0,
+                "textAlign": "right",
+                "styles": [],
+                "pathStartOffset": 0,
+                "pathSide": "left",
+                "pathAlign": "baseline",
+                "underline": false,
+                "overline": false,
+                "linethrough": false,
+                "textBackgroundColor": "",
+                "direction": "ltr",
+                "textDecorationThickness": 66.667,
+                "minWidth": 20,
+                "splitByGrapheme": false,
+                "type": "Textbox",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 618,
+                "top": 1091,
+                "width": 120,
+                "height": 11.3,
+                "fill": "#94A3B8",
+                "stroke": null,
+                "strokeWidth": 1,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 1,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              },
+              {
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": true,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "rx": 0,
+                "ry": 0,
+                "type": "Rect",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 145.4248,
+                "top": 153.613,
+                "width": 240,
+                "height": 100,
+                "fill": "#F3F4F6",
+                "stroke": "#9CA3AF",
+                "strokeWidth": 1,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 1,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              },
+              {
+                "isTokenField": true,
+                "tokenKey": "{{company_name}}",
+                "rawTemplateText": "หัวข้อเอกสาร (Heading 1) {{company_name}} {{company_name}}",
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": true,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "fontSize": 22,
+                "fontWeight": "bold",
+                "fontFamily": "'Noto Sans Thai', 'Noto Sans', sans-serif",
+                "fontStyle": "normal",
+                "lineHeight": 1.16,
+                "text": "หัวข้อเอกสาร (Heading 1) {{company_name}} {{company_name}}",
+                "charSpacing": 0,
+                "textAlign": "left",
+                "styles": [],
+                "pathStartOffset": 0,
+                "pathSide": "left",
+                "pathAlign": "baseline",
+                "underline": false,
+                "overline": false,
+                "linethrough": false,
+                "textBackgroundColor": "",
+                "direction": "ltr",
+                "textDecorationThickness": 66.667,
+                "minWidth": 20,
+                "splitByGrapheme": false,
+                "type": "Textbox",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 423.1238,
+                "top": 123.112,
+                "width": 320,
+                "height": 82.5352,
+                "fill": "#111827",
+                "stroke": null,
+                "strokeWidth": 1,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 1,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              },
+              {
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": true,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "fontSize": 16,
+                "fontWeight": "bold",
+                "fontFamily": "'Noto Sans Thai', 'Noto Sans', sans-serif",
+                "fontStyle": "normal",
+                "lineHeight": 1.16,
+                "text": "หัวข้อย่อย (Heading 2)",
+                "charSpacing": 0,
+                "textAlign": "left",
+                "styles": [],
+                "pathStartOffset": 0,
+                "pathSide": "left",
+                "pathAlign": "baseline",
+                "underline": false,
+                "overline": false,
+                "linethrough": false,
+                "textBackgroundColor": "",
+                "direction": "ltr",
+                "textDecorationThickness": 66.667,
+                "minWidth": 20,
+                "splitByGrapheme": false,
+                "type": "Textbox",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 76,
+                "top": 96,
+                "width": 320,
+                "height": 18.08,
+                "fill": "#111827",
+                "stroke": null,
+                "strokeWidth": 1,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 1,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              },
+              {
+                "isTokenField": true,
+                "tokenKey": "{{company_name}}",
+                "rawTemplateText": "{{company_name}}",
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": true,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "fontSize": 13,
+                "fontWeight": "bold",
+                "fontFamily": "'Noto Sans Thai', 'Noto Sans', sans-serif",
+                "fontStyle": "normal",
+                "lineHeight": 1.16,
+                "text": "{{company_name}}",
+                "charSpacing": 0,
+                "textAlign": "left",
+                "styles": [],
+                "pathStartOffset": 0,
+                "pathSide": "left",
+                "pathAlign": "baseline",
+                "underline": false,
+                "overline": false,
+                "linethrough": false,
+                "textBackgroundColor": "",
+                "direction": "ltr",
+                "textDecorationThickness": 66.667,
+                "minWidth": 20,
+                "splitByGrapheme": false,
+                "type": "Textbox",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 76,
+                "top": 116,
+                "width": 280,
+                "height": 14.69,
+                "fill": "#4338CA",
+                "stroke": null,
+                "strokeWidth": 1,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 1,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              }
+            ],
+            "background": "#FFFFFF"
+          }
+        },
+        {
+          "id": "page-1788774424700",
+          "json": {
+            "version": "6.9.1",
+            "objects": [
+              {
+                "name": "pageFooterNumber",
+                "isPageFooterNumber": true,
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": false,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "fontSize": 10,
+                "fontWeight": "normal",
+                "fontFamily": "'Noto Sans Thai', 'Noto Sans', sans-serif",
+                "fontStyle": "normal",
+                "lineHeight": 1.16,
+                "text": "หน้า 2 จาก 2",
+                "charSpacing": 0,
+                "textAlign": "right",
+                "styles": [],
+                "pathStartOffset": 0,
+                "pathSide": "left",
+                "pathAlign": "baseline",
+                "underline": false,
+                "overline": false,
+                "linethrough": false,
+                "textBackgroundColor": "",
+                "direction": "ltr",
+                "textDecorationThickness": 66.667,
+                "minWidth": 20,
+                "splitByGrapheme": false,
+                "type": "Textbox",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 618,
+                "top": 1091,
+                "width": 120,
+                "height": 11.3,
+                "fill": "#94A3B8",
+                "stroke": null,
+                "strokeWidth": 1,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 1,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              }
+            ],
+            "background": "#FFFFFF"
+          }
+        }
+      ],
+      "sheetData": [],
+      "blocks": [],
+      "createdAt": "2026-09-07T09:47:53.750Z",
+      "updatedAt": "2026-09-07T09:47:53.750Z"
+    },
+    {
+      "id": "tmpl-1788773821931",
+      "name": "เทมเพลตสไลด์ใหม่ (16:9)",
+      "categoryId": "5616",
+      "editorType": "slide",
+      "canvasPreset": "slide-16-9",
+      "version": 1,
+      "description": "เทมเพลตสไลด์นำเสนอ 5616 จำนวน 1 สไลด์",
+      "icon": "Presentation",
+      "badge": "สไลด์",
+      "status": "published",
+      "orientation": "landscape",
+      "theme": {
+        "primaryColor": "#6366F1",
+        "backgroundColor": "#FFFFFF",
+        "hasWatermark": false,
+        "marginMm": null,
+        "marginPx": 40
+      },
+      "margin": {
+        "mm": null,
+        "px": 40
+      },
+      "pageCount": 1,
+      "pages": [
+        {
+          "id": "page-1",
+          "json": {
+            "version": "6.9.1",
+            "objects": [
+              {
+                "name": "pageFooterNumber",
+                "isPageFooterNumber": true,
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": false,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "fontSize": 10,
+                "fontWeight": "normal",
+                "fontFamily": "'Noto Sans Thai', 'Noto Sans', sans-serif",
+                "fontStyle": "normal",
+                "lineHeight": 1.16,
+                "text": "สไลด์ 1 / 1",
+                "charSpacing": 0,
+                "textAlign": "right",
+                "styles": [],
+                "pathStartOffset": 0,
+                "pathSide": "left",
+                "pathAlign": "baseline",
+                "underline": false,
+                "overline": false,
+                "linethrough": false,
+                "textBackgroundColor": "",
+                "direction": "ltr",
+                "textDecorationThickness": 66.667,
+                "minWidth": 20,
+                "splitByGrapheme": false,
+                "type": "Textbox",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 1120,
+                "top": 692,
+                "width": 120,
+                "height": 11.3,
+                "fill": "#94A3B8",
+                "stroke": null,
+                "strokeWidth": 1,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 1,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              },
+              {
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": true,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "rx": 0,
+                "ry": 0,
+                "type": "Rect",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 76,
+                "top": 96,
+                "width": 240,
+                "height": 100,
+                "fill": {
+                  "type": "linear",
+                  "coords": {
+                    "x1": 0,
+                    "y1": 0.5,
+                    "x2": 1,
+                    "y2": 0.5
+                  },
+                  "colorStops": [
+                    {
+                      "offset": 0,
+                      "color": "#4F46E5"
+                    },
+                    {
+                      "offset": 1,
+                      "color": "#06B6D4"
+                    }
+                  ],
+                  "offsetX": 0,
+                  "offsetY": 0,
+                  "gradientUnits": "percentage"
+                },
+                "stroke": "#9CA3AF",
+                "strokeWidth": 1,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 1,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              }
+            ],
+            "background": "#FFFFFF"
+          }
+        }
+      ],
+      "sheetData": [],
+      "blocks": [],
+      "createdAt": "2026-09-07T09:37:01.931Z",
+      "updatedAt": "2026-09-07T09:37:01.933Z"
+    },
+    {
+      "id": "tmpl-1788768026462",
+      "name": "เทมเพลตเอกสารใหม่ (A4)",
+      "categoryId": "5616",
+      "editorType": "document",
+      "canvasPreset": "a4-portrait",
+      "version": 3,
+      "description": "เทมเพลต 5616 จำนวน 1 หน้า",
+      "icon": "FileText",
+      "badge": "กำหนดเอง",
+      "status": "published",
+      "orientation": "portrait",
+      "theme": {
+        "primaryColor": "#5542F6",
+        "backgroundColor": "#FFFFFF",
+        "hasWatermark": false,
+        "marginMm": 15,
+        "marginPx": 57
+      },
+      "margin": {
+        "mm": 15,
+        "px": 57
+      },
+      "pageCount": 1,
+      "pages": [
+        {
+          "id": "page-1",
+          "json": {
+            "version": "6.9.1",
+            "objects": [
+              {
+                "name": "pageFooterNumber",
+                "isPageFooterNumber": true,
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": false,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "fontSize": 10,
+                "fontWeight": "normal",
+                "fontFamily": "'Noto Sans Thai', 'Noto Sans', sans-serif",
+                "fontStyle": "normal",
+                "lineHeight": 1.16,
+                "text": "หน้า 1 จาก 1",
+                "charSpacing": 0,
+                "textAlign": "right",
+                "styles": [],
+                "pathStartOffset": 0,
+                "pathSide": "left",
+                "pathAlign": "baseline",
+                "underline": false,
+                "overline": false,
+                "linethrough": false,
+                "textBackgroundColor": "",
+                "direction": "ltr",
+                "textDecorationThickness": 66.667,
+                "minWidth": 20,
+                "splitByGrapheme": false,
+                "type": "Textbox",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 618,
+                "top": 1091,
+                "width": 120,
+                "height": 11.3,
+                "fill": "#94A3B8",
+                "stroke": null,
+                "strokeWidth": 1,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 1,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              },
+              {
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": true,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "fontSize": 22,
+                "fontWeight": 500,
+                "fontFamily": "'Noto Sans Thai', 'Noto Sans', sans-serif",
+                "fontStyle": "normal",
+                "lineHeight": 1.16,
+                "text": "หัวข้อเอกสาร (Heading 1)",
+                "charSpacing": 0,
+                "textAlign": "left",
+                "styles": [],
+                "pathStartOffset": 0,
+                "pathSide": "left",
+                "pathAlign": "baseline",
+                "underline": false,
+                "overline": false,
+                "linethrough": false,
+                "textBackgroundColor": "",
+                "direction": "ltr",
+                "textDecorationThickness": 66.667,
+                "minWidth": 20,
+                "splitByGrapheme": false,
+                "type": "Textbox",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 149.9105,
+                "top": 157.4865,
+                "width": 236.5559,
+                "height": 53.6976,
+                "fill": "#111827",
+                "stroke": null,
+                "strokeWidth": 1,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 1,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              },
+              {
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": true,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "rx": 0,
+                "ry": 0,
+                "type": "Rect",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 108.1725,
+                "top": 429.8164,
+                "width": 240,
+                "height": 100,
+                "fill": {
+                  "type": "linear",
+                  "coords": {
+                    "x1": 0.49999999999999994,
+                    "y1": 1,
+                    "x2": 0.5,
+                    "y2": 0
+                  },
+                  "colorStops": [
+                    {
+                      "offset": 0.5,
+                      "color": "#32b1c8"
+                    },
+                    {
+                      "offset": 1,
+                      "color": "#32b1c8"
+                    }
+                  ],
+                  "offsetX": 0,
+                  "offsetY": 0,
+                  "gradientUnits": "percentage"
+                },
+                "stroke": "#9CA3AF",
+                "strokeWidth": 1,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 1,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              },
+              {
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": true,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "rx": 0,
+                "ry": 0,
+                "type": "Rect",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 397,
+                "top": 309.4156,
+                "width": 240,
+                "height": 100,
+                "fill": {
+                  "type": "linear",
+                  "coords": {
+                    "x1": 0.49999999999999994,
+                    "y1": 1,
+                    "x2": 0.5,
+                    "y2": 0
+                  },
+                  "colorStops": [
+                    {
+                      "offset": 0.5,
+                      "color": "#1952c2"
+                    },
+                    {
+                      "offset": 1,
+                      "color": "#32b1c8"
+                    }
+                  ],
+                  "offsetX": 0,
+                  "offsetY": 0,
+                  "gradientUnits": "percentage"
+                },
+                "stroke": "#8f9299",
+                "strokeWidth": 0,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 0.2892,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              },
+              {
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": true,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "rx": 0,
+                "ry": 0,
+                "type": "Rect",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 415.3067,
+                "top": 120.9922,
+                "width": 240,
+                "height": 100,
+                "fill": {
+                  "type": "linear",
+                  "coords": {
+                    "x1": 0.49999999999999994,
+                    "y1": 1,
+                    "x2": 0.5,
+                    "y2": 0
+                  },
+                  "colorStops": [
+                    {
+                      "offset": 0.5,
+                      "color": "#1952c2"
+                    },
+                    {
+                      "offset": 1,
+                      "color": "#32b1c8"
+                    }
+                  ],
+                  "offsetX": 0,
+                  "offsetY": 0,
+                  "gradientUnits": "percentage"
+                },
+                "stroke": "#8f9299",
+                "strokeWidth": 0,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 0.2892,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              },
+              {
+                "isTokenField": true,
+                "tokenKey": "{{company_name}}",
+                "rawTemplateText": "{{company_name}}",
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": true,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "fontSize": 13,
+                "fontWeight": "bold",
+                "fontFamily": "'Noto Sans Thai', 'Noto Sans', sans-serif",
+                "fontStyle": "normal",
+                "lineHeight": 1.16,
+                "text": "{{company_name}}",
+                "charSpacing": 0,
+                "textAlign": "left",
+                "styles": [],
+                "pathStartOffset": 0,
+                "pathSide": "left",
+                "pathAlign": "baseline",
+                "underline": false,
+                "overline": false,
+                "linethrough": false,
+                "textBackgroundColor": "",
+                "direction": "ltr",
+                "textDecorationThickness": 66.667,
+                "minWidth": 20,
+                "splitByGrapheme": false,
+                "type": "Textbox",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 76,
+                "top": 116,
+                "width": 280,
+                "height": 14.69,
+                "fill": "#4338CA",
+                "stroke": null,
+                "strokeWidth": 1,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 1,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              },
+              {
+                "isTokenField": true,
+                "tokenKey": "{{company_name_en}}",
+                "rawTemplateText": "{{company_name_en}}",
+                "lockMovementX": false,
+                "lockMovementY": false,
+                "lockRotation": false,
+                "lockScalingX": false,
+                "lockScalingY": false,
+                "hasControls": true,
+                "selectable": true,
+                "opacity": 1,
+                "visible": true,
+                "fontSize": 13,
+                "fontWeight": "bold",
+                "fontFamily": "'Noto Sans Thai', 'Noto Sans', sans-serif",
+                "fontStyle": "normal",
+                "lineHeight": 1.16,
+                "text": "{{company_name_en}}",
+                "charSpacing": 0,
+                "textAlign": "left",
+                "styles": [],
+                "pathStartOffset": 0,
+                "pathSide": "left",
+                "pathAlign": "baseline",
+                "underline": false,
+                "overline": false,
+                "linethrough": false,
+                "textBackgroundColor": "",
+                "direction": "ltr",
+                "textDecorationThickness": 66.667,
+                "minWidth": 20,
+                "splitByGrapheme": false,
+                "type": "Textbox",
+                "version": "6.9.1",
+                "originX": "left",
+                "originY": "top",
+                "left": 84.4664,
+                "top": 254.949,
+                "width": 280,
+                "height": 14.69,
+                "fill": "#4338CA",
+                "stroke": null,
+                "strokeWidth": 1,
+                "strokeDashArray": null,
+                "strokeLineCap": "butt",
+                "strokeDashOffset": 0,
+                "strokeLineJoin": "miter",
+                "strokeUniform": false,
+                "strokeMiterLimit": 4,
+                "scaleX": 1,
+                "scaleY": 1,
+                "angle": 0,
+                "flipX": false,
+                "flipY": false,
+                "shadow": null,
+                "backgroundColor": "",
+                "fillRule": "nonzero",
+                "paintFirst": "fill",
+                "globalCompositeOperation": "source-over",
+                "skewX": 0,
+                "skewY": 0
+              }
+            ],
+            "background": "#FFFFFF"
+          }
+        }
+      ],
+      "sheetData": [],
+      "blocks": [],
+      "createdAt": "2026-09-07T08:00:26.462Z",
+      "updatedAt": "2026-09-07T09:02:17.050Z"
+    },
+    {
+      "id": "tmpl-1788418619277",
+      "name": "ใบเสนอราคาและคำนวณภาษีอัตโนมัติ (Quotation Sheet)",
+      "categoryId": "quotation",
+      "editorType": "sheet",
+      "canvasPreset": null,
+      "version": 1,
+      "description": "สเปรดชีตคำนวณราคาสินค้า พร้อมสูตรคำนวณ VAT 7% และส่งออกเป็น .xlsx",
+      "icon": "Table",
+      "badge": "กำหนดเอง",
+      "status": "published",
+      "orientation": "landscape",
+      "theme": {
+        "primaryColor": "#5542F6",
+        "backgroundColor": "#FFFFFF",
+        "hasWatermark": false
+      },
+      "pageCount": 0,
+      "pages": [],
+      "sheetData": [
+        {
+          "name": "ใบเสนอราคาและคำนวณ (Quotation Sheet)",
+          "id": "sheet_01",
+          "status": 1,
+          "order": 0,
+          "row": 25,
+          "column": 10,
+          "celldata": [
+            {
+              "r": 0,
+              "c": 0,
+              "v": {
+                "v": "ใบเสนอราคาสินค้าและบริการ (QUOTATION)",
+                "m": "QUOTATION",
+                "ct": {
+                  "t": "s"
+                }
+              }
+            },
+            {
+              "r": 2,
+              "c": 0,
+              "v": {
+                "v": "ลูกค้า:",
+                "m": "ลูกค้า:",
+                "ct": {
+                  "t": "s"
+                }
+              }
+            },
+            {
+              "r": 2,
+              "c": 1,
+              "v": {
+                "v": "{{customer_name}}",
+                "m": "{{customer_name}}",
+                "ct": {
+                  "t": "s"
+                }
+              }
+            },
+            {
+              "r": 2,
+              "c": 3,
+              "v": {
+                "v": "เลขที่:",
+                "m": "เลขที่:",
+                "ct": {
+                  "t": "s"
+                }
+              }
+            },
+            {
+              "r": 2,
+              "c": 4,
+              "v": {
+                "v": "{{quotation_no}}",
+                "m": "{{quotation_no}}",
+                "ct": {
+                  "t": "s"
+                }
+              }
+            },
+            {
+              "r": 4,
+              "c": 0,
+              "v": {
+                "v": "รายการ",
+                "ct": {
+                  "t": "s"
+                }
+              }
+            },
+            {
+              "r": 4,
+              "c": 1,
+              "v": {
+                "v": "จำนวน",
+                "ct": {
+                  "t": "n"
+                }
+              }
+            },
+            {
+              "r": 4,
+              "c": 2,
+              "v": {
+                "v": "ราคา",
+                "ct": {
+                  "t": "n"
+                }
+              }
+            },
+            {
+              "r": 4,
+              "c": 3,
+              "v": {
+                "v": "รวม",
+                "ct": {
+                  "t": "s"
+                }
+              }
+            },
+            {
+              "r": 5,
+              "c": 0,
+              "v": {
+                "v": "Cloud Firewall",
+                "ct": {
+                  "t": "s"
+                }
+              }
+            },
+            {
+              "r": 5,
+              "c": 1,
+              "v": {
+                "v": 2,
+                "ct": {
+                  "t": "n"
+                }
+              }
+            },
+            {
+              "r": 5,
+              "c": 2,
+              "v": {
+                "v": 40000,
+                "ct": {
+                  "t": "n"
+                }
+              }
+            },
+            {
+              "r": 5,
+              "c": 3,
+              "v": {
+                "f": "=B6*C6",
+                "v": 80000,
+                "ct": {
+                  "t": "n"
+                }
+              }
+            },
+            {
+              "r": 6,
+              "c": 0,
+              "v": {
+                "v": "DevOps Pipeline",
+                "ct": {
+                  "t": "s"
+                }
+              }
+            },
+            {
+              "r": 6,
+              "c": 1,
+              "v": {
+                "v": 1,
+                "ct": {
+                  "t": "n"
+                }
+              }
+            },
+            {
+              "r": 6,
+              "c": 2,
+              "v": {
+                "v": 60000,
+                "ct": {
+                  "t": "n"
+                }
+              }
+            },
+            {
+              "r": 6,
+              "c": 3,
+              "v": {
+                "f": "=B7*C7",
+                "v": 60000,
+                "ct": {
+                  "t": "n"
+                }
+              }
+            },
+            {
+              "r": 8,
+              "c": 2,
+              "v": {
+                "v": "รวมเงิน:",
+                "ct": {
+                  "t": "s"
+                }
+              }
+            },
+            {
+              "r": 8,
+              "c": 3,
+              "v": {
+                "f": "=SUM(D6:D7)",
+                "v": 140000,
+                "ct": {
+                  "t": "n"
+                }
+              }
+            },
+            {
+              "r": 9,
+              "c": 2,
+              "v": {
+                "v": "VAT 7%:",
+                "ct": {
+                  "t": "s"
+                }
+              }
+            },
+            {
+              "r": 9,
+              "c": 3,
+              "v": {
+                "f": "=D9*0.07",
+                "v": 9800,
+                "ct": {
+                  "t": "n"
+                }
+              }
+            },
+            {
+              "r": 10,
+              "c": 2,
+              "v": {
+                "v": "ยอดรวมสุทธิ:",
+                "ct": {
+                  "t": "s"
+                }
+              }
+            },
+            {
+              "r": 10,
+              "c": 3,
+              "v": {
+                "f": "=D9+D10",
+                "v": 149800,
+                "ct": {
+                  "t": "n"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "blocks": [],
+      "createdAt": "2026-09-03T06:56:59.281Z",
+      "updatedAt": "2026-09-03T06:56:59.292Z"
+    },
+    {
+      "id": "tmpl-quotation-standard",
+      "categoryId": "quotation",
+      "version": 1,
+      "name": "ใบเสนอราคามาตรฐาน",
+      "englishName": "Quotation Standard Template",
+      "description": "โครงสร้างเทมเพลตใบเสนอราคามาตรฐาน พร้อมระบบคำนวณภาษี VAT 7% และส่วนลด",
+      "icon": "Receipt",
+      "badge": "มาตรฐาน",
+      "pageCount": "1 หน้า A4",
+      "status": "published",
+      "orientation": "portrait",
+      "theme": {
+        "primaryColor": "#5542F6",
+        "backgroundColor": "#FFFFFF",
+        "hasWatermark": false
+      },
+      "blocks": [
+        {
+          "id": "b_header",
+          "type": "header",
+          "title": "หัวกระดาษบริษัท",
+          "settings": {
+            "hasLogo": true,
+            "logoUrl": "/quotation.png",
+            "companyName": "[ ชื่อบริษัท / ผู้เสนอราคา ]",
+            "companyNameEn": "[ Company Name (EN) ]",
+            "taxId": "0-0000-00000-00-0",
+            "address": "[ ที่อยู่สำนักงานใหญ่ / สถานประกอบการ ]",
+            "phone": "02-XXX-XXXX",
+            "email": "contact@company.com",
+            "align": "split"
+          }
+        },
+        {
+          "id": "b_title",
+          "type": "doc_title",
+          "title": "หัวเรื่องเอกสาร",
+          "settings": {
+            "titleText": "ใบเสนอราคา (QUOTATION)",
+            "subtitleText": "ต้นฉบับ / Original",
+            "align": "center"
+          }
+        },
+        {
+          "id": "b_info",
+          "type": "info_grid",
+          "title": "ข้อมูลลูกค้าและเอกสาร",
+          "settings": {
+            "billToTitle": "Bill To:",
+            "billToCompany": "[ ชื่อบริษัทลูกค้า / ผู้รับบริการ ]",
+            "attnName": "[ ชื่อผู้ติดต่อ ]",
+            "subject": "[ ระบุเรื่อง / โครงการ ]",
+            "quotationNo": "QT-YYYYMM-XXXX",
+            "date": "[ ว/ด/ป ที่ออกเอกสาร ]",
+            "validity": "30 วัน",
+            "amName": "[ ชื่อผู้จัดทำ / Account Manager ]"
+          }
+        },
+        {
+          "id": "b_table",
+          "type": "quotation_table",
+          "title": "ตารางรายการสินค้า/บริการ",
+          "settings": {
+            "vatRate": 7,
+            "items": []
+          }
+        },
+        {
+          "id": "b_terms",
+          "type": "terms",
+          "title": "เงื่อนไขและข้อกำหนด",
+          "settings": {
+            "heading": "เงื่อนไขการชำระเงินและส่งมอบ:",
+            "bullets": [
+              "ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม (VAT 7%)",
+              "กำหนดยืนราคา 30 วันนับจากวันที่ในเอกสาร",
+              "เงื่อนไขการชำระเงิน: ภายใน 30 วันนับจากวันส่งมอบงาน"
+            ]
+          }
+        },
+        {
+          "id": "b_signatures",
+          "type": "signatures",
+          "title": "ส่วนลงนามอนุมัติ",
+          "settings": {
+            "slots": [
+              {
+                "id": "s1",
+                "name": "[ ผู้มีอำนาจลงนาม / ผู้เสนอราคา ]",
+                "role": "ผู้เสนอราคา"
+              },
+              {
+                "id": "s2",
+                "name": "............................................",
+                "role": "ผู้อนุมัติสั่งซื้อ / ลูกค้า"
+              }
+            ]
+          }
+        }
+      ],
+      "createdAt": "2026-09-01T00:00:00.000Z",
+      "updatedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "tmpl-nda-standard",
+      "categoryId": "nda",
+      "version": 1,
+      "name": "หนังสือสัญญาไม่เปิดเผยข้อมูล",
+      "englishName": "Non-Disclosure Agreement (NDA)",
+      "description": "โครงสร้างสัญญามาตรฐานสำหรับการรักษาความลับทางการค้าและทรัพย์สินทางปัญญา",
+      "icon": "FileSignature",
+      "badge": "มาตรฐาน",
+      "pageCount": "2 หน้า A4",
+      "status": "published",
+      "orientation": "portrait",
+      "theme": {
+        "primaryColor": "#5542F6",
+        "backgroundColor": "#FFFFFF",
+        "hasWatermark": false
+      },
+      "blocks": [
+        {
+          "id": "b_header",
+          "type": "header",
+          "title": "หัวกระดาษ",
+          "settings": {
+            "hasLogo": true,
+            "logoUrl": "/quotation.png",
+            "companyName": "[ ชื่อบริษัท / องค์กร ]",
+            "companyNameEn": "[ Company Name (EN) ]",
+            "taxId": "0-0000-00000-00-0",
+            "address": "[ ที่อยู่สำนักงานใหญ่ ]",
+            "phone": "02-XXX-XXXX",
+            "email": "legal@company.com",
+            "align": "split"
+          }
+        },
+        {
+          "id": "b_title",
+          "type": "doc_title",
+          "title": "หัวเรื่อง",
+          "settings": {
+            "titleText": "หนังสือสัญญาไม่เปิดเผยข้อมูล",
+            "subtitleText": "Non-Disclosure Agreement (NDA)",
+            "align": "center"
+          }
+        },
+        {
+          "id": "b_text",
+          "type": "text_block",
+          "title": "โครงสร้างข้อสัญญา",
+          "settings": {
+            "content": "สัญญาฉบับนี้ทำขึ้นระหว่าง [ ชื่อคู่สัญญาฝ่ายเปิดเผยข้อมูล ] และ [ ชื่อคู่สัญญาฝ่ายรับข้อมูล ] โดยทั้งสองฝ่ายตกลงรักษาความลับของข้อมูลตามขอบเขตและระยะเวลาที่ระบุในสัญญานี้"
+          }
+        },
+        {
+          "id": "b_terms",
+          "type": "terms",
+          "title": "ข้อกำหนดความลับ",
+          "settings": {
+            "heading": "ข้อกำหนดและขอบเขตความลับ:",
+            "bullets": [
+              "ห้ามเปิดเผยข้อมูลความลับแก่บุคคลภายนอกโดยไม่ได้รับความยินยอมเป็นลายลักษณ์อักษร",
+              "ใช้ข้อมูลความลับเพื่อวัตถุประสงค์ตามที่ตกลงกันไว้เท่านั้น",
+              "สัญญานี้มีผลบังคับใช้ตามระยะเวลาที่กำหนดในสัญญา"
+            ]
+          }
+        },
+        {
+          "id": "b_signatures",
+          "type": "signatures",
+          "title": "ลงนามทั้งสองฝ่าย",
+          "settings": {
+            "slots": [
+              {
+                "id": "s1",
+                "name": "[ ผู้มีอำนาจลงนามฝ่ายเปิดเผยข้อมูล ]",
+                "role": "ฝ่ายเปิดเผยข้อมูล"
+              },
+              {
+                "id": "s2",
+                "name": "............................................",
+                "role": "ฝ่ายรับข้อมูล"
+              }
+            ]
+          }
+        }
+      ],
+      "createdAt": "2026-09-01T00:00:00.000Z",
+      "updatedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "tmpl-partner-standard",
+      "categoryId": "partner",
+      "version": 1,
+      "name": "สัญญาแต่งตั้งพันธมิตรตัวแทนจำหน่าย",
+      "englishName": "Partner Agreement",
+      "description": "โครงสร้างสัญญาแต่งตั้งพันธมิตรทางธุรกิจ พร้อมเงื่อนไข Deal Registration",
+      "icon": "Handshake",
+      "badge": "มาตรฐาน",
+      "pageCount": "2 หน้า A4",
+      "status": "published",
+      "orientation": "portrait",
+      "theme": {
+        "primaryColor": "#5542F6",
+        "backgroundColor": "#FFFFFF",
+        "hasWatermark": false
+      },
+      "blocks": [
+        {
+          "id": "b_header",
+          "type": "header",
+          "title": "หัวกระดาษ",
+          "settings": {
+            "hasLogo": true,
+            "logoUrl": "/quotation.png",
+            "companyName": "[ ชื่อบริษัทผู้แต่งตั้ง ]",
+            "companyNameEn": "[ Company Name (EN) ]",
+            "taxId": "0-0000-00000-00-0",
+            "address": "[ ที่อยู่สำนักงานใหญ่ ]",
+            "phone": "02-XXX-XXXX",
+            "email": "partner@company.com",
+            "align": "split"
+          }
+        },
+        {
+          "id": "b_title",
+          "type": "doc_title",
+          "title": "หัวเรื่อง",
+          "settings": {
+            "titleText": "สัญญาแต่งตั้งพันธมิตรตัวแทนจำหน่าย",
+            "subtitleText": "Partner Agreement",
+            "align": "center"
+          }
+        },
+        {
+          "id": "b_text",
+          "type": "text_block",
+          "title": "รายละเอียดข้อตกลง",
+          "settings": {
+            "content": "สัญญานี้จัดทำขึ้นระหว่าง [ ชื่อบริษัทผู้แต่งตั้ง ] และ [ ชื่อตัวแทนพันธมิตร ] เพื่อแต่งตั้งให้เป็นตัวแทนพันธมิตรในการจำหน่ายและให้บริการผลิตภัณฑ์ตามเงื่อนไขที่ตกลงกัน"
+          }
+        },
+        {
+          "id": "b_terms",
+          "type": "terms",
+          "title": "เงื่อนไขพันธมิตร",
+          "settings": {
+            "heading": "เงื่อนไขและสิทธิประโยชน์พันธมิตร:",
+            "bullets": [
+              "ส่วนแบ่งผลประโยชน์ทางการค้าตามระดับพันธมิตรที่กำหนด",
+              "การลงทะเบียนโครงการผ่านระบบ Deal Registration",
+              "ระยะเวลาสัญญาและเงื่อนไขการต่ออายุสัญญา"
+            ]
+          }
+        },
+        {
+          "id": "b_signatures",
+          "type": "signatures",
+          "title": "ลงนามแต่งตั้ง",
+          "settings": {
+            "slots": [
+              {
+                "id": "s1",
+                "name": "[ ผู้มีอำนาจลงนามผู้แต่งตั้ง ]",
+                "role": "ผู้แต่งตั้ง"
+              },
+              {
+                "id": "s2",
+                "name": "............................................",
+                "role": "ผู้รับการแต่งตั้ง (พันธมิตร)"
+              }
+            ]
+          }
+        }
+      ],
+      "createdAt": "2026-09-01T00:00:00.000Z",
+      "updatedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "tmpl-distributor-standard",
+      "categoryId": "distributor",
+      "version": 1,
+      "name": "สัญญาแต่งตั้งและจัดจำหน่ายซอฟต์แวร์",
+      "englishName": "Distributor Agreement",
+      "description": "โครงสร้างสัญญาแต่งตั้งตัวแทนจำหน่ายและจัดจำหน่ายซอฟต์แวร์",
+      "icon": "Building2",
+      "badge": "มาตรฐาน",
+      "pageCount": "2 หน้า A4",
+      "status": "published",
+      "orientation": "portrait",
+      "theme": {
+        "primaryColor": "#5542F6",
+        "backgroundColor": "#FFFFFF",
+        "hasWatermark": false
+      },
+      "blocks": [
+        {
+          "id": "b_header",
+          "type": "header",
+          "title": "หัวกระดาษ",
+          "settings": {
+            "hasLogo": true,
+            "logoUrl": "/quotation.png",
+            "companyName": "[ ชื่อบริษัทผู้จัดจำหน่ายหลัก ]",
+            "companyNameEn": "[ Principal Company (EN) ]",
+            "taxId": "0-0000-00000-00-0",
+            "address": "[ ที่อยู่สำนักงานใหญ่ ]",
+            "phone": "02-XXX-XXXX",
+            "email": "distributor@company.com",
+            "align": "split"
+          }
+        },
+        {
+          "id": "b_title",
+          "type": "doc_title",
+          "title": "หัวเรื่อง",
+          "settings": {
+            "titleText": "สัญญาแต่งตั้งและจัดจำหน่ายซอฟต์แวร์",
+            "subtitleText": "Distributor Agreement",
+            "align": "center"
+          }
+        },
+        {
+          "id": "b_text",
+          "type": "text_block",
+          "title": "รายละเอียดข้อสัญญา",
+          "settings": {
+            "content": "สัญญานี้จัดทำขึ้นระหว่าง [ ชื่อบริษัทผู้จัดจำหน่ายหลัก ] และ [ ชื่อบริษัทตัวแทนจำหน่าย ] เพื่อกำหนดสิทธิและหน้าที่ในการจำหน่ายผลิตภัณฑ์ซอฟต์แวร์ในเขตพื้นที่ที่กำหนด"
+          }
+        },
+        {
+          "id": "b_terms",
+          "type": "terms",
+          "title": "ข้อกำหนดการจำหน่าย",
+          "settings": {
+            "heading": "เงื่อนไขการจำหน่ายและเป้าหมาย:",
+            "bullets": [
+              "กำหนดเป้าหมายยอดจำหน่ายและอัตราส่วนลดตามระดับตัวแทน",
+              "ขอบเขตพื้นที่และสิทธิการจัดจำหน่ายในอาณาเขตที่ตกลง",
+              "การสนับสนุนด้านการตลาดและการฝึกอบรมผลิตภัณฑ์"
+            ]
+          }
+        },
+        {
+          "id": "b_signatures",
+          "type": "signatures",
+          "title": "ลงนามคู่สัญญา",
+          "settings": {
+            "slots": [
+              {
+                "id": "s1",
+                "name": "[ ผู้มีอำนาจลงนามผู้จัดจำหน่ายหลัก ]",
+                "role": "ผู้จัดจำหน่ายหลัก"
+              },
+              {
+                "id": "s2",
+                "name": "............................................",
+                "role": "ตัวแทนจำหน่าย"
+              }
+            ]
+          }
+        }
+      ],
+      "createdAt": "2026-09-01T00:00:00.000Z",
+      "updatedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "tmpl-notification-relocation",
+      "categoryId": "notification",
+      "version": 1,
+      "name": "หนังสือแจ้งเปลี่ยนแปลงที่ตั้งสำนักงานใหญ่",
+      "englishName": "Notice of Head Office Relocation",
+      "description": "หนังสือแจ้งเปลี่ยนแปลงที่อยู่และสถานที่ตั้งสำนักงานใหญ่ทางการ (ไทย-อังกฤษ)",
+      "icon": "Megaphone",
+      "badge": "มาตรฐาน",
+      "pageCount": "1 หน้า A4",
+      "status": "published",
+      "orientation": "portrait",
+      "theme": {
+        "primaryColor": "#af0e0e",
+        "accentColor": "#cb1717",
+        "highlightColor": "#ff1616",
+        "backgroundColor": "#f3f3f4"
+      },
+      "blocks": [
+        {
+          "id": "b_header",
+          "type": "header",
+          "title": "หัวกระดาษบริษัท",
+          "settings": {
+            "hasLogo": true,
+            "logoUrl": "/header_logo.png",
+            "companyName": "บริษัท เดอะ รีโคฟเวอรี่ แอดไวเซอร์ จำกัด",
+            "companyNameEn": "THE RECOVERY ADVISOR CO., LTD.",
+            "taxId": "0105554007189",
+            "address": "45 ซอยโกสุมรวมใจ 37 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210",
+            "phone": "02-1019884",
+            "align": "split"
+          }
+        },
+        {
+          "id": "b_title",
+          "type": "doc_title",
+          "title": "หัวเรื่องเอกสาร",
+          "settings": {
+            "titleText": "หนังสือแจ้งเปลี่ยนแปลงที่ตั้งสำนักงานใหญ่",
+            "subtitleText": "Notice of Head Office Relocation",
+            "align": "center"
+          }
+        },
+        {
+          "id": "b_info",
+          "type": "info_grid",
+          "title": "ข้อมูลการจัดส่ง",
+          "settings": {
+            "date": "01 กันยายน 2569 / September 01, 2026",
+            "recipient": "ท่านคู่ค้าและลูกค้าผู้มีอุปการคุณ / Valued Business Partners",
+            "subject": "แจ้งเปลี่ยนแปลงที่อยู่สำนักงานใหญ่ / Change of Head Office Address"
+          }
+        },
+        {
+          "id": "b_text_th",
+          "type": "text_block",
+          "title": "เนื้อความภาษาไทย",
+          "settings": {
+            "content": "บริษัทฯ ขอเรียนให้ท่านทราบว่า บริษัทฯ ได้ทำการย้ายและเปลี่ยนแปลงที่ตั้งสำนักงานใหญ่ โดยมีผลบังคับใช้ตั้งแต่วันที่ 16 กันยายน 2569 เป็นต้นไป ขอความกรุณาท่านโปรดใช้ที่อยู่ใหม่ในการติดต่อ ออกใบกำกับภาษี ใบเสร็จรับเงิน นิติกรรมสัญญา และการจัดส่งเอกสารต่างๆ โดยมีรายละเอียดที่อยู่ดังต่อไปนี้"
+          }
+        },
+        {
+          "id": "b_text_en",
+          "type": "text_block",
+          "title": "เนื้อความภาษาอังกฤษ",
+          "settings": {
+            "content": "Please be informed that our company will officially relocate its Head Office. This change will be effective from September 16, 2026 onwards. We kindly request that you update your records and use the new address for all future correspondence, tax invoices, receipts, and legal contracts. The details of our addresses are as follows:"
+          }
+        },
+        {
+          "id": "b_address_comparison",
+          "type": "address_comparison",
+          "title": "เปรียบเทียบที่อยู่เดิมและที่อยู่ใหม่",
+          "settings": {
+            "previousAddressTh": "45 ซอยโกสุมรวมใจ 37 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210",
+            "previousAddressEn": "45 Soi Kosum Ruam Chai 37, Don Mueang, Don Mueang, Bangkok 10210, Thailand",
+            "newAddressTh": "18 ซอยโกสุมรวมใจ 35 แยก 4 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210",
+            "newAddressEn": "18 Soi Kosum Ruam Chai 35 Yaek 4, Don Mueang, Don Mueang, Bangkok 10210, Thailand",
+            "effectiveDate": "16 ก.ย. 2569"
+          }
+        },
+        {
+          "id": "b_signatures",
+          "type": "signatures",
+          "title": "ส่วนลงนามผู้มีอำนาจ",
+          "settings": {
+            "slots": [
+              {
+                "id": "s1",
+                "name": "นายศรายุทธ  โกสิยารักษ์",
+                "role": "กรรมการผู้จัดการ / CEO"
+              }
+            ]
+          }
+        }
+      ],
+      "createdAt": "2026-09-01T00:00:00.000Z",
+      "updatedAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "id": "tmpl-recovery-advisor-studio",
+      "name": "สัญญาและข้อตกลงการให้บริการ (The Recovery Advisor)",
+      "categoryId": "nda",
+      "editorType": "document",
+      "canvasPreset": "a4-portrait",
+      "description": "เทมเพลตสัญญาและข้อตกลงการให้บริการ A4 Studio",
+      "icon": "FileText",
+      "badge": "กำหนดเอง",
+      "status": "published",
+      "orientation": "portrait",
+      "pageCount": 1,
+      "pages": [
+        {
+          "id": "page-1",
+          "json": "{\"version\":\"6.9.1\",\"objects\":[{\"type\":\"textbox\",\"left\":56,\"top\":56,\"width\":682,\"text\":\"บริษัท เดอะ รีโคฟเวอรี่ แอดไวเซอร์ จำกัด\\nTHE RECOVERY ADVISOR CO., LTD.\",\"fontSize\":18,\"fontWeight\":\"bold\",\"fill\":\"#1E293B\",\"fontFamily\":\"'Noto Sans Thai', sans-serif\"},{\"type\":\"textbox\",\"left\":56,\"top\":110,\"width\":682,\"text\":\"เลขประจำตัวผู้เสียภาษี: 0105554007189\\n45 ซอยโกสุมรวมใจ 37 แขวงดอนเมือง เขตดอนเมือง กรุงเทพฯ 10210\",\"fontSize\":12,\"fill\":\"#64748B\",\"fontFamily\":\"'Noto Sans Thai', sans-serif\"},{\"type\":\"textbox\",\"left\":56,\"top\":180,\"width\":682,\"text\":\"หนังสือสัญญาและข้อตกลงการให้บริการเทคโนโลยีคลาวด์\",\"fontSize\":20,\"fontWeight\":\"bold\",\"fill\":\"#0F172A\",\"textAlign\":\"center\",\"fontFamily\":\"'Noto Sans Thai', sans-serif\"},{\"type\":\"textbox\",\"left\":56,\"top\":240,\"width\":682,\"text\":\"ลูกค้า / ผู้ว่าจ้าง (Bill To):\\nชื่อผู้ติดต่อ: {{contact_person}}\\nหน่วยงาน / บริษัท: {{customer_name}}\\nเลขที่สัญญา: {{quotation_no}}\\nวันที่: {{date}}\\nสถานะ: ฉบับจริงสมบูรณ์\",\"fontSize\":12,\"fill\":\"#334155\",\"lineHeight\":1.6,\"fontFamily\":\"'Noto Sans Thai', sans-serif\"},{\"type\":\"group\",\"isDocTable\":true,\"left\":56,\"top\":380,\"docTableData\":{\"vatRate\":7,\"themeColor\":\"#2563EB\",\"width\":682,\"items\":[{\"no\":\"1\",\"title\":\"บริการบริหารจัดการระบบคลาวด์และบำรุงรักษารายปี\",\"qty\":1,\"price\":150000},{\"no\":\"2\",\"title\":\"การตรวจสอบช่องโหว่ความปลอดภัยระบบเครือข่าย\",\"qty\":1,\"price\":45000}]}},{\"type\":\"textbox\",\"left\":56,\"top\":720,\"width\":300,\"text\":\"ลงนามผู้ว่าจ้าง: ........................................\\n( {{contact_person}} )\\nวันที่: {{date}}\",\"fontSize\":11,\"fill\":\"#475569\",\"lineHeight\":1.5,\"fontFamily\":\"'Noto Sans Thai', sans-serif\"},{\"type\":\"textbox\",\"left\":438,\"top\":720,\"width\":300,\"text\":\"ลงนามผู้ให้บริการ: ........................................\\n( นายศรายุทธ โกสิยารักษ์ )\\nกรรมการผู้จัดการ\",\"fontSize\":11,\"fill\":\"#475569\",\"lineHeight\":1.5,\"fontFamily\":\"'Noto Sans Thai', sans-serif\"}]}"
+        }
+      ],
+      "updatedAt": "2026-09-04T02:32:50.747Z"
+    },
+    {
+      "id": "tmpl-phase-f-document-fonts",
+      "name": "เอกสารทดสอบฟอนต์ Chonburi และ Kanit (Phase F)",
+      "categoryId": "forms",
+      "editorType": "document",
+      "canvasPreset": "a4-portrait",
+      "version": 1,
+      "status": "published",
+      "pageCount": "1 หน้า A4",
+      "pages": [
+        {
+          "id": "page-1",
+          "json": {
+            "version": "6.9.1",
+            "objects": [
+              {
+                "type": "rect",
+                "left": 56,
+                "top": 40,
+                "width": 682,
+                "height": 4,
+                "fill": "#4338CA",
+                "selectable": false
+              },
+              {
+                "type": "textbox",
+                "left": 56,
+                "top": 60,
+                "width": 682,
+                "fontSize": 26,
+                "fontWeight": "normal",
+                "fontFamily": "'Chonburi', cursive",
+                "fill": "#1E1B4B",
+                "textAlign": "center",
+                "text": "หนังสือรับรองผลงานอันทรงเกียรติและนวัตกรรม 2569"
+              },
+              {
+                "type": "textbox",
+                "left": 56,
+                "top": 110,
+                "width": 682,
+                "fontSize": 16,
+                "fontWeight": "normal",
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#4338CA",
+                "textAlign": "center",
+                "text": "บริษัท เครสท์ เซนโด จำกัด • DocBuilder Unified Font Architecture"
+              },
+              {
+                "type": "textbox",
+                "left": 56,
+                "top": 170,
+                "width": 682,
+                "fontSize": 13,
+                "fontWeight": "normal",
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#334155",
+                "lineHeight": 1.6,
+                "textAlign": "left",
+                "text": "เอกสารฉบับนี้จัดทำขึ้นเพื่อรับรองการทดสอบระบบสถาปัตยกรรมฟอนต์ส่วนกลาง (Phase F: Unified Font Registry System) โดยรวมการแสดงผลฟอนต์พาดหัว Chonburi และเนื้อความ Kanit เพื่อพิสูจน์ว่าระบบสามารถแสดงผลตัวอักษรภาษาไทย สระบน-ล่าง วรรณยุกต์ และการเชื่อมต่อคำได้อย่างคมชัด ถูกต้อง 100% ปราศจากปัญหาตัวอักษรซ้ำซ้อน"
+              },
+              {
+                "type": "textbox",
+                "left": 56,
+                "top": 280,
+                "width": 682,
+                "fontSize": 20,
+                "fontWeight": "normal",
+                "fontFamily": "'Chonburi', cursive",
+                "fill": "#0F172A",
+                "textAlign": "left",
+                "text": "คุณสมบัติสำคัญของระบบแบบอักษรใหม่ (Key Capabilities)"
+              },
+              {
+                "type": "rect",
+                "left": 56,
+                "top": 330,
+                "width": 215,
+                "height": 120,
+                "fill": "#F8FAFC",
+                "stroke": "#E2E8F0",
+                "strokeWidth": 1,
+                "rx": 8,
+                "ry": 8
+              },
+              {
+                "type": "textbox",
+                "left": 68,
+                "top": 345,
+                "width": 190,
+                "fontSize": 14,
+                "fontWeight": "bold",
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#1E293B",
+                "text": "1. คอนทราสต์คมชัด"
+              },
+              {
+                "type": "textbox",
+                "left": 68,
+                "top": 375,
+                "width": 190,
+                "fontSize": 11,
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#64748B",
+                "lineHeight": 1.4,
+                "text": "ฟอนต์ Chonburi ถ่ายทอดความสง่างามของหัวเรื่องได้อย่างโดดเด่น"
+              },
+              {
+                "type": "rect",
+                "left": 289,
+                "top": 330,
+                "width": 215,
+                "height": 120,
+                "fill": "#F8FAFC",
+                "stroke": "#E2E8F0",
+                "strokeWidth": 1,
+                "rx": 8,
+                "ry": 8
+              },
+              {
+                "type": "textbox",
+                "left": 301,
+                "top": 345,
+                "width": 190,
+                "fontSize": 14,
+                "fontWeight": "bold",
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#1E293B",
+                "text": "2. อ่านง่ายในทุกขนาด"
+              },
+              {
+                "type": "textbox",
+                "left": 301,
+                "top": 375,
+                "width": 190,
+                "fontSize": 11,
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#64748B",
+                "lineHeight": 1.4,
+                "text": "ฟอนต์ Kanit มีโครงสร้างเรขาคณิตชัดเจน สบายตาทั้งบนจอและกระดาษ"
+              },
+              {
+                "type": "rect",
+                "left": 523,
+                "top": 330,
+                "width": 215,
+                "height": 120,
+                "fill": "#F8FAFC",
+                "stroke": "#E2E8F0",
+                "strokeWidth": 1,
+                "rx": 8,
+                "ry": 8
+              },
+              {
+                "type": "textbox",
+                "left": 535,
+                "top": 345,
+                "width": 190,
+                "fontSize": 14,
+                "fontWeight": "bold",
+                "fontFamily": "'Noto Sans Thai', sans-serif",
+                "fill": "#1E293B",
+                "text": "3. เข้ากันได้ 100%"
+              },
+              {
+                "type": "textbox",
+                "left": 535,
+                "top": 375,
+                "width": 190,
+                "fontSize": 11,
+                "fontFamily": "'Noto Sans Thai', sans-serif",
+                "fill": "#64748B",
+                "lineHeight": 1.4,
+                "text": "ทำงานร่วมกับฟอนต์มาตรฐาน Noto Sans Thai เดิมได้อย่างลงตัว"
+              },
+              {
+                "type": "textbox",
+                "left": 56,
+                "top": 520,
+                "width": 320,
+                "fontSize": 11,
+                "fontFamily": "'Noto Sans Thai', sans-serif",
+                "fill": "#64748B",
+                "text": "ผู้เสียภาษี: 0105558073755 | วันที่: 4 กันยายน 2569"
+              },
+              {
+                "type": "textbox",
+                "left": 418,
+                "top": 520,
+                "width": 320,
+                "fontSize": 11,
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#4338CA",
+                "textAlign": "right",
+                "text": "ลงนามรับรอง: นายศรายุทธ โกสิยารักษ์ (กรรมการผู้จัดการ)"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "tmpl-phase-f-slide-fonts",
+      "name": "สไลด์นำเสนอ Chonburi และ Kanit (Phase F)",
+      "categoryId": "presentation",
+      "editorType": "slide",
+      "canvasPreset": "slide-16-9",
+      "version": 1,
+      "status": "published",
+      "pageCount": "2 สไลด์ (16:9)",
+      "pages": [
+        {
+          "id": "slide-1",
+          "json": {
+            "version": "6.9.1",
+            "objects": [
+              {
+                "type": "rect",
+                "left": 40,
+                "top": 40,
+                "width": 1200,
+                "height": 640,
+                "fill": "#0F172A",
+                "rx": 16,
+                "ry": 16
+              },
+              {
+                "type": "textbox",
+                "left": 100,
+                "top": 140,
+                "width": 400,
+                "fontSize": 16,
+                "fontWeight": "bold",
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#38BDF8",
+                "text": "EXECUTIVE KEYNOTE • 2026"
+              },
+              {
+                "type": "textbox",
+                "left": 100,
+                "top": 180,
+                "width": 1080,
+                "fontSize": 48,
+                "fontWeight": "normal",
+                "fontFamily": "'Chonburi', cursive",
+                "fill": "#FFFFFF",
+                "text": "กลยุทธ์การทรานส์ฟอร์มธุรกิจสู่ยุคดิจิทัล 2026"
+              },
+              {
+                "type": "textbox",
+                "left": 100,
+                "top": 270,
+                "width": 1080,
+                "fontSize": 22,
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#94A3B8",
+                "text": "สร้างสรรค์เอกสารและงานนำเสนอระดับพรีเมียมด้วยระบบ DocBuilder Platform"
+              },
+              {
+                "type": "textbox",
+                "left": 100,
+                "top": 380,
+                "width": 1080,
+                "fontSize": 18,
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#CBD5E1",
+                "lineHeight": 1.8,
+                "text": "• ยกระดับการสื่อสารองค์กรด้วยระบบจัดเก็บแบบอักษรส่วนกลาง (Unified Font Registry)\n• รองรับฟอนต์ภาษาไทยแท้ พร้อม Fallback อัจฉริยะบน PowerPoint ทุกระบบปฏิบัติการ\n• ความเร็วการประมวลผลสูงและไร้รอยต่อระหว่างหน้าเอกสารและสไลด์"
+              },
+              {
+                "type": "textbox",
+                "left": 100,
+                "top": 580,
+                "width": 800,
+                "fontSize": 14,
+                "fontFamily": "'Noto Sans Thai', sans-serif",
+                "fill": "#64748B",
+                "text": "ผู้นำเสนอ: นายศรายุทธ โกสิยารักษ์ | บริษัท เครสท์ เซนโด จำกัด"
+              }
+            ]
+          }
+        },
+        {
+          "id": "slide-2",
+          "json": {
+            "version": "6.9.1",
+            "objects": [
+              {
+                "type": "rect",
+                "left": 40,
+                "top": 40,
+                "width": 1200,
+                "height": 640,
+                "fill": "#F8FAFC",
+                "stroke": "#E2E8F0",
+                "strokeWidth": 2,
+                "rx": 16,
+                "ry": 16
+              },
+              {
+                "type": "textbox",
+                "left": 80,
+                "top": 80,
+                "width": 1120,
+                "fontSize": 36,
+                "fontFamily": "'Chonburi', cursive",
+                "fill": "#1E1B4B",
+                "text": "ผลลัพธ์และความสำเร็จของการพัฒนาระบบฟอนต์"
+              },
+              {
+                "type": "textbox",
+                "left": 80,
+                "top": 140,
+                "width": 1120,
+                "fontSize": 16,
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#6366F1",
+                "text": "การทดสอบประสิทธิผลการส่งออกไฟล์ข้ามแพลตฟอร์ม (Cross-Platform Export Validation)"
+              },
+              {
+                "type": "rect",
+                "left": 80,
+                "top": 200,
+                "width": 340,
+                "height": 220,
+                "fill": "#FFFFFF",
+                "stroke": "#E0E7FF",
+                "strokeWidth": 2,
+                "rx": 12,
+                "ry": 12
+              },
+              {
+                "type": "textbox",
+                "left": 110,
+                "top": 230,
+                "width": 280,
+                "fontSize": 44,
+                "fontWeight": "bold",
+                "fontFamily": "'Chonburi', cursive",
+                "fill": "#4338CA",
+                "text": "100%"
+              },
+              {
+                "type": "textbox",
+                "left": 110,
+                "top": 300,
+                "width": 280,
+                "fontSize": 18,
+                "fontWeight": "bold",
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#1E293B",
+                "text": "ความแม่นยำของวรรณยุกต์"
+              },
+              {
+                "type": "textbox",
+                "left": 110,
+                "top": 340,
+                "width": 280,
+                "fontSize": 12,
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#64748B",
+                "lineHeight": 1.5,
+                "text": "สระบน-ล่างไม่จม ไม่ซ้อนทับ และไม่เกิดอักขระซ้ำในระบบประมวลผล PDF"
+              },
+              {
+                "type": "rect",
+                "left": 470,
+                "top": 200,
+                "width": 340,
+                "height": 220,
+                "fill": "#FFFFFF",
+                "stroke": "#DCFCE7",
+                "strokeWidth": 2,
+                "rx": 12,
+                "ry": 12
+              },
+              {
+                "type": "textbox",
+                "left": 500,
+                "top": 230,
+                "width": 280,
+                "fontSize": 44,
+                "fontWeight": "bold",
+                "fontFamily": "'Chonburi', cursive",
+                "fill": "#15803D",
+                "text": "0 Error"
+              },
+              {
+                "type": "textbox",
+                "left": 500,
+                "top": 300,
+                "width": 280,
+                "fontSize": 18,
+                "fontWeight": "bold",
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#1E293B",
+                "text": "PPTX Native Compatibility"
+              },
+              {
+                "type": "textbox",
+                "left": 500,
+                "top": 340,
+                "width": 280,
+                "fontSize": 12,
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#64748B",
+                "lineHeight": 1.5,
+                "text": "เปิดและแก้ไขต่อใน PowerPoint ได้ทันทีโดยไม่ติดปัญหา Font Missing"
+              },
+              {
+                "type": "rect",
+                "left": 860,
+                "top": 200,
+                "width": 340,
+                "height": 220,
+                "fill": "#FFFFFF",
+                "stroke": "#FEE2E2",
+                "strokeWidth": 2,
+                "rx": 12,
+                "ry": 12
+              },
+              {
+                "type": "textbox",
+                "left": 890,
+                "top": 230,
+                "width": 280,
+                "fontSize": 44,
+                "fontWeight": "bold",
+                "fontFamily": "'Chonburi', cursive",
+                "fill": "#B91C1C",
+                "text": "14+ Fonts"
+              },
+              {
+                "type": "textbox",
+                "left": 890,
+                "top": 300,
+                "width": 280,
+                "fontSize": 18,
+                "fontWeight": "bold",
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#1E293B",
+                "text": "Thai Google Fonts"
+              },
+              {
+                "type": "textbox",
+                "left": 890,
+                "top": 340,
+                "width": 280,
+                "fontSize": 12,
+                "fontFamily": "'Kanit', sans-serif",
+                "fill": "#64748B",
+                "lineHeight": 1.5,
+                "text": "รองรับฟอนต์ยอดนิยมพร้อมติดตั้งเพิ่มได้แบบเรียลไทม์จากระบบ"
+              },
+              {
+                "type": "textbox",
+                "left": 80,
+                "top": 500,
+                "width": 1120,
+                "fontSize": 13,
+                "fontFamily": "'Noto Sans Thai', sans-serif",
+                "fill": "#94A3B8",
+                "textAlign": "center",
+                "text": "การทดสอบได้รับการตรวจสอบสมบูรณ์ตามเกณฑ์ Phase F Verification Plan"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "tmpl-phase-h-verification",
+      "categoryId": "presentation",
+      "name": "Phase H Verification - Font Weights & Gradients",
+      "description": "Dual pipeline verification for Font Weight variants (300-800) and Gradient fills (Linear & Radial)",
+      "editorType": "slide",
+      "canvasPreset": "slide-16-9",
+      "theme": {
+        "backgroundColor": "#0F172A",
+        "primaryColor": "#3B82F6",
+        "hasWatermark": false
+      },
+      "pages": [
+        {
+          "id": "page-1",
+          "name": "Slide 1",
+          "json": {
+            "version": "6.0.0",
+            "objects": [
+              {
+                "type": "rect",
+                "left": 60,
+                "top": 40,
+                "width": 1160,
+                "height": 75,
+                "fill": "#1E293B",
+                "rx": 12,
+                "ry": 12,
+                "stroke": "#334155",
+                "strokeWidth": 1
+              },
+              {
+                "type": "textbox",
+                "left": 85,
+                "top": 52,
+                "width": 1110,
+                "fontSize": 20,
+                "fontWeight": 700,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#F8FAFC",
+                "text": "Phase H Comprehensive Verification: Font Weights (300-800) & Gradients"
+              },
+              {
+                "type": "textbox",
+                "left": 85,
+                "top": 82,
+                "width": 1110,
+                "fontSize": 12,
+                "fontWeight": 400,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#94A3B8",
+                "text": "Dual Pipeline Proof: Native PDF (Vector/SVG objectBoundingBox) & PPTX (OOXML Solid Fallback + Bold Snap <600)"
+              },
+              {
+                "type": "rect",
+                "left": 60,
+                "top": 135,
+                "width": 560,
+                "height": 535,
+                "fill": "#1E293B",
+                "rx": 16,
+                "ry": 16,
+                "stroke": "#334155",
+                "strokeWidth": 1
+              },
+              {
+                "type": "textbox",
+                "left": 85,
+                "top": 155,
+                "width": 510,
+                "fontSize": 15,
+                "fontWeight": 700,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#38BDF8",
+                "text": "1. Font Weight Variants (Google Font: Prompt)"
+              },
+              {
+                "type": "textbox",
+                "left": 85,
+                "top": 180,
+                "width": 510,
+                "fontSize": 11,
+                "fontWeight": 400,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#94A3B8",
+                "text": "PPTX threshold: <600 snaps to Normal (bold: false), >=600 snaps to Bold (bold: true)"
+              },
+              {
+                "type": "textbox",
+                "left": 85,
+                "top": 215,
+                "width": 510,
+                "fontSize": 16,
+                "fontWeight": 300,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#F1F5F9",
+                "text": "Prompt Weight 300 (Light): ความหนาบางพิเศษ ก ข ค 123"
+              },
+              {
+                "type": "textbox",
+                "left": 85,
+                "top": 280,
+                "width": 510,
+                "fontSize": 16,
+                "fontWeight": 400,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#F1F5F9",
+                "text": "Prompt Weight 400 (Regular): ความหนาปกติมาตรฐาน ก ข ค 123"
+              },
+              {
+                "type": "textbox",
+                "left": 85,
+                "top": 345,
+                "width": 510,
+                "fontSize": 16,
+                "fontWeight": 500,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#F1F5F9",
+                "text": "Prompt Weight 500 (Medium): ความหนาปานกลาง ก ข ค 123"
+              },
+              {
+                "type": "textbox",
+                "left": 85,
+                "top": 415,
+                "width": 510,
+                "fontSize": 16,
+                "fontWeight": 600,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#F1F5F9",
+                "text": "Prompt Weight 600 (Semi-Bold): ความหนากึ่งหนา ก ข ค 123"
+              },
+              {
+                "type": "textbox",
+                "left": 85,
+                "top": 485,
+                "width": 510,
+                "fontSize": 16,
+                "fontWeight": 700,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#F1F5F9",
+                "text": "Prompt Weight 700 (Bold): ความหนาตัวหนาชัดเจน ก ข ค 123"
+              },
+              {
+                "type": "textbox",
+                "left": 85,
+                "top": 555,
+                "width": 510,
+                "fontSize": 16,
+                "fontWeight": 800,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#F1F5F9",
+                "text": "Prompt Weight 800 (Extra-Bold): ความหนาพิเศษเข้มสุด ก ข ค 123"
+              },
+              {
+                "type": "rect",
+                "left": 640,
+                "top": 135,
+                "width": 580,
+                "height": 535,
+                "fill": "#1E293B",
+                "rx": 16,
+                "ry": 16,
+                "stroke": "#334155",
+                "strokeWidth": 1
+              },
+              {
+                "type": "textbox",
+                "left": 665,
+                "top": 155,
+                "width": 530,
+                "fontSize": 15,
+                "fontWeight": 700,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#A78BFA",
+                "text": "2. Gradient Fills (Linear, Radial, & Resized)"
+              },
+              {
+                "type": "rect",
+                "left": 665,
+                "top": 195,
+                "width": 250,
+                "height": 110,
+                "rx": 14,
+                "ry": 14,
+                "fill": {
+                  "type": "linear",
+                  "gradientUnits": "percentage",
+                  "coords": {
+                    "x1": 0,
+                    "y1": 0,
+                    "x2": 1,
+                    "y2": 1
+                  },
+                  "colorStops": [
+                    {
+                      "offset": 0,
+                      "color": "#2563EB"
+                    },
+                    {
+                      "offset": 0.5,
+                      "color": "#8B5CF6"
+                    },
+                    {
+                      "offset": 1,
+                      "color": "#EC4899"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "textbox",
+                "left": 665,
+                "top": 312,
+                "width": 250,
+                "fontSize": 11,
+                "fontWeight": 600,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#E2E8F0",
+                "textAlign": "center",
+                "text": "Linear (45° Tri-color)\nPPTX Fallback: #2563EB"
+              },
+              {
+                "type": "circle",
+                "left": 955,
+                "top": 195,
+                "radius": 55,
+                "fill": {
+                  "type": "radial",
+                  "gradientUnits": "percentage",
+                  "coords": {
+                    "x1": 0.5,
+                    "y1": 0.5,
+                    "x2": 0.5,
+                    "y2": 0.5,
+                    "r1": 0,
+                    "r2": 0.5
+                  },
+                  "colorStops": [
+                    {
+                      "offset": 0,
+                      "color": "#F59E0B"
+                    },
+                    {
+                      "offset": 0.6,
+                      "color": "#EF4444"
+                    },
+                    {
+                      "offset": 1,
+                      "color": "#7C3AED"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "textbox",
+                "left": 950,
+                "top": 312,
+                "width": 250,
+                "fontSize": 11,
+                "fontWeight": 600,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#E2E8F0",
+                "textAlign": "center",
+                "text": "Radial (Center Outward)\nPPTX Fallback: #F59E0B"
+              },
+              {
+                "type": "rect",
+                "left": 665,
+                "top": 375,
+                "width": 530,
+                "height": 110,
+                "rx": 14,
+                "ry": 14,
+                "fill": {
+                  "type": "linear",
+                  "gradientUnits": "percentage",
+                  "coords": {
+                    "x1": 0,
+                    "y1": 0,
+                    "x2": 1,
+                    "y2": 0
+                  },
+                  "colorStops": [
+                    {
+                      "offset": 0,
+                      "color": "#10B981"
+                    },
+                    {
+                      "offset": 0.5,
+                      "color": "#06B6D4"
+                    },
+                    {
+                      "offset": 1,
+                      "color": "#3B82F6"
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "textbox",
+                "left": 675,
+                "top": 415,
+                "width": 510,
+                "fontSize": 13,
+                "fontWeight": 700,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#FFFFFF",
+                "textAlign": "center",
+                "text": "Resized 2.5x Wide Rect (530x110 px)\ngradientUnits: \"percentage\" stretches smoothly 0% -> 100% across shape"
+              },
+              {
+                "type": "textbox",
+                "left": 665,
+                "top": 495,
+                "width": 530,
+                "fontSize": 11,
+                "fontWeight": 400,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#94A3B8",
+                "textAlign": "center",
+                "text": "PPTX Fallback: #10B981 (solidFill stop[0]) | PDF/SVG: objectBoundingBox vector"
+              },
+              {
+                "type": "textbox",
+                "left": 60,
+                "top": 680,
+                "width": 1160,
+                "fontSize": 11,
+                "fontFamily": "'Prompt', sans-serif",
+                "fill": "#64748B",
+                "textAlign": "center",
+                "text": "Generated by DocBuilder Phase H Verification Suite | Zero Regressions Verified across PDF Vector & PowerPoint OOXML"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

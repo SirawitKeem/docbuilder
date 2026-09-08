@@ -1034,6 +1034,36 @@ export default function DocumentEditor({
           handleHistoryPush(canvas);
           hasUnsavedChangesRef.current = true;
         }
+        return;
+      }
+
+      // ── 12. Toggle Bold (Ctrl+B / Cmd+B) - Phase G.1 standard with e.code === "KeyB" ──
+      if (isModifier && code === "KeyB" && !e.shiftKey) {
+        if (isInputActive && !isTextEditing) return; // Don't intercept outside canvas
+        if (!activeObj) return;
+
+        const isTextObj =
+          activeObj.type === "textbox" ||
+          activeObj.type === "i-text" ||
+          activeObj.type === "text";
+        if (!isTextObj) return;
+
+        e.preventDefault();
+        const currentWeight = activeObj.fontWeight;
+        const isBold = currentWeight === "bold" || Number(currentWeight) >= 600;
+        const newWeight = isBold ? 400 : 700;
+
+        if (activeObj.isEditing && activeObj.selectionStart !== activeObj.selectionEnd) {
+          activeObj.setSelectionStyles({ fontWeight: newWeight });
+        } else {
+          activeObj.set("fontWeight", newWeight);
+        }
+        activeObj.dirty = true;
+        canvas.requestRenderAll();
+        setActiveObject(activeObj);
+        handleHistoryPush(canvas);
+        hasUnsavedChangesRef.current = true;
+        return;
       }
     };
 
