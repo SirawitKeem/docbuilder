@@ -145,7 +145,7 @@ export default function HistoryPage() {
                     onClick={() => setCurrentPage(pageNum)}
                     className={`w-8 h-8 rounded-lg text-xs font-semibold transition-colors ${
                       validCurrentPage === pageNum
-                        ? "bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white shadow-2xs"
+                        ? "bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white shadow-2xs"
                         : "border border-border hover:bg-muted text-muted-foreground"
                     }`}
                   >

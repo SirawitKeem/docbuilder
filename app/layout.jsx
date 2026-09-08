@@ -2,7 +2,13 @@ import { Inter, Noto_Sans, Noto_Sans_Thai, Noto_Sans_Thai_Looped, Sarabun } from
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  // Variable font: loads all weights 300–800 in a single request
+  // Matches tenant-hub's "Inter Variable" approach
+});
+
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],

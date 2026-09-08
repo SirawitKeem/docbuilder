@@ -55,7 +55,7 @@ export default function PriceSummaryBlock({ lineItems, vatRate, specialDiscount 
                   const val = e.target.value === "" ? "" : Number(e.target.value);
                   updateField("specialDiscount", val === "" ? 0 : val);
                 }}
-                className="w-20 text-right bg-[#F5F1FF] text-[#7C4DFF] font-bold rounded border border-[#E1D3FF] text-[11px] px-1 py-0.5 outline-none focus:ring-1 focus:ring-[#7C4DFF] tabular-nums"
+                className="w-20 text-right bg-[#F5F3FF] text-[#7C3AED] font-bold rounded border border-[#EDE9FE] text-[11px] px-1 py-0.5 outline-none focus:ring-1 focus:ring-[#7C3AED] tabular-nums"
                 title="ส่วนลดพิเศษ (THB)"
               />
             </div>
@@ -87,7 +87,7 @@ export default function PriceSummaryBlock({ lineItems, vatRate, specialDiscount 
                     const val = e.target.value === "" ? 0 : Number(e.target.value);
                     updateField("vatRate", val);
                   }}
-                  className="w-9 text-center bg-[#F5F1FF] text-[#7C4DFF] font-bold rounded border border-[#E1D3FF] text-[11px] py-0.5 outline-none focus:ring-1 focus:ring-[#7C4DFF]"
+                  className="w-9 text-center bg-[#F5F3FF] text-[#7C3AED] font-bold rounded border border-[#EDE9FE] text-[11px] py-0.5 outline-none focus:ring-1 focus:ring-[#7C3AED]"
                   title="ปรับ % ภาษีมูลค่าเพิ่ม"
                 />
                 <span className="font-bold text-[10px] text-gray-700">%</span>

@@ -98,7 +98,7 @@ export default function ResetPasswordForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 required
-                className="w-full h-11.5 pl-10 pr-4 bg-white border border-gray-200 rounded-xl text-[13.5px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-[#5542F6] focus:ring-3 focus:ring-purple-500/15 font-medium shadow-2xs"
+                className="w-full h-11.5 pl-10 pr-4 bg-white border border-gray-200 rounded-xl text-[13.5px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-primary focus:ring-3 focus:ring-primary/15 font-medium shadow-2xs"
               />
             </div>
           </div>
@@ -123,7 +123,7 @@ export default function ResetPasswordForm() {
         <span>Remember your password?</span>
         <Link
           href="/login"
-          className="font-bold text-[#5542F6] hover:underline ml-0.5"
+          className="font-bold text-primary hover:underline ml-0.5"
         >
           Back to sign in
         </Link>

@@ -204,7 +204,7 @@ export default function ProfileDataListPage() {
             {/* Create New Profile Button */}
             <Link
               href="/profile-data/new"
-              className="inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-xl bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-xs font-semibold hover:opacity-95 transition-opacity shrink-0"
+              className="inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-xl bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-xs font-semibold hover:opacity-95 transition-opacity shrink-0"
             >
               <Plus size={15} />
               สร้างชุดข้อมูลใหม่
@@ -350,7 +350,7 @@ export default function ProfileDataListPage() {
                     onClick={() => setCurrentPage(pageNum)}
                     className={`w-8 h-8 rounded-lg text-xs font-semibold transition-colors ${
                       validCurrentPage === pageNum
-                        ? "bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white shadow-2xs"
+                        ? "bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white shadow-2xs"
                         : "border border-border hover:bg-muted text-muted-foreground"
                     }`}
                   >
@@ -459,7 +459,7 @@ export default function ProfileDataListPage() {
               </button>
               <Link
                 href={`/profile-data/${selectedProfile.id}`}
-                className="px-4 py-1.5 rounded-lg bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white font-semibold text-xs hover:opacity-95 transition-opacity inline-flex items-center gap-1.5"
+                className="px-4 py-1.5 rounded-lg bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white font-semibold text-xs hover:opacity-95 transition-opacity inline-flex items-center gap-1.5"
               >
                 <Pencil size={14} />
                 แก้ไขข้อมูล

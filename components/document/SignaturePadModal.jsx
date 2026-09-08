@@ -106,12 +106,12 @@ export default function SignaturePadModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white border border-[#E4E4E8] rounded-[24px] shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-left select-none">
+      <div className="bg-white border border-[#E5E5E5] rounded-[24px] shadow-2xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-150 text-left select-none">
         
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#F5F1FF] text-[#5542F6] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#F5F3FF] text-[#7C3AED] flex items-center justify-center">
               <PenTool size={16} />
             </div>
             <div>
@@ -134,7 +134,7 @@ export default function SignaturePadModal({
             onClick={() => setActiveTab("draw")}
             className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold border-b-2 transition-all cursor-pointer ${
               activeTab === "draw"
-                ? "border-[#5542F6] text-[#5542F6]"
+                ? "border-[#7C3AED] text-[#7C3AED]"
                 : "border-transparent text-gray-500 hover:text-gray-800"
             }`}
           >
@@ -147,7 +147,7 @@ export default function SignaturePadModal({
             onClick={() => setActiveTab("upload")}
             className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold border-b-2 transition-all cursor-pointer ${
               activeTab === "upload"
-                ? "border-[#5542F6] text-[#5542F6]"
+                ? "border-[#7C3AED] text-[#7C3AED]"
                 : "border-transparent text-gray-500 hover:text-gray-800"
             }`}
           >
@@ -249,8 +249,8 @@ export default function SignaturePadModal({
                   </button>
                 </div>
               ) : (
-                <label className="border-2 border-dashed border-gray-200 hover:border-[#5542F6] rounded-2xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer bg-[#FAFAFC] hover:bg-[#F5F1FF]/30 transition-all h-44">
-                  <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#5542F6] flex items-center justify-center">
+                <label className="border-2 border-dashed border-gray-200 hover:border-[#7C3AED] rounded-2xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer bg-[#FAFAFC] hover:bg-[#F5F3FF]/30 transition-all h-44">
+                  <div className="w-10 h-10 rounded-xl bg-purple-50 text-[#7C3AED] flex items-center justify-center">
                     <Upload size={18} />
                   </div>
                   <span className="text-xs font-semibold text-gray-700">คลิกเพื่ออัปโหลดรูปลายเซ็น</span>
@@ -281,7 +281,7 @@ export default function SignaturePadModal({
             type="button"
             onClick={handleConfirm}
             disabled={activeTab === "draw" ? !hasDrawn : !uploadedImage}
-            className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-[#5542F6] hover:bg-[#4332D6] disabled:opacity-40 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] disabled:opacity-40 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
           >
             <Check size={14} />
             <span>ประทับลายเซ็นนี้</span>

@@ -278,12 +278,12 @@ export default function TemplateDetailModal({ template, onClose }) {
         {/* Modal Header */}
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/70">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#F5F1FF] text-[#5542F6] border border-[#EBE3FF] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-[#F5F3FF] text-[#7C3AED] border border-[#EDE9FE] flex items-center justify-center">
               <IconComp size={20} />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#5542F6] bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#7C3AED] bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">
                   {template.badge || "เทมเพลต"}
                 </span>
                 <span className="text-xs text-gray-400 font-medium">รหัส: {template.id}</span>
@@ -308,7 +308,7 @@ export default function TemplateDetailModal({ template, onClose }) {
           <div className="lg:col-span-7 space-y-3">
             <div className="flex items-center justify-between px-1">
               <span className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
-                <Eye size={13} className="text-[#5542F6]" />
+                <Eye size={13} className="text-[#7C3AED]" />
                 <span>ตัวอย่างโครงสร้างหน้าเอกสารจริง (Authentic Document UI)</span>
               </span>
               <span className="text-[10px] text-gray-400">
@@ -354,7 +354,7 @@ export default function TemplateDetailModal({ template, onClose }) {
                       onClick={() => setCurrentPage(pg)}
                       className={`w-7 h-7 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                         currentPage === pg
-                          ? "bg-[#5542F6] text-white shadow-2xs"
+                          ? "bg-[#7C3AED] text-white shadow-2xs"
                           : "bg-gray-100 hover:bg-gray-200 text-gray-600"
                       }`}
                     >
@@ -387,7 +387,7 @@ export default function TemplateDetailModal({ template, onClose }) {
             <div className="p-4 rounded-2xl bg-white border border-gray-200/80 shadow-2xs space-y-3">
               <div className="flex items-center justify-between border-b border-gray-100 pb-2">
                 <span className="text-xs font-bold text-gray-800 flex items-center gap-1.5">
-                  <Layers size={13} className="text-[#5542F6]" />
+                  <Layers size={13} className="text-[#7C3AED]" />
                   <span>โครงสร้างบล็อกในเทมเพลต ({template.blocks?.length || 0})</span>
                 </span>
                 <span className="text-[10px] text-gray-400">ปรับแต่งได้แบบ Canva</span>
@@ -444,7 +444,7 @@ export default function TemplateDetailModal({ template, onClose }) {
           <div className="flex items-center gap-2">
             <Link
               href={`/templates/new?edit=${template.id}`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#5542F6] hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
             >
               <Edit3 size={14} />
               <span>แก้ไขและปรับแต่งเทมเพลตนี้</span>

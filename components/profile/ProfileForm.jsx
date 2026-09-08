@@ -228,7 +228,7 @@ function ProfileFormContent({ profile }) {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="h-10 px-6 rounded-xl bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-xs font-semibold hover:opacity-95 disabled:opacity-60 transition-opacity shadow-sm"
+          className="h-10 px-6 rounded-xl bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-xs font-semibold hover:opacity-95 disabled:opacity-60 transition-opacity shadow-sm"
         >
           {saving ? "กำลังบันทึก..." : "บันทึกชุดข้อมูล"}
         </button>

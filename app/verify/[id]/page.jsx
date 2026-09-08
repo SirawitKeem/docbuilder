@@ -41,7 +41,7 @@ export default function VerificationPage() {
       {/* Header */}
       <div className="max-w-xl w-full mx-auto flex items-center justify-between pb-6">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#4F03BC] to-[#9F1EF4] flex items-center justify-center text-white font-bold text-sm shadow-xs">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#6D28D9] to-[#8B5CF6] flex items-center justify-center text-white font-bold text-sm shadow-xs">
             CZ
           </div>
           <div>
@@ -52,7 +52,7 @@ export default function VerificationPage() {
 
         <Link
           href="/"
-          className="text-xs font-bold text-[#5542F6] hover:underline flex items-center gap-1"
+          className="text-xs font-bold text-[#7C3AED] hover:underline flex items-center gap-1"
         >
           <span>เข้าสู่ระบบหลัก</span>
         </Link>
@@ -62,7 +62,7 @@ export default function VerificationPage() {
       <div className="max-w-xl w-full mx-auto bg-white rounded-3xl border border-gray-200/90 shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {loading ? (
           <div className="p-16 text-center space-y-3">
-            <div className="w-10 h-10 border-4 border-[#5542F6] border-t-transparent rounded-full animate-spin mx-auto" />
+            <div className="w-10 h-10 border-4 border-[#7C3AED] border-t-transparent rounded-full animate-spin mx-auto" />
             <p className="text-xs text-gray-500 font-medium">กำลังตรวจสอบความถูกต้องของเอกสาร...</p>
           </div>
         ) : errorMsg || !data ? (
@@ -119,7 +119,7 @@ export default function VerificationPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div className="p-3.5 rounded-2xl bg-gray-50/80 border border-gray-100 space-y-1">
                   <span className="text-[10px] font-bold text-gray-400 flex items-center gap-1">
-                    <Building2 size={12} className="text-[#5542F6]" />
+                    <Building2 size={12} className="text-[#7C3AED]" />
                     <span>นิติบุคคลผู้ออกเอกสาร</span>
                   </span>
                   <p className="font-bold text-gray-900">{data.organization?.nameTh}</p>
@@ -146,7 +146,7 @@ export default function VerificationPage() {
               <div className="p-4 rounded-2xl bg-purple-50/60 border border-purple-100 space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <span className="font-bold text-purple-900 flex items-center gap-1">
-                    <Lock size={13} className="text-[#5542F6]" />
+                    <Lock size={13} className="text-[#7C3AED]" />
                     <span>Verification Token (รหัสป้องกันการปลอมแปลง)</span>
                   </span>
                   <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">

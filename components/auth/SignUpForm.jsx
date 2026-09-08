@@ -102,7 +102,7 @@ export default function SignUpForm() {
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your full name"
               required
-              className="w-full h-11 pl-10 pr-4 bg-white border border-gray-200 rounded-xl text-[13.5px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-[#5542F6] focus:ring-3 focus:ring-purple-500/15 font-medium shadow-2xs"
+              className="w-full h-11 pl-10 pr-4 bg-white border border-gray-200 rounded-xl text-[13.5px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-primary focus:ring-3 focus:ring-primary/15 font-medium shadow-2xs"
             />
           </div>
         </div>
@@ -123,7 +123,7 @@ export default function SignUpForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
-              className="w-full h-11 pl-10 pr-4 bg-white border border-gray-200 rounded-xl text-[13.5px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-[#5542F6] focus:ring-3 focus:ring-purple-500/15 font-medium shadow-2xs"
+              className="w-full h-11 pl-10 pr-4 bg-white border border-gray-200 rounded-xl text-[13.5px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-primary focus:ring-3 focus:ring-primary/15 font-medium shadow-2xs"
             />
           </div>
         </div>
@@ -144,7 +144,7 @@ export default function SignUpForm() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Create a password"
               required
-              className="w-full h-11 pl-10 pr-10 bg-white border border-gray-200 rounded-xl text-[13.5px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-[#5542F6] focus:ring-3 focus:ring-purple-500/15 font-medium shadow-2xs"
+              className="w-full h-11 pl-10 pr-10 bg-white border border-gray-200 rounded-xl text-[13.5px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-primary focus:ring-3 focus:ring-primary/15 font-medium shadow-2xs"
             />
             <button
               type="button"
@@ -173,7 +173,7 @@ export default function SignUpForm() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm your password"
               required
-              className="w-full h-11 pl-10 pr-10 bg-white border border-gray-200 rounded-xl text-[13.5px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-[#5542F6] focus:ring-3 focus:ring-purple-500/15 font-medium shadow-2xs"
+              className="w-full h-11 pl-10 pr-10 bg-white border border-gray-200 rounded-xl text-[13.5px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-primary focus:ring-3 focus:ring-primary/15 font-medium shadow-2xs"
             />
             <button
               type="button"
@@ -193,15 +193,15 @@ export default function SignUpForm() {
               type="checkbox"
               checked={agreeTerms}
               onChange={(e) => setAgreeTerms(e.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 text-[#5542F6] focus:ring-[#5542F6] accent-[#5542F6] cursor-pointer"
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary accent-primary cursor-pointer"
             />
             <span className="text-[12.5px]">
               I agree to the{" "}
-              <Link href="/terms" className="font-semibold text-[#5542F6] hover:underline">
+              <Link href="/terms" className="font-semibold text-primary hover:underline">
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link href="/privacy" className="font-semibold text-[#5542F6] hover:underline">
+              <Link href="/privacy" className="font-semibold text-primary hover:underline">
                 Privacy Policy
               </Link>
             </span>
@@ -226,7 +226,7 @@ export default function SignUpForm() {
         Already have an account?{" "}
         <Link
           href="/login"
-          className="font-bold text-[#5542F6] hover:underline"
+          className="font-bold text-primary hover:underline"
         >
           Sign in
         </Link>

@@ -17,7 +17,7 @@ export default function UniversalTemplateRenderer({ template, scale = 1, classNa
   const paperHeight = isLandscape ? 794 : 1123;
 
   const theme = template.theme || {
-    primaryColor: "#5542F6",
+    primaryColor: "#7C3AED",
     backgroundColor: "#FFFFFF",
     hasBorder: false,
     hasWatermark: false,

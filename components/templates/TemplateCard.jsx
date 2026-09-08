@@ -12,40 +12,40 @@ export default function TemplateCard({ template, variant = "compact", onSelect }
   const isAvailable = template.available !== false;
 
   const cardInner = (
-    <div className="bg-white border border-[#EAEAEF] rounded-[20px] shadow-2xs p-5 h-full flex flex-col transition-all duration-200 group-hover:-translate-y-1 group-hover:border-[#5542F6]/50 group-hover:shadow-md text-left relative overflow-hidden select-none">
+    <div className="bg-surface border border-border rounded-[12px] shadow-2xs p-5 h-full flex flex-col transition-all duration-200 group-hover:border-primary/50 group-hover:shadow-card text-left relative overflow-hidden select-none">
       {/* Top Bar: Icon Box + Category Badge */}
       <div className="flex items-center justify-between gap-2 mb-3.5">
-        <div className={`w-11 h-11 rounded-2xl flex items-center justify-center border ${colorClass.bg} ${colorClass.text} ${colorClass.border} transition-transform group-hover:scale-105 duration-200 shadow-2xs`}>
-          <Icon size={20} />
+        <div className={`w-9 h-9 rounded-[6px] flex items-center justify-center border ${colorClass.bg} ${colorClass.text} ${colorClass.border} transition-transform group-hover:scale-105 duration-200 shadow-2xs`}>
+          <Icon size={18} />
         </div>
-        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold border ${colorClass.bg} ${colorClass.text} ${colorClass.border}`}>
+        <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${colorClass.bg} ${colorClass.text} ${colorClass.border}`}>
           {badgeText}
         </span>
       </div>
 
       {/* Title & Full Name */}
-      <p className="font-bold text-gray-900 text-[15px] group-hover:text-[#5542F6] transition-colors line-clamp-1 font-sans">
+      <p className="font-semibold text-foreground text-[15px] group-hover:text-primary transition-colors line-clamp-1 font-sans">
         {template.name}
       </p>
-      <p className="text-xs text-gray-500 mt-0.5 mb-1 font-normal line-clamp-2 leading-relaxed">
+      <p className="text-xs text-muted-foreground mt-0.5 mb-1 font-normal line-clamp-2 leading-relaxed">
         {template.fullName || template.description}
       </p>
 
       {variant === "full" && (
-        <p className="text-xs text-gray-400 mt-2 mb-4 leading-relaxed line-clamp-2">
+        <p className="text-xs text-muted-foreground/80 mt-2 mb-4 leading-relaxed line-clamp-2">
           {template.description}
         </p>
       )}
 
       {/* Bottom Action CTA */}
-      <div className={variant === "full" ? "mt-auto pt-3 border-t border-gray-100" : "mt-auto pt-3"}>
+      <div className={variant === "full" ? "mt-auto pt-3 border-t border-border" : "mt-auto pt-3"}>
         {isAvailable ? (
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5542F6]">
-            <span>เลือกเทมเพลต</span>
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary group-hover:text-primary/90">
+            <span>สร้างเอกสาร</span>
             <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-gray-400">
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground">
             <Lock size={12} />
             เร็วๆ นี้
           </span>

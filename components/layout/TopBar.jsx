@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import {
   Search,
@@ -109,30 +109,50 @@ export function TopBar() {
 
   const unreadCount = notifications.filter((n) => n.unread).length;
 
+  const pathname = usePathname();
+  const pageTitles = {
+    "/": "Dashboard",
+    "/create": "Create Document",
+    "/create/quotation": "Quotation",
+    "/create/partner": "Partner Agreement",
+    "/create/nda": "NDA Agreement",
+    "/create/distributor": "Distributor Agreement",
+    "/create/notification": "Official Notification",
+    "/create/custom": "Custom Document",
+    "/documents": "My Documents",
+    "/profile-data": "Profile Data",
+    "/templates": "Templates Catalog",
+    "/history": "Sent History",
+    "/settings": "System Settings",
+  };
+  const title = pageTitles[pathname] || "DocBuilder Workspace";
+
   return (
     <>
-      <header className="flex h-16 w-full items-center justify-between border-b border-border bg-surface px-4 sm:px-6 select-none shrink-0 transition-colors">
-        {/* Left Side: Sidebar Trigger & Search Bar */}
-        <div className="flex items-center gap-3 lg:gap-4 flex-1 max-w-xl">
-          <SidebarTrigger className="text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" />
+      <header className="flex h-14 w-full items-center justify-between bg-sidebar px-4 sm:px-6 select-none shrink-0 transition-colors">
+        {/* Left Side: Page Title (Desktop) & Sidebar Trigger (Mobile) */}
+        <div className="flex items-center gap-3">
+          <SidebarTrigger className="text-muted-foreground hover:text-foreground hover:bg-[#EEEEEE] dark:hover:bg-[#242424] transition-colors lg:hidden" />
+          <h1 className="text-lg font-semibold tracking-[-0.01em] text-foreground min-w-0 truncate font-sans">
+            {title}
+          </h1>
+        </div>
 
-          {/* Quick Search Button / Input (Cmd+K NextAdmin Style) */}
+        {/* Right Side: Quick Search, Dark Mode Toggle, Notifications, User Avatar */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Quick Search Button / Input (Cmd+K) */}
           <button
             onClick={() => setOpenCommand(true)}
-            className="flex items-center justify-between w-full max-w-xs sm:max-w-sm h-9.5 px-3.5 rounded-lg border border-border bg-muted/30 hover:bg-muted/60 text-muted-foreground text-xs font-medium transition-colors shadow-2xs group"
+            className="hidden md:flex items-center justify-between w-48 lg:w-56 h-9 px-3 rounded-[6px] border border-border bg-white dark:bg-[#1A1A1A] hover:bg-[#F6F6F6] dark:hover:bg-[#222222] text-muted-foreground text-xs font-normal transition-colors shadow-2xs group"
           >
-            <div className="flex items-center gap-2">
-              <Search size={15} className="text-muted-foreground group-hover:text-foreground transition-colors" />
-              <span>Search pages...</span>
+            <div className="flex items-center gap-2 truncate">
+              <Search size={14} className="text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
+              <span className="truncate">Search pages...</span>
             </div>
-            <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-semibold bg-background border border-border rounded text-muted-foreground shadow-2xs">
+            <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-semibold bg-muted/60 border border-border rounded text-muted-foreground shadow-2xs shrink-0">
               <span className="text-[10px]">⌘</span>K
             </kbd>
           </button>
-        </div>
-
-        {/* Right Side: Real Dark Mode Toggle, Notifications, Avatar User Profile */}
-        <div className="flex items-center gap-2 sm:gap-3">
           {/* Real Dark Mode Toggle Button */}
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -244,20 +264,20 @@ export function TopBar() {
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => handleSelectRoute("/profile-data")} className="cursor-pointer">
                 <User className="mr-2 h-4 w-4 text-muted-foreground" />
-                <span>ตั้งค่าโปรไฟล์</span>
+                <span>Profile Settings</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleSelectRoute("/documents")} className="cursor-pointer">
                 <FolderOpen className="mr-2 h-4 w-4 text-muted-foreground" />
-                <span>เอกสารของฉัน</span>
+                <span>My Documents</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleSelectRoute("/settings")} className="cursor-pointer">
                 <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
-                <span>ตั้งค่าระบบ</span>
+                <span>System Settings</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => handleSelectRoute("/login")} className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer">
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>ออกจากระบบ</span>
+                <span>Sign out</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

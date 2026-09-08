@@ -11,6 +11,7 @@ import {
 import { getDocumentHistory } from "@/lib/data/documents";
 import DocumentsTable from "@/components/documents/DocumentsTable";
 import { getTemplates } from "@/lib/data/templates";
+import { extractDocumentMeta } from "@/lib/data/documentMeta";
 
 export default function DocumentsPage() {
   const [documents, setDocuments] = useState([]);
@@ -19,7 +20,7 @@ export default function DocumentsPage() {
 
   // Search & Filter States
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all"); // 'all' | 'draft' | 'sent'
+  const [activeTab, setActiveTab] = useState("all"); // 'all' | 'exported'
   const [templateFilter, setTemplateFilter] = useState("all");
 
   // Pagination State
@@ -44,30 +45,28 @@ export default function DocumentsPage() {
 
   // Filter Documents dynamically
   const filteredDocuments = documents.filter((doc) => {
+    const meta = extractDocumentMeta(doc);
     const q = searchQuery.toLowerCase().trim();
-    const docName = (doc.name || "").toLowerCase();
-    const templateName = (doc.templateName || "").toLowerCase();
-    const createdBy = (doc.createdBy || "").toLowerCase();
+    const docName = (meta?.name || doc.name || "").toLowerCase();
+    const docNo = (meta?.docNumber || "").toLowerCase();
+    const counterparty = (meta?.counterpartyName || "").toLowerCase();
+    const templateName = (meta?.templateName || doc.templateName || "").toLowerCase();
 
-    const matchesSearch = !q || docName.includes(q) || templateName.includes(q) || createdBy.includes(q);
+    const matchesSearch = !q || docName.includes(q) || docNo.includes(q) || counterparty.includes(q) || templateName.includes(q);
 
-    const matchesStatus =
-      statusFilter === "all" ||
-      (statusFilter === "draft" && (doc.status === "draft" || !doc.status)) ||
-      (statusFilter === "signed" && doc.status === "signed") ||
-      (statusFilter === "completed" && (doc.status === "completed" || doc.status === "issued" || doc.status === "sent"));
+    const matchesTab =
+      activeTab === "all" ||
+      (activeTab === "exported" && meta?.hasExported);
 
     const matchesTemplate =
       templateFilter === "all" || doc.templateId === templateFilter;
 
-    return matchesSearch && matchesStatus && matchesTemplate;
+    return matchesSearch && matchesTab && matchesTemplate;
   });
 
-  // Calculate status counts (Document lifecycle states)
-  const totalCount = documents.length;
-  const draftCount = documents.filter((d) => d.status === "draft" || !d.status).length;
-  const signedCount = documents.filter((d) => d.status === "signed").length;
-  const completedCount = documents.filter((d) => d.status === "completed" || d.status === "issued" || d.status === "sent").length;
+  // Calculate tab counts
+  const allCount = documents.length;
+  const exportedCount = documents.filter((d) => extractDocumentMeta(d)?.hasExported).length;
 
   // Pagination Calculations
   const totalItems = filteredDocuments.length;
@@ -91,10 +90,10 @@ export default function DocumentsPage() {
 
         <Link
           href="/create"
-          className="inline-flex items-center justify-center gap-2 h-10 px-5 rounded-xl bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-xs font-semibold hover:opacity-95 transition-opacity shrink-0 shadow-sm"
+          className="primary-button inline-flex items-center gap-2 h-9 px-4 rounded-[6px] text-white font-medium text-xs shadow-xs hover:opacity-95 transition-all cursor-pointer select-none"
         >
-          <Plus size={16} strokeWidth={2.5} />
-          สร้างเอกสารใหม่
+          <Plus size={15} strokeWidth={2.5} />
+          <span>สร้างเอกสารใหม่</span>
         </Link>
       </div>
 
@@ -102,73 +101,39 @@ export default function DocumentsPage() {
       <div className="bg-surface border border-border rounded-2xl p-4 shadow-xs space-y-3">
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
           
-          {/* Status Segmented Tabs - Clean Document Lifecycle */}
-          <div className="flex items-center gap-1.5 p-1 bg-muted/50 rounded-xl border border-border/60 self-start sm:self-auto overflow-x-auto">
+          {/* Tabs: All Documents vs Export & Sent Logs */}
+          <div className="flex items-center gap-1 p-1 bg-muted/60 rounded-xl border border-border/70 self-start sm:self-auto overflow-x-auto">
             <button
               onClick={() => {
-                setStatusFilter("all");
+                setActiveTab("all");
                 setCurrentPage(1);
               }}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                statusFilter === "all"
+                activeTab === "all"
                   ? "bg-surface text-foreground shadow-2xs border border-border"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <span>ทั้งหมด</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-muted text-[10px] font-bold">
-                {totalCount}
+              <span>เอกสารทั้งหมด</span>
+              <span className="px-1.5 py-0.2 rounded-full bg-muted text-[10px] font-bold text-muted-foreground">
+                {allCount}
               </span>
             </button>
 
             <button
               onClick={() => {
-                setStatusFilter("draft");
+                setActiveTab("exported");
                 setCurrentPage(1);
               }}
               className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                statusFilter === "draft"
+                activeTab === "exported"
                   ? "bg-surface text-foreground shadow-2xs border border-border"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <span>ฉบับร่าง</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">
-                {draftCount}
-              </span>
-            </button>
-
-            <button
-              onClick={() => {
-                setStatusFilter("signed");
-                setCurrentPage(1);
-              }}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                statusFilter === "signed"
-                  ? "bg-surface text-foreground shadow-2xs border border-border"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <span>ลงนามแล้ว</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-purple-100 text-[#5542F6] text-[10px] font-bold">
-                {signedCount}
-              </span>
-            </button>
-
-            <button
-              onClick={() => {
-                setStatusFilter("completed");
-                setCurrentPage(1);
-              }}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
-                statusFilter === "completed"
-                  ? "bg-surface text-foreground shadow-2xs border border-border"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <span>เสร็จสมบูรณ์</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">
-                {completedCount}
+              <span>ประวัติการส่งออก</span>
+              <span className="px-1.5 py-0.2 rounded-full bg-muted text-[10px] font-bold text-muted-foreground">
+                {exportedCount}
               </span>
             </button>
           </div>
@@ -185,8 +150,8 @@ export default function DocumentsPage() {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="ค้นหาชื่อเอกสาร, ผู้สร้าง, เทมเพลต..."
-                className="w-full h-9 pl-9 pr-3 rounded-xl border border-border bg-muted/20 text-xs text-foreground outline-none focus:border-primary focus:bg-surface transition-all"
+                placeholder="ค้นหาชื่อเอกสาร, เลขที่, คู่สัญญา, เทมเพลต..."
+                className="w-full h-9 pl-9 pr-3 rounded-xl border border-border bg-muted/20 text-xs text-foreground outline-none focus:border-primary focus:bg-surface transition-all placeholder:text-muted-foreground/70"
               />
             </div>
 
@@ -217,7 +182,8 @@ export default function DocumentsPage() {
         <div className="space-y-4">
           <DocumentsTable
             documents={paginatedDocuments}
-            emptyMessage="ไม่พบเอกสารที่ตรงกับเงื่อนไขการค้นหา"
+            showSentTo={activeTab === "exported"}
+            emptyMessage={activeTab === "exported" ? "ยังไม่มีประวัติการส่งออกหรือส่งอีเมล" : "ไม่พบเอกสารที่ตรงกับเงื่อนไขการค้นหา"}
             onRefresh={loadDocuments}
           />
 
@@ -242,7 +208,7 @@ export default function DocumentsPage() {
                     onClick={() => setCurrentPage(pageNum)}
                     className={`w-8 h-8 rounded-lg text-xs font-semibold transition-colors ${
                       validCurrentPage === pageNum
-                        ? "bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white shadow-2xs"
+                        ? "bg-primary text-primary-foreground shadow-2xs font-bold"
                         : "border border-border hover:bg-muted text-muted-foreground"
                     }`}
                   >

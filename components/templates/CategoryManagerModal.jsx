@@ -37,7 +37,7 @@ export const ICON_MAP = {
 };
 
 export const COLOR_MAP = {
-  purple: { bg: "bg-[#F5F1FF]", text: "text-[#5542F6]", border: "border-[#EBE3FF]", ring: "ring-[#5542F6]" },
+  purple: { bg: "bg-[#F5F3FF]", text: "text-[#7C3AED]", border: "border-[#EDE9FE]", ring: "ring-[#7C3AED]" },
   blue: { bg: "bg-[#EFF6FF]", text: "text-[#2563EB]", border: "border-[#DBEAFE]", ring: "ring-[#2563EB]" },
   emerald: { bg: "bg-[#ECFDF5]", text: "text-[#059669]", border: "border-[#D1FAE5]", ring: "ring-[#059669]" },
   amber: { bg: "bg-[#FFFBEB]", text: "text-[#D97706]", border: "border-[#FEF3C7]", ring: "ring-[#D97706]" },
@@ -144,7 +144,7 @@ export default function CategoryManagerModal({
         {/* Header */}
         <div className="px-6 py-4.5 border-b border-gray-100 flex items-center justify-between bg-gray-50/70">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#F5F1FF] text-[#5542F6] border border-[#EBE3FF] flex items-center justify-center shadow-2xs">
+            <div className="w-10 h-10 rounded-2xl bg-[#F5F3FF] text-[#7C3AED] border border-[#EDE9FE] flex items-center justify-center shadow-2xs">
               <Layers size={18} />
             </div>
             <div>
@@ -174,7 +174,7 @@ export default function CategoryManagerModal({
           {editingId && (
             <form onSubmit={handleSave} className="p-4 rounded-2xl bg-purple-50/40 border border-purple-100 space-y-4 shadow-2xs">
               <div className="flex items-center justify-between border-b border-purple-100 pb-2">
-                <span className="text-xs font-bold text-[#5542F6] flex items-center gap-1.5">
+                <span className="text-xs font-bold text-[#7C3AED] flex items-center gap-1.5">
                   <Sparkles size={14} />
                   <span>แก้ไขข้อมูลหมวดหมู่</span>
                 </span>
@@ -195,7 +195,7 @@ export default function CategoryManagerModal({
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="เช่น Purchase Order"
-                    className="w-full h-9 px-3 rounded-xl border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6]"
+                    className="w-full h-9 px-3 rounded-xl border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED]"
                     required
                   />
                 </div>
@@ -207,7 +207,7 @@ export default function CategoryManagerModal({
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                     placeholder="เช่น ใบสั่งซื้อสินค้า (Purchase Order)"
-                    className="w-full h-9 px-3 rounded-xl border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6]"
+                    className="w-full h-9 px-3 rounded-xl border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED]"
                   />
                 </div>
               </div>
@@ -219,7 +219,7 @@ export default function CategoryManagerModal({
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="อธิบายวัตถุประสงค์ของเอกสารหมวดนี้..."
-                  className="w-full p-2.5 rounded-xl border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] resize-none"
+                  className="w-full p-2.5 rounded-xl border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] resize-none"
                 />
               </div>
 
@@ -234,7 +234,7 @@ export default function CategoryManagerModal({
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-5 py-2 text-xs font-bold text-white bg-[#5542F6] hover:bg-[#4332D6] rounded-xl shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+                  className="px-5 py-2 text-xs font-bold text-white bg-[#7C3AED] hover:bg-[#4332D6] rounded-xl shadow-xs transition-colors cursor-pointer disabled:opacity-50"
                 >
                   {loading ? "กำลังบันทึก..." : "บันทึกการแก้ไข"}
                 </button>
@@ -252,7 +252,7 @@ export default function CategoryManagerModal({
               onClick={() => {
                 if (onOpenCreateModal) onOpenCreateModal();
               }}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#5542F6] text-white hover:bg-[#4332D6] text-xs font-bold transition-all shadow-2xs cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#7C3AED] text-white hover:bg-[#4332D6] text-xs font-bold transition-all shadow-2xs cursor-pointer"
             >
               <Plus size={14} />
               <span>เพิ่มประเภทเอกสารใหม่</span>
@@ -284,7 +284,7 @@ export default function CategoryManagerModal({
                             มาตรฐาน
                           </span>
                         ) : (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-50 text-[#5542F6] border border-purple-100">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-50 text-[#7C3AED] border border-purple-100">
                             {cat.badge || "กำหนดเอง"}
                           </span>
                         )}
@@ -300,7 +300,7 @@ export default function CategoryManagerModal({
                     <button
                       type="button"
                       onClick={() => handleStartEdit(cat)}
-                      className="p-2 rounded-xl text-gray-400 hover:text-[#5542F6] hover:bg-purple-50 transition-colors cursor-pointer"
+                      className="p-2 rounded-xl text-gray-400 hover:text-[#7C3AED] hover:bg-purple-50 transition-colors cursor-pointer"
                       title="แก้ไขข้อมูลหมวดหมู่"
                     >
                       <Edit2 size={15} />

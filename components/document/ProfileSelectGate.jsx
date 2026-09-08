@@ -157,14 +157,14 @@ function ProfileSelectGateContent({ templateId }) {
 
       {/* Header Title Section */}
       <div className="mb-8 space-y-1">
-        <h1 className="text-2xl font-bold text-[#22162B]">เลือกชุดข้อมูลที่จะใช้</h1>
+        <h1 className="text-2xl font-bold text-[#171717]">เลือกชุดข้อมูลที่จะใช้</h1>
         <p className="text-sm text-[#646469]">
-          แสดงเฉพาะชุดข้อมูลที่สามารถใช้งานร่วมกับ <strong className="text-[#7C4DFF] font-bold">{shortTemplateTitle}</strong> โดยอัตโนมัติ
+          แสดงเฉพาะชุดข้อมูลที่สามารถใช้งานร่วมกับ <strong className="text-[#7C3AED] font-bold">{shortTemplateTitle}</strong> โดยอัตโนมัติ
         </p>
       </div>
 
       {/* Main Container Card */}
-      <div className="bg-white border border-[#E4E4E8] rounded-[16px] p-6 shadow-card space-y-5">
+      <div className="bg-white border border-[#E5E5E5] rounded-[16px] p-6 shadow-card space-y-5">
         
         {/* Toolbar: Search Input + Create Profile Button */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
@@ -177,7 +177,7 @@ function ProfileSelectGateContent({ templateId }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={`ค้นหาชุดข้อมูลสำหรับ ${shortTemplateTitle}...`}
-              className="w-full h-10 pl-10 pr-4 rounded-[10px] border border-[#E4E4E8] bg-gray-50/50 text-sm outline-none focus:border-[#7C4DFF] focus:ring-2 focus:ring-[#F5F1FF] transition-all"
+              className="w-full h-10 pl-10 pr-4 rounded-[10px] border border-[#E5E5E5] bg-gray-50/50 text-sm outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#F5F3FF] transition-all"
             />
           </div>
 
@@ -185,7 +185,7 @@ function ProfileSelectGateContent({ templateId }) {
             <button
               onClick={() => setSelectedId(null)}
               type="button"
-              className="inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-[10px] bg-[#5542F6] text-white text-xs font-bold hover:bg-[#4332D6] transition-colors cursor-pointer shadow-xs"
+              className="inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-[10px] bg-[#7C3AED] text-white text-xs font-bold hover:bg-[#4332D6] transition-colors cursor-pointer shadow-xs"
             >
               <FileText size={15} />
               <span>เริ่มสร้างเอกสารทันที</span>
@@ -194,7 +194,7 @@ function ProfileSelectGateContent({ templateId }) {
             <Link
               href="/profile-data/new"
               target="_blank"
-              className="inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-[10px] border border-[#E4E4E8] bg-white text-gray-700 hover:bg-gray-50 text-xs font-semibold transition-colors shrink-0"
+              className="inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-[10px] border border-[#E5E5E5] bg-white text-gray-700 hover:bg-gray-50 text-xs font-semibold transition-colors shrink-0"
             >
               <Plus size={15} />
               <span>เพิ่มชุดข้อมูลกลาง</span>
@@ -277,7 +277,7 @@ function ProfileSelectGateContent({ templateId }) {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => setSelectedId(p.id)}
-                            className="px-3.5 py-1.5 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-xs font-semibold hover:opacity-95 transition-opacity shrink-0"
+                            className="px-3.5 py-1.5 rounded-[10px] bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-xs font-semibold hover:opacity-95 transition-opacity shrink-0"
                           >
                             เลือกใช้งาน
                           </button>
@@ -287,7 +287,7 @@ function ProfileSelectGateContent({ templateId }) {
                               e.stopPropagation();
                               setOpenMenuId(openMenuId === p.id ? null : p.id);
                             }}
-                            className="p-1.5 rounded-[10px] border border-[#E4E4E8] bg-white hover:bg-[#F6F6FA] text-gray-600 transition-colors"
+                            className="p-1.5 rounded-[10px] border border-[#E5E5E5] bg-white hover:bg-[#F6F6FA] text-gray-600 transition-colors"
                             title="ตัวเลือกเพิ่มเติม"
                           >
                             <MoreHorizontal size={15} />
@@ -330,14 +330,14 @@ function ProfileSelectGateContent({ templateId }) {
         {/* Blank Document Choice Card */}
         <div
           onClick={() => setSelectedId(null)}
-          className="w-full flex items-center justify-between p-4 rounded-[16px] border border-dashed border-[#E4E4E8] bg-gray-50/50 hover:bg-[#F6F6FA] transition-all cursor-pointer group"
+          className="w-full flex items-center justify-between p-4 rounded-[16px] border border-dashed border-[#E5E5E5] bg-gray-50/50 hover:bg-[#F6F6FA] transition-all cursor-pointer group"
         >
           <div className="flex items-center gap-3.5 min-w-0 pr-4">
             <div className="w-10 h-10 rounded-[10px] bg-gray-200 text-gray-600 flex items-center justify-center shrink-0">
               <FileText size={20} />
             </div>
             <div className="min-w-0">
-              <p className="font-bold text-[#22162B] text-sm group-hover:text-[#7C4DFF] transition-colors">
+              <p className="font-bold text-[#171717] text-sm group-hover:text-[#7C3AED] transition-colors">
                 เริ่มจากเอกสารเปล่า (ไม่ใช้ข้อมูลที่บันทึกไว้)
               </p>
               <p className="text-xs text-[#646469] mt-0.5 truncate">
@@ -346,7 +346,7 @@ function ProfileSelectGateContent({ templateId }) {
             </div>
           </div>
 
-          <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[10px] bg-white border border-[#E4E4E8] text-[#22162B] text-xs font-semibold group-hover:bg-[#7C4DFF] group-hover:text-white group-hover:border-[#7C4DFF] transition-all">
+          <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[10px] bg-white border border-[#E5E5E5] text-[#171717] text-xs font-semibold group-hover:bg-[#7C3AED] group-hover:text-white group-hover:border-[#7C3AED] transition-all">
             <span>เลือกเอกสารเปล่า</span>
             <ChevronRight size={15} />
           </div>

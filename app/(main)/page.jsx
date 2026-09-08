@@ -5,7 +5,7 @@ import { currentUser } from "@/lib/mock-data/user";
 
 export default function HomePage() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <HeroSection userName={currentUser.name} />
       <TemplateGrid />
       <RecentDocumentsTable />

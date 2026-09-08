@@ -89,7 +89,7 @@ export default function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
-              className="w-full h-11.5 pl-10 pr-4 bg-white border border-gray-200 rounded-xl text-[13.5px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-[#5542F6] focus:ring-3 focus:ring-purple-500/15 font-medium shadow-2xs"
+              className="w-full h-11.5 pl-10 pr-4 bg-white border border-gray-200 rounded-xl text-[13.5px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-primary focus:ring-3 focus:ring-primary/15 font-medium shadow-2xs"
             />
           </div>
         </div>
@@ -110,7 +110,7 @@ export default function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
               required
-              className="w-full h-11.5 pl-10 pr-10 bg-white border border-gray-200 rounded-xl text-[13.5px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-[#5542F6] focus:ring-3 focus:ring-purple-500/15 font-medium shadow-2xs"
+              className="w-full h-11.5 pl-10 pr-10 bg-white border border-gray-200 rounded-xl text-[13.5px] text-gray-900 placeholder:text-gray-400 outline-none transition-all focus:border-primary focus:ring-3 focus:ring-primary/15 font-medium shadow-2xs"
             />
             <button
               type="button"
@@ -130,13 +130,13 @@ export default function LoginForm() {
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 text-[#5542F6] focus:ring-[#5542F6] accent-[#5542F6] cursor-pointer"
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary accent-primary cursor-pointer"
             />
             <span className="font-medium text-[13px] text-gray-700">Keep me signed in</span>
           </label>
           <Link
             href="/reset-password"
-            className="font-medium text-[13px] text-[#5542F6] hover:underline"
+            className="font-medium text-[13px] text-primary hover:underline"
           >
             Forget password?
           </Link>
@@ -160,7 +160,7 @@ export default function LoginForm() {
         Don&apos;t have an account?{" "}
         <Link
           href="/sign-up"
-          className="font-bold text-[#5542F6] hover:underline"
+          className="font-bold text-primary hover:underline"
         >
           Create account
         </Link>

@@ -46,12 +46,12 @@ export default function ContractFormSidebar({ template, isOpen }) {
   const isComplete = requiredFields.length > 0 && filledRequiredCount === requiredFields.length;
 
   return (
-    <div className="w-[360px] xl:w-[400px] bg-white border-r border-[#E4E4E8] flex flex-col h-full shrink-0 shadow-sm z-20 select-none">
+    <div className="w-[360px] xl:w-[400px] bg-white border-r border-[#E5E5E5] flex flex-col h-full shrink-0 shadow-sm z-20 select-none">
       {/* Sidebar Header */}
-      <div className="p-4 border-b border-[#E4E4E8] bg-white">
+      <div className="p-4 border-b border-[#E5E5E5] bg-white">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#F5F1FF] text-[#5542F6] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#F5F3FF] text-[#7C3AED] flex items-center justify-center">
               <FileSignature size={18} />
             </div>
             <div>
@@ -63,7 +63,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
           <button
             onClick={handleFillTodayDate}
             type="button"
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#F0EBFF] hover:bg-[#E5DCFF] text-[#5542F6] text-[11px] font-bold transition-colors cursor-pointer shadow-2xs"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#F0EBFF] hover:bg-[#E5DCFF] text-[#7C3AED] text-[11px] font-bold transition-colors cursor-pointer shadow-2xs"
             title="ใส่วันที่ปัจจุบันอัตโนมัติ"
           >
             <Sparkles size={12} />
@@ -75,14 +75,14 @@ export default function ContractFormSidebar({ template, isOpen }) {
         <div className="space-y-1">
           <div className="flex items-center justify-between text-[11px]">
             <span className="text-gray-500 font-medium">ความสมบูรณ์ของฟิลด์</span>
-            <span className={`font-bold ${isComplete ? "text-emerald-600" : "text-[#5542F6]"}`}>
+            <span className={`font-bold ${isComplete ? "text-emerald-600" : "text-[#7C3AED]"}`}>
               {filledRequiredCount} / {requiredFields.length} ฟิลด์
             </span>
           </div>
           <div className="w-full h-1.5 rounded-full bg-gray-100 overflow-hidden">
             <div
               className={`h-full transition-all duration-300 ${
-                isComplete ? "bg-emerald-500" : "bg-gradient-to-r from-[#5542F6] to-[#7C4DFF]"
+                isComplete ? "bg-emerald-500" : "bg-gradient-to-r from-[#7C3AED] to-[#7C3AED]"
               }`}
               style={{
                 width: `${requiredFields.length > 0 ? (filledRequiredCount / requiredFields.length) * 100 : 100}%`,
@@ -98,7 +98,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
         {/* Section 1: ข้อมูลสัญญา & วันที่ */}
         <div className="space-y-3 p-3.5 rounded-xl border border-gray-100 bg-[#FAFAFC]">
           <div className="flex items-center gap-2 text-xs font-bold text-gray-800">
-            <Calendar size={15} className="text-[#5542F6]" />
+            <Calendar size={15} className="text-[#7C3AED]" />
             <span>1. วันที่และสถานที่ทำสัญญา</span>
           </div>
 
@@ -110,7 +110,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
                 value={values.contract_location || ""}
                 onChange={(e) => setField("contract_location", e.target.value)}
                 placeholder="เช่น กรุงเทพมหานคร"
-                className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all"
+                className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] outline-none transition-all"
               />
             </div>
           )}
@@ -123,7 +123,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
                 value={values.contract_date_day || ""}
                 onChange={(e) => setField("contract_date_day", e.target.value)}
                 placeholder="17"
-                className="w-full h-9 px-2.5 text-xs text-center rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all"
+                className="w-full h-9 px-2.5 text-xs text-center rounded-lg border border-gray-200 bg-white focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] outline-none transition-all"
               />
             </div>
             <div className="space-y-1">
@@ -133,7 +133,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
                 value={values.contract_date_month || ""}
                 onChange={(e) => setField("contract_date_month", e.target.value)}
                 placeholder="สิงหาคม"
-                className="w-full h-9 px-2.5 text-xs text-center rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all"
+                className="w-full h-9 px-2.5 text-xs text-center rounded-lg border border-gray-200 bg-white focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] outline-none transition-all"
               />
             </div>
             <div className="space-y-1">
@@ -143,7 +143,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
                 value={values.contract_date_year || ""}
                 onChange={(e) => setField("contract_date_year", e.target.value)}
                 placeholder="2569"
-                className="w-full h-9 px-2.5 text-xs text-center rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all"
+                className="w-full h-9 px-2.5 text-xs text-center rounded-lg border border-gray-200 bg-white focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] outline-none transition-all"
               />
             </div>
           </div>
@@ -152,7 +152,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
         {/* Section 2: ข้อมูลคู่สัญญา (Reseller หรือ ผู้รับข้อมูล) */}
         <div className="space-y-3 p-3.5 rounded-xl border border-gray-100 bg-[#FAFAFC]">
           <div className="flex items-center gap-2 text-xs font-bold text-gray-800">
-            <Building2 size={15} className="text-[#5542F6]" />
+            <Building2 size={15} className="text-[#7C3AED]" />
             <span>
               2. {isDistributorOrPartner ? "ข้อมูลตัวแทนจำหน่าย (Reseller)" : "ข้อมูลคู่สัญญา (ผู้รับข้อมูล)"}
             </span>
@@ -179,7 +179,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
                 setField("counterparty_name", val);
               }}
               placeholder={isDistributorOrPartner ? "บริษัท ตัวแทนจำหน่าย จำกัด" : "บริษัท คู่สัญญา จำกัด"}
-              className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all"
+              className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] outline-none transition-all"
             />
           </div>
 
@@ -197,7 +197,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
                   setField("counterparty_registration_number", e.target.value);
                 }}
                 placeholder="เช่น 0105558000000"
-                className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all"
+                className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] outline-none transition-all"
               />
             </div>
           )}
@@ -223,7 +223,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
                 setField("counterparty_address", val);
               }}
               placeholder="เลขที่ ... ถนน ... แขวง/ตำบล ... เขต/อำเภอ ... จังหวัด ... รหัสไปรษณีย์ ..."
-              className="w-full p-2.5 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all resize-none leading-relaxed"
+              className="w-full p-2.5 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] outline-none transition-all resize-none leading-relaxed"
             />
           </div>
         </div>
@@ -231,7 +231,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
         {/* Section 3: ข้อมูลผู้ลงนาม & ลายเซ็นดิจิทัลคู่สัญญา */}
         <div className="space-y-3 p-3.5 rounded-xl border border-gray-100 bg-[#FAFAFC]">
           <div className="flex items-center gap-2 text-xs font-bold text-gray-800">
-            <UserCheck size={15} className="text-[#5542F6]" />
+            <UserCheck size={15} className="text-[#7C3AED]" />
             <span>3. ผู้ลงนาม ({isDistributorOrPartner ? "Reseller" : "คู่สัญญา"})</span>
           </div>
 
@@ -256,7 +256,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
                 setField("counterparty_signatory_name", val);
               }}
               placeholder="เช่น นายสมชาย ตัวอย่าง"
-              className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all"
+              className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] outline-none transition-all"
             />
           </div>
 
@@ -281,7 +281,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
                 setField("counterparty_signatory_position", val);
               }}
               placeholder="เช่น กรรมการผู้จัดการ"
-              className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all"
+              className="w-full h-9 px-3 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] outline-none transition-all"
             />
           </div>
 
@@ -292,7 +292,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
               <button
                 type="button"
                 onClick={() => setSigModalTarget("counterparty")}
-                className="inline-flex items-center gap-1 text-[11px] font-bold text-[#5542F6] hover:underline cursor-pointer"
+                className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7C3AED] hover:underline cursor-pointer"
               >
                 <PenTool size={11} />
                 <span>{values.counterparty_signature_image ? "เปลี่ยนลายเซ็น" : "วาด/แนบลายเซ็น"}</span>
@@ -325,13 +325,13 @@ export default function ContractFormSidebar({ template, isOpen }) {
         {/* Section 4: ข้อมูลฝ่ายเรา (เครสท์ เซนโด) & ลายเซ็น */}
         <div className="p-3.5 rounded-xl border border-purple-100 bg-[#FBF9FF] text-xs text-gray-600 space-y-2.5">
           <div className="flex items-center justify-between">
-            <p className="font-bold text-[#5542F6] flex items-center gap-1.5">
+            <p className="font-bold text-[#7C3AED] flex items-center gap-1.5">
               <CheckCircle2 size={14} /> {isDistributorOrPartner ? "ฝ่ายผู้จัดจำหน่ายหลัก (ฝ่ายเรา):" : "ฝ่ายผู้เปิดเผยข้อมูล (ฝ่ายเรา):"}
             </p>
             <button
               type="button"
               onClick={() => setSigModalTarget("our")}
-              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#5542F6] hover:underline cursor-pointer"
+              className="inline-flex items-center gap-1 text-[11px] font-bold text-[#7C3AED] hover:underline cursor-pointer"
             >
               <PenTool size={11} />
               <span>{values.our_signature_image ? "เปลี่ยนลายเซ็น" : "วาด/แนบลายเซ็น"}</span>
@@ -372,7 +372,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
               type="checkbox"
               checked={values.include_seal !== false}
               onChange={(e) => setField("include_seal", e.target.checked)}
-              className="w-4 h-4 rounded text-[#5542F6] accent-[#5542F6] cursor-pointer"
+              className="w-4 h-4 rounded text-[#7C3AED] accent-[#7C3AED] cursor-pointer"
             />
           </label>
         </div>
@@ -381,14 +381,14 @@ export default function ContractFormSidebar({ template, isOpen }) {
         <div className="space-y-2 p-3.5 rounded-xl border border-gray-100 bg-[#FAFAFC]">
           <div className="flex items-center justify-between text-xs font-bold text-gray-800">
             <div className="flex items-center gap-2">
-              <span className="text-[#5542F6]">🛡️</span>
+              <span className="text-[#7C3AED]">🛡️</span>
               <span>5. ลายน้ำบน PDF (Watermark)</span>
             </div>
           </div>
           <select
             value={values.watermark || "none"}
             onChange={(e) => setField("watermark", e.target.value)}
-            className="w-full h-9 px-2.5 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] outline-none transition-all cursor-pointer font-medium"
+            className="w-full h-9 px-2.5 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] outline-none transition-all cursor-pointer font-medium"
           >
             <option value="none">⚪ ไม่มีลายน้ำ (ต้นฉบับปกติ)</option>
             <option value="DRAFT">🟡 ฉบับร่าง (DRAFT)</option>

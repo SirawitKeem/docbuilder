@@ -258,7 +258,7 @@ function UniversalDocumentContent() {
             <div className="flex items-center gap-2">
               <span className="text-xs font-semibold text-gray-400">เทมเพลต</span>
               <span className="text-gray-300 text-xs">/</span>
-              <span className="text-xs font-bold text-[#5542F6]">{template.name}</span>
+              <span className="text-xs font-bold text-[#7C3AED]">{template.name}</span>
               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
                 {documentStatus === "published" ? "เสร็จสมบูรณ์" : "ฉบับร่าง"}
               </span>
@@ -267,7 +267,7 @@ function UniversalDocumentContent() {
               type="text"
               value={documentName}
               onChange={(e) => setDocumentName(e.target.value)}
-              className="text-lg sm:text-xl font-black text-gray-900 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-[#5542F6] outline-none transition-all py-0.5 mt-0.5 max-w-xl"
+              className="text-lg sm:text-xl font-black text-gray-900 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-[#7C3AED] outline-none transition-all py-0.5 mt-0.5 max-w-xl"
               placeholder="ระบุชื่อเอกสาร..."
             />
           </div>
@@ -298,7 +298,7 @@ function UniversalDocumentContent() {
           <button
             type="button"
             onClick={handlePrint}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#5542F6] hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs cursor-pointer"
           >
             <Printer size={14} />
             <span>พิมพ์ / PDF</span>
@@ -307,7 +307,7 @@ function UniversalDocumentContent() {
           <button
             type="button"
             onClick={() => setIsEmailModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-purple-200 bg-purple-50 hover:bg-purple-100 text-[#5542F6] text-xs font-bold shadow-2xs cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-purple-200 bg-purple-50 hover:bg-purple-100 text-[#7C3AED] text-xs font-bold shadow-2xs cursor-pointer"
           >
             <Send size={14} />
             <span>ส่งอีเมล</span>
@@ -322,7 +322,7 @@ function UniversalDocumentContent() {
           <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-xs space-y-4">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#F5F1FF] text-[#5542F6] flex items-center justify-center font-bold text-xs">
+                <div className="w-7 h-7 rounded-lg bg-[#F5F3FF] text-[#7C3AED] flex items-center justify-center font-bold text-xs">
                   <FileText size={15} />
                 </div>
                 <h2 className="text-sm font-bold text-gray-900">กรอกและปรับแต่งข้อมูลเอกสาร</h2>
@@ -341,7 +341,7 @@ function UniversalDocumentContent() {
                     type="text"
                     value={values.doc_date || ""}
                     onChange={(e) => handleFieldChange("doc_date", e.target.value)}
-                    className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6]"
+                    className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#7C3AED]"
                   />
                 </div>
 
@@ -351,7 +351,7 @@ function UniversalDocumentContent() {
                     type="text"
                     value={values.recipient || ""}
                     onChange={(e) => handleFieldChange("recipient", e.target.value)}
-                    className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6]"
+                    className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#7C3AED]"
                   />
                 </div>
 
@@ -361,7 +361,7 @@ function UniversalDocumentContent() {
                     type="text"
                     value={values.subject || ""}
                     onChange={(e) => handleFieldChange("subject", e.target.value)}
-                    className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6]"
+                    className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#7C3AED]"
                   />
                 </div>
 
@@ -375,14 +375,14 @@ function UniversalDocumentContent() {
                     value={values.old_address_th || ""}
                     onChange={(e) => handleFieldChange("old_address_th", e.target.value)}
                     placeholder="ที่อยู่เดิม (ภาษาไทย)..."
-                    className="w-full p-2.5 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6]"
+                    className="w-full p-2.5 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#7C3AED]"
                   />
                   <textarea
                     rows={2}
                     value={values.old_address_en || ""}
                     onChange={(e) => handleFieldChange("old_address_en", e.target.value)}
                     placeholder="Previous Address (English)..."
-                    className="w-full p-2.5 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6]"
+                    className="w-full p-2.5 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#7C3AED]"
                   />
                 </div>
 
@@ -414,7 +414,7 @@ function UniversalDocumentContent() {
                       type="text"
                       value={values.signatory_name || ""}
                       onChange={(e) => handleFieldChange("signatory_name", e.target.value)}
-                      className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6]"
+                      className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#7C3AED]"
                     />
                   </div>
                   <div className="space-y-1">
@@ -423,7 +423,7 @@ function UniversalDocumentContent() {
                       type="text"
                       value={values.signatory_position || ""}
                       onChange={(e) => handleFieldChange("signatory_position", e.target.value)}
-                      className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6]"
+                      className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#7C3AED]"
                     />
                   </div>
                 </div>
@@ -435,7 +435,7 @@ function UniversalDocumentContent() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between text-[11px] text-gray-500 bg-gray-50 p-2.5 rounded-xl border border-gray-200/60">
                       <span className="font-semibold">ตัวแปรไดนามิกที่ตรวจพบในเทมเพลต</span>
-                      <span className="font-bold px-2 py-0.5 rounded-full bg-purple-100 text-[#5542F6]">
+                      <span className="font-bold px-2 py-0.5 rounded-full bg-purple-100 text-[#7C3AED]">
                         {detectedTokens.length} ตัวแปร
                       </span>
                     </div>
@@ -450,7 +450,7 @@ function UniversalDocumentContent() {
                     ).map(([category, tokens]) => (
                       <div key={category} className="space-y-3 pt-2 first:pt-0">
                         <div className="text-[11px] font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#5542F6]" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#7C3AED]" />
                           <span>{category}</span>
                         </div>
                         {tokens.map((t) => (
@@ -468,7 +468,7 @@ function UniversalDocumentContent() {
                               value={values[t.key] ?? ""}
                               onChange={(e) => handleFieldChange(t.key, e.target.value)}
                               placeholder={t.example || `ระบุ ${t.label}...`}
-                              className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#5542F6] transition-colors"
+                              className="w-full h-9 px-3 rounded-lg border border-gray-200 bg-white text-xs outline-none focus:border-[#7C3AED] transition-colors"
                             />
                           </div>
                         ))}
@@ -486,7 +486,7 @@ function UniversalDocumentContent() {
                     </p>
                     <Link
                       href={`/templates/new?edit=${template.id}`}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#5542F6] hover:underline pt-1"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#7C3AED] hover:underline pt-1"
                     >
                       <span>แก้ไขเลย์เอาต์ใน Studio</span>
                       <span>→</span>
@@ -525,7 +525,7 @@ function UniversalDocumentContent() {
               <select
                 value={watermark}
                 onChange={(e) => setWatermark(e.target.value)}
-                className="w-full h-9 px-2.5 rounded-lg border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#5542F6]"
+                className="w-full h-9 px-2.5 rounded-lg border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#7C3AED]"
               >
                 {WATERMARK_OPTIONS.map((w) => (
                   <option key={w.id} value={w.id}>
@@ -541,7 +541,7 @@ function UniversalDocumentContent() {
         <div className="lg:col-span-7 space-y-3">
           <div className="flex items-center justify-between px-1">
             <div className="flex items-center gap-2">
-              <Eye size={15} className="text-[#5542F6]" />
+              <Eye size={15} className="text-[#7C3AED]" />
               <span className="text-xs font-bold text-gray-700">พรีวิวกระดาษ A4 เสมือนจริง (Print Preview)</span>
             </div>
             <span className="text-[10px] font-semibold text-gray-400">ขนาด 210 x 297 mm</span>

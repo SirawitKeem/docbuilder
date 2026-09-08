@@ -66,10 +66,10 @@ export default function ReviewScreen({
 
       <div className="flex-1 overflow-auto">
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className={`rounded-[16px] px-5 py-4 mb-6 flex items-center gap-3 ${status.isComplete ? "bg-[#DDEEE2]" : "bg-[#F6F6FA] border border-[#E4E4E8]"}`}>
+          <div className={`rounded-[16px] px-5 py-4 mb-6 flex items-center gap-3 ${status.isComplete ? "bg-[#DDEEE2]" : "bg-[#F6F6FA] border border-[#E5E5E5]"}`}>
             <span className={`w-2.5 h-2.5 rounded-full ${status.isComplete ? "bg-[#239742]" : "bg-[#B2AFBC]"}`} />
             <div>
-              <p className={`text-sm font-semibold ${status.isComplete ? "text-[#17682F]" : "text-[#22162B]"}`}>
+              <p className={`text-sm font-semibold ${status.isComplete ? "text-[#17682F]" : "text-[#171717]"}`}>
                 {status.isComplete ? "✓ กรอกข้อมูลครบแล้ว" : `กรอกข้อมูลแล้ว ${status.filled}/${status.total} รายการ`}
               </p>
               <p className="text-xs text-[#646469]">
@@ -82,7 +82,7 @@ export default function ReviewScreen({
             <button
               onClick={onSendEmail}
               disabled={!status.isComplete || exporting}
-              className="flex items-center gap-2 h-11 px-5 rounded-[10px] border border-[#E4E4E8] bg-white text-[#22162B] text-sm font-medium hover:bg-[#F6F6FA] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              className="flex items-center gap-2 h-11 px-5 rounded-[10px] border border-[#E5E5E5] bg-white text-[#171717] text-sm font-medium hover:bg-[#F6F6FA] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <Send size={16} />
               ส่ง Email
@@ -93,7 +93,7 @@ export default function ReviewScreen({
               <button
                 onClick={() => onExport?.(selectedFormat)}
                 disabled={!status.isComplete || exporting}
-                className="flex items-center gap-2 h-11 pl-5 pr-3 rounded-l-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-sm font-semibold hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity cursor-pointer"
+                className="flex items-center gap-2 h-11 pl-5 pr-3 rounded-l-[10px] bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-sm font-semibold hover:opacity-95 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity cursor-pointer"
                 title={`ส่งออกเอกสารในรูปแบบ .${selectedFormat}`}
               >
                 {exporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
@@ -102,7 +102,7 @@ export default function ReviewScreen({
               <button
                 onClick={() => setExportMenuOpen(!exportMenuOpen)}
                 disabled={!status.isComplete || exporting}
-                className="h-11 px-2.5 rounded-r-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white hover:opacity-95 border-l border-white/25 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity flex items-center justify-center cursor-pointer"
+                className="h-11 px-2.5 rounded-r-[10px] bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white hover:opacity-95 border-l border-white/25 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity flex items-center justify-center cursor-pointer"
                 title="เลือกรูปแบบการส่งออก (PDF, HTML, WebP)"
               >
                 <ChevronDown size={15} className={`transition-transform duration-150 ${exportMenuOpen ? "rotate-180" : ""}`} />

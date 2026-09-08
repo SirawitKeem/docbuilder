@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, LayoutGrid } from "lucide-react";
+import { ArrowRight, Sparkle } from "@phosphor-icons/react";
 import TemplateCard from "@/components/templates/TemplateCard";
 import TemplateSelectModal from "@/components/templates/TemplateSelectModal";
 import { getTemplates } from "@/lib/data/templates";
@@ -18,22 +18,22 @@ export default function TemplateGrid() {
   return (
     <section className="space-y-3.5">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-[#F5F1FF] text-[#5542F6] flex items-center justify-center">
-            <LayoutGrid size={17} />
+        <div className="flex items-center gap-2.5">
+          <div className="size-8 rounded-[6px] bg-violet-50 text-primary dark:bg-violet-950/40 dark:text-violet-300 flex items-center justify-center shrink-0">
+            <Sparkle size={16} weight="fill" />
           </div>
           <div>
-            <h2 className="text-base font-bold text-gray-900 leading-tight">เริ่มต้นสร้างเอกสาร</h2>
-            <p className="text-[11px] text-gray-500">เลือกเทมเพลตที่ต้องการสร้างได้ทันที</p>
+            <h2 className="text-base font-semibold text-foreground leading-tight">Quick Start Templates</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">เลือกแบบฟอร์มเพื่อเริ่มสร้างสัญญาหรือใบเสนอราคาได้ทันที</p>
           </div>
         </div>
 
         <Link
           href="/templates"
-          className="inline-flex items-center gap-1 text-xs font-bold text-[#5542F6] hover:text-[#4332D6] transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline transition-colors"
         >
           <span>ดูเทมเพลตทั้งหมด</span>
-          <ArrowRight size={14} />
+          <ArrowRight size={13} weight="bold" />
         </Link>
       </div>
 

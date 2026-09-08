@@ -46,7 +46,7 @@ export const EXTENDED_ICON_MAP = {
 };
 
 const COLOR_OPTIONS = [
-  { id: "purple", name: "ม่วง (Purple)", hex: "#5542F6", bg: "bg-[#F5F1FF]", text: "text-[#5542F6]", border: "border-[#EBE3FF]" },
+  { id: "purple", name: "ม่วง (Purple)", hex: "#7C3AED", bg: "bg-[#F5F3FF]", text: "text-[#7C3AED]", border: "border-[#EDE9FE]" },
   { id: "blue", name: "น้ำเงิน (Blue)", hex: "#2563EB", bg: "bg-[#EFF6FF]", text: "text-[#2563EB]", border: "border-[#DBEAFE]" },
   { id: "emerald", name: "เขียว (Emerald)", hex: "#059669", bg: "bg-[#ECFDF5]", text: "text-[#059669]", border: "border-[#D1FAE5]" },
   { id: "amber", name: "ส้ม/ทอง (Amber)", hex: "#D97706", bg: "bg-[#FFFBEB]", text: "text-[#D97706]", border: "border-[#FEF3C7]" },
@@ -119,7 +119,7 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
         {/* Modal Header */}
         <div className="px-6 py-4.5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-purple-50/50 via-white to-gray-50/30">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#F5F1FF] text-[#5542F6] border border-[#EBE3FF] flex items-center justify-center shadow-2xs">
+            <div className="w-10 h-10 rounded-2xl bg-[#F5F3FF] text-[#7C3AED] border border-[#EDE9FE] flex items-center justify-center shadow-2xs">
               <FolderPlus size={20} />
             </div>
             <div>
@@ -163,7 +163,7 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="เช่น Purchase Order, Invoice, MOU, Certificate..."
-                  className="w-full h-10 px-3.5 rounded-xl border border-gray-200 bg-white text-xs font-bold text-gray-900 outline-none focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] transition-all"
+                  className="w-full h-10 px-3.5 rounded-xl border border-gray-200 bg-white text-xs font-bold text-gray-900 outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all"
                 />
                 <p className="text-[11px] text-gray-400 mt-1">
                   ใช้แสดงเป็นหัวข้อหลักของการ์ดโฟลเดอร์ในคลังเทมเพลต
@@ -180,7 +180,7 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                   placeholder="เช่น ใบสั่งซื้อสินค้า (Purchase Order), ใบแจ้งหนี้..."
-                  className="w-full h-10 px-3.5 rounded-xl border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] transition-all"
+                  className="w-full h-10 px-3.5 rounded-xl border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all"
                 />
               </div>
 
@@ -194,7 +194,7 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="อธิบายการใช้งาน เช่น เอกสารสำหรับสั่งซื้อสินค้าและบริการ พร้อมระบบเงื่อนไขการส่งมอบ..."
-                  className="w-full p-3 rounded-xl border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] transition-all resize-none"
+                  className="w-full p-3 rounded-xl border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all resize-none"
                 />
               </div>
 
@@ -214,7 +214,7 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
                         onClick={() => setFormData({ ...formData, icon: key })}
                         className={`h-11 rounded-xl flex flex-col items-center justify-center transition-all cursor-pointer ${
                           isSelected
-                            ? "bg-[#5542F6] text-white shadow-xs scale-105"
+                            ? "bg-[#7C3AED] text-white shadow-xs scale-105"
                             : "bg-gray-50 hover:bg-gray-100 text-gray-600 border border-gray-200/80"
                         }`}
                         title={item.label}
@@ -241,7 +241,7 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
                         onClick={() => setFormData({ ...formData, color: c.id })}
                         className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
                           isSelected
-                            ? `${c.bg} ${c.text} ${c.border} ring-2 ring-offset-1 ring-[#5542F6] shadow-2xs`
+                            ? `${c.bg} ${c.text} ${c.border} ring-2 ring-offset-1 ring-[#7C3AED] shadow-2xs`
                             : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
                         }`}
                       >
@@ -261,13 +261,13 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
             <div className="lg:col-span-5 space-y-3">
               <div className="flex items-center justify-between px-1">
                 <span className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
-                  <Sparkles size={14} className="text-[#5542F6]" />
+                  <Sparkles size={14} className="text-[#7C3AED]" />
                   <span>ตัวอย่างการ์ดในคลังเทมเพลต (Live Preview)</span>
                 </span>
               </div>
 
               {/* Preview Card */}
-              <div className="bg-white rounded-2xl border-2 border-dashed border-[#5542F6]/40 p-6 shadow-sm flex flex-col justify-between group text-left relative overflow-hidden bg-gradient-to-b from-purple-50/20 to-white">
+              <div className="bg-white rounded-2xl border-2 border-dashed border-[#7C3AED]/40 p-6 shadow-sm flex flex-col justify-between group text-left relative overflow-hidden bg-gradient-to-b from-purple-50/20 to-white">
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-4">
                     <div
@@ -276,7 +276,7 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
                       <SelectedIconComp size={22} />
                     </div>
 
-                    <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-purple-50 text-[#5542F6] border border-purple-100/80">
+                    <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-purple-50 text-[#7C3AED] border border-purple-100/80">
                       0 รูปแบบเทมเพลต
                     </span>
                   </div>
@@ -289,7 +289,7 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
                   </p>
                 </div>
 
-                <div className="pt-4 mt-5 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-[#5542F6]">
+                <div className="pt-4 mt-5 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-[#7C3AED]">
                   <span className="flex items-center gap-1.5">
                     <FolderOpen size={15} />
                     <span>เปิดดูคลังเทมเพลต</span>
@@ -317,7 +317,7 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
             <button
               type="submit"
               disabled={loading || !formData.name.trim()}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#5542F6] hover:bg-[#4332D6] disabled:opacity-50 text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] disabled:opacity-50 text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
             >
               {loading ? (
                 <>

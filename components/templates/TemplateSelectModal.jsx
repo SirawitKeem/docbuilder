@@ -121,7 +121,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
       <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped p-10 flex flex-col justify-between overflow-hidden">
         <div className="border-b border-gray-200 pb-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-lg bg-[#5542F6] flex items-center justify-center text-white font-bold text-xs">
+            <div className="w-9 h-9 rounded-lg bg-[#7C3AED] flex items-center justify-center text-white font-bold text-xs">
               CZ
             </div>
             <div>
@@ -129,7 +129,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
               <p className="text-[10px] text-gray-500">CREST ZENDO CO., LTD.</p>
             </div>
           </div>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-50 text-[#5542F6] font-bold border border-purple-100">
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-50 text-[#7C3AED] font-bold border border-purple-100">
             เอกสารทางการ
           </span>
         </div>
@@ -232,8 +232,8 @@ export default function TemplateSelectModal({ category, onClose }) {
         {/* Modal Header */}
         <div className="h-18 px-6 border-b border-gray-100 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-2xl bg-purple-50 text-[#5542F6] flex items-center justify-center shrink-0 border border-purple-100/60 shadow-2xs">
-              <FileText size={20} className="text-[#5542F6]" />
+            <div className="w-10 h-10 rounded-2xl bg-purple-50 text-[#7C3AED] flex items-center justify-center shrink-0 border border-purple-100/60 shadow-2xs">
+              <FileText size={20} className="text-[#7C3AED]" />
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-gray-900 tracking-tight">
@@ -263,7 +263,7 @@ export default function TemplateSelectModal({ category, onClose }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="ค้นหาเทมเพลต..."
-              className="w-full pl-8.5 pr-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#7C4DFF]/20 focus:border-[#7C4DFF] transition-all"
+              className="w-full pl-8.5 pr-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#7C3AED]/20 focus:border-[#7C3AED] transition-all"
             />
           </div>
           <div className="text-xs text-gray-500 font-medium">
@@ -284,13 +284,13 @@ export default function TemplateSelectModal({ category, onClose }) {
                     onClick={() => setSelectedTemplate(item)}
                     className={`rounded-xl p-3 border transition-all duration-150 cursor-pointer flex flex-col justify-between relative group ${
                       isSelected
-                        ? "border-[#7C4DFF] bg-[#FAF8FF] ring-1.5 ring-[#7C4DFF] shadow-xs"
+                        ? "border-[#7C3AED] bg-[#F5F3FF] ring-1.5 ring-[#7C3AED] shadow-xs"
                         : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-2xs"
                     }`}
                   >
                     {/* Top Right Checkmark Badge when active */}
                     {isSelected && (
-                      <div className="absolute top-2 right-2 w-4.5 h-4.5 rounded-full bg-[#7C4DFF] text-white flex items-center justify-center shadow-xs z-10 animate-in zoom-in-50 duration-150">
+                      <div className="absolute top-2 right-2 w-4.5 h-4.5 rounded-full bg-[#7C3AED] text-white flex items-center justify-center shadow-xs z-10 animate-in zoom-in-50 duration-150">
                         <Check size={11} strokeWidth={3} />
                       </div>
                     )}
@@ -306,7 +306,7 @@ export default function TemplateSelectModal({ category, onClose }) {
                     {/* Title & Tag */}
                     <div className="space-y-1">
                       <div className="flex items-center justify-between gap-1">
-                        <h3 className="font-bold text-xs text-gray-900 group-hover:text-[#7C4DFF] transition-colors truncate">
+                        <h3 className="font-bold text-xs text-gray-900 group-hover:text-[#7C3AED] transition-colors truncate">
                           {item.name}
                         </h3>
                         {item.tag && (
@@ -428,7 +428,7 @@ export default function TemplateSelectModal({ category, onClose }) {
 
           <button
             onClick={handleUseTemplate}
-            className="px-5 py-2 rounded-xl bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-xs font-semibold hover:opacity-95 transition-opacity shadow-sm flex items-center gap-1.5 cursor-pointer"
+            className="px-5 py-2 rounded-xl bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-xs font-semibold hover:opacity-95 transition-opacity shadow-sm flex items-center gap-1.5 cursor-pointer"
           >
             <FileText size={14} />
             <span>ใช้เทมเพลตนี้</span>

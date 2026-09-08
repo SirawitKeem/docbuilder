@@ -26,44 +26,14 @@ import {
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { templateRegistry } from "@/lib/templates/registry";
-import { getFieldProfile } from "@/lib/data/fieldProfile";
+import { getFieldProfile } from "@/lib/data/fieldProfiles";
 import { DocumentFieldsProvider } from "@/context/DocumentFieldsContext";
 import { paginateQuotationLineItems } from "@/lib/quotationHelpers";
 import QuotationDocument from "@/components/document/quotation/QuotationDocument";
 import DocumentHeader from "@/components/document/DocumentHeader";
 import DocumentFooter from "@/components/document/DocumentFooter";
 import EmailScreen from "@/components/document/EmailScreen";
-
-const statusStyles = {
-  draft: "bg-amber-50 text-amber-700 border border-amber-200/80 hover:bg-amber-100/80",
-  pending_approval: "bg-purple-50 text-[#5542F6] border border-purple-200/80 hover:bg-purple-100/80",
-  signed: "bg-purple-50 text-[#5542F6] border border-purple-200/80 hover:bg-purple-100/80",
-  completed: "bg-emerald-50 text-emerald-700 border border-emerald-200/80 hover:bg-emerald-100/80",
-  issued: "bg-emerald-50 text-emerald-700 border border-emerald-200/80 hover:bg-emerald-100/80",
-  sent: "bg-blue-50 text-blue-700 border border-blue-200/80 hover:bg-blue-100/80",
-  rejected: "bg-rose-50 text-rose-700 border border-rose-200/80 hover:bg-rose-100/80",
-  cancelled: "bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-200/80",
-};
-
-const statusLabel = {
-  draft: "ฉบับร่าง",
-  pending_approval: "รอการอนุมัติ",
-  signed: "ลงนามแล้ว",
-  completed: "เสร็จสมบูรณ์",
-  issued: "เสร็จสมบูรณ์",
-  sent: "ส่งแล้ว",
-  rejected: "ตีกลับแก้ไข",
-  cancelled: "ยกเลิก",
-};
-
-const statusList = [
-  { id: "draft", label: "ฉบับร่าง (Draft)", dot: "bg-amber-500" },
-  { id: "pending_approval", label: "รอการอนุมัติ (Pending)", dot: "bg-[#5542F6]" },
-  { id: "completed", label: "เสร็จสมบูรณ์ (Completed)", dot: "bg-emerald-500" },
-  { id: "rejected", label: "ตีกลับแก้ไข (Rejected)", dot: "bg-rose-500" },
-  { id: "sent", label: "ส่งแล้ว (Sent)", dot: "bg-blue-500" },
-  { id: "cancelled", label: "ยกเลิก (Cancelled)", dot: "bg-gray-400" },
-];
+import { extractDocumentMeta } from "@/lib/data/documentMeta";
 
 const getCounterpartyName = (doc) => {
   if (doc?.values) {
@@ -130,7 +100,6 @@ export default function DocumentsTable({
   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
   const [selectedIds, setSelectedIds] = useState([]);
   const [openMenuId, setOpenMenuId] = useState(null);
-  const [openStatusMenuId, setOpenStatusMenuId] = useState(null);
   const [previewDoc, setPreviewDoc] = useState(null);
   const [emailDoc, setEmailDoc] = useState(null);
   const [renameDoc, setRenameDoc] = useState(null);
@@ -141,16 +110,12 @@ export default function DocumentsTable({
   const [expandedExportDocId, setExpandedExportDocId] = useState(null);
 
   const menuRef = useRef(null);
-  const statusMenuRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(e) {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setOpenMenuId(null);
         setExpandedExportDocId(null);
-      }
-      if (statusMenuRef.current && !statusMenuRef.current.contains(e.target)) {
-        setOpenStatusMenuId(null);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -294,40 +259,6 @@ export default function DocumentsTable({
     }
   };
 
-  // Instant Status Change
-  const handleUpdateStatus = async (doc, newStatus) => {
-    setOpenStatusMenuId(null);
-    setOpenMenuId(null);
-    try {
-      if (doc.templateId === "quotation") {
-        await fetch(`/api/quotations/${doc.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...doc, status: newStatus }),
-        });
-      } else {
-        await fetch("/api/documents", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...doc, status: newStatus }),
-        });
-      }
-
-      setToast({
-        message: `เปลี่ยนสถานะเป็น "${statusLabel[newStatus] || newStatus}" เรียบร้อยแล้ว`,
-      });
-
-      if (onRefresh) {
-        onRefresh();
-      } else {
-        router.refresh();
-      }
-    } catch (err) {
-      console.error("Update status error:", err);
-      alert("เกิดข้อผิดพลาดในการเปลี่ยนสถานะเอกสาร");
-    }
-  };
-
   // Trigger Confirmation Modal for Single Delete
   const requestSingleDelete = (doc) => {
     setDeleteModalState({
@@ -443,7 +374,7 @@ export default function DocumentsTable({
                 toast.action.onClick();
                 setToast(null);
               }}
-              className="ml-1 px-2.5 py-1 rounded-lg bg-[#5542F6] hover:bg-[#4332D6] text-white text-[11px] font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-xs"
+              className="ml-1 px-2.5 py-1 rounded-lg bg-[#7C3AED] hover:bg-[#4332D6] text-white text-[11px] font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-xs"
             >
               <span>{toast.action.label}</span>
               <ArrowRight size={12} />
@@ -486,12 +417,12 @@ export default function DocumentsTable({
       )}
 
       {/* Main Table Container */}
-      <div className="bg-surface border border-border rounded-2xl shadow-xs overflow-hidden transition-colors">
+      <div className="bg-surface border border-border rounded-[12px] shadow-2xs overflow-hidden transition-colors">
         <table className="w-full text-sm table-fixed">
           <thead>
-            <tr className="border-b border-border text-left text-xs font-semibold text-muted-foreground bg-muted/50">
+            <tr className="border-b border-border text-left text-xs font-semibold text-muted-foreground bg-muted/40">
               {/* Checkbox Column */}
-              <th className="w-[5%] px-4 py-3.5 text-center">
+              <th className="w-[48px] px-4 py-3.5 text-center">
                 <input
                   type="checkbox"
                   checked={isAllSelected}
@@ -500,27 +431,25 @@ export default function DocumentsTable({
                   title={isAllSelected ? "ยกเลิกเลือกทั้งหมด" : "เลือกทั้งหมด"}
                 />
               </th>
-              <th className="w-[28%] px-4 py-3.5">ชื่อเอกสาร</th>
-              <th className="w-[20%] px-4 py-3.5">{showSentTo ? "ส่งไปยัง" : "คู่สัญญา / ลูกค้า"}</th>
+              <th className="px-4 py-3.5">ชื่อเอกสาร</th>
+              <th className="w-[24%] px-4 py-3.5">{showSentTo ? "ส่งไปยัง" : "คู่สัญญา / ผู้รับ"}</th>
               <th className="w-[18%] px-4 py-3.5">เทมเพลต</th>
-              <th className="w-[15%] px-4 py-3.5">แก้ไขล่าสุด</th>
-              <th className="w-[12%] px-2 py-3.5 text-center">สถานะ</th>
-              <th className="w-[12%] px-4 py-3.5 text-right whitespace-nowrap">การดำเนินการ</th>
+              <th className="w-[14%] px-4 py-3.5">แก้ไขล่าสุด</th>
+              <th className="w-[110px] px-4 py-3.5 text-right whitespace-nowrap">การจัดการ</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {documents.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-5 py-12 text-center text-muted-foreground">
+                <td colSpan={6} className="px-5 py-12 text-center text-muted-foreground">
                   {emptyMessage}
                 </td>
               </tr>
             ) : (
               documents.map((doc, docIdx) => {
-                const { dateStr, timeStr } = formatDateTime(doc.updatedAt || doc.createdAt);
+                const meta = extractDocumentMeta(doc);
                 const isSelected = selectedIds.includes(doc.id);
                 const isNearBottom = docIdx >= Math.max(0, documents.length - 2);
-                const counterparty = getCounterpartyName(doc);
 
                 return (
                   <tr
@@ -539,17 +468,20 @@ export default function DocumentsTable({
                       />
                     </td>
 
+                    {/* Document Title & Meta */}
                     <td className="px-4 py-3.5">
                       <div className="flex items-center gap-3">
-                        <PdfIcon className="w-8 h-9 shrink-0" />
+                        <div className="size-9 rounded-[8px] bg-muted/80 flex items-center justify-center text-muted-foreground shrink-0 border border-border/60">
+                          <FileText size={18} />
+                        </div>
                         <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-1.5 group/name flex-wrap">
+                          <div className="flex items-center gap-1.5 group/name">
                             <Link
                               href={`/documents/${doc.id}`}
-                              className="font-semibold text-foreground text-sm leading-snug truncate max-w-[200px] sm:max-w-xs hover:text-[#5542F6] hover:underline"
-                              title={doc.name}
+                              className="font-medium text-foreground text-sm leading-snug truncate max-w-[260px] sm:max-w-xs hover:text-primary transition-colors"
+                              title={meta.name}
                             >
-                              {doc.name}
+                              {meta.name}
                             </Link>
                             <button
                               onClick={() => setRenameDoc(doc)}
@@ -558,99 +490,75 @@ export default function DocumentsTable({
                             >
                               <Pencil size={11} />
                             </button>
-                            {(doc.lastSentAt || doc.sentTo) && (
-                              <Link
-                                href="/history"
-                                onClick={(e) => e.stopPropagation()}
-                                className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-blue-50 text-blue-700 text-[10px] font-bold border border-blue-200/80 hover:bg-blue-100 transition-colors"
-                                title={`มีประวัติส่งออกแล้วเมื่อ ${doc.lastSentAt || ""} - คลิกเพื่อดูประวัติการส่ง`}
-                              >
-                                <Mail size={11} className="text-blue-600" />
-                                <span>เคยส่งแล้ว</span>
-                              </Link>
-                            )}
                           </div>
-                          <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                            {getContractFullName(doc)}
-                          </p>
+                          {meta.docNumber ? (
+                            <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                              {meta.docNumber}
+                            </p>
+                          ) : null}
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3.5 text-foreground font-medium">
+
+                    {/* Client / Counterparty */}
+                    <td className="px-4 py-3.5">
                       {showSentTo ? (
-                        <span className="truncate block" title={doc.sentTo || "-"}>
+                        <span className="truncate block text-xs font-medium text-foreground" title={doc.sentTo || "-"}>
                           {doc.sentTo || "-"}
                         </span>
                       ) : (
-                        <span className="truncate block text-xs" title={counterparty}>
-                          {counterparty}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3.5 text-muted-foreground">
-                      <span className="line-clamp-1 text-xs leading-relaxed" title={doc.templateName}>
-                        {doc.templateName}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3.5 whitespace-nowrap">
-                      <p className="text-foreground text-xs font-medium">{dateStr}</p>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">{timeStr}</p>
-                    </td>
-
-                    {/* Status Column with Interactive Status Changer */}
-                    <td className="px-2 py-3.5 text-center whitespace-nowrap relative">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpenStatusMenuId(openStatusMenuId === doc.id ? null : doc.id);
-                        }}
-                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold whitespace-nowrap cursor-pointer transition-all ${
-                          statusStyles[doc.status] || "bg-muted text-muted-foreground"
-                        }`}
-                        title="คลิกเพื่อเปลี่ยนสถานะ"
-                      >
-                        <span>{statusLabel[doc.status] || doc.status}</span>
-                      </button>
-
-                      {/* Status Dropdown Menu */}
-                      {openStatusMenuId === doc.id && (
-                        <div
-                          ref={statusMenuRef}
-                          className={`absolute left-1/2 -translate-x-1/2 ${
-                            isNearBottom ? "bottom-10" : "top-10"
-                          } w-40 bg-surface border border-border rounded-xl shadow-xl py-1 z-50 text-left animate-in fade-in zoom-in-95 duration-100`}
-                        >
-                          <div className="px-3 py-1.5 border-b border-border text-[10px] font-bold text-muted-foreground uppercase">
-                            เปลี่ยนสถานะ
-                          </div>
-                          {statusList.map((st) => (
-                            <button
-                              key={st.id}
-                              onClick={() => handleUpdateStatus(doc, st.id)}
-                              className={`w-full text-left px-3 py-1.5 text-xs font-medium hover:bg-muted flex items-center justify-between transition-colors cursor-pointer ${
-                                doc.status === st.id ? "text-primary font-bold bg-primary/5" : "text-foreground"
-                              }`}
-                            >
-                              <div className="flex items-center gap-2">
-                                <span className={`w-2 h-2 rounded-full ${st.dot}`} />
-                                <span>{st.label}</span>
-                              </div>
-                              {doc.status === st.id && <Check size={13} className="text-primary" />}
-                            </button>
-                          ))}
+                        <div>
+                          <p className="text-xs font-medium text-foreground truncate max-w-[220px]" title={meta.counterpartyName}>
+                            {meta.counterpartyName}
+                          </p>
+                          {meta.contactPerson && (
+                            <p className="text-[11px] text-muted-foreground truncate max-w-[220px] mt-0.5" title={meta.contactPerson}>
+                              {meta.contactPerson}
+                            </p>
+                          )}
                         </div>
                       )}
                     </td>
 
+                    {/* Template */}
+                    <td className="px-4 py-3.5">
+                      <span className="text-xs text-muted-foreground font-normal">
+                        {meta.templateName}
+                      </span>
+                    </td>
+
+                    {/* Last Modified */}
+                    <td className="px-4 py-3.5 whitespace-nowrap">
+                      <p className="text-foreground text-xs font-medium" title={meta.fullDateTime}>
+                        {meta.relativeTime}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground mt-0.5">
+                        {formatDateTime(meta.updatedAt).dateStr}
+                      </p>
+                    </td>
+
                     {/* Action Column */}
-                    <td className="px-4 py-3.5 relative whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-1.5">
+                    <td className="px-4 py-3.5 relative whitespace-nowrap text-right">
+                      <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => setPreviewDoc(doc)}
-                          className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                          className="p-1.5 rounded-[6px] hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                           title="ดูตัวอย่างเอกสาร (Preview)"
                         >
                           <Eye size={16} />
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            const targetPath = doc.templateId === "quotation"
+                              ? `/create/quotation?id=${doc.id}`
+                              : `/create/${doc.templateId || "nda"}?id=${doc.id}`;
+                            router.push(targetPath);
+                          }}
+                          className="p-1.5 rounded-[6px] hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                          title="แก้ไขเอกสาร (Edit)"
+                        >
+                          <Edit3 size={15} />
                         </button>
 
                         <button
@@ -664,7 +572,7 @@ export default function DocumentsTable({
                               setExpandedExportDocId(null);
                             }
                           }}
-                          className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                          className="p-1.5 rounded-[6px] hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                           title="การดำเนินการเพิ่มเติม"
                         >
                           <MoreHorizontal size={16} />
@@ -682,7 +590,7 @@ export default function DocumentsTable({
                               }}
                               className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
                             >
-                              <Copy size={14} className="text-[#5542F6]" />
+                              <Copy size={14} className="text-muted-foreground" />
                               <span>คัดลอกเอกสารนี้</span>
                             </button>
                             <button
@@ -724,9 +632,9 @@ export default function DocumentsTable({
                               <>
                                 <button
                                   onClick={() => handleCreateReceiptFromQuotation(doc)}
-                                  className="w-full text-left px-3.5 py-2 text-xs font-medium text-purple-700 hover:bg-purple-50 flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
+                                  className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
                                 >
-                                  <Receipt size={14} className="text-purple-600" />
+                                  <Receipt size={14} className="text-muted-foreground" />
                                   <span>ออกใบเสร็จรับเงิน (Receipt)</span>
                                 </button>
                                 <button
@@ -741,9 +649,9 @@ export default function DocumentsTable({
                                       alert("ไม่สามารถสร้างฉบับปรับปรุงได้");
                                     }
                                   }}
-                                  className="w-full text-left px-3.5 py-2 text-xs font-medium text-emerald-700 hover:bg-emerald-50 flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
+                                  className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
                                 >
-                                  <CopyPlus size={14} className="text-emerald-600" />
+                                  <CopyPlus size={14} className="text-muted-foreground" />
                                   <span>สร้างฉบับปรับปรุง (New Rev)</span>
                                 </button>
                               </>
@@ -982,10 +890,10 @@ function RenameModal({ doc, onClose, onRenamed }) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white border border-[#E4E4E8] rounded-[24px] shadow-2xl w-full max-w-md p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
+      <div className="bg-white border border-[#E5E5E5] rounded-[24px] shadow-2xl w-full max-w-md p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
         <div className="flex items-center justify-between border-b border-gray-100 pb-3">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#F5F1FF] text-[#5542F6] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#F5F3FF] text-[#7C3AED] flex items-center justify-center">
               <Pencil size={16} />
             </div>
             <h3 className="text-base font-bold text-gray-900">เปลี่ยนชื่อเอกสาร</h3>
@@ -1006,7 +914,7 @@ function RenameModal({ doc, onClose, onRenamed }) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="ระบุชื่อเอกสาร..."
-              className="w-full h-10 px-3.5 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-[#5542F6] focus:ring-2 focus:ring-[#F5F1FF] transition-all"
+              className="w-full h-10 px-3.5 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#F5F3FF] transition-all"
               autoFocus
             />
           </div>
@@ -1022,7 +930,7 @@ function RenameModal({ doc, onClose, onRenamed }) {
             <button
               type="submit"
               disabled={saving || !name.trim()}
-              className="w-full h-10 rounded-xl bg-[#5542F6] hover:bg-[#4332D6] text-white text-xs font-bold transition-colors shadow-xs flex items-center justify-center disabled:opacity-50 cursor-pointer"
+              className="w-full h-10 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] text-white text-xs font-bold transition-colors shadow-xs flex items-center justify-center disabled:opacity-50 cursor-pointer"
             >
               <span>{saving ? "กำลังบันทึก..." : "บันทึกชื่อใหม่"}</span>
             </button>
@@ -1068,13 +976,13 @@ function PreviewModal({ doc, onClose }) {
         <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-muted/30">
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="font-bold text-foreground text-base">{doc.name}</h3>
-              <span className={`px-3 py-0.5 rounded-full text-xs font-semibold ${statusStyles[doc.status] || "bg-muted text-muted-foreground"}`}>
-                {statusLabel[doc.status] || doc.status}
+              <h3 className="font-semibold text-foreground text-base">{doc.name}</h3>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground border border-border/60">
+                {doc.templateName || "เอกสาร"}
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-0.5">
-              เทมเพลต: {doc.templateName} • สร้างเมื่อ {new Date(doc.createdAt).toLocaleDateString("th-TH")}
+              แก้ไขล่าสุด {extractDocumentMeta(doc)?.relativeTime || "-"} • สร้างเมื่อ {new Date(doc.createdAt).toLocaleDateString("th-TH")}
             </p>
           </div>
           <button

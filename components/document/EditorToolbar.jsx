@@ -81,7 +81,7 @@ export default function EditorToolbar({
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleFinishEdit();
                 }}
-                className="h-7 px-2 text-sm font-semibold text-gray-900 border border-[#5542F6] rounded-md outline-none focus:ring-1 focus:ring-[#5542F6]"
+                className="h-7 px-2 text-sm font-semibold text-gray-900 border border-[#7C3AED] rounded-md outline-none focus:ring-1 focus:ring-[#7C3AED]"
                 autoFocus
               />
             ) : (
@@ -125,8 +125,8 @@ export default function EditorToolbar({
             onClick={onToggleForm}
             className={`flex items-center gap-1.5 h-10 px-3.5 rounded-[10px] border text-xs font-bold transition-all cursor-pointer ${
               isFormOpen
-                ? "border-[#5542F6] bg-[#F5F1FF] text-[#5542F6]"
-                : "border-[#E4E4E8] bg-white text-[#52525B] hover:bg-[#F6F6FA]"
+                ? "border-[#7C3AED] bg-[#F5F3FF] text-[#7C3AED]"
+                : "border-[#E5E5E5] bg-white text-[#52525B] hover:bg-[#F6F6FA]"
             }`}
             title="เปิด/ปิด แถบฟอร์มกรอกข้อมูล"
           >
@@ -139,11 +139,11 @@ export default function EditorToolbar({
           <button
             onClick={onCreateRevision}
             disabled={isCreatingRevision}
-            className="flex items-center gap-2 h-10 px-4 rounded-[10px] border border-[#E4E4E8] text-[#22162B] text-sm font-medium hover:bg-[#F6F6FA] transition-colors disabled:opacity-60"
+            className="flex items-center gap-2 h-10 px-4 rounded-[10px] border border-[#E5E5E5] text-[#171717] text-sm font-medium hover:bg-[#F6F6FA] transition-colors disabled:opacity-60"
             title="สร้างฉบับปรับปรุงใหม่ (คงเลข Quotation No. เดิม แต่อัปเกรด Rev ขึ้น)"
           >
             {isCreatingRevision ? (
-              <Loader2 size={16} className="animate-spin text-[#7C4DFF]" />
+              <Loader2 size={16} className="animate-spin text-[#7C3AED]" />
             ) : (
               <CopyPlus size={16} />
             )}
@@ -155,17 +155,17 @@ export default function EditorToolbar({
         <button
           onClick={onSave}
           disabled={isSaving}
-          className="flex items-center gap-2 h-10 px-4 rounded-[10px] border border-[#E4E4E8] text-[#22162B] text-sm font-medium hover:bg-[#F6F6FA] transition-colors disabled:opacity-60"
+          className="flex items-center gap-2 h-10 px-4 rounded-[10px] border border-[#E5E5E5] text-[#171717] text-sm font-medium hover:bg-[#F6F6FA] transition-colors disabled:opacity-60"
           title="บันทึกเอกสารนี้ไว้ในคลัง 'เอกสารของฉัน'"
         >
-          {isSaving ? <Loader2 size={16} className="animate-spin text-[#7C4DFF]" /> : <Save size={16} className="text-[#646469]" />}
+          {isSaving ? <Loader2 size={16} className="animate-spin text-[#7C3AED]" /> : <Save size={16} className="text-[#646469]" />}
           <span className="hidden sm:inline">{isSaving ? "กำลังบันทึก..." : "บันทึกเอกสาร"}</span>
         </button>
 
         {/* ปุ่ม Preview */}
         <button
           onClick={onPreview}
-          className="flex items-center gap-2 h-10 px-4 rounded-[10px] border border-[#E4E4E8] text-[#22162B] text-sm font-medium hover:bg-[#F6F6FA] transition-colors"
+          className="flex items-center gap-2 h-10 px-4 rounded-[10px] border border-[#E5E5E5] text-[#171717] text-sm font-medium hover:bg-[#F6F6FA] transition-colors"
         >
           <Eye size={16} />
           <span className="hidden sm:inline">Preview</span>
@@ -176,7 +176,7 @@ export default function EditorToolbar({
           <button
             onClick={() => onExport?.(selectedFormat)}
             disabled={exporting}
-            className="flex items-center gap-1.5 h-10 pl-3.5 pr-2 rounded-l-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-sm font-semibold hover:opacity-95 transition-opacity disabled:opacity-60 cursor-pointer"
+            className="flex items-center gap-1.5 h-10 pl-3.5 pr-2 rounded-l-[10px] bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-sm font-semibold hover:opacity-95 transition-opacity disabled:opacity-60 cursor-pointer"
             title={`ส่งออกเอกสารในรูปแบบ .${selectedFormat}`}
           >
             {exporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
@@ -187,7 +187,7 @@ export default function EditorToolbar({
           <button
             onClick={() => setExportMenuOpen(!exportMenuOpen)}
             disabled={exporting}
-            className="h-10 px-2 rounded-r-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white hover:opacity-95 border-l border-white/25 transition-opacity disabled:opacity-60 flex items-center justify-center cursor-pointer"
+            className="h-10 px-2 rounded-r-[10px] bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white hover:opacity-95 border-l border-white/25 transition-opacity disabled:opacity-60 flex items-center justify-center cursor-pointer"
             title="เลือกรูปแบบการส่งออก (PDF, HTML, WebP)"
           >
             <ChevronDown size={14} className={`transition-transform duration-150 ${exportMenuOpen ? "rotate-180" : ""}`} />

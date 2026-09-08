@@ -33,8 +33,8 @@ export default function NewTemplateTypeModal({
         {/* Modal Header */}
         <div className="h-18 px-6 border-b border-gray-100 flex items-center justify-between shrink-0 bg-white">
           <div className="flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-2xl bg-purple-50 text-[#5542F6] flex items-center justify-center shrink-0 border border-purple-100/60 shadow-2xs">
-              <Sparkles size={20} className="text-[#5542F6]" />
+            <div className="w-10 h-10 rounded-2xl bg-purple-50 text-[#7C3AED] flex items-center justify-center shrink-0 border border-purple-100/60 shadow-2xs">
+              <Sparkles size={20} className="text-[#7C3AED]" />
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-gray-900 tracking-tight">
@@ -61,22 +61,22 @@ export default function NewTemplateTypeModal({
             {/* Card 1: 📄 Docs (Enabled) */}
             <div
               onClick={() => onSelect?.("document")}
-              className="group bg-white rounded-2xl border-2 border-purple-200 hover:border-[#5542F6] p-5.5 flex flex-col justify-between shadow-2xs hover:shadow-lg transition-all duration-200 cursor-pointer relative overflow-hidden text-left"
+              className="group bg-white rounded-2xl border-2 border-purple-200 hover:border-[#7C3AED] p-5.5 flex flex-col justify-between shadow-2xs hover:shadow-lg transition-all duration-200 cursor-pointer relative overflow-hidden text-left"
             >
               {/* Highlight Ribbon */}
               <div className="absolute top-0 right-0 w-24 h-24 overflow-hidden pointer-events-none">
-                <div className="absolute transform rotate-45 bg-gradient-to-r from-[#5542F6] to-[#7C4DFF] text-white text-[9px] font-black py-0.5 right-[-32px] top-[18px] w-[120px] text-center shadow-xs">
+                <div className="absolute transform rotate-45 bg-gradient-to-r from-[#7C3AED] to-[#7C3AED] text-white text-[9px] font-black py-0.5 right-[-32px] top-[18px] w-[120px] text-center shadow-xs">
                   พร้อมใช้งาน
                 </div>
               </div>
 
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-purple-50 border border-purple-100/80 text-[#5542F6] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform shadow-2xs">
+                <div className="w-12 h-12 rounded-2xl bg-purple-50 border border-purple-100/80 text-[#7C3AED] flex items-center justify-center mb-4 group-hover:scale-105 transition-transform shadow-2xs">
                   <FileText size={24} />
                 </div>
 
                 <div className="flex items-center gap-2 mb-1.5">
-                  <h3 className="text-base font-black text-gray-900 group-hover:text-[#5542F6] transition-colors">
+                  <h3 className="text-base font-black text-gray-900 group-hover:text-[#7C3AED] transition-colors">
                     Docs (เอกสาร A4)
                   </h3>
                 </div>
@@ -90,7 +90,7 @@ export default function NewTemplateTypeModal({
                 <span className="text-[11px] font-bold text-gray-400">ขนาด 794 × 1123 px</span>
                 <button
                   type="button"
-                  className="px-3.5 py-1.5 rounded-xl bg-[#5542F6] group-hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="px-3.5 py-1.5 rounded-xl bg-[#7C3AED] group-hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
                   <span>เลือก Docs</span>
                   <span>→</span>

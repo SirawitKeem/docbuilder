@@ -314,8 +314,8 @@ export default function TemplatesHubPage() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200/80 pb-5">
             <div>
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#5542F6] animate-pulse" />
-                <span className="text-xs font-bold uppercase tracking-wider text-[#5542F6]">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#7C3AED] animate-pulse" />
+                <span className="text-xs font-bold uppercase tracking-wider text-[#7C3AED]">
                   Enterprise Template Hub
                 </span>
               </div>
@@ -343,7 +343,7 @@ export default function TemplatesHubPage() {
               <button
                 type="button"
                 onClick={() => setIsCreateCategoryModalOpen(true)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#5542F6] hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
                 title="สร้างประเภทเอกสารหรือโฟลเดอร์เอกสารใหม่"
               >
                 <Plus size={16} />
@@ -361,7 +361,7 @@ export default function TemplatesHubPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="ค้นหาประเภทเอกสาร (เช่น Quotation, NDA, Partner Agreement...)"
-                className="w-full h-10 pl-10 pr-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-white focus:bg-white text-xs text-gray-800 outline-none focus:border-[#5542F6] focus:ring-1 focus:ring-[#5542F6] transition-all"
+                className="w-full h-10 pl-10 pr-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-white focus:bg-white text-xs text-gray-800 outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all"
               />
             </div>
           </div>
@@ -369,19 +369,19 @@ export default function TemplatesHubPage() {
           {/* Document Collections Grid */}
           {loading ? (
             <div className="p-16 text-center space-y-3 bg-white rounded-2xl border border-gray-200">
-              <div className="w-8 h-8 border-3 border-[#5542F6] border-t-transparent rounded-full animate-spin mx-auto" />
+              <div className="w-8 h-8 border-3 border-[#7C3AED] border-t-transparent rounded-full animate-spin mx-auto" />
               <p className="text-xs text-gray-500 font-medium">กำลังโหลดคลังประเภทเอกสาร...</p>
             </div>
           ) : filteredCategories.length === 0 ? (
             <div className="p-12 text-center bg-white rounded-2xl border border-dashed border-gray-200 space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-purple-50 text-[#5542F6] flex items-center justify-center mx-auto">
+              <div className="w-12 h-12 rounded-2xl bg-purple-50 text-[#7C3AED] flex items-center justify-center mx-auto">
                 <Folder size={24} />
               </div>
               <h3 className="text-sm font-bold text-gray-900">ไม่พบประเภทเอกสารที่ค้นหา</h3>
               <button
                 type="button"
                 onClick={() => setIsCreateCategoryModalOpen(true)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#5542F6] text-white text-xs font-bold cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#7C3AED] text-white text-xs font-bold cursor-pointer"
               >
                 <Plus size={14} />
                 <span>เพิ่มประเภทเอกสารใหม่</span>
@@ -402,7 +402,7 @@ export default function TemplatesHubPage() {
                       setSelectedCategory(cat);
                       setSearchQuery("");
                     }}
-                    className="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-2xs hover:shadow-lg hover:border-[#5542F6]/60 transition-all duration-200 flex flex-col justify-between group text-left cursor-pointer relative overflow-hidden"
+                    className="bg-white rounded-2xl border border-gray-200/80 p-6 shadow-2xs hover:shadow-lg hover:border-[#7C3AED]/60 transition-all duration-200 flex flex-col justify-between group text-left cursor-pointer relative overflow-hidden"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-4">
@@ -415,7 +415,7 @@ export default function TemplatesHubPage() {
                         </span>
                       </div>
 
-                      <h3 className="text-base font-black text-gray-900 group-hover:text-[#5542F6] transition-colors leading-snug">
+                      <h3 className="text-base font-black text-gray-900 group-hover:text-[#7C3AED] transition-colors leading-snug">
                         {cat.name}
                       </h3>
                       <p className="text-xs text-gray-500 mt-2 line-clamp-2 leading-relaxed">
@@ -423,7 +423,7 @@ export default function TemplatesHubPage() {
                       </p>
                     </div>
 
-                    <div className="pt-4 mt-5 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-[#5542F6] group-hover:translate-x-0.5 transition-transform">
+                    <div className="pt-4 mt-5 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-[#7C3AED] group-hover:translate-x-0.5 transition-transform">
                       <span className="flex items-center gap-1.5">
                         <FolderOpen size={15} />
                         <span>เปิดดูคลังเทมเพลต</span>
@@ -462,7 +462,7 @@ export default function TemplatesHubPage() {
                     คลังเทมเพลต
                   </button>
                   <span className="text-gray-300 text-xs">/</span>
-                  <span className="text-xs font-bold text-[#5542F6]">{selectedCategory.name}</span>
+                  <span className="text-xs font-bold text-[#7C3AED]">{selectedCategory.name}</span>
                 </div>
                 <h2 className="text-xl sm:text-2xl font-black text-gray-900 leading-tight mt-0.5">
                   เทมเพลตหมวด {selectedCategory.name}
@@ -474,7 +474,7 @@ export default function TemplatesHubPage() {
             <button
               type="button"
               onClick={() => setIsTypeModalOpen(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#5542F6] hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
             >
               <Plus size={15} />
               <span>สร้างเทมเพลตใหม่ในหมวดนี้</span>
@@ -490,7 +490,7 @@ export default function TemplatesHubPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={`ค้นหาในหมวด ${selectedCategory.name}...`}
-                className="w-full h-9 pl-9 pr-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-white focus:bg-white text-xs text-gray-800 outline-none focus:border-[#5542F6] transition-all"
+                className="w-full h-9 pl-9 pr-4 rounded-xl border border-gray-200 bg-gray-50/50 hover:bg-white focus:bg-white text-xs text-gray-800 outline-none focus:border-[#7C3AED] transition-all"
               />
             </div>
           </div>
@@ -498,7 +498,7 @@ export default function TemplatesHubPage() {
           {/* Level 2 Templates Grid */}
           {currentCategoryTemplates.length === 0 ? (
             <div className="p-12 text-center bg-white rounded-2xl border border-dashed border-gray-200 space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-purple-50 text-[#5542F6] flex items-center justify-center mx-auto">
+              <div className="w-12 h-12 rounded-2xl bg-purple-50 text-[#7C3AED] flex items-center justify-center mx-auto">
                 <FileText size={24} />
               </div>
               <h3 className="text-sm font-bold text-gray-900">ยังไม่มีรูปแบบเทมเพลตในหมวดหมู่นี้</h3>
@@ -508,7 +508,7 @@ export default function TemplatesHubPage() {
               <button
                 type="button"
                 onClick={() => setIsTypeModalOpen(true)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#5542F6] hover:bg-[#4332D6] text-white text-xs font-bold cursor-pointer transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] text-white text-xs font-bold cursor-pointer transition-colors"
               >
                 <Plus size={14} />
                 <span>สร้างเทมเพลตใหม่</span>
@@ -519,7 +519,7 @@ export default function TemplatesHubPage() {
               {currentCategoryTemplates.map((tmpl) => (
                 <div
                   key={tmpl.id}
-                  className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs hover:shadow-lg hover:border-[#5542F6]/50 transition-all duration-200 flex flex-col justify-between group text-left relative"
+                  className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-2xs hover:shadow-lg hover:border-[#7C3AED]/50 transition-all duration-200 flex flex-col justify-between group text-left relative"
                 >
                   <div>
                     {/* Live Document Preview Miniature */}
@@ -527,7 +527,7 @@ export default function TemplatesHubPage() {
 
                     {/* Badge & Info Header */}
                     <div className="flex items-center justify-between gap-2 mb-2">
-                      <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-50 text-[#5542F6] border border-purple-100">
+                      <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-purple-50 text-[#7C3AED] border border-purple-100">
                         {tmpl.badge || "เทมเพลต"}
                       </span>
                       <span className="text-[10px] font-medium text-gray-400">
@@ -542,7 +542,7 @@ export default function TemplatesHubPage() {
                           type="text"
                           value={newName}
                           onChange={(e) => setNewName(e.target.value)}
-                          className="flex-1 text-sm font-bold text-gray-900 border border-[#5542F6] rounded-lg px-2 py-1 outline-none"
+                          className="flex-1 text-sm font-bold text-gray-900 border border-[#7C3AED] rounded-lg px-2 py-1 outline-none"
                           autoFocus
                         />
                         <button
@@ -565,7 +565,7 @@ export default function TemplatesHubPage() {
                       </div>
                     ) : (
                       <div className="flex items-start justify-between gap-2">
-                        <h3 className="text-sm font-bold text-gray-900 group-hover:text-[#5542F6] transition-colors leading-snug line-clamp-2">
+                        <h3 className="text-sm font-bold text-gray-900 group-hover:text-[#7C3AED] transition-colors leading-snug line-clamp-2">
                           {tmpl.name}
                         </h3>
                         <button
@@ -590,7 +590,7 @@ export default function TemplatesHubPage() {
                     <button
                       type="button"
                       onClick={() => setPreviewTemplate(tmpl)}
-                      className="inline-flex items-center gap-1 text-[#5542F6] font-bold hover:underline cursor-pointer"
+                      className="inline-flex items-center gap-1 text-[#7C3AED] font-bold hover:underline cursor-pointer"
                     >
                       <Eye size={13} />
                       <span>ดูตัวอย่าง</span>
@@ -622,7 +622,7 @@ export default function TemplatesHubPage() {
                       {/* Edit in Studio */}
                       <Link
                         href={`/templates/new?edit=${tmpl.id}`}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-[#5542F6] text-gray-700 hover:text-white font-bold transition-all cursor-pointer shadow-2xs"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-[#7C3AED] text-gray-700 hover:text-white font-bold transition-all cursor-pointer shadow-2xs"
                       >
                         <Edit3 size={12} />
                         <span>แก้ไข</span>

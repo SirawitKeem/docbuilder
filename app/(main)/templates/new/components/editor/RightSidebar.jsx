@@ -438,7 +438,7 @@ export default function RightSidebar({
   const isDocTable = activeObject && (activeObject.isDocTable || activeObject.type === "DocTable" || activeObject.type === "docTable");
 
   return (
-    <aside className="w-80 bg-white border-l border-gray-200 flex flex-col h-[calc(100vh-53px)] select-none z-20 shrink-0 shadow-xs">
+    <aside className="editor-right-sidebar w-80 bg-white border-l border-gray-200 flex flex-col h-[calc(100vh-53px)] select-none z-20 shrink-0 shadow-xs">
       <div className="flex border-b border-gray-200 bg-gray-50/70 p-1 gap-1">
         <button
           onClick={() => setActiveTab("properties")}

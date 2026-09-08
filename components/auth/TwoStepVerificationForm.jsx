@@ -119,7 +119,7 @@ export default function TwoStepVerificationForm() {
                 onKeyDown={(e) => handleKeyDown(idx, e)}
                 onPaste={handlePaste}
                 autoFocus={idx === 0}
-                className="w-full h-13 sm:h-14 text-center text-xl font-extrabold text-gray-900 bg-white border border-gray-200 rounded-xl focus:border-[#5542F6] focus:ring-3 focus:ring-purple-500/15 outline-none transition-all shadow-2xs"
+                className="w-full h-13 sm:h-14 text-center text-xl font-extrabold text-gray-900 bg-white border border-gray-200 rounded-xl focus:border-primary focus:ring-3 focus:ring-primary/15 outline-none transition-all shadow-2xs"
               />
             ))}
           </div>
@@ -132,14 +132,14 @@ export default function TwoStepVerificationForm() {
               type="checkbox"
               checked={trustDevice}
               onChange={(e) => setTrustDevice(e.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 text-[#5542F6] focus:ring-[#5542F6] accent-[#5542F6] cursor-pointer"
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary accent-primary cursor-pointer"
             />
             <span className="font-medium text-[13px] text-gray-700">Trust this device for 30 days</span>
           </label>
           <button
             type="button"
             onClick={() => alert("Enter your backup code in the boxes above.")}
-            className="font-semibold text-[13px] text-[#5542F6] hover:underline cursor-pointer"
+            className="font-semibold text-[13px] text-primary hover:underline cursor-pointer"
           >
             Use backup code
           </button>
@@ -163,7 +163,7 @@ export default function TwoStepVerificationForm() {
         <ArrowLeft size={14} className="text-gray-400 shrink-0" />
         <Link
           href="/login"
-          className="font-bold text-[#5542F6] hover:underline"
+          className="font-bold text-primary hover:underline"
         >
           Back to sign in
         </Link>
@@ -171,7 +171,7 @@ export default function TwoStepVerificationForm() {
 
       {/* Security Info Card */}
       <div className="mt-6 p-4 rounded-2xl bg-gradient-to-r from-purple-50/70 to-blue-50/50 border border-purple-100/70 flex items-start gap-3.5 shadow-2xs">
-        <div className="w-8 h-8 rounded-full bg-white text-[#5542F6] flex items-center justify-center shrink-0 border border-purple-100 shadow-2xs">
+        <div className="w-8 h-8 rounded-full bg-white text-primary flex items-center justify-center shrink-0 border border-purple-100 shadow-2xs">
           <ShieldCheck size={16} />
         </div>
         <div>

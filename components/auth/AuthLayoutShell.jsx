@@ -4,7 +4,7 @@ import AuthBackButton from "@/components/ui/AuthBackButton";
 import Antigravity from "@/components/auth/Antigravity";
 
 // Dual Sparkle Stars above Ally DOC Header (matches image reference)
-function DualSparkleIcon({ className = "w-6 h-6 text-[#5542F6]" }) {
+function DualSparkleIcon({ className = "w-6 h-6 text-primary" }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
       <path d="M16.5 1C16.5 5.694 20.306 9.5 25 9.5C20.306 9.5 16.5 13.306 16.5 18C16.5 13.306 12.694 9.5 8 9.5C12.694 9.5 16.5 5.694 16.5 1Z" />
@@ -14,7 +14,7 @@ function DualSparkleIcon({ className = "w-6 h-6 text-[#5542F6]" }) {
 }
 
 // 4-Point Diamond Sparkle Star
-function SparkleStar({ className = "w-4 h-4 text-[#5542F6]" }) {
+function SparkleStar({ className = "w-4 h-4 text-primary" }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
       <path d="M12 0C12 6.627 17.373 12 24 12C17.373 12 12 17.373 12 24C12 17.373 6.627 12 0 12C6.627 12 12 6.627 12 0Z" />
@@ -23,7 +23,7 @@ function SparkleStar({ className = "w-4 h-4 text-[#5542F6]" }) {
 }
 
 // AI-Powered Automation (8-Point Geometric Star)
-function AiSparkleIcon({ className = "w-5 h-5 text-[#5542F6]" }) {
+function AiSparkleIcon({ className = "w-5 h-5 text-primary" }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="m12 2.5-2.2 6.3a2 2 0 0 1-1.2 1.2L2.5 12l6.1 2a2 2 0 0 1 1.2 1.2l2.2 6.3 2.2-6.3a2 2 0 0 1 1.2-1.2l6.1-2-6.1-2a2 2 0 0 1-1.2-1.2L12 2.5Z" />
@@ -106,7 +106,7 @@ export default function AuthLayoutShell({
           {/* Soft Diffuse Glow Backdrop for Rich Depth */}
           <div
             role="presentation"
-            className="pointer-events-none absolute right-[-5%] top-[25%] h-[420px] w-[420px] rounded-full blur-[65px] bg-[radial-gradient(circle,rgba(124,77,255,0.30)_0%,rgba(192,132,252,0.15)_45%,transparent_90%)]"
+            className="pointer-events-none absolute right-[-5%] top-[25%] h-[420px] w-[420px] rounded-full blur-[65px] bg-[radial-gradient(circle,rgba(124,58,237,0.30)_0%,rgba(192,132,252,0.15)_45%,transparent_90%)]"
           />
 
           {/* Decorative Subtle Arc in Bottom-Right Corner */}
@@ -123,7 +123,7 @@ export default function AuthLayoutShell({
                 <span className="text-[30px] sm:text-[34px] font-black tracking-tight text-gray-900 font-sans">
                   Ally DOC
                 </span>
-                <DualSparkleIcon className="w-6 h-6 text-[#5542F6] shrink-0 mb-3.5" />
+                <DualSparkleIcon className="w-6 h-6 text-primary shrink-0 mb-3.5" />
               </div>
 
               <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#F0F2FF] border border-[#DDE2FF] text-[#4F46E5] text-[12px] font-semibold shadow-2xs">
@@ -150,8 +150,8 @@ export default function AuthLayoutShell({
             {/* Feature Highlights List */}
             <div className="space-y-4 pt-2">
               <div className="flex items-start gap-3.5">
-                <div className="w-11 h-11 rounded-full bg-[#F5F3FF] border border-[#EBE5FF] text-[#5542F6] flex items-center justify-center shrink-0 shadow-2xs">
-                  <AiSparkleIcon className="w-5 h-5 text-[#5542F6]" />
+                <div className="w-11 h-11 rounded-full bg-violet-50 border border-violet-100 text-primary flex items-center justify-center shrink-0 shadow-2xs">
+                  <AiSparkleIcon className="w-5 h-5 text-primary" />
                 </div>
                 <div>
                   <h3 className="text-xs xl:text-sm font-bold text-gray-900 leading-snug">

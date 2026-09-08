@@ -363,15 +363,15 @@ export default function EmailScreen({
             )}
 
             {/* Bottom Alert Banner & Send Button */}
-            <div className="pt-4 border-t border-[#E4E4E8] flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-2 p-3 rounded-[10px] bg-[#F5F1FF] text-[#5C33CC] border border-[#E1D3FF] text-xs flex-1">
-                <ShieldCheck size={18} className="shrink-0 text-[#7C4DFF]" />
+            <div className="pt-4 border-t border-[#E5E5E5] flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-2 p-3 rounded-[10px] bg-[#F5F3FF] text-[#6D28D9] border border-[#EDE9FE] text-xs flex-1">
+                <ShieldCheck size={18} className="shrink-0 text-[#7C3AED]" />
                 <span>โปรดตรวจสอบอีเมลผู้รับและรายละเอียดให้ถูกต้องก่อนส่ง</span>
               </div>
               <button
                 onClick={handleSend}
                 disabled={sending || loadingFormat || !activeAttachment}
-                className="w-full sm:w-auto px-7 h-11 rounded-[10px] bg-gradient-to-t from-[#4F03BC] to-[#9F1EF4] text-white text-sm font-semibold hover:opacity-95 disabled:opacity-50 flex items-center justify-center gap-2 shrink-0 transition-opacity cursor-pointer"
+                className="w-full sm:w-auto px-7 h-11 rounded-[10px] bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-sm font-semibold hover:opacity-95 disabled:opacity-50 flex items-center justify-center gap-2 shrink-0 transition-opacity cursor-pointer"
               >
                 {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
                 {sending ? "กำลังส่ง..." : "ส่งอีเมล"}
