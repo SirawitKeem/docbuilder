@@ -137,7 +137,7 @@ export async function POST(request) {
   <title>${docTitle}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai+Looped:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
 ${allCss}
   </style>
@@ -152,7 +152,7 @@ ${allCss}
       justify-content: flex-start;
       min-height: 100vh;
       gap: 24px;
-      font-family: 'Noto Sans Thai Looped', 'Noto Sans Thai', 'Sarabun', sans-serif;
+      font-family: 'Inter', 'Noto Sans Thai', sans-serif;
     }
     .print-page,
     .quotation-document-wrapper > div,

@@ -25,14 +25,14 @@ export default function NotificationRelocationDocument({ data, values, quotation
 
   return (
     <div
-      className="bg-white text-gray-900 overflow-hidden font-noto-looped text-left flex flex-col justify-between text-[14.5px] leading-[1.7]"
+      className="bg-white text-gray-900 overflow-hidden text-left flex flex-col justify-between text-[14.5px] leading-[1.7]"
       style={{
         width: 794,
         minHeight: 1123,
         height: 1123,
         boxSizing: "border-box",
         padding: "0px 48px 0px 48px",
-        fontFamily: "'Noto Sans', var(--font-noto-sans), 'Noto Sans Thai Looped', var(--font-noto-thai-looped), sans-serif",
+        fontFamily: "var(--font-inter), 'Inter', var(--font-noto-thai), 'Noto Sans Thai', sans-serif",
       }}
     >
       {/* ── TOP & MAIN CONTENT ── */}

@@ -40,7 +40,7 @@ const getCounterpartyName = (doc) => {
     if (doc.values.counterparty_name) return doc.values.counterparty_name;
     if (doc.values.recipient) return doc.values.recipient;
     if (doc.values.reseller_company_name) return doc.values.reseller_company_name;
-    if (doc.values.distributor_company_name && doc.values.distributor_company_name !== "บริษัท เครสท์ เซนโด จำกัด") {
+    if (doc.values.distributor_company_name && doc.values.distributor_company_name !== "บริษัท เครสท์ เซนโด จำกัด" && doc.values.distributor_company_name !== "Crest Zendo Co., Ltd.") {
       return doc.values.distributor_company_name;
     }
     if (doc.values.subject) return doc.values.subject;
@@ -63,18 +63,18 @@ function PdfIcon({ className = "w-8 h-9" }) {
 
 function getContractFullName(doc) {
   if (doc.templateId === "nda" || doc.name?.startsWith("NDA")) {
-    return "หนังสือสัญญาไม่เปิดเผยข้อมูล";
+    return "Non-Disclosure Agreement (NDA)";
   }
   if (doc.templateId === "distributor" || doc.name?.includes("Distributor")) {
-    return "สัญญาแต่งตั้งและจัดจำหน่ายซอฟต์แวร์";
+    return "Software Distribution Agreement";
   }
   if (doc.templateId === "partner" || doc.name?.includes("Partner")) {
-    return "สัญญาแต่งตั้งพันธมิตรตัวแทนจำหน่าย";
+    return "Partner Distribution Agreement";
   }
   if (doc.templateId === "notification" || doc.name?.includes("Notification") || doc.name?.includes("หนังสือแจ้ง")) {
-    return "หนังสือแจ้งเปลี่ยนแปลงที่ตั้งสำนักงานใหญ่";
+    return "Headquarters Relocation Notice";
   }
-  return doc.templateName || "หนังสือสัญญา";
+  return doc.templateName || "Agreement";
 }
 
 function formatDateTime(dateString) {
@@ -82,15 +82,18 @@ function formatDateTime(dateString) {
   const d = new Date(dateString);
   if (isNaN(d.getTime())) return { dateStr: dateString, timeStr: "" };
 
-  const dateStr = d.toLocaleDateString("th-TH");
-  const timeStr = d.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }) + " น.";
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const dateStr = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+  const timeStr = `${hours}:${minutes}`;
   return { dateStr, timeStr };
 }
 
 export default function DocumentsTable({
   documents = [],
   showSentTo = false,
-  emptyMessage = "ยังไม่มีเอกสารในระบบ",
+  emptyMessage = "No documents found",
   deleteApiUrl = "/api/documents",
   allowEdit = true,
   onRefresh,
@@ -147,7 +150,7 @@ export default function DocumentsTable({
   // 1-Click Duplicate Document
   const handleDuplicate = async (doc) => {
     try {
-      const duplicateName = `[สำเนา] ${doc.name || "เอกสาร"}`;
+      const duplicateName = `[Copy] ${doc.name || "Document"}`;
       let newDoc;
 
       if (doc.templateId === "quotation") {
@@ -166,7 +169,7 @@ export default function DocumentsTable({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
-        if (!res.ok) throw new Error("คัดลอกใบเสนอราคาไม่สำเร็จ");
+        if (!res.ok) throw new Error("Failed to duplicate quotation");
         newDoc = await res.json();
       } else {
         const payload = {
@@ -184,14 +187,14 @@ export default function DocumentsTable({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
-        if (!res.ok) throw new Error("คัดลอกเอกสารไม่สำเร็จ");
+        if (!res.ok) throw new Error("Failed to duplicate document");
         newDoc = await res.json();
       }
 
       setToast({
-        message: `คัดลอกเอกสาร "${duplicateName}" เรียบร้อยแล้ว`,
+        message: `Duplicated "${duplicateName}" successfully`,
         action: {
-          label: "เปิดแก้ไขทันที",
+          label: "Edit Now",
           onClick: () => {
             const targetPath = doc.templateId === "quotation"
               ? `/create/quotation?id=${newDoc.id}`
@@ -208,7 +211,7 @@ export default function DocumentsTable({
       }
     } catch (err) {
       console.error("Duplicate error:", err);
-      alert("เกิดข้อผิดพลาดในการคัดลอกเอกสาร");
+      alert("Failed to duplicate document");
     }
   };
 
@@ -216,8 +219,8 @@ export default function DocumentsTable({
   const handleCreateReceiptFromQuotation = async (doc) => {
     setOpenMenuId(null);
     try {
-      const receiptNo = `REC-${new Date().getFullYear() + 543}${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(Math.floor(Math.random() * 900) + 100)}`;
-      const receiptName = `ใบเสร็จรับเงิน ${receiptNo} (${doc.quotationNo || doc.name})`;
+      const receiptNo = `REC-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(Math.floor(Math.random() * 900) + 100)}`;
+      const receiptName = `Receipt ${receiptNo} (${doc.quotationNo || doc.name})`;
       const payload = {
         ...doc,
         name: receiptName,
@@ -235,13 +238,13 @@ export default function DocumentsTable({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("ออกใบเสร็จไม่สำเร็จ");
+      if (!res.ok) throw new Error("Failed to generate receipt");
       const newReceipt = await res.json();
 
       setToast({
-        message: `ออกใบเสร็จรับเงิน "${receiptName}" สำเร็จแล้ว`,
+        message: `Receipt "${receiptName}" generated successfully`,
         action: {
-          label: "เปิดดูใบเสร็จ",
+          label: "View Receipt",
           onClick: () => {
             router.push(`/create/quotation?id=${newReceipt.id}`);
           },
@@ -255,7 +258,7 @@ export default function DocumentsTable({
       }
     } catch (err) {
       console.error("Create receipt error:", err);
-      alert("เกิดข้อผิดพลาดในการออกใบเสร็จรับเงิน");
+      alert("Failed to generate receipt");
     }
   };
 
@@ -264,7 +267,7 @@ export default function DocumentsTable({
     setDeleteModalState({
       type: "single",
       id: doc.id,
-      docName: doc.name || "เอกสารนี้",
+      docName: doc.name || "this document",
     });
   };
 
@@ -307,7 +310,7 @@ export default function DocumentsTable({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids: selectedIds }),
       });
-      if (!res.ok) throw new Error("ลบรายการไม่สำเร็จ");
+      if (!res.ok) throw new Error("Failed to delete items");
       setSelectedIds([]);
       if (onRefresh) {
         onRefresh();
@@ -317,7 +320,7 @@ export default function DocumentsTable({
       }
     } catch (err) {
       console.error("Bulk delete error:", err);
-      alert("เกิดข้อผิดพลาดในการลบรายการที่เลือก");
+      alert("Failed to delete selected items");
     } finally {
       setIsBulkDeleting(false);
     }
@@ -343,7 +346,7 @@ export default function DocumentsTable({
           format,
         }),
       });
-      if (!res.ok) throw new Error("ส่งออกไฟล์ไม่สำเร็จ");
+      if (!res.ok) throw new Error("Failed to export document");
       const blob = await res.blob();
       const baseName = (doc.name || "document").replace(/\.(pdf|html|webp)$/i, "");
       const downloadFileName = `${baseName}.${format}`;
@@ -355,7 +358,7 @@ export default function DocumentsTable({
       URL.revokeObjectURL(url);
     } catch (err) {
       console.error("Export error:", err);
-      alert("เกิดข้อผิดพลาดในการดาวน์โหลดเอกสาร");
+      alert("Failed to download document");
     } finally {
       setDownloadingDocId(null);
     }
@@ -394,7 +397,7 @@ export default function DocumentsTable({
         <div className="mb-3 p-3 bg-primary/10 border border-primary/20 rounded-xl flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2 duration-150">
           <div className="flex items-center gap-2 text-xs font-bold text-foreground">
             <span className="w-2 h-2 rounded-full bg-primary" />
-            <span>เลือกอยู่ {selectedIds.length} รายการ</span>
+            <span>{selectedIds.length} items selected</span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -402,7 +405,7 @@ export default function DocumentsTable({
               onClick={() => setSelectedIds([])}
               className="px-3 py-1.5 rounded-lg border border-border bg-surface text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
-              ยกเลิกการเลือก
+              Cancel
             </button>
             <button
               onClick={requestBulkDelete}
@@ -410,7 +413,7 @@ export default function DocumentsTable({
               className="px-4 py-1.5 rounded-xl bg-[#FF3B30] text-white text-xs font-semibold hover:opacity-90 disabled:opacity-50 transition-opacity flex items-center gap-1.5 shadow-2xs cursor-pointer"
             >
               <Trash2 size={14} className="text-white" />
-              <span className="text-white">{isBulkDeleting ? "กำลังลบ..." : `ลบรายการที่เลือก (${selectedIds.length})`}</span>
+              <span className="text-white">{isBulkDeleting ? "Deleting..." : `Delete selected (${selectedIds.length})`}</span>
             </button>
           </div>
         </div>
@@ -428,14 +431,14 @@ export default function DocumentsTable({
                   checked={isAllSelected}
                   onChange={toggleSelectAll}
                   className="w-4 h-4 rounded border-border text-primary focus:ring-primary cursor-pointer accent-primary"
-                  title={isAllSelected ? "ยกเลิกเลือกทั้งหมด" : "เลือกทั้งหมด"}
+                  title={isAllSelected ? "Deselect all" : "Select all"}
                 />
               </th>
-              <th className="px-4 py-3.5">ชื่อเอกสาร</th>
-              <th className="w-[24%] px-4 py-3.5">{showSentTo ? "ส่งไปยัง" : "คู่สัญญา / ผู้รับ"}</th>
-              <th className="w-[18%] px-4 py-3.5">เทมเพลต</th>
-              <th className="w-[14%] px-4 py-3.5">แก้ไขล่าสุด</th>
-              <th className="w-[110px] px-4 py-3.5 text-right whitespace-nowrap">การจัดการ</th>
+              <th className="px-4 py-3.5">Document Name</th>
+              <th className="w-[24%] px-4 py-3.5">{showSentTo ? "Sent To" : "Counterparty / Recipient"}</th>
+              <th className="w-[18%] px-4 py-3.5">Template</th>
+              <th className="w-[14%] px-4 py-3.5">Last Modified</th>
+              <th className="w-[110px] px-4 py-3.5 text-right whitespace-nowrap">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -486,7 +489,7 @@ export default function DocumentsTable({
                             <button
                               onClick={() => setRenameDoc(doc)}
                               className="opacity-0 group-hover/name:opacity-100 p-0.5 rounded-md hover:bg-muted text-muted-foreground hover:text-primary transition-all cursor-pointer"
-                              title="เปลี่ยนชื่อเอกสาร"
+                              title="Rename document"
                             >
                               <Pencil size={11} />
                             </button>
@@ -543,7 +546,7 @@ export default function DocumentsTable({
                         <button
                           onClick={() => setPreviewDoc(doc)}
                           className="p-1.5 rounded-[6px] hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                          title="ดูตัวอย่างเอกสาร (Preview)"
+                          title="Preview document"
                         >
                           <Eye size={16} />
                         </button>
@@ -556,7 +559,7 @@ export default function DocumentsTable({
                             router.push(targetPath);
                           }}
                           className="p-1.5 rounded-[6px] hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                          title="แก้ไขเอกสาร (Edit)"
+                          title="Edit document"
                         >
                           <Edit3 size={15} />
                         </button>
@@ -573,7 +576,7 @@ export default function DocumentsTable({
                             }
                           }}
                           className="p-1.5 rounded-[6px] hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                          title="การดำเนินการเพิ่มเติม"
+                          title="More actions"
                         >
                           <MoreHorizontal size={16} />
                         </button>
@@ -591,7 +594,7 @@ export default function DocumentsTable({
                               className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
                             >
                               <Copy size={14} className="text-muted-foreground" />
-                              <span>คัดลอกเอกสารนี้</span>
+                              <span>Duplicate document</span>
                             </button>
                             <button
                               onClick={() => {
@@ -601,7 +604,7 @@ export default function DocumentsTable({
                               className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
                             >
                               <Pencil size={14} className="text-muted-foreground" />
-                              <span>เปลี่ยนชื่อเอกสาร</span>
+                              <span>Rename document</span>
                             </button>
                             <button
                               onClick={() => {
@@ -611,7 +614,7 @@ export default function DocumentsTable({
                               className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
                             >
                               <Send size={14} className="text-muted-foreground" />
-                              <span>ส่งอีเมล</span>
+                              <span>Send email</span>
                             </button>
                             {allowEdit && (
                               <button
@@ -625,7 +628,7 @@ export default function DocumentsTable({
                                 className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
                               >
                                 <Edit3 size={14} className="text-muted-foreground" />
-                                <span>แก้ไขเอกสาร</span>
+                                <span>Edit document</span>
                               </button>
                             )}
                             {doc.templateId === "quotation" && (
@@ -635,7 +638,7 @@ export default function DocumentsTable({
                                   className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
                                 >
                                   <Receipt size={14} className="text-muted-foreground" />
-                                  <span>ออกใบเสร็จรับเงิน (Receipt)</span>
+                                  <span>Generate receipt</span>
                                 </button>
                                 <button
                                   onClick={async () => {
@@ -646,13 +649,13 @@ export default function DocumentsTable({
                                       const newRev = await res.json();
                                       router.push(`/create/quotation?id=${newRev.id}`);
                                     } catch {
-                                      alert("ไม่สามารถสร้างฉบับปรับปรุงได้");
+                                      alert("Failed to create revision");
                                     }
                                   }}
                                   className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
                                 >
                                   <CopyPlus size={14} className="text-muted-foreground" />
-                                  <span>สร้างฉบับปรับปรุง (New Rev)</span>
+                                  <span>Create new revision</span>
                                 </button>
                               </>
                             )}
@@ -675,7 +678,7 @@ export default function DocumentsTable({
                                     size={14}
                                     className={expandedExportDocId === doc.id ? "text-primary" : "text-muted-foreground"}
                                   />
-                                  <span>ส่งออกเอกสาร (Export)</span>
+                                  <span>Export document</span>
                                 </div>
                                 <ChevronRight
                                   size={13}
@@ -696,7 +699,7 @@ export default function DocumentsTable({
                                     className="w-full text-left px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-background hover:shadow-xs rounded-md flex items-center gap-2 transition-all whitespace-nowrap cursor-pointer"
                                   >
                                     <FileText size={13} className="text-red-500 shrink-0" />
-                                    <span>Export PDF / พิมพ์</span>
+                                    <span>Export PDF / Print</span>
                                   </button>
                                   <button
                                     onClick={() => {
@@ -742,7 +745,7 @@ export default function DocumentsTable({
                               className="w-full text-left px-3.5 py-2 text-xs font-medium text-destructive hover:bg-destructive/10 flex items-center gap-2.5 transition-colors disabled:opacity-40 whitespace-nowrap cursor-pointer"
                             >
                               <Trash2 size={14} className="text-destructive" />
-                              <span>ลบเอกสาร</span>
+                              <span>Delete document</span>
                             </button>
                           </div>
                         )}
@@ -785,13 +788,13 @@ export default function DocumentsTable({
             <div className="space-y-1.5">
               <h3 className="text-lg font-bold text-foreground tracking-tight">
                 {deleteModalState.type === "bulk"
-                  ? `ต้องการลบเอกสาร ${deleteModalState.count} รายการหรือไม่?`
-                  : "ต้องการลบเอกสารหรือไม่?"}
+                  ? `Delete ${deleteModalState.count} selected documents?`
+                  : "Delete document?"}
               </h3>
               <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
                 {deleteModalState.type === "bulk"
-                  ? `เอกสารที่เลือกทั้งหมด ${deleteModalState.count} รายการจะถูกลบออกจากระบบอย่างถาวร และไม่สามารถกู้คืนกลับมาได้`
-                  : `เอกสาร "${deleteModalState.docName}" จะถูกลบออกจากระบบอย่างถาวร และไม่สามารถกู้คืนกลับมาได้`}
+                  ? `All ${deleteModalState.count} selected documents will be permanently removed from workspace. This action cannot be undone.`
+                  : `Document "${deleteModalState.docName}" will be permanently removed from workspace. This action cannot be undone.`}
               </p>
             </div>
 
@@ -833,7 +836,7 @@ export default function DocumentsTable({
         <div className="fixed inset-0 z-50 bg-background overflow-y-auto animate-in fade-in duration-150">
           <EmailScreen
             documentId={emailDoc.id}
-            defaultSubject={`เอกสาร ${emailDoc.templateName || emailDoc.name || "เอกสาร"}`}
+            defaultSubject={`Document: ${emailDoc.templateName || emailDoc.name || "Document"}`}
             fileName={emailDoc.name || `${emailDoc.templateId || "document"}.pdf`}
             templateId={emailDoc.templateId || "nda"}
             templateName={emailDoc.templateName}
@@ -877,12 +880,12 @@ function RenameModal({ doc, onClose, onRenamed }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: doc.id, name: name.trim() }),
       });
-      if (!res.ok) throw new Error("ไม่สามารถเปลี่ยนชื่อเอกสารได้");
+      if (!res.ok) throw new Error("Failed to rename document");
       onRenamed();
       onClose();
     } catch (err) {
       console.error(err);
-      alert("เกิดข้อผิดพลาดในการเปลี่ยนชื่อเอกสาร");
+      alert("Failed to rename document");
     } finally {
       setSaving(false);
     }
@@ -896,7 +899,7 @@ function RenameModal({ doc, onClose, onRenamed }) {
             <div className="w-8 h-8 rounded-lg bg-[#F5F3FF] text-[#7C3AED] flex items-center justify-center">
               <Pencil size={16} />
             </div>
-            <h3 className="text-base font-bold text-gray-900">เปลี่ยนชื่อเอกสาร</h3>
+            <h3 className="text-base font-bold text-gray-900">Rename Document</h3>
           </div>
           <button
             onClick={onClose}
@@ -908,12 +911,12 @@ function RenameModal({ doc, onClose, onRenamed }) {
 
         <form onSubmit={handleSave} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-gray-700">ชื่อเอกสารใหม่</label>
+            <label className="text-xs font-semibold text-gray-700">New Document Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="ระบุชื่อเอกสาร..."
+              placeholder="Enter document name..."
               className="w-full h-10 px-3.5 rounded-xl border border-gray-200 bg-white text-sm outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#F5F3FF] transition-all"
               autoFocus
             />
@@ -925,14 +928,14 @@ function RenameModal({ doc, onClose, onRenamed }) {
               onClick={onClose}
               className="w-full h-10 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 text-xs font-bold transition-colors cursor-pointer"
             >
-              ยกเลิก
+              Cancel
             </button>
             <button
               type="submit"
               disabled={saving || !name.trim()}
               className="w-full h-10 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] text-white text-xs font-bold transition-colors shadow-xs flex items-center justify-center disabled:opacity-50 cursor-pointer"
             >
-              <span>{saving ? "กำลังบันทึก..." : "บันทึกชื่อใหม่"}</span>
+              <span>{saving ? "Saving..." : "Save Changes"}</span>
             </button>
           </div>
         </form>
@@ -978,17 +981,17 @@ function PreviewModal({ doc, onClose }) {
             <div className="flex items-center gap-2">
               <h3 className="font-semibold text-foreground text-base">{doc.name}</h3>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground border border-border/60">
-                {doc.templateName || "เอกสาร"}
+                {doc.templateName || "Document"}
               </span>
             </div>
             <p className="text-xs text-muted-foreground mt-0.5">
-              แก้ไขล่าสุด {extractDocumentMeta(doc)?.relativeTime || "-"} • สร้างเมื่อ {new Date(doc.createdAt).toLocaleDateString("th-TH")}
+              Last modified {extractDocumentMeta(doc)?.relativeTime || "-"} • Created {formatDateTime(doc.createdAt).dateStr}
             </p>
           </div>
           <button
             onClick={onClose}
             className="p-2 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-            title="ปิดหน้าต่าง"
+            title="Close"
           >
             <X size={20} />
           </button>
@@ -1036,12 +1039,12 @@ function PreviewModal({ doc, onClose }) {
 
         {/* Modal Footer */}
         <div className="px-6 py-3.5 border-t border-border flex items-center justify-between bg-muted/30">
-          <p className="text-xs text-muted-foreground">โหมดแสดงตัวอย่างเอกสาร (อ่านอย่างเดียว)</p>
+          <p className="text-xs text-muted-foreground">Document Preview Mode (Read-only)</p>
           <button
             onClick={onClose}
             className="px-4 py-2 text-sm font-medium text-foreground hover:bg-muted rounded-lg transition-colors"
           >
-            ปิดหน้าต่าง
+            Close
           </button>
         </div>
       </div>

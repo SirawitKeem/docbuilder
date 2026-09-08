@@ -81,10 +81,10 @@ export default function DocumentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">
-            เอกสารของฉัน
+            My Documents
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground">
-            คลังจัดการเอกสารและสัญญาธุรกิจทั้งหมดที่คุณสร้างและบันทึกไว้ในระบบ
+            Manage and organize all business contracts, agreements, and export logs
           </p>
         </div>
 
@@ -93,7 +93,7 @@ export default function DocumentsPage() {
           className="primary-button inline-flex items-center gap-2 h-9 px-4 rounded-[6px] text-white font-medium text-xs shadow-xs hover:opacity-95 transition-all cursor-pointer select-none"
         >
           <Plus size={15} strokeWidth={2.5} />
-          <span>สร้างเอกสารใหม่</span>
+          <span>New Document</span>
         </Link>
       </div>
 
@@ -114,7 +114,7 @@ export default function DocumentsPage() {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <span>เอกสารทั้งหมด</span>
+              <span>All Documents</span>
               <span className="px-1.5 py-0.2 rounded-full bg-muted text-[10px] font-bold text-muted-foreground">
                 {allCount}
               </span>
@@ -131,7 +131,7 @@ export default function DocumentsPage() {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <span>ประวัติการส่งออก</span>
+              <span>Export History</span>
               <span className="px-1.5 py-0.2 rounded-full bg-muted text-[10px] font-bold text-muted-foreground">
                 {exportedCount}
               </span>
@@ -150,7 +150,7 @@ export default function DocumentsPage() {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="ค้นหาชื่อเอกสาร, เลขที่, คู่สัญญา, เทมเพลต..."
+                placeholder="Search documents by name, number, counterparty, template..."
                 className="w-full h-9 pl-9 pr-3 rounded-xl border border-border bg-muted/20 text-xs text-foreground outline-none focus:border-primary focus:bg-surface transition-all placeholder:text-muted-foreground/70"
               />
             </div>
@@ -164,7 +164,7 @@ export default function DocumentsPage() {
               }}
               className="h-9 px-3 rounded-xl border border-border bg-surface text-xs font-medium text-foreground outline-none cursor-pointer shrink-0"
             >
-              <option value="all">ทุกเทมเพลต</option>
+              <option value="all">All Templates</option>
               {allTemplatesList.map((t) => (
                 <option key={t.id} value={t.id}>
                   {t.name}
@@ -183,14 +183,14 @@ export default function DocumentsPage() {
           <DocumentsTable
             documents={paginatedDocuments}
             showSentTo={activeTab === "exported"}
-            emptyMessage={activeTab === "exported" ? "ยังไม่มีประวัติการส่งออกหรือส่งอีเมล" : "ไม่พบเอกสารที่ตรงกับเงื่อนไขการค้นหา"}
+            emptyMessage={activeTab === "exported" ? "No export or email history found" : "No documents found matching your search"}
             onRefresh={loadDocuments}
           />
 
           {/* Pagination Controls */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-2 text-xs text-muted-foreground">
             <div>
-              แสดง <strong className="font-semibold text-foreground">{totalItems > 0 ? startIndex + 1 : 0} - {Math.min(startIndex + pageSize, totalItems)}</strong> จาก <strong className="font-semibold text-foreground">{totalItems}</strong> รายการ
+              Showing <strong className="font-semibold text-foreground">{totalItems > 0 ? startIndex + 1 : 0} - {Math.min(startIndex + pageSize, totalItems)}</strong> of <strong className="font-semibold text-foreground">{totalItems}</strong> documents
             </div>
 
             <div className="flex items-center gap-3">
@@ -232,9 +232,9 @@ export default function DocumentsPage() {
                 }}
                 className="h-8 px-2 rounded-lg border border-border bg-surface text-xs text-muted-foreground outline-none cursor-pointer"
               >
-                <option value={5}>5 / หน้า</option>
-                <option value={10}>10 / หน้า</option>
-                <option value={20}>20 / หน้า</option>
+                <option value={5}>5 / page</option>
+                <option value={10}>10 / page</option>
+                <option value={20}>20 / page</option>
               </select>
             </div>
           </div>

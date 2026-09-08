@@ -60,7 +60,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
     if (categoryId === "quotation") {
       return (
         <QuotationDataProvider initialQuotation={emptyQuotationPreviewData}>
-          <div style={{ width: 794, height: 1123 }} className="bg-white overflow-hidden text-left font-noto-looped select-none">
+          <div style={{ width: 794, height: 1123 }} className="bg-white overflow-hidden text-left font-sans select-none">
             <QuotationDocument currentPage={1} />
           </div>
         </QuotationDataProvider>
@@ -70,7 +70,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
     if (categoryId === "nda") {
       return (
         <DocumentFieldsProvider initialValues={{}} defaultReadOnly={true}>
-          <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden select-none">
+          <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-sans px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden select-none">
             <DocumentHeader logo="/quotation.png" />
             <div className="flex-1 min-h-0 overflow-hidden text-gray-900 text-sm">
               <NdaPage1 />
@@ -84,7 +84,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
     if (categoryId === "partner") {
       return (
         <DocumentFieldsProvider initialValues={{}} defaultReadOnly={true}>
-          <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden">
+          <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-sans px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden">
             <DocumentHeader logo="/quotation.png" />
             <div className="flex-1 min-h-0 overflow-hidden text-gray-900 text-sm">
               <PartnerPage1 />
@@ -98,7 +98,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
     if (categoryId === "distributor") {
       return (
         <DocumentFieldsProvider initialValues={{}} defaultReadOnly={true}>
-          <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden">
+          <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-sans px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden">
             <DocumentHeader logo="/quotation.png" />
             <div className="flex-1 min-h-0 overflow-hidden text-gray-900 text-sm">
               <DistributorPage1 />
@@ -111,26 +111,26 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
 
     if (categoryId === "notification") {
       return (
-        <div style={{ width: 794, height: 1123 }} className="bg-white overflow-hidden text-left font-noto-looped select-none">
+        <div style={{ width: 794, height: 1123 }} className="bg-white overflow-hidden text-left font-sans select-none">
           <NotificationRelocationDocument data={notificationTemplate.previewData} />
         </div>
       );
     }
 
     return (
-      <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-noto-looped p-10 flex flex-col justify-between overflow-hidden">
+      <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-sans p-10 flex flex-col justify-between overflow-hidden">
         <div className="border-b border-gray-200 pb-3 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-lg bg-[#7C3AED] flex items-center justify-center text-white font-bold text-xs">
               CZ
             </div>
             <div>
-              <p className="font-bold text-gray-900 text-xs">บริษัท เครสท์ เซนโด จำกัด</p>
+              <p className="font-bold text-gray-900 text-xs">Crest Zendo Co., Ltd.</p>
               <p className="text-[10px] text-gray-500">CREST ZENDO CO., LTD.</p>
             </div>
           </div>
           <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-50 text-[#7C3AED] font-bold border border-purple-100">
-            เอกสารทางการ
+            Official Document
           </span>
         </div>
         <div className="flex-1 py-6 space-y-3">
@@ -237,10 +237,10 @@ export default function TemplateSelectModal({ category, onClose }) {
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-gray-900 tracking-tight">
-                เลือกเทมเพลต {category.name}
+                Select {category.name} Template
               </h2>
               <p className="text-xs text-gray-500 font-medium">
-                เลือกเทมเพลตที่ต้องการใช้ในการสร้างเอกสาร {category.fullName || category.name}
+                Choose a template to create {category.fullName || category.name}
               </p>
             </div>
           </div>
@@ -248,7 +248,7 @@ export default function TemplateSelectModal({ category, onClose }) {
           <button
             onClick={onClose}
             className="w-8 h-8 rounded-full bg-gray-100 text-gray-400 hover:text-gray-700 hover:bg-gray-200 transition-colors flex items-center justify-center cursor-pointer"
-            title="ปิดหน้าต่าง (ESC)"
+            title="Close (ESC)"
           >
             <X size={16} />
           </button>
@@ -262,12 +262,12 @@ export default function TemplateSelectModal({ category, onClose }) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="ค้นหาเทมเพลต..."
+              placeholder="Search templates..."
               className="w-full pl-8.5 pr-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#7C3AED]/20 focus:border-[#7C3AED] transition-all"
             />
           </div>
           <div className="text-xs text-gray-500 font-medium">
-            ทั้งหมด {filteredTemplates.length} รูปแบบ
+            {filteredTemplates.length} templates available
           </div>
         </div>
 
@@ -331,7 +331,7 @@ export default function TemplateSelectModal({ category, onClose }) {
 
             {filteredTemplates.length === 0 && (
               <div className="py-16 text-center text-gray-400 font-medium text-xs">
-                ไม่พบรูปแบบเทมเพลตที่ตรงกับการค้นหา
+                No templates found matching your search
               </div>
             )}
           </div>
@@ -371,16 +371,16 @@ export default function TemplateSelectModal({ category, onClose }) {
                   </p>
                 </div>
 
-                {/* Info Block (ข้อมูลเทมเพลต) */}
+                {/* Info Block */}
                 <div className="space-y-1.5 pt-2.5 border-t border-gray-200/60 text-xs">
                   <div className="flex items-center gap-1.5 font-bold text-gray-800 mb-1">
                     <Info size={13} className="text-gray-400" />
-                    <span>ข้อมูลเทมเพลต</span>
+                    <span>Template Specifications</span>
                   </div>
 
                   {selectedTemplate.pageCount && (
                     <div className="flex items-center justify-between text-gray-600 py-0.5">
-                      <span className="text-gray-500">จำนวนหน้า</span>
+                      <span className="text-gray-500">Page Count</span>
                       <span className="font-semibold text-gray-900">
                         {selectedTemplate.pageCount}
                       </span>
@@ -388,20 +388,20 @@ export default function TemplateSelectModal({ category, onClose }) {
                   )}
 
                   <div className="flex items-center justify-between text-gray-600 py-0.5">
-                    <span className="text-gray-500">รูปแบบไฟล์</span>
+                    <span className="text-gray-500">File Format</span>
                     <span className="font-semibold text-gray-900">PDF</span>
                   </div>
 
                   <div className="flex items-center justify-between text-gray-600 py-0.5">
-                    <span className="text-gray-500">รองรับการส่งอีเมล</span>
+                    <span className="text-gray-500">Email Ready</span>
                     <CheckCircle2 size={15} className="text-emerald-500 fill-emerald-50" />
                   </div>
                 </div>
 
-                {/* Highlights Block (จุดเด่น) */}
+                {/* Highlights Block */}
                 {selectedTemplate.features && selectedTemplate.features.length > 0 && (
                   <div className="space-y-1.5 pt-2 border-t border-gray-200/60 text-xs">
-                    <div className="font-bold text-gray-800">จุดเด่น</div>
+                    <div className="font-bold text-gray-800">Key Features</div>
                     <div className="space-y-1">
                       {selectedTemplate.features.map((feat, idx) => (
                         <div key={idx} className="flex items-start gap-1.5 text-gray-600 font-normal text-[11.5px]">
@@ -423,7 +423,7 @@ export default function TemplateSelectModal({ category, onClose }) {
             onClick={onClose}
             className="px-4 py-2 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold transition-colors cursor-pointer shadow-2xs"
           >
-            ยกเลิก
+            Cancel
           </button>
 
           <button
@@ -431,7 +431,7 @@ export default function TemplateSelectModal({ category, onClose }) {
             className="px-5 py-2 rounded-xl bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-xs font-semibold hover:opacity-95 transition-opacity shadow-sm flex items-center gap-1.5 cursor-pointer"
           >
             <FileText size={14} />
-            <span>ใช้เทมเพลตนี้</span>
+            <span>Use Template</span>
             <ArrowRight size={13} />
           </button>
         </div>

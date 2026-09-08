@@ -61,49 +61,6 @@
   ],
   "documents": [
     {
-      "id": "doc-1788773092573",
-      "verificationToken": "VRF-MTR1BBOD-4ZOVC",
-      "name": "เทมเพลตเอกสารใหม่ (A4)",
-      "templateId": "tmpl-1788768026462",
-      "templateName": "เทมเพลตเอกสารใหม่ (A4)",
-      "createdBy": "นายสมชาย ใจดี (ผู้จัดทำ)",
-      "createdAt": "2026-09-07T09:24:52.573Z",
-      "updatedAt": "2026-09-07T09:24:52.573Z",
-      "status": "draft",
-      "sentTo": null,
-      "values": {
-        "company_name": "บริษัท แอดวานซ์ ด็อกคิวเมนท์ ซิสเต็มส์ จำกัด",
-        "company_name_en": "THE RECOVERY ADVISOR CO., LTD."
-      },
-      "activityLogs": [
-        {
-          "id": "act-1788773092573",
-          "action": "create",
-          "performedBy": "นายสมชาย ใจดี (ผู้จัดทำ)",
-          "timestamp": "2026-09-07T09:24:52.573Z",
-          "details": "สร้างเอกสารฉบับร่าง"
-        }
-      ],
-      "approvalChain": [
-        {
-          "id": "step-1",
-          "stepName": "ผู้จัดทำ / ผู้ยื่นเอกสาร",
-          "assignedRole": "ผู้จัดทำ",
-          "assignedUser": "นายสมชาย ใจดี (ผู้จัดทำ)",
-          "status": "approved",
-          "signedAt": "2026-09-07T09:24:52.573Z"
-        },
-        {
-          "id": "step-2",
-          "stepName": "ผู้มีอำนาจอนุมัติ / กรรมการ",
-          "assignedRole": "กรรมการผู้จัดการ",
-          "assignedUser": "นายศรายุทธ โกสิยารักษ์",
-          "status": "pending",
-          "signedAt": null
-        }
-      ]
-    },
-    {
       "id": "doc-1788331547618",
       "verificationToken": "VRF-MTJQFHEQ-T2D3O",
       "name": "NotificationLetter_02-09-2569.pdf",
@@ -3845,27 +3802,5 @@
         }
       ]
     }
-  ],
-  "settings": {
-    "profile": {
-      "name": "นายศรายุทธ โกสิยารักษ์",
-      "email": "sarayut@crestzendo.com",
-      "position": "CEO / Founder",
-      "signatureUrl": null
-    },
-    "organization": {
-      "companyNameTh": "บริษัท เครสท์ เซนโด จำกัด",
-      "companyNameEn": "Crest Zendo Co., Ltd.",
-      "taxId": "0105558073755",
-      "addressTh": "8/40 เดอะ คอนเนค 37 ซอยช่างอากาศอุทิศ 10 แยก 1-2 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210",
-      "phone": "02-123-4567",
-      "email": "contact@crestzendo.com",
-      "sealUrl": null
-    },
-    "preferences": {
-      "language": "th",
-      "dateFormat": "buddhist"
-    }
-  },
-  "notifications": []
+  ]
 }

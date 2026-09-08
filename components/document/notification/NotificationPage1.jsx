@@ -9,8 +9,8 @@ export default function NotificationPage1({ content = defaultContent }) {
 
   return (
     <div
-      className="h-full flex flex-col justify-between text-[14.5px] leading-[1.7] text-left font-noto-looped text-gray-900"
-      style={{ fontFamily: "'Noto Sans', var(--font-noto-sans), 'Noto Sans Thai Looped', var(--font-noto-thai-looped), sans-serif" }}
+      className="h-full flex flex-col justify-between text-[14.5px] leading-[1.7] text-left text-gray-900"
+      style={{ fontFamily: "var(--font-inter), 'Inter', var(--font-noto-thai), 'Noto Sans Thai', sans-serif" }}
     >
       {/* ── TOP & MAIN CONTENT ── */}
       <div>

@@ -22,7 +22,7 @@ export default function RecentDocumentsTable() {
           </div>
           <div>
             <h2 className="text-base font-semibold text-foreground leading-tight">Recently Updated Documents</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">เอกสารและสัญญาที่สร้างและอัปเดตล่าสุดในระบบ</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Documents and contracts recently created or modified in workspace</p>
           </div>
         </div>
 
@@ -30,7 +30,7 @@ export default function RecentDocumentsTable() {
           href="/documents"
           className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline transition-colors"
         >
-          <span>ดูเอกสารทั้งหมด</span>
+          <span>View all documents</span>
           <ArrowRight size={13} weight="bold" />
         </Link>
       </div>

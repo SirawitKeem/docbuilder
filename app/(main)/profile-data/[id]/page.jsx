@@ -21,22 +21,22 @@ export default function EditProfileDataPage({ params }) {
   if (loading) {
     return (
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">แก้ไขชุดข้อมูล</h1>
-        <div className="h-64 rounded-card bg-gray-100 animate-pulse mt-6" />
+        <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">Edit Data Preset</h1>
+        <div className="h-64 rounded-card bg-muted animate-pulse mt-6" />
       </div>
     );
   }
 
   if (!profile) {
-    return <div className="text-gray-400">ไม่พบชุดข้อมูลนี้ในระบบ</div>;
+    return <div className="text-muted-foreground">Data preset not found in the system</div>;
   }
 
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">แก้ไขชุดข้อมูล: {profile.name}</h1>
-        <p className="text-sm text-gray-500">
-          ปรับแต่งและอัปเดตรายละเอียดของชุดข้อมูลนี้
+        <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">Edit Data Preset: {profile.name}</h1>
+        <p className="text-sm text-muted-foreground">
+          Update reusable field values and associated document templates
         </p>
       </div>
       <ProfileForm profile={profile} />

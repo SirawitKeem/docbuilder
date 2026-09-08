@@ -77,11 +77,11 @@ function ProfileFormContent({ profile }) {
 
   const handleSave = async () => {
     if (!name.trim()) {
-      alert("กรุณาตั้งชื่อชุดข้อมูลเพื่อให้จำง่ายตอนเลือกใช้");
+      alert("Please enter a preset name for easy identification.");
       return;
     }
     if (selectedTemplateIds.length === 0 && Object.keys(values).length === 0) {
-      alert("กรุณาเลือกเทมเพลตอย่างน้อย 1 เทมเพลตเพื่อกรอกข้อมูล");
+      alert("Please select at least 1 template to configure fields.");
       return;
     }
     setSaving(true);
@@ -104,7 +104,7 @@ function ProfileFormContent({ profile }) {
           className="inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors bg-surface px-3.5 py-2 rounded-xl border border-border shadow-2xs"
         >
           <ArrowLeft size={15} />
-          ย้อนกลับไปหน้าชุดข้อมูล
+          Back to Data Presets
         </Link>
       </div>
 
@@ -113,22 +113,22 @@ function ProfileFormContent({ profile }) {
         
         {/* 1. Profile Name Input Field */}
         <div className="space-y-1.5 pb-5 border-b border-border">
-          <label className="block text-sm font-bold text-foreground">ชื่อชุดข้อมูล</label>
+          <label className="block text-sm font-semibold text-foreground">Preset Name</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="เช่น บริษัท ตัวอย่าง จำกัด, ลูกค้าประจำ A"
-            className="w-full h-10 px-3.5 rounded-xl border border-border bg-muted/20 text-sm text-foreground outline-none focus:border-primary focus:bg-surface font-medium transition-all"
+            placeholder="e.g. Crest Zendo Co., Ltd., Partner Profile A"
+            className="w-full h-10 px-3.5 rounded-xl border border-border bg-muted/20 text-sm text-foreground outline-none focus:border-primary focus:bg-surface font-medium transition-all placeholder:text-muted-foreground/70"
           />
-          <p className="text-xs text-muted-foreground">ใช้เป็นชื่อสำหรับเลือกตอนสร้างเอกสาร ไม่ปรากฏในเอกสารจริง</p>
+          <p className="text-xs text-muted-foreground">Used to identify this preset during document generation. Does not appear on final documents.</p>
         </div>
 
-        {/* 2. Template Selector Chips (เริ่มต้นไม่เลือก ให้ User เลือกเอง) */}
+        {/* 2. Template Selector Chips */}
         <div className="space-y-2.5 pb-5 border-b border-border">
           <div className="flex items-center justify-between">
-            <label className="block text-sm font-bold text-foreground flex items-center gap-1.5">
-              <span>เลือกเทมเพลตที่จะนำชุดข้อมูลนี้ไปใช้</span>
+            <label className="block text-sm font-semibold text-foreground flex items-center gap-1.5">
+              <span>Compatible Templates</span>
               <Sparkles size={14} className="text-primary" />
             </label>
             <div className="flex items-center gap-3">
@@ -136,22 +136,22 @@ function ProfileFormContent({ profile }) {
                 <button
                   type="button"
                   onClick={clearAllTemplates}
-                  className="text-xs font-semibold text-muted-foreground hover:text-foreground"
+                  className="text-xs font-semibold text-muted-foreground hover:text-foreground cursor-pointer"
                 >
-                  ยกเลิกการเลือก
+                  Deselect all
                 </button>
               )}
               <button
                 type="button"
                 onClick={selectAllTemplates}
-                className="text-xs font-semibold text-primary hover:underline"
+                className="text-xs font-semibold text-primary hover:underline cursor-pointer"
               >
-                เลือกทั้งหมด
+                Select all
               </button>
             </div>
           </div>
           <p className="text-xs text-muted-foreground">
-            คลิกเลือกเทมเพลตที่คุณต้องการ — แบบฟอร์มจะแสดงเฉพาะฟิลด์ข้อมูลที่เทมเพลตนั้นๆ ต้องนำไปใช้
+            Choose which document templates will use this preset — the form will adapt and display relevant fields below.
           </p>
 
           <div className="flex flex-wrap gap-2 pt-1">
@@ -179,13 +179,13 @@ function ProfileFormContent({ profile }) {
         {/* 3. Dynamic Form Fields grouped by Category */}
         {visibleKeys.length === 0 ? (
           <div className="p-10 text-center border border-dashed border-border rounded-xl bg-muted/20 text-muted-foreground text-xs space-y-1">
-            <p className="font-semibold text-foreground">💡 ยังไม่ได้เลือกเทมเพลต</p>
-            <p>กรุณาคลิกเลือกเทมเพลตด้านบนเพื่อแสดงฟิลด์ข้อมูลที่ต้องกรอก</p>
+            <p className="font-semibold text-foreground">💡 No templates selected</p>
+            <p>Select one or more templates above to show the required fields to fill.</p>
           </div>
         ) : (
           Object.entries(grouped).map(([category, keys]) => (
             <div key={category} className="space-y-4 pt-1">
-              <h2 className="text-sm font-bold text-foreground pb-2 border-b border-border uppercase tracking-wider text-muted-foreground">
+              <h2 className="text-xs font-bold text-muted-foreground pb-2 border-b border-border uppercase tracking-wider">
                 {categoryLabels[category] || category}
               </h2>
               <div className="space-y-4">
@@ -202,7 +202,7 @@ function ProfileFormContent({ profile }) {
                           placeholder={def.placeholder}
                           onChange={(e) => handleChange(key, e.target.value)}
                           rows={2}
-                          className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-muted/20 text-xs text-foreground outline-none focus:border-primary focus:bg-surface resize-none transition-all"
+                          className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-muted/20 text-xs text-foreground outline-none focus:border-primary focus:bg-surface resize-none transition-all placeholder:text-muted-foreground/70"
                         />
                       ) : (
                         <input
@@ -210,7 +210,7 @@ function ProfileFormContent({ profile }) {
                           value={values[key] || ""}
                           placeholder={def.placeholder}
                           onChange={(e) => handleChange(key, e.target.value)}
-                          className="w-full h-10 px-3.5 rounded-xl border border-border bg-muted/20 text-xs text-foreground outline-none focus:border-primary focus:bg-surface transition-all"
+                          className="w-full h-10 px-3.5 rounded-xl border border-border bg-muted/20 text-xs text-foreground outline-none focus:border-primary focus:bg-surface transition-all placeholder:text-muted-foreground/70"
                         />
                       )}
                     </div>
@@ -228,20 +228,20 @@ function ProfileFormContent({ profile }) {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="h-10 px-6 rounded-xl bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-xs font-semibold hover:opacity-95 disabled:opacity-60 transition-opacity shadow-sm"
+          className="primary-button h-10 px-6 rounded-xl text-white text-xs font-semibold hover:opacity-95 disabled:opacity-60 transition-opacity shadow-sm cursor-pointer"
         >
-          {saving ? "กำลังบันทึก..." : "บันทึกชุดข้อมูล"}
+          {saving ? "Saving..." : "Save Preset"}
         </button>
         <button
           onClick={() => router.push("/profile-data")}
-          className="h-10 px-5 rounded-xl border border-border text-foreground text-xs font-medium hover:bg-muted transition-colors bg-surface"
+          className="h-10 px-5 rounded-xl border border-border text-foreground text-xs font-medium hover:bg-muted transition-colors bg-surface cursor-pointer"
         >
-          ยกเลิก
+          Cancel
         </button>
         {saved && (
           <span className="inline-flex items-center gap-1.5 text-xs text-emerald-600 font-bold">
             <CheckCircle2 size={15} />
-            บันทึกเรียบร้อยแล้ว
+            Saved successfully
           </span>
         )}
       </div>
@@ -251,7 +251,7 @@ function ProfileFormContent({ profile }) {
 
 export default function ProfileForm(props) {
   return (
-    <Suspense fallback={<div className="h-32 flex items-center justify-center text-muted-foreground text-xs">กำลังโหลด...</div>}>
+    <Suspense fallback={<div className="h-32 flex items-center justify-center text-muted-foreground text-xs">Loading...</div>}>
       <ProfileFormContent {...props} />
     </Suspense>
   );

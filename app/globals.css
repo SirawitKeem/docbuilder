@@ -33,9 +33,9 @@
   --shadow-card: var(--elevation-card);
   --shadow-panel: var(--elevation-panel);
 
-  /* UI Shell Font: Inter (EN) + Noto Sans Thai (TH) — matches tenant-hub design system */
-  --font-sans: var(--font-inter), "Inter", var(--font-noto-thai), "Noto Sans Thai", ui-sans-serif, system-ui, sans-serif;
-  --font-noto-looped: var(--font-noto-sans), "Noto Sans", var(--font-noto-thai-looped), "Noto Sans Thai Looped", sans-serif;
+  /* Pure Fonts: Inter ONLY for English, Noto Sans Thai ONLY for Thai */
+  --font-sans: var(--font-inter), "Inter", var(--font-noto-thai), "Noto Sans Thai", sans-serif;
+  --font-noto-looped: var(--font-inter), "Inter", var(--font-noto-thai), "Noto Sans Thai", sans-serif;
 }
  
 :root {
@@ -124,11 +124,19 @@
 }
 
 
+html {
+  font-family: "Inter", "Noto Sans Thai", sans-serif;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: var(--font-sans);
+  font-family: inherit;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
 }
 
 .scrollbar-none {
@@ -214,19 +222,16 @@ nextjs-portal {
   display: none !important;
 }
 
-/* Document Template-Specific Font Scopes (Isolated per template for PDF export parity) */
+/* Document Typography Scopes strictly enforced: Inter (EN) + Noto Sans Thai (TH) */
 .font-noto-looped,
 .template-notification,
 .notification-document-wrapper,
 .template-quotation,
-.quotation-document-wrapper {
-  font-family: var(--font-noto-sans), "Noto Sans", var(--font-noto-thai-looped), "Noto Sans Thai Looped", sans-serif !important;
-}
-
+.quotation-document-wrapper,
 .template-nda,
 .template-partner,
 .template-distributor {
-  font-family: var(--font-noto-thai), "Noto Sans Thai", sans-serif !important;
+  font-family: var(--font-inter), "Inter", var(--font-noto-thai), "Noto Sans Thai", sans-serif !important;
 }
 
 /* Centralized Document Typography */
@@ -444,5 +449,5 @@ nextjs-portal {
 }
 
 .font-sarabun {
-  font-family: var(--font-sarabun), "TH Sarabun New", "Sarabun", "Noto Sans Thai", sans-serif;
+  font-family: var(--font-inter), "Inter", var(--font-noto-thai), "Noto Sans Thai", sans-serif !important;
 }

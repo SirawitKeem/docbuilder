@@ -7,48 +7,51 @@ export default function TemplateCard({ template, variant = "compact", onSelect }
   const iconData = EXTENDED_ICON_MAP[template.icon];
   const Icon = iconData ? iconData.icon : FileText;
   const colorClass = COLOR_MAP[template.color] || COLOR_MAP.purple;
-  const badgeText = template.badge || "พร้อมใช้งาน";
-
   const isAvailable = template.available !== false;
 
   const cardInner = (
-    <div className="bg-surface border border-border rounded-[12px] shadow-2xs p-5 h-full flex flex-col transition-all duration-200 group-hover:border-primary/50 group-hover:shadow-card text-left relative overflow-hidden select-none">
-      {/* Top Bar: Icon Box + Category Badge */}
-      <div className="flex items-center justify-between gap-2 mb-3.5">
+    <div className="bg-surface border border-border rounded-[12px] shadow-2xs p-4 sm:p-5 h-full flex flex-col justify-between transition-all duration-200 group-hover:border-neutral-300 dark:group-hover:border-neutral-700 group-hover:shadow-card text-left relative overflow-hidden select-none">
+      {/* Top Bar: Icon Box */}
+      <div className="flex items-center justify-between gap-2 mb-3">
         <div className={`w-9 h-9 rounded-[6px] flex items-center justify-center border ${colorClass.bg} ${colorClass.text} ${colorClass.border} transition-transform group-hover:scale-105 duration-200 shadow-2xs`}>
           <Icon size={18} />
         </div>
-        <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${colorClass.bg} ${colorClass.text} ${colorClass.border}`}>
-          {badgeText}
-        </span>
+        {!isAvailable && (
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-medium border border-border bg-muted text-muted-foreground">
+            Coming soon
+          </span>
+        )}
       </div>
 
-      {/* Title & Full Name */}
-      <p className="font-semibold text-foreground text-[15px] group-hover:text-primary transition-colors line-clamp-1 font-sans">
-        {template.name}
-      </p>
-      <p className="text-xs text-muted-foreground mt-0.5 mb-1 font-normal line-clamp-2 leading-relaxed">
-        {template.fullName || template.description}
-      </p>
+      {/* Title */}
+      <div className="flex-1 my-1">
+        <p className="font-semibold text-foreground text-sm sm:text-[15px] line-clamp-1 font-sans">
+          {template.name}
+        </p>
+      </div>
 
-      {variant === "full" && (
-        <p className="text-xs text-muted-foreground/80 mt-2 mb-4 leading-relaxed line-clamp-2">
+      {variant === "full" && template.description && (
+        <p className="text-xs text-muted-foreground/80 mt-1 mb-2 leading-relaxed line-clamp-2">
           {template.description}
         </p>
       )}
 
-      {/* Bottom Action CTA */}
-      <div className={variant === "full" ? "mt-auto pt-3 border-t border-border" : "mt-auto pt-3"}>
+      {/* Bottom Action CTA: Minimal Clean Split Row without top border line */}
+      <div className="mt-auto pt-2 flex items-center justify-between">
         {isAvailable ? (
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-primary group-hover:text-primary/90">
-            <span>สร้างเอกสาร</span>
-            <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
-          </span>
+          <>
+            <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-150">
+              Use template
+            </span>
+            <div className="size-6 rounded-full bg-muted/80 group-hover:bg-neutral-200/80 dark:group-hover:bg-neutral-700/80 flex items-center justify-center text-muted-foreground group-hover:text-foreground transition-all duration-150">
+              <ArrowRight size={12} className="transition-transform duration-150 group-hover:translate-x-0.5" />
+            </div>
+          </>
         ) : (
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground">
+          <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground/70">
             <Lock size={12} />
-            เร็วๆ นี้
-          </span>
+            <span>Coming soon</span>
+          </div>
         )}
       </div>
     </div>

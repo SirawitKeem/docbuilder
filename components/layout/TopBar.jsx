@@ -51,24 +51,24 @@ export function TopBar() {
   const [notifications, setNotifications] = useState([
     {
       id: 1,
-      title: "สร้างใบเสนอราคา CZ2608063 สำเร็จ",
-      time: "10 นาทีที่แล้ว",
+      title: "Quotation CZ2608063 generated successfully",
+      time: "10m ago",
       unread: true,
       icon: FileText,
       iconColor: "text-primary",
     },
     {
       id: 2,
-      title: "Partner Agreement ถูกส่งทางอีเมลแล้ว",
-      time: "1 ชั่วโมงที่แล้ว",
+      title: "Partner Agreement sent via email",
+      time: "1h ago",
       unread: true,
       icon: CheckCircle2,
       iconColor: "text-emerald-600 dark:text-emerald-400",
     },
     {
       id: 3,
-      title: "อัปเดตระบบเทมเพลตเวอร์ชันใหม่ 2.0",
-      time: "เมื่อวานนี้",
+      title: "System template updated to v2.0",
+      time: "Yesterday",
       unread: false,
       icon: Sparkles,
       iconColor: "text-muted-foreground",
@@ -104,6 +104,9 @@ export function TopBar() {
 
   const handleSelectRoute = (path) => {
     setOpenCommand(false);
+    if (path.startsWith("/settings") && typeof window !== "undefined") {
+      window.sessionStorage.setItem("docbuilder-settings-return-path", pathname);
+    }
     router.push(path);
   };
 
@@ -123,7 +126,11 @@ export function TopBar() {
     "/profile-data": "Profile Data",
     "/templates": "Templates Catalog",
     "/history": "Sent History",
-    "/settings": "System Settings",
+    "/settings": "Settings",
+    "/settings/account": "Settings",
+    "/settings/general": "Settings",
+    "/settings/email": "Settings",
+    "/settings/preferences": "Settings",
   };
   const title = pageTitles[pathname] || "DocBuilder Workspace";
 
@@ -171,7 +178,7 @@ export function TopBar() {
             <DropdownMenuTrigger asChild>
               <button
                 className="relative h-9 w-9 rounded-lg border border-border bg-surface text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center justify-center shadow-2xs"
-                title="การแจ้งเตือน"
+                title="Notifications"
               >
                 <Bell size={17} />
                 {unreadCount > 0 && (
@@ -186,18 +193,18 @@ export function TopBar() {
             >
               <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/40">
                 <DropdownMenuLabel className="p-0 font-semibold text-xs uppercase tracking-wider text-muted-foreground">
-                  การแจ้งเตือน
+                  Notifications
                 </DropdownMenuLabel>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="text-[10px] font-normal border-primary/30 text-primary">
-                    {unreadCount} ใหม่
+                    {unreadCount} new
                   </Badge>
                   {unreadCount > 0 && (
                     <button
                       onClick={markAllAsRead}
                       className="text-[10px] text-muted-foreground hover:text-foreground font-medium underline"
                     >
-                      อ่านทั้งหมด
+                      Mark all as read
                     </button>
                   )}
                 </div>
@@ -233,7 +240,7 @@ export function TopBar() {
 
               <div className="p-2 border-t border-border text-center bg-muted/20">
                 <Button variant="ghost" size="sm" className="w-full text-xs text-primary h-7">
-                  ดูการแจ้งเตือนทั้งหมด
+                  View all notifications
                 </Button>
               </div>
             </DropdownMenuContent>
@@ -262,17 +269,21 @@ export function TopBar() {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => handleSelectRoute("/profile-data")} className="cursor-pointer">
+              <DropdownMenuItem onClick={() => handleSelectRoute("/settings/account")} className="cursor-pointer">
                 <User className="mr-2 h-4 w-4 text-muted-foreground" />
-                <span>Profile Settings</span>
+                <span>Account Settings</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleSelectRoute("/documents")} className="cursor-pointer">
                 <FolderOpen className="mr-2 h-4 w-4 text-muted-foreground" />
                 <span>My Documents</span>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleSelectRoute("/settings")} className="cursor-pointer">
+              <DropdownMenuItem onClick={() => handleSelectRoute("/profile-data")} className="cursor-pointer">
+                <FileText className="mr-2 h-4 w-4 text-muted-foreground" />
+                <span>Data Presets</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSelectRoute("/settings/account")} className="cursor-pointer">
                 <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
-                <span>System Settings</span>
+                <span>Settings</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => handleSelectRoute("/login")} className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer">
@@ -286,40 +297,44 @@ export function TopBar() {
 
       {/* Command Search Dialog (Cmd+K) */}
       <CommandDialog open={openCommand} onOpenChange={setOpenCommand}>
-        <CommandInput placeholder="พิมพ์คำค้นหาเอกสาร, เมนู, หรือเทมเพลต..." />
+        <CommandInput placeholder="Search documents, pages, or templates..." />
         <CommandList>
-          <CommandEmpty>ไม่พบข้อมูลที่ค้นหา</CommandEmpty>
-          <CommandGroup heading="เมนูระบบ">
+          <CommandEmpty>No results found.</CommandEmpty>
+          <CommandGroup heading="Workspace">
             <CommandItem onSelect={() => handleSelectRoute("/")}>
               <FileText className="mr-2 h-4 w-4 text-primary" />
-              <span>หน้าหลัก (Dashboard)</span>
+              <span>Dashboard</span>
             </CommandItem>
             <CommandItem onSelect={() => handleSelectRoute("/create")}>
               <Plus className="mr-2 h-4 w-4 text-primary" />
-              <span>สร้างเอกสารใหม่</span>
+              <span>Create Document</span>
             </CommandItem>
             <CommandItem onSelect={() => handleSelectRoute("/documents")}>
               <FolderOpen className="mr-2 h-4 w-4 text-primary" />
-              <span>เอกสารของฉัน</span>
+              <span>My Documents</span>
             </CommandItem>
             <CommandItem onSelect={() => handleSelectRoute("/templates")}>
               <LayoutGrid className="mr-2 h-4 w-4 text-primary" />
-              <span>คลังเทมเพลตทั้งหมด</span>
+              <span>Templates Catalog</span>
+            </CommandItem>
+            <CommandItem onSelect={() => handleSelectRoute("/profile-data")}>
+              <FileText className="mr-2 h-4 w-4 text-primary" />
+              <span>Data Presets</span>
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
-          <CommandGroup heading="สร้างเอกสารด่วน">
+          <CommandGroup heading="Quick Create">
             <CommandItem onSelect={() => handleSelectRoute("/create/quotation")}>
               <FileText className="mr-2 h-4 w-4 text-primary" />
-              <span>ใบเสนอราคา (Quotation)</span>
+              <span>Quotation</span>
             </CommandItem>
             <CommandItem onSelect={() => handleSelectRoute("/create/partner")}>
               <FileText className="mr-2 h-4 w-4 text-primary" />
-              <span>สัญญาแต่งตั้งพันธมิตร (Partner Agreement)</span>
+              <span>Partner Agreement</span>
             </CommandItem>
             <CommandItem onSelect={() => handleSelectRoute("/create/nda")}>
               <FileText className="mr-2 h-4 w-4 text-primary" />
-              <span>สัญญาไม่เปิดเผยข้อมูล (NDA)</span>
+              <span>NDA Agreement</span>
             </CommandItem>
           </CommandGroup>
         </CommandList>

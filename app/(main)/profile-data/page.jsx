@@ -86,9 +86,9 @@ export default function ProfileDataListPage() {
   if (profiles === null) {
     return (
       <div>
-        <h1 className="text-2xl font-bold text-foreground mb-1">ตั้งค่าข้อมูลกลาง</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">Data Presets</h1>
         <p className="text-xs sm:text-sm text-muted-foreground mb-6">
-          จัดการข้อมูลที่ใช้ร่วมกันสำหรับเทมเพลตต่าง ๆ เพื่อดึงไปเติมในเอกสารโดยอัตโนมัติ
+          Manage reusable shared entity data across templates to auto-fill dynamic fields in documents
         </p>
         <div className="h-64 rounded-2xl bg-muted animate-pulse" />
       </div>
@@ -128,7 +128,7 @@ export default function ProfileDataListPage() {
 
   const selectedProfile = profiles.find((p) => p.id === selectedProfileId);
   const selectedValues = selectedProfile?.values || {};
-  const selectedCompanyName = selectedProfile?.name || selectedValues.counterparty_name || selectedValues.bill_to_company || selectedValues.notification_recipient || selectedValues.our_company_name || "บริษัท ไม่ระบุชื่อ";
+  const selectedCompanyName = selectedProfile?.name || selectedValues.counterparty_name || selectedValues.bill_to_company || selectedValues.notification_recipient || selectedValues.our_company_name || "Untitled Entity";
   const selectedTaxId = selectedValues.counterparty_registration_number || selectedValues.tax_id || "-";
   const selectedAddress = selectedValues.counterparty_address || selectedValues.notification_new_address_th || selectedValues.our_company_address || "-";
   const selectedPhone = selectedValues.am_phone || selectedValues.phone || "-";
@@ -141,9 +141,9 @@ export default function ProfileDataListPage() {
   return (
     <div>
       {/* Page Header */}
-      <h1 className="text-2xl font-bold text-foreground mb-1">ตั้งค่าข้อมูลกลาง</h1>
+      <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">Data Presets</h1>
       <p className="text-xs sm:text-sm text-muted-foreground mb-6">
-        จัดการข้อมูลที่ใช้ร่วมกันสำหรับเทมเพลตต่าง ๆ เพื่อดึงไปเติมในเอกสารโดยอัตโนมัติ
+        Manage reusable shared entity data across templates to auto-fill dynamic fields in documents
       </p>
 
       {/* Main Section */}
@@ -164,8 +164,8 @@ export default function ProfileDataListPage() {
                     setSearchQuery(e.target.value);
                     setCurrentPage(1);
                   }}
-                  placeholder="ค้นหาชื่อบริษัท, ผู้ติดต่อ..."
-                  className="w-full h-9 pl-9 pr-3 rounded-xl border border-border bg-muted/30 text-xs text-foreground outline-none focus:border-primary focus:bg-surface transition-all"
+                  placeholder="Search company, signatory, or entity..."
+                  className="w-full h-9 pl-9 pr-3 rounded-xl border border-border bg-muted/30 text-xs text-foreground outline-none focus:border-primary focus:bg-surface transition-all placeholder:text-muted-foreground/70"
                 />
               </div>
 
@@ -178,7 +178,7 @@ export default function ProfileDataListPage() {
                 }}
                 className="h-9 px-3 rounded-xl border border-border bg-surface text-xs font-medium text-foreground outline-none cursor-pointer"
               >
-                <option value="all">ทุกเทมเพลต</option>
+                <option value="all">All Templates</option>
                 {allTemplatesList.map((t) => (
                   <option key={t.id} value={t.id}>
                     {t.name}
@@ -195,19 +195,19 @@ export default function ProfileDataListPage() {
                 }}
                 className="h-9 px-3 rounded-xl border border-border bg-surface text-xs font-medium text-foreground outline-none cursor-pointer"
               >
-                <option value="all">สถานะ: ทั้งหมด</option>
-                <option value="complete">ข้อมูลครบถ้วน</option>
-                <option value="incomplete">ข้อมูลไม่ครบ</option>
+                <option value="all">Status: All</option>
+                <option value="complete">Complete</option>
+                <option value="incomplete">Incomplete</option>
               </select>
             </div>
 
             {/* Create New Profile Button */}
             <Link
               href="/profile-data/new"
-              className="inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-xl bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-xs font-semibold hover:opacity-95 transition-opacity shrink-0"
+              className="primary-button inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-xl text-white text-xs font-semibold hover:opacity-95 transition-opacity shrink-0"
             >
               <Plus size={15} />
-              สร้างชุดข้อมูลใหม่
+              New Preset
             </Link>
           </div>
 
@@ -215,14 +215,14 @@ export default function ProfileDataListPage() {
           <div className="space-y-2.5">
             {paginatedProfiles.length === 0 ? (
               <div className="p-10 text-center border border-dashed border-border rounded-xl bg-muted/20 text-muted-foreground text-xs">
-                {searchQuery ? "ไม่พบข้อมูลที่ตรงกับเงื่อนไขการค้นหา" : "ยังไม่มีชุดข้อมูล — กดปุ่มสร้างชุดข้อมูลใหม่ด้านบน"}
+                {searchQuery ? "No preset data matching your search" : "No presets created yet — click 'New Preset' above"}
               </div>
             ) : (
               paginatedProfiles.map((p) => {
                 const isSelected = selectedProfileId === p.id;
                 const values = p.values || {};
-                const companyName = p.name || values.counterparty_name || values.our_company_name || "บริษัท ไม่ระบุชื่อ";
-                const address = values.counterparty_address || values.our_company_address || "ไม่ได้ระบุที่อยู่";
+                const companyName = p.name || values.counterparty_name || values.our_company_name || "Untitled Entity";
+                const address = values.counterparty_address || values.our_company_address || "No address specified";
                 const formattedDate = formatThaiDateTime(p.updatedAt || p.createdAt);
                 const relevant = getRelevantTemplates(values);
                 const isComplete = relevant.length > 0 && relevant.some((r) => r.isComplete);
@@ -246,14 +246,14 @@ export default function ProfileDataListPage() {
 
                         <div className="min-w-0 flex-1 space-y-1">
                           <div className="flex items-center gap-2.5 flex-wrap">
-                            <h3 className="font-bold text-foreground text-sm leading-snug">{companyName}</h3>
+                            <h3 className="font-semibold text-foreground text-sm leading-snug">{companyName}</h3>
                             {isComplete ? (
-                              <span className="px-2.5 py-0.5 rounded-full bg-[#DDEEE2] text-[#17682F] text-[11px] font-semibold">
-                                ข้อมูลครบถ้วน
+                              <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 text-[10px] font-semibold border border-emerald-200/50">
+                                Complete
                               </span>
                             ) : (
-                              <span className="px-2.5 py-0.5 rounded-full bg-[#FFF2CE] text-[#725000] text-[11px] font-semibold">
-                                ข้อมูลไม่ครบ
+                              <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300 text-[10px] font-semibold border border-amber-200/50">
+                                Incomplete
                               </span>
                             )}
                           </div>
@@ -280,7 +280,7 @@ export default function ProfileDataListPage() {
                           }}
                           className="px-3 py-1.5 rounded-lg border border-border bg-surface hover:bg-muted text-primary font-semibold text-xs transition-colors"
                         >
-                          ดูรายละเอียด
+                          View Details
                         </button>
 
                         <div className="relative">
@@ -305,7 +305,7 @@ export default function ProfileDataListPage() {
                                 className="w-full text-left px-3 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2 transition-colors"
                               >
                                 <Pencil size={14} className="text-muted-foreground" />
-                                แก้ไขข้อมูล
+                                Edit Preset
                               </Link>
                               <button
                                 onClick={(e) => {
@@ -316,7 +316,7 @@ export default function ProfileDataListPage() {
                                 className="w-full text-left px-3 py-2 text-xs font-medium text-destructive hover:bg-destructive/10 flex items-center gap-2 transition-colors"
                               >
                                 <Trash2 size={14} className="text-destructive" />
-                                ลบชุดข้อมูล
+                                Delete Preset
                               </button>
                             </div>
                           )}
@@ -332,7 +332,7 @@ export default function ProfileDataListPage() {
           {/* Pagination */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 text-xs text-muted-foreground border-t border-border">
             <div>
-              แสดง <strong className="font-semibold text-foreground">{totalItems > 0 ? startIndex + 1 : 0} - {Math.min(startIndex + pageSize, totalItems)}</strong> จาก <strong className="font-semibold text-foreground">{totalItems}</strong> รายการ
+              Showing <strong className="font-semibold text-foreground">{totalItems > 0 ? startIndex + 1 : 0} - {Math.min(startIndex + pageSize, totalItems)}</strong> of <strong className="font-semibold text-foreground">{totalItems}</strong> presets
             </div>
 
             <div className="flex items-center gap-3">
@@ -340,7 +340,7 @@ export default function ProfileDataListPage() {
                 <button
                   disabled={validCurrentPage <= 1}
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-muted disabled:opacity-40"
+                  className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-muted disabled:opacity-40 transition-colors"
                 >
                   <ChevronLeft size={14} />
                 </button>
@@ -350,7 +350,7 @@ export default function ProfileDataListPage() {
                     onClick={() => setCurrentPage(pageNum)}
                     className={`w-8 h-8 rounded-lg text-xs font-semibold transition-colors ${
                       validCurrentPage === pageNum
-                        ? "bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white shadow-2xs"
+                        ? "bg-primary text-primary-foreground shadow-2xs font-bold"
                         : "border border-border hover:bg-muted text-muted-foreground"
                     }`}
                   >
@@ -360,7 +360,7 @@ export default function ProfileDataListPage() {
                 <button
                   disabled={validCurrentPage >= totalPages}
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                  className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-muted disabled:opacity-40"
+                  className="w-8 h-8 rounded-lg border border-border flex items-center justify-center hover:bg-muted disabled:opacity-40 transition-colors"
                 >
                   <ChevronRight size={14} />
                 </button>
@@ -372,11 +372,11 @@ export default function ProfileDataListPage() {
                   setPageSize(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="h-8 px-2 rounded-lg border border-border bg-surface text-xs text-muted-foreground outline-none"
+                className="h-8 px-2 rounded-lg border border-border bg-surface text-xs text-muted-foreground outline-none cursor-pointer"
               >
-                <option value={5}>5 / หน้า</option>
-                <option value={10}>10 / หน้า</option>
-                <option value={20}>20 / หน้า</option>
+                <option value={5}>5 / page</option>
+                <option value={10}>10 / page</option>
+                <option value={20}>20 / page</option>
               </select>
             </div>
           </div>
@@ -388,16 +388,16 @@ export default function ProfileDataListPage() {
             {/* Panel Header */}
             <div className="flex items-start justify-between pb-3 border-b border-border">
               <div>
-                <h2 className="text-base font-bold text-foreground">รายละเอียดชุดข้อมูล</h2>
+                <h2 className="text-base font-bold text-foreground">Preset Details</h2>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="font-bold text-sm text-foreground">{selectedCompanyName}</span>
+                  <span className="font-semibold text-sm text-foreground">{selectedCompanyName}</span>
                   {selectedIsComplete ? (
-                    <span className="px-2 py-0.5 rounded-full bg-[#DDEEE2] text-[#17682F] text-[10px] font-semibold">
-                      ข้อมูลครบถ้วน
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 text-[10px] font-semibold border border-emerald-200/50">
+                      Complete
                     </span>
                   ) : (
-                    <span className="px-2 py-0.5 rounded-full bg-[#FFF2CE] text-[#725000] text-[10px] font-semibold">
-                      ข้อมูลไม่ครบ
+                    <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300 text-[10px] font-semibold border border-amber-200/50">
+                      Incomplete
                     </span>
                   )}
                 </div>
@@ -405,46 +405,46 @@ export default function ProfileDataListPage() {
               <button
                 onClick={() => setSelectedProfileId(null)}
                 className="p-1 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                title="ปิดหน้าต่าง"
+                title="Close panel"
               >
                 <X size={18} />
               </button>
             </div>
 
-            {/* Section 1: ข้อมูลพื้นฐาน */}
+            {/* Section 1: Basic Information */}
             <div className="space-y-2 text-xs border-b border-border pb-3">
-              <h3 className="font-bold text-xs tracking-wide text-muted-foreground">ข้อมูลพื้นฐาน</h3>
+              <h3 className="font-semibold text-xs tracking-wide text-muted-foreground uppercase">Basic Information</h3>
               <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-muted-foreground">ชื่อบริษัท</span>
+                <span className="text-muted-foreground">Company Name</span>
                 <span className="font-semibold text-foreground">{selectedCompanyName}</span>
               </div>
               <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-muted-foreground">เลขประจำตัวผู้เสียภาษี</span>
+                <span className="text-muted-foreground">Tax ID / Reg No</span>
                 <span className="font-mono text-foreground">{selectedTaxId}</span>
               </div>
               <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-muted-foreground">ที่อยู่</span>
+                <span className="text-muted-foreground">Address</span>
                 <span className="text-foreground leading-relaxed">{selectedAddress}</span>
               </div>
               <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-muted-foreground">เบอร์โทรศัพท์</span>
+                <span className="text-muted-foreground">Phone</span>
                 <span className="text-foreground">{selectedPhone}</span>
               </div>
               <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-muted-foreground">อีเมล</span>
+                <span className="text-muted-foreground">Email</span>
                 <span className="text-primary">{selectedEmail}</span>
               </div>
             </div>
 
-            {/* Section 2: ข้อมูลผู้ติดต่อหลัก */}
+            {/* Section 2: Primary Contact */}
             <div className="space-y-2 text-xs border-b border-border pb-3">
-              <h3 className="font-bold text-xs tracking-wide text-muted-foreground">ข้อมูลผู้ติดต่อหลัก</h3>
+              <h3 className="font-semibold text-xs tracking-wide text-muted-foreground uppercase">Authorized Signatory</h3>
               <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-muted-foreground">ชื่อ-สกุล</span>
+                <span className="text-muted-foreground">Contact Name</span>
                 <span className="font-semibold text-foreground">{selectedContactName}</span>
               </div>
               <div className="grid grid-cols-[120px_1fr] gap-2">
-                <span className="text-muted-foreground">ตำแหน่ง</span>
+                <span className="text-muted-foreground">Position</span>
                 <span className="text-foreground">{selectedPosition}</span>
               </div>
             </div>
@@ -453,16 +453,16 @@ export default function ProfileDataListPage() {
             <div className="pt-2 flex items-center justify-between gap-3">
               <button
                 onClick={() => handleDelete(selectedProfile.id, selectedProfile.name)}
-                className="px-3.5 py-1.5 rounded-lg border border-destructive/30 text-destructive hover:bg-destructive/10 font-semibold text-xs transition-colors"
+                className="px-3.5 py-1.5 rounded-lg border border-destructive/30 text-destructive hover:bg-destructive/10 font-semibold text-xs transition-colors cursor-pointer"
               >
-                ลบชุดข้อมูล
+                Delete Preset
               </button>
               <Link
                 href={`/profile-data/${selectedProfile.id}`}
-                className="px-4 py-1.5 rounded-lg bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white font-semibold text-xs hover:opacity-95 transition-opacity inline-flex items-center gap-1.5"
+                className="primary-button px-4 py-1.5 rounded-lg text-white font-semibold text-xs hover:opacity-95 transition-opacity inline-flex items-center gap-1.5 cursor-pointer"
               >
                 <Pencil size={14} />
-                แก้ไขข้อมูล
+                Edit Preset
               </Link>
             </div>
           </div>

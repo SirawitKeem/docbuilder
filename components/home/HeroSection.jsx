@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   FilePlus,
-  IdentificationCard,
   Copy,
   Sparkle,
 } from "@phosphor-icons/react";
@@ -20,28 +19,29 @@ function SparkleStar({ className = "w-4 h-4 text-white fill-white" }) {
 
 function getGreeting() {
   const hour = new Date().getHours();
-  if (hour >= 5 && hour < 12) return "สวัสดีตอนเช้า";
-  if (hour >= 12 && hour < 17) return "สวัสดีตอนบ่าย";
-  return "สวัสดีตอนเย็น";
+  if (hour >= 5 && hour < 12) return "Good morning";
+  if (hour >= 12 && hour < 17) return "Good afternoon";
+  return "Good evening";
 }
 
-function getThaiDate() {
+function getFormattedDate() {
   const date = new Date();
-  const monthNames = [
-    "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
-    "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const months = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   ];
-  return `${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear() + 543}`;
+  return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
 }
 
 export default function HeroSection({ userName }) {
-  const [greeting, setGreeting] = useState("ยินดีต้อนรับกลับมา");
-  const [thaiDate, setThaiDate] = useState("");
+  const [greeting, setGreeting] = useState("Welcome back");
+  const [formattedDate, setFormattedDate] = useState("");
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setGreeting(getGreeting());
-    setThaiDate(getThaiDate());
+    setFormattedDate(getFormattedDate());
   }, []);
 
   return (
@@ -59,14 +59,14 @@ export default function HeroSection({ userName }) {
       <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
         {/* Left Side: Greeting, Headline, & Actions */}
         <div className="max-w-xl text-left">
-          {/* Top Pill Badge: Greeting & Thai Date */}
+          {/* Top Pill Badge: Greeting & Formatted Date */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-50 border border-violet-100 text-primary text-[11px] font-medium mb-3 shadow-2xs dark:bg-violet-950/40 dark:border-violet-900/50 dark:text-violet-300">
             <Sparkle size={13} weight="fill" className="text-primary shrink-0" />
             <span>{greeting}</span>
-            {thaiDate && (
+            {formattedDate && (
               <>
                 <span className="text-muted-foreground/40">•</span>
-                <span className="text-muted-foreground font-normal">{thaiDate}</span>
+                <span className="text-muted-foreground font-normal">{formattedDate}</span>
               </>
             )}
           </div>
@@ -78,33 +78,25 @@ export default function HeroSection({ userName }) {
 
           {/* Description */}
           <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-5 font-normal">
-            ระบบจัดการและสร้างเอกสาร สัญญา และใบเสนอราคามาตรฐานสำหรับธุรกิจ เชื่อมโยงข้อมูลโปรไฟล์กลาง พร้อมระบบส่งออก PDF ทางการ
+            Enterprise workspace for generating agreements, quotations, and official business documents with verified profiles and standard PDF exports.
           </p>
 
-          {/* Action Buttons */}
+          {/* Action Buttons: 2 buttons (Create Document & Templates Catalog) */}
           <div className="flex flex-wrap items-center gap-2.5">
             <Link
               href="/create"
-              className="primary-button inline-flex items-center gap-2 h-9 px-4 rounded-[6px] text-white font-medium text-xs shadow-xs hover:opacity-95 transition-all cursor-pointer select-none"
+              className="inline-flex items-center gap-2 h-9 px-4 rounded-[6px] bg-[#6E56CF] hover:bg-[#5E47BE] text-white font-medium text-xs shadow-2xs transition-all cursor-pointer select-none"
             >
               <FilePlus size={16} weight="bold" />
-              <span>สร้างเอกสารใหม่</span>
-            </Link>
-
-            <Link
-              href="/profile-data"
-              className="inline-flex items-center gap-2 h-9 px-3.5 rounded-[6px] border border-border bg-surface hover:bg-muted text-foreground font-medium text-xs transition-colors cursor-pointer select-none shadow-2xs"
-            >
-              <IdentificationCard size={16} className="text-primary" />
-              <span>ข้อมูลโปรไฟล์กลาง</span>
+              <span>Create Document</span>
             </Link>
 
             <Link
               href="/templates"
-              className="inline-flex items-center gap-2 h-9 px-3.5 rounded-[6px] border border-border bg-surface hover:bg-muted text-foreground font-medium text-xs transition-colors cursor-pointer select-none shadow-2xs"
+              className="inline-flex items-center gap-2 h-9 px-3.5 rounded-[6px] border border-border bg-white dark:bg-[#1E1E1E] hover:bg-muted/60 text-foreground font-medium text-xs transition-colors cursor-pointer select-none shadow-2xs"
             >
               <Copy size={16} className="text-muted-foreground" />
-              <span>คลังเทมเพลต</span>
+              <span>Templates Catalog</span>
             </Link>
           </div>
         </div>
@@ -129,7 +121,7 @@ export default function HeroSection({ userName }) {
             </div>
             <div className="flex justify-between items-center pt-1.5 border-t border-border/50">
               <span className="text-[9px] font-semibold text-muted-foreground">Total</span>
-              <span className="text-[10px] font-black text-blue-600 dark:text-blue-400">฿125,000</span>
+              <span className="text-[10px] font-black text-blue-600 dark:text-blue-400">$125,000</span>
             </div>
           </div>
 
