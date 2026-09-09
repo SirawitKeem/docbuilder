@@ -45,6 +45,7 @@ function TemplateBuilderContent() {
   const defaultPreset = editorTypeParam === "slide" ? "slide-16-9" : "a4-portrait";
   const canvasPresetParam = searchParams.get("canvasPreset") || defaultPreset;
   const customNameParam = searchParams.get("customName") ? decodeURIComponent(searchParams.get("customName")) : null;
+  const editId = searchParams.get("edit");
 
   const [categoryId, setCategoryId] = useState(categoryIdParam);
   const [editorType, setEditorType] = useState(editorTypeParam);

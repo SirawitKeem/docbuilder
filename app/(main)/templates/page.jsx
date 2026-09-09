@@ -54,7 +54,7 @@ export default function TemplatesHubPage() {
 
   const handleSelectType = (editorType, customOptions = null) => {
     setIsTypeModalOpen(false);
-    const catId = selectedCategory?.id || "forms";
+    const catId = selectedCategory?.id || categories[0]?.id || "notification";
     if (editorType === "sheet") {
       router.push(`/templates/new?categoryId=${catId}&editorType=sheet`);
     } else if (editorType === "custom" && customOptions) {
