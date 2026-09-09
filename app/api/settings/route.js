@@ -8,8 +8,16 @@ export async function GET() {
 
 export async function PATCH(request) {
   const body = await request.json();
-  // Only allow known fields
-  const allowedFields = ['language', 'currency', 'theme'];
+  // Allow all known settings domains
+  const allowedFields = [
+    'account',
+    'preferences',
+    'organization',
+    'sessions',
+    'language',
+    'currency',
+    'theme'
+  ];
   const patch = {};
   for (const key of allowedFields) {
     if (body[key] !== undefined) {

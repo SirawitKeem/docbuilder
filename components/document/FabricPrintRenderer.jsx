@@ -10,6 +10,7 @@ import {
   buildGoogleFontsUrl,
   findFontByFamily,
 } from "@/lib/fonts/fontRegistry";
+import "@/app/(main)/templates/new/components/editor/elements/DocTable";
 
 /**
  * 🛡️ Patch FabricText SVG renderer with Smart Style-Grouping
@@ -113,13 +114,22 @@ function replaceTokensInObject(obj, tokenMap) {
     obj.set("text", replaceTokens(raw, tokenMap));
   }
   // 2. DocTable Custom Object: Dynamic Token Replacement & Rebuild
-  if (obj.isDocTable && obj.docTableData && obj.updateTableData) {
-    const rawItems = obj.rawItems || obj.docTableData.items || [];
-    const replacedItems = rawItems.map((item) => ({
+  if ((obj.isDocTable || obj.type === "DocTable" || obj.type === "docTable") && obj.docTableData && obj.updateTableData) {
+    const rawItems = (Array.isArray(tokenMap.table_items) && tokenMap.table_items.length > 0)
+      ? tokenMap.table_items
+      : (obj.rawItems || obj.docTableData.items || []);
+    const vatRate = tokenMap.table_vatRate !== undefined
+      ? Number(tokenMap.table_vatRate)
+      : (obj.docTableData.vatRate !== undefined ? obj.docTableData.vatRate : 7);
+
+    const replacedItems = rawItems.map((item, idx) => ({
       ...item,
-      desc: replaceTokens(item.desc || "", tokenMap),
+      no: String(idx + 1),
+      desc: replaceTokens(item.desc || item.title || "", tokenMap),
+      qty: Number(item.qty) || 1,
+      price: Number(item.price !== undefined ? item.price : item.unitPrice) || 0,
     }));
-    obj.updateTableData({ items: replacedItems });
+    obj.updateTableData({ items: replacedItems, vatRate });
   }
   // 3. Respect visibility: Hide hidden objects from Vector SVG
   if (obj.visible === false) {

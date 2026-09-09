@@ -52,11 +52,16 @@ export default function TemplatesHubPage() {
   const [templateToDelete, setTemplateToDelete] = useState(null);
   const [isDeletingTemplate, setIsDeletingTemplate] = useState(false);
 
-  const handleSelectType = (editorType) => {
+  const handleSelectType = (editorType, customOptions = null) => {
     setIsTypeModalOpen(false);
     const catId = selectedCategory?.id || "forms";
     if (editorType === "sheet") {
       router.push(`/templates/new?categoryId=${catId}&editorType=sheet`);
+    } else if (editorType === "custom" && customOptions) {
+      const { width, height, unit, name } = customOptions;
+      const presetId = `custom_${width}_${height}_${unit || "px"}`;
+      const nameParam = name ? `&customName=${encodeURIComponent(name)}` : "";
+      router.push(`/templates/new?categoryId=${catId}&editorType=document&canvasPreset=${presetId}&w=${width}&h=${height}&unit=${unit || "px"}${nameParam}`);
     } else {
       const preset = editorType === "slide" ? "slide-16-9" : "a4-portrait";
       router.push(`/templates/new?categoryId=${catId}&editorType=${editorType}&canvasPreset=${preset}`);

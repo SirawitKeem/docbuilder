@@ -1,5 +1,6 @@
 import puppeteer from "puppeteer";
 import { customTemplatesRepo } from "@/lib/db/repositories";
+import { getCanvasPreset } from "@/lib/editor/canvasPresets";
 
 export async function POST(request) {
   let browser;
@@ -8,7 +9,7 @@ export async function POST(request) {
 
     const payload = quotationData || values || {};
     
-    // Dynamically determine template format & dimensions (Docs A4 vs Slides 16:9)
+    // Dynamically determine template format & dimensions (Docs A4 vs Slides 16:9 vs Custom)
     let isSlide = false;
     let pageWidth = 794;
     let pageHeight = 1123;
@@ -17,11 +18,18 @@ export async function POST(request) {
       if (templateId) {
         const tmpl = await customTemplatesRepo.getById(templateId);
         if (tmpl) {
-          if (tmpl.canvasPreset === "slide-16-9" || tmpl.editorType === "slide") {
+          if (tmpl.canvasPreset) {
+            const preset = getCanvasPreset(tmpl.canvasPreset);
+            if (preset) {
+              pageWidth = preset.width;
+              pageHeight = preset.height;
+              isSlide = tmpl.editorType === "slide" || tmpl.canvasPreset === "slide-16-9";
+            }
+          } else if (tmpl.editorType === "slide") {
             isSlide = true;
             pageWidth = 1280;
             pageHeight = 720;
-          } else if (tmpl.canvasPreset === "a4-landscape" || tmpl.orientation === "landscape") {
+          } else if (tmpl.orientation === "landscape") {
             pageWidth = 1123;
             pageHeight = 794;
           }

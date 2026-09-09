@@ -28,6 +28,8 @@ export const CUSTOM_CANVAS_PROPS = [
   "opacity",
   "visible",
   "isUserGroup",
+  "originX",
+  "originY",
 ];
 
 // Ensure FabricObject & Group serialize custom properties even with toJSON()
@@ -48,25 +50,23 @@ if (fabric && fabric.Group) {
 export function buildDocTableElements(data) {
   const {
     width = A4_TABLE_WIDTH,
-    themeColor = "#2563EB",
+    themeColor = "#0F4C35",
     vatRate = 7,
+    cols = [
+      { title: "PRODUCT CODE", width: 105, align: "left" },
+      { title: "DESCRIPTION", width: 330, align: "left" },
+      { title: "QTY", width: 40, align: "center" },
+      { title: "PRICE", width: 105, align: "right" },
+      { title: "AMOUNT", width: 102, align: "right" },
+    ],
     items = [
-      { no: "1", desc: "บริการพัฒนาระบบคลาวด์และโครงสร้างพื้นฐานดิจิทัล", qty: 1, price: 150000 },
-      { no: "2", desc: "แพ็กเกจความปลอดภัยทางไซเบอร์ WAF & Anti-DDoS 24/7", qty: 1, price: 54000 },
-      { no: "3", desc: "บริการฝึกอบรมและสนับสนุนทางเทคนิครายปี (Support SLA)", qty: 1, price: 20000 },
+      { no: "CZ-001", desc: "บริการจัดทำและพัฒนาระบบเอกสารดิจิทัล Enterprise", qty: 1, price: 45000 },
+      { no: "CZ-002", desc: "แพ็กเกจพื้นที่จัดเก็บข้อมูลบนคลาวด์และระบบรักษาความปลอดภัย", qty: 1, price: 15000 },
+      { no: "CZ-003", desc: "บริการฝึกอบรมการใช้งานและสนับสนุนทางเทคนิครายปี (SLA 99.9%)", qty: 1, price: 12000 },
     ],
   } = data;
 
   const elements = [];
-
-  // Column definitions (sums to 682px)
-  const cols = [
-    { title: "ลำดับ", width: 52, align: "center" },
-    { title: "รายการสินค้า / รายละเอียด (Description)", width: 330, align: "left" },
-    { title: "จำนวน", width: 60, align: "center" },
-    { title: "ราคา/หน่วย (บาท)", width: 120, align: "right" },
-    { title: "จำนวนเงิน (บาท)", width: 120, align: "right" },
-  ];
 
   // 1. Header Background
   const headerBg = new fabric.Rect({
@@ -87,7 +87,7 @@ export function buildDocTableElements(data) {
       left: currX + (col.align === "left" ? 10 : 0),
       top: 8,
       width: col.width - (col.align === "left" ? 10 : 0),
-      fontSize: 11,
+      fontSize: 10,
       fontWeight: "bold",
       fill: "#FFFFFF",
       fontFamily: "'Noto Sans Thai', 'Noto Sans', sans-serif",
@@ -198,22 +198,42 @@ export class DocTable extends fabric.Group {
   constructor(data = {}, options = {}) {
     const tableData = {
       width: A4_TABLE_WIDTH,
-      themeColor: data.themeColor || "#2563EB",
+      themeColor: data.themeColor || "#0F4C35",
       vatRate: data.vatRate !== undefined ? data.vatRate : 7,
+      cols: data.cols || [
+        { title: "PRODUCT CODE", width: 105, align: "left" },
+        { title: "DESCRIPTION", width: 330, align: "left" },
+        { title: "QTY", width: 40, align: "center" },
+        { title: "PRICE", width: 105, align: "right" },
+        { title: "AMOUNT", width: 102, align: "right" },
+      ],
       items: data.items && data.items.length > 0 ? data.items : [
-        { no: "1", desc: "บริการพัฒนาระบบคลาวด์และโครงสร้างพื้นฐานดิจิทัล", qty: 1, price: 150000 },
-        { no: "2", desc: "แพ็กเกจความปลอดภัยทางไซเบอร์ WAF & Anti-DDoS 24/7", qty: 1, price: 54000 },
-        { no: "3", desc: "บริการฝึกอบรมและสนับสนุนทางเทคนิครายปี (Support SLA)", qty: 1, price: 20000 },
+        { no: "CZ-001", desc: "บริการจัดทำและพัฒนาระบบเอกสารดิจิทัล Enterprise", qty: 1, price: 45000 },
+        { no: "CZ-002", desc: "แพ็กเกจพื้นที่จัดเก็บข้อมูลบนคลาวด์และระบบรักษาความปลอดภัย", qty: 1, price: 15000 },
+        { no: "CZ-003", desc: "บริการฝึกอบรมการใช้งานและสนับสนุนทางเทคนิครายปี (SLA 99.9%)", qty: 1, price: 12000 },
       ],
     };
 
     const elements = buildDocTableElements(tableData);
 
+    // Clean options: strip undefined values so they don't overwrite Fabric defaults with undefined/NaN
+    const cleanOptions = {};
+    for (const [k, v] of Object.entries(options)) {
+      if (v !== undefined) {
+        cleanOptions[k] = v;
+      }
+    }
+
     super(elements, {
-      left: options.left !== undefined ? options.left : 56,
-      top: options.top !== undefined ? options.top : 320,
+      left: 56,
+      top: 320,
+      originX: "left",
+      originY: "top",
+      scaleX: 1,
+      scaleY: 1,
+      angle: 0,
       subTargetCheck: true,
-      ...options,
+      ...cleanOptions,
     });
 
     this.isDocTable = true;
@@ -279,6 +299,11 @@ export class DocTable extends fabric.Group {
     return super.toObject([
       "isDocTable",
       "docTableData",
+      "originX",
+      "originY",
+      "scaleX",
+      "scaleY",
+      "angle",
       "lockMovementX",
       "lockMovementY",
       "lockRotation",
@@ -298,12 +323,20 @@ export class DocTable extends fabric.Group {
       vatRate: 7,
       items: [],
     };
+    const cleanOptions = {};
+    for (const [k, v] of Object.entries(object)) {
+      if (v !== undefined && k !== "docTableData" && k !== "objects") {
+        cleanOptions[k] = v;
+      }
+    }
     const instance = new DocTable(data, {
-      left: object.left,
-      top: object.top,
-      scaleX: object.scaleX,
-      scaleY: object.scaleY,
-      angle: object.angle,
+      left: object.left !== undefined ? object.left : 56,
+      top: object.top !== undefined ? object.top : 320,
+      originX: object.originX || "left",
+      originY: object.originY || "top",
+      scaleX: object.scaleX !== undefined ? object.scaleX : 1,
+      scaleY: object.scaleY !== undefined ? object.scaleY : 1,
+      angle: object.angle !== undefined ? object.angle : 0,
       opacity: object.opacity !== undefined ? object.opacity : 1,
       visible: object.visible !== false,
       lockMovementX: Boolean(object.lockMovementX),
@@ -313,6 +346,7 @@ export class DocTable extends fabric.Group {
       lockScalingY: Boolean(object.lockScalingY),
       hasControls: object.hasControls !== undefined ? object.hasControls : !object.lockMovementX,
       selectable: object.selectable !== undefined ? object.selectable : true,
+      ...cleanOptions,
     });
     return instance;
   }

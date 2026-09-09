@@ -253,6 +253,7 @@ export default function DocumentEditor({
     if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
       window.__DOC_EDITOR_INIT_HISTORY__ = initHistory;
       window.__DOC_EDITOR_PUSH_HISTORY__ = handleHistoryPush;
+      window.__DOC_EDITOR_CANVAS__ = canvas;
     }
   }, [initialPages, initHistory, editorType, preset.id, handleHistoryPush]);
 
@@ -538,17 +539,91 @@ export default function DocumentEditor({
         fill: options.fill || "#F3F4F6",
         stroke: options.stroke || "#9CA3AF",
         strokeWidth: options.strokeWidth || 1,
-        rx: options.rx || 0,
-        ry: options.rx || 0,
+        rx: 0,
+        ry: 0,
+      });
+    } else if (options.type === "rounded-rect") {
+      shapeObj = new fabric.Rect({
+        left: MARGIN_PX + 20,
+        top: MARGIN_PX + 40,
+        width: options.width || 240,
+        height: options.height || 110,
+        fill: options.fill || "#F8FAFC",
+        stroke: options.stroke || "#CBD5E1",
+        strokeWidth: options.strokeWidth || 1.5,
+        rx: options.rx || 12,
+        ry: options.ry || 12,
       });
     } else if (options.type === "circle") {
       shapeObj = new fabric.Circle({
         left: MARGIN_PX + 20,
         top: MARGIN_PX + 40,
-        radius: options.radius || 40,
+        radius: options.radius || 45,
         fill: options.fill || "#EEF2FF",
         stroke: options.stroke || "#6366F1",
         strokeWidth: 2,
+      });
+    } else if (options.type === "ellipse") {
+      shapeObj = new fabric.Ellipse({
+        left: MARGIN_PX + 20,
+        top: MARGIN_PX + 40,
+        rx: options.rx || 65,
+        ry: options.ry || 40,
+        fill: options.fill || "#F0FDF4",
+        stroke: options.stroke || "#10B981",
+        strokeWidth: 2,
+      });
+    } else if (options.type === "triangle") {
+      shapeObj = new fabric.Triangle({
+        left: MARGIN_PX + 20,
+        top: MARGIN_PX + 40,
+        width: options.width || 90,
+        height: options.height || 80,
+        fill: options.fill || "#FEF3C7",
+        stroke: options.stroke || "#F59E0B",
+        strokeWidth: 2,
+      });
+    } else if (options.type === "star") {
+      const starPoints = [
+        { x: 50, y: 0 },
+        { x: 61, y: 35 },
+        { x: 98, y: 35 },
+        { x: 68, y: 57 },
+        { x: 79, y: 91 },
+        { x: 50, y: 70 },
+        { x: 21, y: 91 },
+        { x: 32, y: 57 },
+        { x: 2, y: 35 },
+        { x: 39, y: 35 },
+      ];
+      shapeObj = new fabric.Polygon(starPoints, {
+        left: MARGIN_PX + 20,
+        top: MARGIN_PX + 40,
+        scaleX: 1,
+        scaleY: 1,
+        fill: options.fill || "#FEF08A",
+        stroke: options.stroke || "#CA8A04",
+        strokeWidth: 2,
+      });
+    } else if (options.type === "arrow") {
+      shapeObj = new fabric.Path("M 0 15 L 140 15 L 140 0 L 190 25 L 140 50 L 140 35 L 0 35 Z", {
+        left: MARGIN_PX + 20,
+        top: MARGIN_PX + 40,
+        fill: options.fill || "#6366F1",
+        stroke: options.stroke || "#4338CA",
+        strokeWidth: 1,
+      });
+    } else if (options.type === "pill") {
+      shapeObj = new fabric.Rect({
+        left: MARGIN_PX + 20,
+        top: MARGIN_PX + 40,
+        width: options.width || 140,
+        height: options.height || 40,
+        rx: 20,
+        ry: 20,
+        fill: options.fill || "#EEF2FF",
+        stroke: options.stroke || "#6366F1",
+        strokeWidth: 1.5,
       });
     } else if (options.type === "line") {
       shapeObj = new fabric.Line([0, 0, options.width || 300, 0], {
@@ -556,6 +631,14 @@ export default function DocumentEditor({
         top: MARGIN_PX + 60,
         stroke: options.stroke || "#9CA3AF",
         strokeWidth: 1.5,
+      });
+    } else if (options.type === "dashed-line") {
+      shapeObj = new fabric.Line([0, 0, options.width || 300, 0], {
+        left: MARGIN_PX + 20,
+        top: MARGIN_PX + 60,
+        stroke: options.stroke || "#64748B",
+        strokeWidth: 1.5,
+        strokeDashArray: [6, 4],
       });
     }
 
@@ -707,7 +790,72 @@ export default function DocumentEditor({
       const statNum = new fabric.IText("+185%", { left: 490, top: 240, fontSize: 72, fontWeight: "bold", fill: "#4F46E5" });
       const statLabel = new fabric.IText("อัตราการเติบโตของยอดขายรายไตรมาส (Quarterly Growth)", { left: 400, top: 350, fontSize: 20, fill: "#3730A3" });
       const statSub = new fabric.IText("เปรียบเทียบกับเป้าหมายประจำปี 2026", { left: 470, top: 400, fontSize: 16, fill: "#6366F1" });
-      group = new fabric.Group([cardBg, statNum, statLabel, statSub], { left: 340, top: 200 });
+    } else if (presetKey === "doc_title") {
+      const titleBoxBg = new fabric.Rect({
+        left: 0,
+        top: 0,
+        width: 240,
+        height: 80,
+        fill: "#EEF2FF",
+        stroke: "#6366F1",
+        strokeWidth: 1.5,
+        rx: 8,
+        ry: 8,
+      });
+      const titleMain = new fabric.IText("ใบเสนอราคา\nQUOTATION", {
+        left: 0,
+        top: 14,
+        width: 240,
+        fontSize: 16,
+        fontWeight: "bold",
+        fill: "#4338CA",
+        fontFamily: "'Noto Sans Thai', sans-serif",
+        textAlign: "center",
+      });
+      const titleSub = new fabric.IText("ต้นฉบับ / Original", {
+        left: 0,
+        top: 54,
+        width: 240,
+        fontSize: 10,
+        fill: "#6366F1",
+        fontFamily: "'Noto Sans Thai', sans-serif",
+        textAlign: "center",
+      });
+      group = new fabric.Group([titleBoxBg, titleMain, titleSub], {
+        left: currentMargin + currentWidth - 240,
+        top: currentMargin,
+      });
+    } else if (presetKey === "callout_box") {
+      const calloutBg = new fabric.Rect({
+        left: 0,
+        top: 0,
+        width: currentWidth,
+        height: 70,
+        fill: "#FFFBEB",
+        stroke: "#F59E0B",
+        strokeWidth: 1.5,
+        rx: 8,
+        ry: 8,
+      });
+      const calloutTitle = new fabric.IText("ข้อสังเกตและเงื่อนไขสำคัญ (Important Note):", {
+        left: 16,
+        top: 12,
+        fontSize: 12,
+        fontWeight: "bold",
+        fill: "#B45309",
+        fontFamily: "'Noto Sans Thai', sans-serif",
+      });
+      const calloutBody = new fabric.IText("กรุณาตรวจสอบรายละเอียดความถูกต้องก่อนลงนามอนุมัติ เอกสารนี้มีผลผูกพันตามกฎหมาย", {
+        left: 16,
+        top: 36,
+        fontSize: 11,
+        fill: "#92400E",
+        fontFamily: "'Noto Sans Thai', sans-serif",
+      });
+      group = new fabric.Group([calloutBg, calloutTitle, calloutBody], {
+        left: currentMargin,
+        top: Math.max(300, preset.height - currentMargin - 180),
+      });
     } else if (presetKey === "slide_bullets") {
       const t1 = new fabric.IText("✔ 1. สรุปภาพรวมและกลยุทธ์สำคัญขององค์กร", { left: 120, top: 200, fontSize: 24, fontWeight: "bold", fill: "#1E293B" });
       const t2 = new fabric.IText("✔ 2. ทิศทางการพัฒนาเทคโนโลยีและระบบอัตโนมัติ", { left: 120, top: 280, fontSize: 24, fontWeight: "bold", fill: "#1E293B" });

@@ -9,6 +9,7 @@ import { getQuotation, createQuotation, updateQuotation, createQuotationRevision
 import { getFieldProfile } from "@/lib/data/fieldProfiles";
 import { paginateQuotationLineItems, createEmptyLineItem, validateQuotation } from "@/lib/quotationHelpers";
 import QuotationDocument from "./QuotationDocument";
+import QuotationFormSidebar from "./QuotationFormSidebar";
 import EditorToolbar from "../EditorToolbar";
 import PageControls from "../PageControls";
 import ReviewScreen from "../ReviewScreen";
@@ -43,6 +44,7 @@ function QuotationEditorContent({ docId }) {
   const [isCreatingRevision, setIsCreatingRevision] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
   const [showToast, setShowToast] = useState(null);
+  const [isFormOpen, setIsFormOpen] = useState(true);
   const scrollContainerRef = useRef(null);
   const pageRefs = useRef([]);
 
@@ -225,6 +227,7 @@ function QuotationEditorContent({ docId }) {
           pageCount: pageCount,
           isCustomDoc: true,
         }}
+        docName={quotation.name || `ใบเสนอราคา ${quotation.quotationNo || ""}`}
         // eslint-disable-next-line react/display-name
         pages={Array.from({ length: pageCount }, (_, i) => () => <QuotationDocument currentPage={i + 1} />)}
         status={{
@@ -277,23 +280,29 @@ function QuotationEditorContent({ docId }) {
         savedAt={savedAt}
         onCreateRevision={activeDocId ? handleCreateRevision : undefined}
         isCreatingRevision={isCreatingRevision}
+        isFormOpen={isFormOpen}
+        onToggleForm={() => setIsFormOpen((prev) => !prev)}
       />
 
-      {/* A4 Document Canvas — identical layout to ReviewScreen/Preview */}
-      <div
-        ref={scrollContainerRef}
-        className="flex-1 min-h-0 overflow-y-auto bg-gray-100/90"
-      >
-        <div className="flex flex-col items-center py-8 pb-36 gap-8">
-          {Array.from({ length: pageCount }, (_, i) => (
-            <div
-              key={i}
-              ref={(el) => { pageRefs.current[i] = el; }}
-              style={{ zoom: zoom / 100 }}
-            >
-              <QuotationDocument currentPage={i + 1} />
-            </div>
-          ))}
+      {/* 2-Column Split Workspace: Left Form Sidebar + Right Live A4 Canvas */}
+      <div className="flex-1 min-h-0 flex overflow-hidden">
+        <QuotationFormSidebar isOpen={isFormOpen} />
+
+        <div
+          ref={scrollContainerRef}
+          className="flex-1 min-h-0 overflow-y-auto bg-gray-100/90"
+        >
+          <div className="flex flex-col items-center py-8 pb-36 gap-8">
+            {Array.from({ length: pageCount }, (_, i) => (
+              <div
+                key={i}
+                ref={(el) => { pageRefs.current[i] = el; }}
+                style={{ zoom: zoom / 100 }}
+              >
+                <QuotationDocument currentPage={i + 1} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 

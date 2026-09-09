@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { customTemplatesRepo } from "@/lib/db/repositories";
+import { synthesizeCanvasPagesFromTemplate } from "@/lib/templates/blockToCanvas";
 
 export async function GET(req, { params }) {
   try {
@@ -8,6 +9,15 @@ export async function GET(req, { params }) {
     if (!template) {
       return NextResponse.json({ error: "ไม่พบเทมเพลตนี้" }, { status: 404 });
     }
+
+    // Auto-synthesize canvas pages if missing or empty
+    if (!template.pages || template.pages.length === 0) {
+      const synthesized = synthesizeCanvasPagesFromTemplate(template);
+      if (synthesized && synthesized.length > 0) {
+        template.pages = synthesized;
+      }
+    }
+
     return NextResponse.json(template);
   } catch (err) {
     console.error("Error fetching template by id:", err);

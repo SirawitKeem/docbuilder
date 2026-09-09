@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { createClientNotification } from "@/lib/utils/notifications";
 import {
   ArrowLeft,
   Undo2,
@@ -64,6 +65,17 @@ export default function EditorToolbar({
     if (nameInput.trim() && onDocNameChange) {
       onDocNameChange(nameInput.trim());
     }
+  };
+
+  const handleExportAction = (format) => {
+    onExport?.(format);
+    createClientNotification({
+      type: "document_exported",
+      title: "ส่งออกเอกสารสำเร็จ",
+      description: `ส่งออกไฟล์ "${docName || template?.fullName || "เอกสาร"}" เป็น .${format.toUpperCase()} เรียบร้อยแล้ว`,
+      link: "/documents",
+      metadata: { format, docName: docName || template?.fullName },
+    });
   };
 
   return (
@@ -176,7 +188,7 @@ export default function EditorToolbar({
         {/* ปุ่ม Multi-Format Export (PDF, HTML, WebP) */}
         <div className="relative flex items-center" ref={exportMenuRef}>
           <button
-            onClick={() => onExport?.(selectedFormat)}
+            onClick={() => handleExportAction(selectedFormat)}
             disabled={exporting}
             className="flex items-center gap-1.5 h-10 pl-3.5 pr-2 rounded-l-[10px] bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-sm font-semibold hover:opacity-95 transition-opacity disabled:opacity-60 cursor-pointer"
             title={`ส่งออกเอกสารในรูปแบบ .${selectedFormat}`}
@@ -207,7 +219,7 @@ export default function EditorToolbar({
                 onClick={() => {
                   setSelectedFormat("pdf");
                   setExportMenuOpen(false);
-                  onExport?.("pdf");
+                  handleExportAction("pdf");
                 }}
                 className={`w-full text-left px-3.5 py-2.5 hover:bg-gray-50 flex items-start gap-3 transition-colors cursor-pointer group ${
                   selectedFormat === "pdf" ? "bg-purple-50/50" : ""
@@ -230,7 +242,7 @@ export default function EditorToolbar({
                 onClick={() => {
                   setSelectedFormat("html");
                   setExportMenuOpen(false);
-                  onExport?.("html");
+                  handleExportAction("html");
                 }}
                 className={`w-full text-left px-3.5 py-2.5 hover:bg-gray-50 flex items-start gap-3 transition-colors cursor-pointer group border-t border-gray-100 ${
                   selectedFormat === "html" ? "bg-purple-50/50" : ""
@@ -253,7 +265,7 @@ export default function EditorToolbar({
                 onClick={() => {
                   setSelectedFormat("webp");
                   setExportMenuOpen(false);
-                  onExport?.("webp");
+                  handleExportAction("webp");
                 }}
                 className={`w-full text-left px-3.5 py-2.5 hover:bg-gray-50 flex items-start gap-3 transition-colors cursor-pointer group border-t border-gray-100 ${
                   selectedFormat === "webp" ? "bg-purple-50/50" : ""

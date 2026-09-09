@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
+import { getCanvasPreset } from "@/lib/editor/canvasPresets";
 
 // Dynamic import for DocumentEditor with SSR disabled
 const DocumentEditor = dynamic(
@@ -43,15 +44,20 @@ function TemplateBuilderContent() {
   const editorTypeParam = searchParams.get("editorType") || "document";
   const defaultPreset = editorTypeParam === "slide" ? "slide-16-9" : "a4-portrait";
   const canvasPresetParam = searchParams.get("canvasPreset") || defaultPreset;
-  const editId = searchParams.get("edit");
+  const customNameParam = searchParams.get("customName") ? decodeURIComponent(searchParams.get("customName")) : null;
 
   const [categoryId, setCategoryId] = useState(categoryIdParam);
   const [editorType, setEditorType] = useState(editorTypeParam);
   const [canvasPreset, setCanvasPreset] = useState(canvasPresetParam);
   const [categoryName, setCategoryName] = useState("Notification Letter");
   const [templateName, setTemplateName] = useState(() => {
+    if (customNameParam) return customNameParam;
     if (editorTypeParam === "sheet") return "New Spreadsheet Template";
     if (editorTypeParam === "slide") return "เทมเพลตสไลด์ใหม่ (16:9)";
+    if (canvasPresetParam && canvasPresetParam.startsWith("custom_")) {
+      const parts = canvasPresetParam.split("_");
+      return `เทมเพลตกำหนดขนาดเอง (${parts[1]} × ${parts[2]} ${parts[3] || "px"})`;
+    }
     return "เทมเพลตเอกสารใหม่ (A4)";
   });
   const [initialPages, setInitialPages] = useState(null);
@@ -67,15 +73,20 @@ function TemplateBuilderContent() {
       const effectivePreset = searchParams.get("canvasPreset") || (editorTypeParam === "slide" ? "slide-16-9" : "a4-portrait");
       setCanvasPreset(effectivePreset);
       if (categoryIdParam) setCategoryId(categoryIdParam);
-      if (editorTypeParam === "slide") {
+      if (customNameParam) {
+        setTemplateName(customNameParam);
+      } else if (editorTypeParam === "slide") {
         setTemplateName("เทมเพลตสไลด์ใหม่ (16:9)");
       } else if (editorTypeParam === "sheet") {
         setTemplateName("New Spreadsheet Template");
+      } else if (effectivePreset && effectivePreset.startsWith("custom_")) {
+        const parts = effectivePreset.split("_");
+        setTemplateName(`เทมเพลตกำหนดขนาดเอง (${parts[1]} × ${parts[2]} ${parts[3] || "px"})`);
       } else {
         setTemplateName("เทมเพลตเอกสารใหม่ (A4)");
       }
     }
-  }, [editorTypeParam, canvasPresetParam, categoryIdParam, editId]);
+  }, [editorTypeParam, canvasPresetParam, categoryIdParam, customNameParam, editId]);
 
   useEffect(() => {
     // 1. If edit mode (load existing template from Database)
@@ -134,27 +145,40 @@ function TemplateBuilderContent() {
       const activeEditorType = editorData?.editorType || editorType || "document";
       const isSheet = activeEditorType === "sheet";
       const isSlide = activeEditorType === "slide";
+      const effectiveCanvasPreset = isSheet ? null : editorData?.canvasPreset || canvasPreset || (isSlide ? "slide-16-9" : "a4-portrait");
+      const presetObj = getCanvasPreset(effectiveCanvasPreset);
+      const isCustomCanvas = effectiveCanvasPreset && effectiveCanvasPreset.startsWith("custom_");
+      const isPoster = effectiveCanvasPreset?.includes("poster") || (isCustomCanvas && (templateName.toLowerCase().includes("poster") || templateName.includes("โปสเตอร์")));
+      const isLandscape = isSheet ? true : isSlide ? true : (presetObj?.width > presetObj?.height);
 
       const defaultName = isSheet
         ? "New Spreadsheet Template"
         : isSlide
         ? "เทมเพลตสไลด์ใหม่ (16:9)"
+        : isPoster
+        ? "เทมเพลตโปสเตอร์ใหม่"
+        : isCustomCanvas
+        ? "เทมเพลตกำหนดขนาดเอง"
         : "เทมเพลตใหม่";
 
       const payload = {
         name: editorData?.name || templateName || defaultName,
         categoryId: categoryId || categoryIdParam,
         editorType: activeEditorType,
-        canvasPreset: isSheet ? null : editorData?.canvasPreset || canvasPreset || (isSlide ? "slide-16-9" : "a4-portrait"),
+        canvasPreset: effectiveCanvasPreset,
         description: isSheet
           ? `เทมเพลตสเปรดชีต ${categoryName}`
           : isSlide
           ? `เทมเพลตสไลด์นำเสนอ ${categoryName} จำนวน ${editorData?.pageCount || 1} สไลด์`
+          : isPoster
+          ? `เทมเพลตโปสเตอร์ ${categoryName} ขนาด ${presetObj?.name || ""}`
+          : isCustomCanvas
+          ? `เทมเพลตกำหนดขนาดเอง ${categoryName} (${presetObj?.width} × ${presetObj?.height} px)`
           : `เทมเพลต ${categoryName} จำนวน ${editorData?.pageCount || 1} หน้า`,
-        icon: isSheet ? "Table" : isSlide ? "Presentation" : "FileText",
-        badge: isSlide ? "สไลด์" : "กำหนดเอง",
+        icon: isSheet ? "Table" : isSlide ? "Presentation" : isPoster ? "Maximize2" : "FileText",
+        badge: isSlide ? "สไลด์" : isPoster ? "โปสเตอร์" : isCustomCanvas ? "กำหนดขนาดเอง" : "กำหนดเอง",
         status: "published",
-        orientation: isSheet ? "landscape" : isSlide ? "landscape" : "portrait",
+        orientation: isLandscape ? "landscape" : "portrait",
         pageCount: isSheet ? 0 : editorData?.pageCount || 1,
         pages: isSheet ? [] : editorData?.pages || [],
         sheetData: isSheet ? editorData?.sheetData || [] : [],

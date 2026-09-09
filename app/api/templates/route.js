@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { customTemplatesRepo } from "@/lib/db/repositories";
+import { synthesizeCanvasPagesFromTemplate } from "@/lib/templates/blockToCanvas";
 
 export async function GET(req) {
   try {
@@ -43,6 +44,18 @@ export async function POST(req) {
     const safeEditorType = editorType && validEditorTypes.includes(editorType) ? editorType : "document";
     const safeCanvasPreset = canvasPreset || (safeEditorType === "slide" ? "slide-16-9" : "a4-portrait");
 
+    let effectivePages = Array.isArray(pages) ? pages : [];
+    if (effectivePages.length === 0 && safeEditorType !== "sheet") {
+      const synthesized = synthesizeCanvasPagesFromTemplate({
+        ...body,
+        categoryId: categoryId || "forms",
+        name: name.trim(),
+      });
+      if (synthesized && synthesized.length > 0) {
+        effectivePages = synthesized;
+      }
+    }
+
     const created = await customTemplatesRepo.create({
       name: name.trim(),
       categoryId: categoryId || "forms",
@@ -59,8 +72,8 @@ export async function POST(req) {
         backgroundColor: "#FFFFFF",
         hasWatermark: false,
       },
-      pageCount: pageCount || (pages?.length || 1),
-      pages: Array.isArray(pages) ? pages : [],
+      pageCount: pageCount || (effectivePages?.length || 1),
+      pages: effectivePages,
       sheetData: Array.isArray(sheetData) ? sheetData : [],
       blocks: Array.isArray(blocks) ? blocks : [],
     });

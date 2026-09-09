@@ -636,6 +636,85 @@ export default function RightSidebar({
                       </select>
                     </div>
                   </div>
+
+                  {/* Row Items Details Editor in Studio */}
+                  {Array.isArray(activeObject.docTableData?.items) && activeObject.docTableData.items.length > 0 && (
+                    <div className="pt-2 border-t border-blue-200/60 space-y-2">
+                      <label className="text-[10px] text-blue-900 font-bold block">
+                        รายละเอียดแถวในตาราง ({activeObject.docTableData.items.length} รายการ)
+                      </label>
+                      <div className="max-h-56 overflow-y-auto space-y-2 pr-1 scrollbar-thin">
+                        {activeObject.docTableData.items.map((item, idx) => (
+                          <div key={idx} className="p-2 bg-white rounded-lg border border-blue-200/80 shadow-2xs space-y-1.5 text-xs">
+                            <div className="flex items-center justify-between text-[10px] text-blue-950 font-bold">
+                              <span>แถวที่ #{idx + 1}</span>
+                              {activeObject.docTableData.items.length > 1 && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const nextItems = activeObject.docTableData.items
+                                      .filter((_, i) => i !== idx)
+                                      .map((it, i) => ({ ...it, no: String(i + 1) }));
+                                    activeObject.updateTableData({ items: nextItems });
+                                    if (onPushHistory) onPushHistory(canvas);
+                                  }}
+                                  className="text-red-500 hover:text-red-700 cursor-pointer p-0.5"
+                                  title="ลบแถวนี้"
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </button>
+                              )}
+                            </div>
+                            <input
+                              type="text"
+                              value={item.desc || item.title || ""}
+                              onChange={(e) => {
+                                const nextItems = [...activeObject.docTableData.items];
+                                nextItems[idx] = { ...nextItems[idx], desc: e.target.value };
+                                activeObject.updateTableData({ items: nextItems });
+                                if (onPushHistory) onPushHistory(canvas);
+                              }}
+                              placeholder="รายละเอียดสินค้า..."
+                              className="w-full h-7 px-2 text-[11px] rounded border border-gray-200 outline-none focus:border-blue-500"
+                            />
+                            <div className="grid grid-cols-2 gap-1.5">
+                              <div>
+                                <label className="text-[9px] text-gray-500 block">จำนวน</label>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  value={item.qty ?? 1}
+                                  onChange={(e) => {
+                                    const nextItems = [...activeObject.docTableData.items];
+                                    nextItems[idx] = { ...nextItems[idx], qty: Number(e.target.value) || 1 };
+                                    activeObject.updateTableData({ items: nextItems });
+                                    if (onPushHistory) onPushHistory(canvas);
+                                  }}
+                                  className="w-full h-6 px-1.5 text-[11px] text-center rounded border border-gray-200 outline-none focus:border-blue-500"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-[9px] text-gray-500 block">ราคา/หน่วย</label>
+                                <input
+                                  type="number"
+                                  min="0"
+                                  step="any"
+                                  value={item.price ?? 0}
+                                  onChange={(e) => {
+                                    const nextItems = [...activeObject.docTableData.items];
+                                    nextItems[idx] = { ...nextItems[idx], price: Number(e.target.value) || 0 };
+                                    activeObject.updateTableData({ items: nextItems });
+                                    if (onPushHistory) onPushHistory(canvas);
+                                  }}
+                                  className="w-full h-6 px-1.5 text-[11px] text-right rounded border border-gray-200 outline-none focus:border-blue-500"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 

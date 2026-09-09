@@ -1,11 +1,16 @@
 "use client";
 
-import { useState, useMemo, Suspense } from "react";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle2, ArrowLeft, Check, Sparkles } from "lucide-react";
+import { CheckCircle2, ArrowLeft, Check, Sparkles, Loader2 } from "lucide-react";
 import { fieldRegistry, categoryLabels } from "@/lib/profiles/fieldRegistry";
-import { getAllTemplateSchemas, getTemplateAllKeys, getRelevantTemplates } from "@/lib/profiles/compatibility";
+import {
+  getAllTemplateSchemas,
+  getTemplateAllKeys,
+  getRelevantTemplates,
+  buildCustomTemplateSchema,
+} from "@/lib/profiles/compatibility";
 import { createFieldProfile, updateFieldProfile } from "@/lib/data/fieldProfiles";
 
 function ProfileFormContent({ profile }) {
@@ -16,7 +21,36 @@ function ProfileFormContent({ profile }) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const allTemplates = getAllTemplateSchemas();
+  // ── Dynamic template + custom token loading ──
+  const [allTemplates, setAllTemplates] = useState(() => getAllTemplateSchemas());
+  const [customTokens, setCustomTokens] = useState([]);
+  const [isLoadingTemplates, setIsLoadingTemplates] = useState(true);
+
+  useEffect(() => {
+    async function loadDynamic() {
+      try {
+        const [tokRes, tmplRes] = await Promise.all([
+          fetch("/api/custom-tokens", { cache: "no-store" }),
+          fetch("/api/templates", { cache: "no-store" }),
+        ]);
+        const tokens = tokRes.ok ? await tokRes.json() : [];
+        const customTemplates = tmplRes.ok ? await tmplRes.json() : [];
+        setCustomTokens(tokens);
+
+        const entityTokens = tokens.filter((t) => t.scope === "entity");
+        const customSchemas = customTemplates
+          .map((t) => buildCustomTemplateSchema(t, entityTokens))
+          .filter((s) => s.fields.length > 0); // only templates with entity fields
+
+        setAllTemplates([...getAllTemplateSchemas(), ...customSchemas]);
+      } catch {
+        // fallback to system templates only
+      } finally {
+        setIsLoadingTemplates(false);
+      }
+    }
+    loadDynamic();
+  }, []);
 
   // เลือกเทมเพลตที่จะใช้ชุดข้อมูลนี้ (เริ่มต้นเป็น [] ให้ User เลือกเองทั้งหมด)
   const [selectedTemplateIds, setSelectedTemplateIds] = useState(() => {
@@ -26,6 +60,7 @@ function ProfileFormContent({ profile }) {
     }
     return [];
   });
+
 
   const toggleTemplateSelect = (id) => {
     setSelectedTemplateIds((prev) =>
@@ -42,13 +77,29 @@ function ProfileFormContent({ profile }) {
   };
 
   // แสดงเฉพาะ field ที่เทมเพลตที่เลือกใช้งานจริงเท่านั้น
+  // รองรับทั้ง System Templates (fieldRegistry) และ Custom Templates (entity tokens)
   const visibleKeys = useMemo(() => {
     if (selectedTemplateIds.length === 0) return [];
     const keys = new Set();
+    const customEntityFields = []; // fields from custom templates
 
     selectedTemplateIds.forEach((id) => {
-      const templateKeys = getTemplateAllKeys(id);
-      templateKeys.forEach((k) => keys.add(k));
+      // System template: use getTemplateAllKeys
+      const systemKeys = getTemplateAllKeys(id);
+      if (systemKeys.length > 0) {
+        systemKeys.forEach((k) => keys.add(k));
+      } else {
+        // Custom template: look up schema in allTemplates
+        const schema = allTemplates.find((t) => t.id === id);
+        if (schema?.isCustomTemplate && schema.fields?.length > 0) {
+          schema.fields.forEach((f) => {
+            if (f.sharedKey) {
+              keys.add(f.sharedKey);
+              customEntityFields.push(f.sharedKey);
+            }
+          });
+        }
+      }
     });
 
     // รักษาฟิลด์ที่มีค่าบันทึกอยู่แล้วในโปรไฟล์เดิม
@@ -56,19 +107,42 @@ function ProfileFormContent({ profile }) {
       if (v) keys.add(k);
     });
 
-    return [...keys].filter((k) => fieldRegistry[k]);
-  }, [selectedTemplateIds, values]);
+    return [...keys];
+  }, [selectedTemplateIds, values, allTemplates]);
 
-  // Group fields by category
+  // คำนิยามฟิลด์แบบรวม: fieldRegistry (system) + customTokens entity (custom)
+  const resolvedFieldDef = useMemo(() => {
+    const combined = { ...fieldRegistry };
+    customTokens.forEach((t) => {
+      if (t.scope === "entity" && !combined[t.key]) {
+        combined[t.key] = {
+          label: t.label,
+          type: "text",
+          category: "custom",
+          placeholder: t.example || "",
+          isCustom: true,
+        };
+      }
+    });
+    return combined;
+  }, [customTokens]);
+
+
+
+  // Group fields by category — use resolvedFieldDef (system + custom tokens)
   const grouped = useMemo(() => {
     const groups = {};
     visibleKeys.forEach((key) => {
-      const cat = fieldRegistry[key]?.category || "company";
+      const def = resolvedFieldDef[key];
+      if (!def) return; // skip unknown keys
+      const cat = def.category || "company";
       if (!groups[cat]) groups[cat] = [];
       groups[cat].push(key);
     });
     return groups;
-  }, [visibleKeys]);
+  }, [visibleKeys, resolvedFieldDef]);
+
+
 
   const handleChange = (key, val) => {
     setValues((prev) => ({ ...prev, [key]: val }));
@@ -154,27 +228,38 @@ function ProfileFormContent({ profile }) {
             Choose which document templates will use this preset — the form will adapt and display relevant fields below.
           </p>
 
-          <div className="flex flex-wrap gap-2 pt-1">
-            {allTemplates.map((t) => {
-              const isSelected = selectedTemplateIds.includes(t.id);
-              return (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => toggleTemplateSelect(t.id)}
-                  className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
-                    isSelected
-                      ? "bg-primary/10 text-primary border-primary/30 shadow-2xs"
-                      : "bg-surface text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
-                  }`}
-                >
-                  {isSelected && <Check size={13} className="text-primary" />}
-                  <span>{t.name}</span>
-                </button>
-              );
-            })}
-          </div>
+          {isLoadingTemplates ? (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground pt-1">
+              <Loader2 size={13} className="animate-spin" />
+              <span>กำลังโหลดเทมเพลต...</span>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2 pt-1">
+              {allTemplates.map((t) => {
+                const isSelected = selectedTemplateIds.includes(t.id);
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    onClick={() => toggleTemplateSelect(t.id)}
+                    className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                      isSelected
+                        ? "bg-primary/10 text-primary border-primary/30 shadow-2xs"
+                        : "bg-surface text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
+                    }`}
+                  >
+                    {isSelected && <Check size={13} className="text-primary" />}
+                    <span>{t.name}</span>
+                    {t.isCustomTemplate && (
+                      <span className="px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-600 text-[9px] font-bold">Custom</span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
         </div>
+
 
         {/* 3. Dynamic Form Fields grouped by Category */}
         {visibleKeys.length === 0 ? (
@@ -185,16 +270,19 @@ function ProfileFormContent({ profile }) {
         ) : (
           Object.entries(grouped).map(([category, keys]) => (
             <div key={category} className="space-y-4 pt-1">
-              <h2 className="text-xs font-bold text-muted-foreground pb-2 border-b border-border uppercase tracking-wider">
-                {categoryLabels[category] || category}
+              <h2 className="text-xs font-bold text-muted-foreground pb-2 border-b border-border uppercase tracking-wider flex items-center gap-1.5">
+                {category === "custom" && <span className="px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-600 text-[9px] font-bold normal-case">Custom</span>}
+                {categoryLabels[category] || (category === "custom" ? "ตัวแปรที่กำหนดเอง (Custom Variables)" : category)}
               </h2>
               <div className="space-y-4">
                 {keys.map((key) => {
-                  const def = fieldRegistry[key];
+                  const def = resolvedFieldDef[key];
+                  if (!def) return null;
                   return (
                     <div key={key}>
-                      <label className="block text-xs font-semibold text-foreground mb-1.5">
+                      <label className="block text-xs font-semibold text-foreground mb-1.5 flex items-center gap-1.5">
                         {def.label}
+                        {def.isCustom && <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-500 font-bold">custom</span>}
                       </label>
                       {def.type === "textarea" ? (
                         <textarea
@@ -220,6 +308,7 @@ function ProfileFormContent({ profile }) {
             </div>
           ))
         )}
+
 
       </div>
 

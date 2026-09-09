@@ -23,6 +23,9 @@ import DistributorPage1 from "@/components/document/distributor/DistributorPage1
 import PartnerPage1 from "@/components/document/partner/PartnerPage1";
 import NotificationRelocationDocument from "@/components/document/notification/NotificationRelocationDocument";
 import { notificationTemplate } from "@/lib/templates/notification/schema";
+import UniversalTemplateRenderer from "@/components/document/UniversalTemplateRenderer";
+import FabricPrintRenderer from "@/components/document/FabricPrintRenderer";
+import { DEFAULT_SAMPLE_TOKEN_MAP } from "@/lib/tokens/tokenEngine";
 
 const emptyQuotationPreviewData = {
   id: "preview",
@@ -51,14 +54,170 @@ const emptyQuotationPreviewData = {
 };
 
 /**
- * Authentic Document Preview rendered directly from the real Document Component
+ * Helper component: Loads full template by ID and renders via FabricPrintRenderer
  */
-function RealTemplatePreview({ categoryId, scale = 0.151 }) {
+function CustomFabricTemplatePreview({ templateId, scale = 0.151, fallback }) {
+  const [loadedTemplate, setLoadedTemplate] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    if (!templateId) {
+      setLoading(false);
+      return;
+    }
+    fetch(`/api/templates/${templateId}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (active) {
+          setLoadedTemplate(data);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.warn("Failed to load template for preview:", err);
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [templateId]);
+
   const width = 794 * scale;
   const height = 1123 * scale;
 
+  if (loading) {
+    return (
+      <div
+        className="overflow-hidden rounded-md shadow-xs border border-gray-100 bg-white relative shrink-0 flex items-center justify-center animate-pulse"
+        style={{ width, height }}
+      >
+        <div className="w-4 h-4 rounded-full border-2 border-purple-400 border-t-transparent animate-spin" />
+      </div>
+    );
+  }
+
+  if (!loadedTemplate) {
+    return fallback || null;
+  }
+
+  // If template has blocks without pages (Universal Block format)
+  if ((!loadedTemplate.pages || loadedTemplate.pages.length === 0) && Array.isArray(loadedTemplate.blocks) && loadedTemplate.blocks.length > 0) {
+    return (
+      <div
+        className="overflow-hidden rounded-md shadow-xs border border-gray-200 bg-white relative shrink-0"
+        style={{ width, height }}
+      >
+        <div
+          className="origin-top-left pointer-events-none select-none"
+          style={{
+            width: 794,
+            height: 1123,
+            transform: `scale(${scale})`,
+          }}
+        >
+          <UniversalTemplateRenderer template={loadedTemplate} scale={1} />
+        </div>
+      </div>
+    );
+  }
+
+  // Fabric Canvas Rendering
+  return (
+    <div
+      className="overflow-hidden rounded-md shadow-xs border border-gray-200 bg-white relative shrink-0"
+      style={{ width, height }}
+    >
+      <div
+        className="origin-top-left pointer-events-none select-none"
+        style={{
+          width: 794,
+          height: 1123,
+          transform: `scale(${scale})`,
+        }}
+      >
+        <FabricPrintRenderer
+          template={loadedTemplate}
+          values={DEFAULT_SAMPLE_TOKEN_MAP}
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Authentic Document Preview rendered directly from the real Document Component
+ */
+function RealTemplatePreview({ categoryId, templateItem = null, scale = 0.151 }) {
+  const width = 794 * scale;
+  const height = 1123 * scale;
+
+  // Check if this is a custom template from studio
+  const isCustom = Boolean(
+    templateItem &&
+    (templateItem.isCustom ||
+      (templateItem.id && String(templateItem.id).startsWith("tmpl-")) ||
+      (Array.isArray(templateItem.pages) && templateItem.pages.length > 0))
+  );
+
+  const fallbackSkeleton = (
+    <div
+      className="overflow-hidden rounded-md shadow-xs border border-gray-200 bg-white relative shrink-0"
+      style={{ width, height }}
+    >
+      <div
+        className="origin-top-left pointer-events-none select-none"
+        style={{
+          width: 794,
+          height: 1123,
+          transform: `scale(${scale})`,
+        }}
+      >
+        <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-sans p-10 flex flex-col justify-between overflow-hidden">
+          <div className="border-b border-gray-200 pb-3 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-lg bg-[#7C3AED] flex items-center justify-center text-white font-bold text-xs">
+                CZ
+              </div>
+              <div>
+                <p className="font-bold text-gray-900 text-xs">Crest Zendo Co., Ltd.</p>
+                <p className="text-[10px] text-gray-500">CREST ZENDO CO., LTD.</p>
+              </div>
+            </div>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-50 text-[#7C3AED] font-bold border border-purple-100">
+              Official Document
+            </span>
+          </div>
+          <div className="flex-1 py-6 space-y-3">
+            <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto" />
+            <div className="h-2.5 bg-gray-100 rounded w-full" />
+            <div className="h-2.5 bg-gray-100 rounded w-5/6" />
+            <div className="h-2.5 bg-gray-100 rounded w-4/6" />
+          </div>
+          <div className="border-t border-gray-100 pt-4 flex justify-between">
+            <div className="h-8 border-b border-gray-300 w-28" />
+            <div className="h-8 border-b border-gray-300 w-28" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const effectiveCategory = (templateItem?.categoryId || categoryId || "").toLowerCase();
+  const isStandardCategory = ["quotation", "nda", "partner", "distributor", "notification"].includes(effectiveCategory);
+
+  if (!isStandardCategory && isCustom && templateItem?.id) {
+    return (
+      <CustomFabricTemplatePreview
+        templateId={templateItem.id}
+        scale={scale}
+        fallback={fallbackSkeleton}
+      />
+    );
+  }
+
   const content = useMemo(() => {
-    if (categoryId === "quotation") {
+    if (effectiveCategory === "quotation") {
       return (
         <QuotationDataProvider initialQuotation={emptyQuotationPreviewData}>
           <div style={{ width: 794, height: 1123 }} className="bg-white overflow-hidden text-left font-sans select-none">
@@ -68,7 +227,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
       );
     }
 
-    if (categoryId === "nda") {
+    if (effectiveCategory === "nda") {
       return (
         <DocumentFieldsProvider initialValues={{}} defaultReadOnly={true}>
           <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-sans px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden select-none">
@@ -82,7 +241,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
       );
     }
 
-    if (categoryId === "partner") {
+    if (effectiveCategory === "partner") {
       return (
         <DocumentFieldsProvider initialValues={{}} defaultReadOnly={true}>
           <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-sans px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden">
@@ -96,7 +255,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
       );
     }
 
-    if (categoryId === "distributor") {
+    if (effectiveCategory === "distributor") {
       return (
         <DocumentFieldsProvider initialValues={{}} defaultReadOnly={true}>
           <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-sans px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden">
@@ -110,7 +269,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
       );
     }
 
-    if (categoryId === "notification") {
+    if (effectiveCategory === "notification") {
       return (
         <div style={{ width: 794, height: 1123 }} className="bg-white overflow-hidden text-left font-sans select-none">
           <NotificationRelocationDocument data={notificationTemplate.previewData} />
@@ -146,7 +305,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
         </div>
       </div>
     );
-  }, [categoryId]);
+  }, [effectiveCategory]);
 
   return (
     <div
@@ -216,7 +375,11 @@ export default function TemplateSelectModal({ category, onClose }) {
     if (!selectedTemplate || !category?.id) return;
     onClose?.();
     const standardCategories = ["quotation", "nda", "partner", "distributor", "notification"];
-    if (standardCategories.includes(category.id.toLowerCase())) {
+    const isCustom = Boolean(
+      selectedTemplate.isCustom ||
+      (selectedTemplate.id && String(selectedTemplate.id).startsWith("tmpl-"))
+    );
+    if (!isCustom && standardCategories.includes(category.id.toLowerCase())) {
       router.push(`/create/${category.id}`);
     } else {
       router.push(`/create/custom?templateId=${selectedTemplate.id}&categoryId=${category.id}`);
@@ -301,6 +464,7 @@ export default function TemplateSelectModal({ category, onClose }) {
                     <div className="w-full h-40 rounded-lg bg-[#F8F9FB] flex items-center justify-center p-2 mb-2.5 overflow-hidden">
                       <RealTemplatePreview
                         categoryId={category.id}
+                        templateItem={item}
                         scale={0.132}
                       />
                     </div>
@@ -347,6 +511,7 @@ export default function TemplateSelectModal({ category, onClose }) {
                   <div className="transform hover:scale-105 transition-transform duration-200">
                     <RealTemplatePreview
                       categoryId={category.id}
+                      templateItem={selectedTemplate}
                       scale={0.145}
                     />
                   </div>

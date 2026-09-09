@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { createEmptyLineItem, createEmptyGroup, createEmptyBullet, createEmptySubBullet } from "@/lib/quotationHelpers";
 
 export const QuotationDataContext = createContext(null);
@@ -8,6 +8,12 @@ export const QuotationDataContext = createContext(null);
 export function QuotationDataProvider({ children, initialQuotation, defaultReadOnly = false }) {
   const [quotation, setQuotation] = useState(initialQuotation);
   const [readOnly, setReadOnly] = useState(defaultReadOnly);
+
+  useEffect(() => {
+    if (initialQuotation) {
+      setQuotation(initialQuotation);
+    }
+  }, [initialQuotation]);
 
   const updateField = (field, value) => setQuotation((prev) => ({ ...prev, [field]: value }));
 

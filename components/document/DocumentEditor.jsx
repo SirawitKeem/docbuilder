@@ -189,11 +189,13 @@ function EditorContent({ templateId, initialDocId, initialDocName }) {
     return (
       <ReviewScreen
         template={schema}
+        docName={docName}
         pages={pages}
         status={status}
         onExport={handleDownload}
         onSendEmail={handleGoToEmail}
         exporting={generating}
+        onBackToEdit={() => setReadOnly(false)}
       />
     );
   }

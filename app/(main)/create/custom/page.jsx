@@ -13,12 +13,21 @@ import {
   MapPin,
   CheckCircle2,
   Eye,
+  Sparkles,
+  Tag,
+  Plus,
+  Trash2,
 } from "lucide-react";
 import UniversalTemplateRenderer from "@/components/document/UniversalTemplateRenderer";
 import NotificationRelocationDocument from "@/components/document/notification/NotificationRelocationDocument";
 import FabricPrintRenderer from "@/components/document/FabricPrintRenderer";
 import { extractTokensFromTemplate, DEFAULT_SAMPLE_TOKEN_MAP } from "@/lib/tokens/tokenEngine";
 import EmailScreen from "@/components/document/EmailScreen";
+import EditorToolbar from "@/components/document/EditorToolbar";
+import ReviewScreen from "@/components/document/ReviewScreen";
+import { listFieldProfiles } from "@/lib/data/fieldProfiles";
+import { QuotationDataProvider } from "@/context/QuotationDataContext";
+import QuotationDocument from "@/components/document/quotation/QuotationDocument";
 
 const WATERMARK_OPTIONS = [
   { id: "none", label: "ไม่มีลายน้ำ (ต้นฉบับ)", badge: "Original" },
@@ -43,12 +52,63 @@ function UniversalDocumentContent() {
   const [values, setValues] = useState({});
   const [detectedTokens, setDetectedTokens] = useState([]);
   const [watermark, setWatermark] = useState("none");
+  const [isReviewing, setIsReviewing] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveToast, setSaveToast] = useState("");
+  const [isFormOpen, setIsFormOpen] = useState(true);
+  const [profiles, setProfiles] = useState([]);
+  const [selectedProfileId, setSelectedProfileId] = useState("");
+  const [customTokens, setCustomTokens] = useState([]); // custom entity tokens for autofill
+
+  // Dynamic DocTable state (Quotation / Pricing Table support)
+  const [hasDocTable, setHasDocTable] = useState(false);
+  const [tableItems, setTableItems] = useState([]);
+  const [tableVatRate, setTableVatRate] = useState(7);
+
+  const handleSelectProfile = (pId) => {
+    setSelectedProfileId(pId);
+    if (!pId) return;
+    const found = profiles.find((p) => p.id === pId);
+    if (found?.values) {
+      setValues((prev) => {
+        const next = {
+          ...prev,
+          // Spread all preset values first (includes custom entity token keys directly)
+          ...found.values,
+          // Standard field aliases (backward compat)
+          company_name: found.values.company_name || found.values.our_company_name || prev.company_name,
+          company_name_en: found.values.company_name_en || prev.company_name_en,
+          company_tax_id: found.values.company_tax_id || found.values.tax_id || prev.company_tax_id,
+          company_address: found.values.company_address || found.values.our_company_address || prev.company_address,
+          company_phone: found.values.company_phone || prev.company_phone,
+          customer_company: found.values.customer_company || found.values.counterparty_name || found.values.bill_to_company || prev.customer_company,
+          customer_name: found.values.customer_name || found.values.counterparty_signatory_name || found.values.attn_name || prev.customer_name,
+          customer_address: found.values.customer_address || found.values.counterparty_address || prev.customer_address,
+          customer_tax_id: found.values.customer_tax_id || found.values.counterparty_registration_number || prev.customer_tax_id,
+          attn_name: found.values.attn_name || found.values.counterparty_signatory_name || prev.attn_name,
+          authorized_signatory_name: found.values.authorized_signatory_name || found.values.our_signatory_name || prev.authorized_signatory_name,
+          authorized_signatory_position: found.values.authorized_signatory_position || found.values.our_signatory_position || prev.authorized_signatory_position,
+        };
+        // Custom entity tokens: direct key-to-key mapping (no alias needed)
+        customTokens.filter((t) => t.scope === "entity").forEach((t) => {
+          if (found.values[t.key] !== undefined) {
+            next[t.key] = found.values[t.key];
+          }
+        });
+        return next;
+      });
+    }
+  };
 
   // Load Template Schema & Document
   useEffect(() => {
+    listFieldProfiles().then((pList) => setProfiles(pList || [])).catch(() => {});
+    // Load custom tokens for entity scope autofill
+    fetch("/api/custom-tokens").then((r) => r.ok ? r.json() : []).then(setCustomTokens).catch(() => {});
+
+
+
     async function loadData() {
       if (!templateId) {
         setErrorMsg("ไม่พบรหัสเทมเพลต (Template ID is missing)");
@@ -124,11 +184,12 @@ function UniversalDocumentContent() {
         }
 
         // If editing existing document
+        let existingDoc = null;
         if (documentId) {
           const docRes = await fetch("/api/documents");
           if (docRes.ok) {
             const allDocs = await docRes.json();
-            const existingDoc = (allDocs || []).find((d) => d.id === documentId);
+            existingDoc = (allDocs || []).find((d) => d.id === documentId);
             if (existingDoc) {
               setDocumentName(existingDoc.name || tmplData.name);
               setDocumentStatus(existingDoc.status || "draft");
@@ -139,6 +200,56 @@ function UniversalDocumentContent() {
                 Object.assign(initialVals, existingDoc.values);
               }
             }
+          }
+        }
+
+        // 3. Detect DocTable in template pages & initialize line items
+        let foundDocTable = null;
+        if (Array.isArray(tmplData.pages)) {
+          for (const page of tmplData.pages) {
+            if (!page) continue;
+            const json = typeof page.json === "string" ? JSON.parse(page.json) : page.json;
+            if (json && Array.isArray(json.objects)) {
+              foundDocTable = json.objects.find(
+                (o) => o.isDocTable || o.type === "DocTable" || o.type === "docTable"
+              );
+              if (foundDocTable) break;
+            }
+          }
+        }
+
+        const isTmplQuotation =
+          tmplData.id === "quotation" ||
+          tmplData.categoryId === "quotation" ||
+          (tmplData.id || "").toLowerCase().includes("quotation") ||
+          (tmplData.name || "").toLowerCase().includes("ใบเสนอราคา") ||
+          (tmplData.name || "").toLowerCase().includes("quotation");
+
+        if (foundDocTable || isTmplQuotation) {
+          setHasDocTable(true);
+          const defaultItems = (foundDocTable?.docTableData?.items && foundDocTable.docTableData.items.length > 0)
+            ? foundDocTable.docTableData.items
+            : [
+                { no: "1", desc: "บริการพัฒนาระบบคลาวด์และโครงสร้างพื้นฐานดิจิทัล", qty: 1, price: 150000 },
+                { no: "2", desc: "แพ็กเกจความปลอดภัยทางไซเบอร์ WAF & Anti-DDoS 24/7", qty: 1, price: 54000 },
+                { no: "3", desc: "บริการฝึกอบรมและสนับสนุนทางเทคนิครายปี (Support SLA)", qty: 1, price: 20000 },
+              ];
+          const defaultVat = foundDocTable?.docTableData?.vatRate !== undefined ? Number(foundDocTable.docTableData.vatRate) : 7;
+
+          if (existingDoc?.values?.table_items && Array.isArray(existingDoc.values.table_items) && existingDoc.values.table_items.length > 0) {
+            setTableItems(existingDoc.values.table_items);
+            initialVals.table_items = existingDoc.values.table_items;
+          } else {
+            setTableItems(defaultItems);
+            initialVals.table_items = defaultItems;
+          }
+
+          if (existingDoc?.values?.table_vatRate !== undefined) {
+            setTableVatRate(Number(existingDoc.values.table_vatRate));
+            initialVals.table_vatRate = Number(existingDoc.values.table_vatRate);
+          } else {
+            setTableVatRate(defaultVat);
+            initialVals.table_vatRate = defaultVat;
           }
         }
 
@@ -158,10 +269,118 @@ function UniversalDocumentContent() {
     setValues((prev) => ({ ...prev, [fieldId]: val }));
   };
 
+  const handleTableItemChange = (index, field, val) => {
+    setTableItems((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: val };
+      setValues((v) => ({ ...v, table_items: next }));
+      return next;
+    });
+  };
+
+  const handleAddTableItem = () => {
+    setTableItems((prev) => {
+      const nextNo = String(prev.length + 1);
+      const next = [
+        ...prev,
+        {
+          no: nextNo,
+          desc: `รายการสินค้าลำดับที่ ${nextNo}`,
+          qty: 1,
+          price: 10000,
+        },
+      ];
+      setValues((v) => ({ ...v, table_items: next }));
+      return next;
+    });
+  };
+
+  const handleRemoveTableItem = (index) => {
+    if (tableItems.length <= 1) return;
+    setTableItems((prev) => {
+      const next = prev
+        .filter((_, i) => i !== index)
+        .map((it, idx) => ({ ...it, no: String(idx + 1) }));
+      setValues((v) => ({ ...v, table_items: next }));
+      return next;
+    });
+  };
+
+  const handleVatRateChange = (rate) => {
+    setTableVatRate(rate);
+    setValues((v) => ({ ...v, table_vatRate: rate }));
+  };
+
+  const tableSubtotal = (tableItems || []).reduce(
+    (acc, it) => acc + (Number(it.qty) || 1) * (Number(it.price) || 0),
+    0
+  );
+  const tableVatAmount = tableSubtotal * ((Number(tableVatRate) || 0) / 100);
+  const tableGrandTotal = tableSubtotal + tableVatAmount;
+
   const isNotification =
     template?.id === "tmpl-notification-relocation" ||
     template?.categoryId === "notification" ||
     (template?.name || "").includes("เปลี่ยนแปลงที่ตั้ง");
+
+  const isQuotation =
+    template?.id === "quotation" ||
+    template?.categoryId === "quotation" ||
+    (template?.id || "").toLowerCase().includes("quotation") ||
+    (template?.name || "").toLowerCase().includes("ใบเสนอราคา") ||
+    (template?.name || "").toLowerCase().includes("quotation");
+
+  const quotationData = React.useMemo(() => {
+    return {
+      id: documentId || "doc-custom",
+      quotationNo: values.quotation_no || values.doc_no || "QT-202609-0001",
+      revision: values.revision || "01",
+      quotationDate: values.date || values.quotation_date || new Date().toISOString().split("T")[0],
+      priceValidity: values.validity || values.price_validity || "30 วัน",
+      deliveryTerm: values.delivery_term || "7 วัน",
+      creditTerm: values.credit_term || "30 วัน",
+      billTo: {
+        companyName: values.customer_company || values.company_name || values.recipient || "บริษัท ตัวอย่าง จำกัด",
+        attn: values.attn_name || values.customer_name || values.contact_person || "-",
+        endUser: values.end_user || "-",
+        subject: values.subject || "ใบเสนอราคาโครงการและบริการ",
+        am: values.am_name || "Account Manager",
+      },
+      lineItems: (tableItems && tableItems.length > 0)
+        ? tableItems.map((it, idx) => ({
+            id: `item-${idx}`,
+            code: it.no || String(idx + 1),
+            title: it.desc || it.title || "รายการสินค้า / บริการ",
+            qty: Number(it.qty) || 1,
+            unitPrice: Number(it.price) || 0,
+            unit: "งาน",
+            groups: [],
+          }))
+        : [
+            {
+              id: "item-1",
+              code: "01",
+              title: "บริการพัฒนาระบบคลาวด์และโครงสร้างพื้นฐานดิจิทัล",
+              qty: 1,
+              unitPrice: 150000,
+              unit: "โครงการ",
+              groups: [],
+            },
+          ],
+      vatRate: tableVatRate ?? 7,
+      specialDiscount: Number(values.discount || values.special_discount || 0),
+      remarks: values.remarks || "",
+      remarksList: [
+        "Payment: Annually",
+        "กำหนดยืนราคา 30 วันนับจากวันที่ออกใบเสนอราคา",
+        "ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม 7% (VAT Excluded)",
+      ],
+      senderName: values.authorized_signatory_name || values.sender_name || "นายศรายุทธ โกสิยารักษ์",
+      senderPosition: values.authorized_signatory_position || values.sender_position || "Managing Director",
+      senderEmail: values.sender_email || "contact@crestzendo.com",
+      senderPhone: values.sender_phone || "02-1019884",
+    };
+  }, [values, tableItems, tableVatRate, documentId]);
 
   const isFabricTemplate = Boolean(
     template?.pages &&
@@ -234,102 +453,144 @@ function UniversalDocumentContent() {
     );
   }
 
+  // Calculate completion status based on detected tokens and table items
+  const totalFields = detectedTokens.length || (hasDocTable ? 3 : 1);
+  const filledFields = detectedTokens.length > 0
+    ? detectedTokens.filter((t) => Boolean(values[t.key] && String(values[t.key]).trim())).length
+    : (hasDocTable && tableItems.length > 0 ? totalFields : 1);
+  const isDocumentComplete = totalFields > 0 ? filledFields >= totalFields : true;
+  const statusObj = {
+    isComplete: isDocumentComplete,
+    filled: filledFields,
+    total: totalFields,
+  };
+
+  const renderDocumentPage = () => (
+    <div className="origin-top shadow-xl border border-gray-300 rounded-sm overflow-hidden bg-white print-paper-shadow">
+      {isNotification ? (
+        <NotificationRelocationDocument values={values} />
+      ) : isQuotation ? (
+        <QuotationDataProvider initialQuotation={quotationData} defaultReadOnly={true}>
+          <div style={{ width: 794, minHeight: 1123 }} className="bg-white overflow-hidden text-left font-noto-looped">
+            <QuotationDocument currentPage={1} />
+          </div>
+        </QuotationDataProvider>
+      ) : isFabricTemplate ? (
+        <FabricPrintRenderer
+          template={template}
+          values={values}
+          watermark={watermark}
+        />
+      ) : (
+        <UniversalTemplateRenderer template={template} scale={1} />
+      )}
+    </div>
+  );
+
+  if (isReviewing) {
+    return (
+      <>
+        <ReviewScreen
+          template={{
+            fullName: documentName || template?.name || "เอกสารกำหนดเอง",
+            name: documentName || template?.name,
+            isCustomDoc: true,
+          }}
+          docName={documentName || template?.name}
+          customRender={true}
+          pages={[renderDocumentPage]}
+          status={statusObj}
+          onExport={handlePrint}
+          onSendEmail={() => setIsEmailModalOpen(true)}
+          onBackToEdit={() => setIsReviewing(false)}
+        />
+
+        {/* Email Modal */}
+        {isEmailModalOpen && (
+          <EmailScreen
+            documentId={documentId || template?.id}
+            defaultSubject={documentName || template?.name || "เอกสารทางการ"}
+            fileName={`${documentName || "document"}.pdf`}
+            templateId={template?.id}
+            templateName={documentName || template?.name}
+            values={values}
+            onBack={() => setIsEmailModalOpen(false)}
+            onSent={() => {
+              setIsEmailModalOpen(false);
+              setSaveToast("ส่งอีเมลเรียบร้อยแล้ว!");
+              setTimeout(() => setSaveToast(""), 3000);
+            }}
+          />
+        )}
+      </>
+    );
+  }
+
   return (
-    <div className="space-y-6 text-left pb-24">
+    <div className="flex flex-col h-screen relative text-left">
       {/* Save Success Toast */}
       {saveToast && (
-        <div className="fixed top-6 right-6 z-50 bg-emerald-600 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 text-xs font-bold animate-in fade-in slide-in-from-top-4">
+        <div className="fixed top-20 right-6 z-50 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-2 text-xs font-bold animate-in fade-in slide-in-from-top-4">
           <CheckCircle2 size={16} />
           <span>{saveToast}</span>
         </div>
       )}
 
-      {/* Top Header Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-gray-200/80 pb-4">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/templates"
-            className="w-9 h-9 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors shadow-2xs cursor-pointer"
-            title="ย้อนกลับ"
-          >
-            <ChevronLeft size={18} />
-          </Link>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-gray-400">เทมเพลต</span>
-              <span className="text-gray-300 text-xs">/</span>
-              <span className="text-xs font-bold text-[#7C3AED]">{template.name}</span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
-                {documentStatus === "published" ? "เสร็จสมบูรณ์" : "ฉบับร่าง"}
-              </span>
-            </div>
-            <input
-              type="text"
-              value={documentName}
-              onChange={(e) => setDocumentName(e.target.value)}
-              className="text-lg sm:text-xl font-black text-gray-900 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-[#7C3AED] outline-none transition-all py-0.5 mt-0.5 max-w-xl"
-              placeholder="ระบุชื่อเอกสาร..."
-            />
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <button
-            type="button"
-            onClick={() => handleSave("draft")}
-            disabled={isSaving}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-xs font-bold text-gray-700 shadow-2xs cursor-pointer disabled:opacity-50"
-          >
-            <Save size={14} className="text-gray-400" />
-            <span>{isSaving ? "กำลังบันทึก..." : "บันทึกฉบับร่าง"}</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => handleSave("published")}
-            disabled={isSaving}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs cursor-pointer disabled:opacity-50"
-          >
-            <CheckCircle2 size={14} />
-            <span>เสร็จสมบูรณ์</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={handlePrint}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs cursor-pointer"
-          >
-            <Printer size={14} />
-            <span>พิมพ์ / PDF</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setIsEmailModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-purple-200 bg-purple-50 hover:bg-purple-100 text-[#7C3AED] text-xs font-bold shadow-2xs cursor-pointer"
-          >
-            <Send size={14} />
-            <span>ส่งอีเมล</span>
-          </button>
-        </div>
-      </div>
+      {/* Unified Editor Toolbar */}
+      <EditorToolbar
+        template={{
+          fullName: template.name || "เอกสารกำหนดเอง",
+        }}
+        docName={documentName}
+        onDocNameChange={setDocumentName}
+        status={statusObj}
+        onPreview={() => setIsReviewing(true)}
+        onExport={handlePrint}
+        onSave={() => handleSave("draft")}
+        isSaving={isSaving}
+        isFormOpen={isFormOpen}
+        onToggleForm={() => setIsFormOpen((prev) => !prev)}
+      />
 
       {/* 2-Column Split Workspace */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Editable Form Fields */}
-        <div className="lg:col-span-5 space-y-4">
-          <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#F5F3FF] text-[#7C3AED] flex items-center justify-center font-bold text-xs">
-                  <FileText size={15} />
+      <div className="flex-1 min-h-0 flex overflow-hidden">
+        {/* Left Column: Editable Form Fields (Sidebar) */}
+        {isFormOpen && (
+          <aside className="w-[360px] xl:w-[400px] bg-surface border-r border-border flex flex-col h-full shrink-0 shadow-2xs z-20 select-none overflow-y-auto p-4 space-y-4 text-left scrollbar-thin">
+            <div className="p-3.5 rounded-[10px] border border-border bg-muted/20 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-[#F5F3FF] text-[#7C3AED] flex items-center justify-center font-bold text-xs">
+                    <FileText size={15} />
+                  </div>
+                  <h2 className="text-sm font-bold text-foreground">กรอกและปรับแต่งข้อมูล</h2>
                 </div>
-                <h2 className="text-sm font-bold text-gray-900">กรอกและปรับแต่งข้อมูลเอกสาร</h2>
+                <span className="text-[10px] font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">
+                  Live Sync ⚡
+                </span>
               </div>
-              <span className="text-[11px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">
-                Live Sync ⚡
-              </span>
+
+              {/* Data Preset Selector */}
+              {profiles.length > 0 && (
+                <div className="space-y-1 pt-1 border-t border-border/60">
+                  <label className="text-[11px] font-medium text-muted-foreground flex items-center gap-1">
+                    <Sparkles size={12} className="text-primary" />
+                    <span>ดึงข้อมูลจากชุดข้อมูล (Data Preset)</span>
+                  </label>
+                  <select
+                    value={selectedProfileId}
+                    onChange={(e) => handleSelectProfile(e.target.value)}
+                    className="w-full h-8 px-2.5 rounded-[8px] border border-border bg-surface text-xs text-foreground outline-none focus:border-primary cursor-pointer"
+                  >
+                    <option value="">-- ไม่ใช้ชุดข้อมูล (กำหนดเอง) --</option>
+                    {profiles.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </div>
 
             {/* If Notification Document */}
@@ -431,7 +692,127 @@ function UniversalDocumentContent() {
             ) : isFabricTemplate ? (
               /* Fabric Studio Dynamic Form */
               <div className="space-y-4">
-                {detectedTokens.length > 0 ? (
+                {/* 1. Dynamic Table Items if template has DocTable */}
+                {hasDocTable && (
+                  <div className="space-y-3 p-3.5 rounded-[10px] border border-border bg-muted/20">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
+                        <Tag size={14} className="text-primary" />
+                        <span>รายการสินค้า / บริการในตาราง</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleAddTableItem}
+                        className="text-[11px] font-medium text-primary hover:underline cursor-pointer inline-flex items-center gap-0.5"
+                      >
+                        <Plus size={11} />
+                        <span>เพิ่มรายการ</span>
+                      </button>
+                    </div>
+
+                    <div className="space-y-2.5">
+                      {tableItems.map((item, idx) => {
+                        const amount = (Number(item.qty) || 1) * (Number(item.price) || 0);
+                        return (
+                          <div
+                            key={idx}
+                            className="p-3 rounded-[8px] bg-surface border border-border/80 shadow-2xs space-y-2 relative group"
+                          >
+                            <div className="flex items-center justify-between gap-1.5">
+                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-[4px] bg-muted text-muted-foreground font-mono">
+                                #{idx + 1}
+                              </span>
+                              {tableItems.length > 1 && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveTableItem(idx)}
+                                  className="p-1 rounded-[6px] text-muted-foreground/60 hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer ml-auto"
+                                  title="ลบรายการนี้"
+                                >
+                                  <Trash2 size={13} />
+                                </button>
+                              )}
+                            </div>
+
+                            <input
+                              type="text"
+                              value={item.desc || item.title || ""}
+                              onChange={(e) => handleTableItemChange(idx, "desc", e.target.value)}
+                              placeholder="ชื่อรายการสินค้าหรือบริการ..."
+                              className="w-full h-8 px-2.5 text-xs font-medium rounded-[6px] border border-border bg-surface text-foreground outline-none focus:border-primary"
+                            />
+
+                            <div className="grid grid-cols-2 gap-2 pt-0.5">
+                              <div className="space-y-0.5">
+                                <label className="text-[10px] text-muted-foreground">จำนวน (Qty)</label>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  value={item.qty ?? 1}
+                                  onChange={(e) => handleTableItemChange(idx, "qty", Number(e.target.value) || 1)}
+                                  className="w-full h-7 px-2 text-xs text-center rounded-[6px] border border-border bg-surface text-foreground outline-none focus:border-primary tabular-nums"
+                                />
+                              </div>
+                              <div className="space-y-0.5">
+                                <label className="text-[10px] text-muted-foreground">ราคาต่อหน่วย (THB)</label>
+                                <input
+                                  type="number"
+                                  min="0"
+                                  step="any"
+                                  value={item.price ?? 0}
+                                  onChange={(e) => handleTableItemChange(idx, "price", Number(e.target.value) || 0)}
+                                  className="w-full h-7 px-2 text-xs text-right rounded-[6px] border border-border bg-surface text-foreground outline-none focus:border-primary tabular-nums"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="pt-1.5 border-t border-border/60 flex items-center justify-between text-[11px]">
+                              <span className="text-muted-foreground">จำนวนเงิน:</span>
+                              <span className="font-semibold font-mono text-foreground">
+                                {amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Price Summary */}
+                    <div className="p-3 rounded-[8px] bg-surface border border-border/80 space-y-1.5 text-xs">
+                      <div className="flex justify-between text-muted-foreground">
+                        <span>รวมเป็นเงิน (Subtotal):</span>
+                        <span className="font-mono text-foreground">
+                          {tableSubtotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <span>ภาษีมูลค่าเพิ่ม:</span>
+                          <select
+                            value={tableVatRate}
+                            onChange={(e) => handleVatRateChange(Number(e.target.value))}
+                            className="h-6 px-1 text-[11px] rounded border border-border bg-surface text-foreground cursor-pointer"
+                          >
+                            <option value={7}>7%</option>
+                            <option value={0}>0% (ยกเว้น)</option>
+                          </select>
+                        </div>
+                        <span className="font-mono text-foreground">
+                          {tableVatAmount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท
+                        </span>
+                      </div>
+                      <div className="pt-1.5 border-t border-border flex justify-between font-bold text-foreground">
+                        <span>จำนวนเงินรวมทั้งสิ้น:</span>
+                        <span className="font-mono text-primary text-sm">
+                          {tableGrandTotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 2. Dynamic Variables */}
+                {detectedTokens.length > 0 && (
                   <div className="space-y-4">
                     <div className="flex items-center justify-between text-[11px] text-gray-500 bg-gray-50 p-2.5 rounded-xl border border-gray-200/60">
                       <span className="font-semibold">ตัวแปรไดนามิกที่ตรวจพบในเทมเพลต</span>
@@ -475,7 +856,9 @@ function UniversalDocumentContent() {
                       </div>
                     ))}
                   </div>
-                ) : (
+                )}
+
+                {!hasDocTable && detectedTokens.length === 0 && (
                   <div className="p-4 bg-purple-50/60 rounded-xl border border-purple-100 text-xs space-y-2">
                     <div className="flex items-center gap-2 font-bold text-purple-900">
                       <CheckCircle2 size={16} className="text-purple-600" />
@@ -520,12 +903,12 @@ function UniversalDocumentContent() {
             )}
 
             {/* Watermark Selector */}
-            <div className="pt-4 border-t border-gray-100 space-y-1">
-              <label className="text-xs font-semibold text-gray-700">ลายน้ำเอกสาร (PDF Watermark)</label>
+            <div className="pt-4 border-t border-border space-y-1">
+              <label className="text-xs font-semibold text-foreground">ลายน้ำเอกสาร (PDF Watermark)</label>
               <select
                 value={watermark}
                 onChange={(e) => setWatermark(e.target.value)}
-                className="w-full h-9 px-2.5 rounded-lg border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#7C3AED]"
+                className="w-full h-9 px-2.5 rounded-[8px] border border-border bg-surface text-xs text-foreground outline-none focus:border-primary"
               >
                 {WATERMARK_OPTIONS.map((w) => (
                   <option key={w.id} value={w.id}>
@@ -534,33 +917,23 @@ function UniversalDocumentContent() {
                 ))}
               </select>
             </div>
-          </div>
-        </div>
+          </aside>
+        )}
 
         {/* Right Column: Live A4 Document Output */}
-        <div className="lg:col-span-7 space-y-3">
-          <div className="flex items-center justify-between px-1">
-            <div className="flex items-center gap-2">
-              <Eye size={15} className="text-[#7C3AED]" />
-              <span className="text-xs font-bold text-gray-700">พรีวิวกระดาษ A4 เสมือนจริง (Print Preview)</span>
+        <div className="flex-1 min-h-0 overflow-y-auto bg-muted/30 p-4 sm:p-6 flex flex-col items-center">
+          <div className="w-full max-w-[850px] flex flex-col items-center space-y-3">
+            <div className="w-full flex items-center justify-between px-1">
+              <div className="flex items-center gap-2">
+                <Eye size={15} className="text-primary" />
+                <span className="text-xs font-bold text-foreground">พรีวิวกระดาษ A4 เสมือนจริง (Print Preview)</span>
+              </div>
+              <span className="text-[10px] font-semibold text-muted-foreground">ขนาด 210 x 297 mm</span>
             </div>
-            <span className="text-[10px] font-semibold text-gray-400">ขนาด 210 x 297 mm</span>
-          </div>
 
-          {/* A4 Paper Output Container */}
-          <div className="bg-gray-100/70 p-4 sm:p-6 rounded-2xl border border-gray-200/80 flex justify-center overflow-x-auto shadow-inner print-container-wrapper">
-            <div className="origin-top shadow-xl border border-gray-300 rounded-sm overflow-hidden bg-white print-paper-shadow">
-              {isNotification ? (
-                <NotificationRelocationDocument values={values} />
-              ) : isFabricTemplate ? (
-                <FabricPrintRenderer
-                  template={template}
-                  values={values}
-                  watermark={watermark}
-                />
-              ) : (
-                <UniversalTemplateRenderer template={template} scale={1} />
-              )}
+            {/* A4 Paper Output Container */}
+            <div className="w-full flex justify-center overflow-x-auto print-container-wrapper">
+              {renderDocumentPage()}
             </div>
           </div>
         </div>

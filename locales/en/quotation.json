@@ -1,5 +1,7 @@
 {
   "quotation": {
+    "title": "Quotation",
+    "formTitle": "Quotation Form",
     "addItem": "Add new product / service item",
     "addSubCategory": "Add sub-category",
     "addBullet": "Add bullet (•)",

@@ -1,5 +1,7 @@
 {
   "quotation": {
+    "title": "ใบเสนอราคา (Quotation)",
+    "formTitle": "กรอกข้อมูลใบเสนอราคา",
     "addItem": "เพิ่มรายการสินค้า / บริการใหม่",
     "addSubCategory": "เพิ่มหมวดหมู่ย่อย",
     "addBullet": "เพิ่ม bullet (•)",

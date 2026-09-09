@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { documentsRepo, sentHistoryRepo } from "@/lib/db/repositories";
+import { documentsRepo, sentHistoryRepo, notificationsRepo } from "@/lib/db/repositories";
 
 async function getAccessToken() {
   const body = new URLSearchParams({
@@ -122,6 +122,19 @@ export async function POST(request) {
         } catch (e) {
           console.warn("Update document lastSentAt error:", e);
         }
+      }
+
+      // 3. Create real-time notification
+      try {
+        await notificationsRepo.create({
+          type: "email_sent",
+          title: "ส่งเอกสารทางอีเมลสำเร็จ",
+          description: `ส่ง ${templateName || attachmentName || "เอกสาร"} ไปยัง ${to} เรียบร้อยแล้ว`,
+          link: "/history",
+          metadata: { documentId, to, subject },
+        });
+      } catch (notifErr) {
+        console.warn("Notification error:", notifErr);
       }
     };
 

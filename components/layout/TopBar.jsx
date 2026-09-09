@@ -8,6 +8,7 @@ import {
   Moon,
   Sun,
   Bell,
+  BellOff,
   FileText,
   Plus,
   FolderOpen,
@@ -19,9 +20,12 @@ import {
   CheckCircle2,
   Sparkles,
   ChevronDown,
+  Send,
+  Download,
+  CopyPlus,
 } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -50,59 +54,139 @@ export function TopBar() {
   const [mounted, setMounted] = useState(false);
   const [openCommand, setOpenCommand] = useState(false);
   const { t } = useLanguage();
-
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      title: "Quotation CZ2608063 generated successfully",
-      time: "10m ago",
-      unread: true,
-      icon: FileText,
-      iconColor: "text-primary",
-    },
-    {
-      id: 2,
-      title: "Partner Agreement sent via email",
-      time: "1h ago",
-      unread: true,
-      icon: CheckCircle2,
-      iconColor: "text-emerald-600 dark:text-emerald-400",
-    },
-    {
-      id: 3,
-      title: "System template updated to v2.0",
-      time: "Yesterday",
-      unread: false,
-      icon: Sparkles,
-      iconColor: "text-muted-foreground",
-    },
-  ]);
+  const [userProfile, setUserProfile] = useState({
+    fullName: "สิรวิทย์ เพชรจำรัส",
+    email: "keem@crestzendo.com",
+    avatar: "",
+  });
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.account) {
+          setUserProfile({
+            fullName: data.account.fullName || "สิรวิทย์ เพชรจำรัส",
+            email: data.account.email || "keem@crestzendo.com",
+            avatar: data.account.avatar || "",
+          });
+        }
+      })
+      .catch(() => {});
   }, []);
 
-  // Handle Cmd+K / Ctrl+K keyboard shortcut
-  useEffect(() => {
-    const down = (e) => {
-      if (e.code === "KeyK" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setOpenCommand((open) => !open);
+  const [notifications, setNotifications] = useState([]);
+
+  const fetchNotifications = async () => {
+    try {
+      const res = await fetch("/api/notifications");
+      if (res.ok) {
+        const data = await res.json();
+        setNotifications(data.notifications || []);
       }
-    };
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
-  }, []);
-
-  const markAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
+    } catch (err) {
+      console.warn("Failed to load notifications:", err);
+    }
   };
 
-  const toggleNotificationRead = (id) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, unread: !n.unread } : n))
-    );
+  useEffect(() => {
+    fetchNotifications();
+
+    // Listen to client-side notification triggers
+    const handleUpdate = () => {
+      fetchNotifications();
+    };
+    window.addEventListener("docbuilder-notification-update", handleUpdate);
+    window.addEventListener("focus", handleUpdate);
+
+    // Poll every 30 seconds
+    const interval = setInterval(fetchNotifications, 30000);
+
+    return () => {
+      window.removeEventListener("docbuilder-notification-update", handleUpdate);
+      window.removeEventListener("focus", handleUpdate);
+      clearInterval(interval);
+    };
+  }, []);
+
+  const markAllAsRead = async () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
+    try {
+      await fetch("/api/notifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ markAll: true }),
+      });
+    } catch (err) {
+      console.warn("Failed to mark all notifications as read:", err);
+    }
+  };
+
+  const handleNotificationClick = async (notif) => {
+    if (notif.unread) {
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === notif.id ? { ...n, unread: false } : n))
+      );
+      fetch("/api/notifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: notif.id }),
+      }).catch(() => {});
+    }
+    if (notif.link) {
+      handleSelectRoute(notif.link);
+    }
+  };
+
+  const formatRelativeTime = (timestamp) => {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffSec = Math.floor((now - date) / 1000);
+    if (diffSec < 60) return "เพิ่งสร้าง";
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `${diffMin} นาทีที่แล้ว`;
+    const diffHour = Math.floor(diffMin / 60);
+    if (diffHour < 24) return `${diffHour} ชั่วโมงที่แล้ว`;
+    const diffDay = Math.floor(diffHour / 24);
+    if (diffDay === 1) return "เมื่อวาน";
+    if (diffDay < 7) return `${diffDay} วันที่แล้ว`;
+    return date.toLocaleDateString("th-TH", { day: "numeric", month: "short" });
+  };
+
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case "email_sent":
+        return {
+          icon: Send,
+          color: "text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40",
+        };
+      case "document_exported":
+        return {
+          icon: Download,
+          color: "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40",
+        };
+      case "document_created":
+        return {
+          icon: FileText,
+          color: "text-primary bg-primary/10",
+        };
+      case "revision_created":
+        return {
+          icon: CopyPlus,
+          color: "text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40",
+        };
+      case "template_saved":
+        return {
+          icon: Sparkles,
+          color: "text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/40",
+        };
+      default:
+        return {
+          icon: Bell,
+          color: "text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800",
+        };
+    }
   };
 
   const handleSelectRoute = (path) => {
@@ -214,36 +298,59 @@ export function TopBar() {
               </div>
 
               <div className="max-h-72 overflow-y-auto divide-y divide-border/60 bg-surface">
-                {notifications.map((n) => {
-                  const ItemIcon = n.icon;
-                  return (
-                    <div
-                      key={n.id}
-                      onClick={() => toggleNotificationRead(n.id)}
-                      className={`p-3 text-xs transition-colors hover:bg-muted/60 cursor-pointer flex items-start gap-2.5 ${
-                        n.unread ? "bg-primary/5 font-medium" : "text-muted-foreground"
-                      }`}
-                    >
-                      <ItemIcon size={16} className={`shrink-0 mt-0.5 ${n.iconColor}`} />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-1">
-                          <p className="text-foreground leading-snug">{n.title}</p>
-                          {n.unread && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1" />
-                          )}
-                        </div>
-                        <p className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1">
-                          <Clock size={11} /> {n.time}
-                        </p>
-                      </div>
+                {notifications.length === 0 ? (
+                  <div className="py-8 px-4 text-center flex flex-col items-center justify-center text-muted-foreground">
+                    <div className="w-10 h-10 rounded-full bg-muted/60 flex items-center justify-center mb-2 text-muted-foreground/60">
+                      <BellOff size={18} />
                     </div>
-                  );
-                })}
+                    <p className="text-xs font-medium text-foreground">ไม่มีการแจ้งเตือน</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">การแจ้งเตือนกิจกรรมและเอกสารจะแสดงที่นี่</p>
+                  </div>
+                ) : (
+                  notifications.map((n) => {
+                    const iconConfig = getNotificationIcon(n.type);
+                    const ItemIcon = iconConfig.icon;
+                    return (
+                      <div
+                        key={n.id}
+                        onClick={() => handleNotificationClick(n)}
+                        className={`p-3 text-xs transition-colors hover:bg-muted/60 cursor-pointer flex items-start gap-2.5 ${
+                          n.unread ? "bg-primary/5 font-medium" : "text-muted-foreground"
+                        }`}
+                      >
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${iconConfig.color}`}>
+                          <ItemIcon size={14} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-1">
+                            <p className="text-foreground leading-snug font-medium line-clamp-1">{n.title}</p>
+                            {n.unread && (
+                              <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1" />
+                            )}
+                          </div>
+                          {n.message && (
+                            <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-2 leading-relaxed">
+                              {n.message}
+                            </p>
+                          )}
+                          <p className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1">
+                            <Clock size={11} /> {formatRelativeTime(n.timestamp || n.createdAt)}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
               </div>
 
               <div className="p-2 border-t border-border text-center bg-muted/20">
-                <Button variant="ghost" size="sm" className="w-full text-xs text-primary h-7">
-                  {t('topbar.viewAllNotifications') || "View all notifications"}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSelectRoute("/history")}
+                  className="w-full text-xs text-primary hover:text-primary hover:bg-primary/5 h-7 font-medium"
+                >
+                  {t('topbar.viewAllNotifications') || "ดูประวัติเอกสารทั้งหมด"}
                 </Button>
               </div>
             </DropdownMenuContent>
@@ -253,13 +360,16 @@ export function TopBar() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-2.5 pl-1.5 pr-2 py-1 rounded-lg hover:bg-muted/60 transition-colors outline-none cursor-pointer group">
-                <Avatar className="h-8 w-8 ring-1 ring-border shrink-0">
+                <Avatar className="h-8 w-8 ring-1 ring-border shrink-0 overflow-hidden">
+                  {userProfile.avatar ? (
+                    <AvatarImage src={userProfile.avatar} alt={userProfile.fullName} className="object-cover w-full h-full" />
+                  ) : null}
                   <AvatarFallback className="bg-primary text-primary-foreground font-bold text-xs">
-                    K
+                    {userProfile.fullName ? userProfile.fullName.slice(0, 2).toUpperCase() : "SP"}
                   </AvatarFallback>
                 </Avatar>
-                <span className="hidden sm:inline-block text-xs font-semibold text-foreground tracking-tight">
-                  Keem
+                <span className="hidden sm:inline-block text-xs font-semibold text-foreground tracking-tight max-w-[130px] truncate">
+                  {userProfile.fullName}
                 </span>
                 <ChevronDown size={14} className="text-muted-foreground group-hover:text-foreground transition-colors" />
               </button>
@@ -267,8 +377,8 @@ export function TopBar() {
             <DropdownMenuContent align="end" sideOffset={8} className="w-56 shadow-md border border-border bg-surface z-50 rounded-xl">
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-semibold text-foreground leading-none">Keem</p>
-                  <p className="text-xs text-muted-foreground leading-none">keem@example.com</p>
+                  <p className="text-sm font-semibold text-foreground leading-none truncate">{userProfile.fullName}</p>
+                  <p className="text-xs text-muted-foreground leading-none truncate">{userProfile.email}</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />

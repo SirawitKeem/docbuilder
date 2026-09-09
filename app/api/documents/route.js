@@ -1,4 +1,4 @@
-import { documentsRepo } from "@/lib/db/repositories";
+import { documentsRepo, notificationsRepo } from "@/lib/db/repositories";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -23,6 +23,17 @@ export async function POST(request) {
     }
   }
   const record = await documentsRepo.create(body);
+  try {
+    await notificationsRepo.create({
+      type: "document_created",
+      title: "บันทึกเอกสารสำเร็จ",
+      description: `บันทึกเอกสาร "${record.name || body.name || "เอกสาร"}" ลงในระบบเรียบร้อยแล้ว`,
+      link: "/documents",
+      metadata: { documentId: record.id, templateId: record.templateId },
+    });
+  } catch (err) {
+    console.warn("Notification error:", err);
+  }
   return Response.json(record);
 }
 
