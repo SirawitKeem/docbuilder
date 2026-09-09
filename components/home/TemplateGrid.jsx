@@ -6,10 +6,12 @@ import { ArrowRight, Sparkle } from "@phosphor-icons/react";
 import TemplateCard from "@/components/templates/TemplateCard";
 import TemplateSelectModal from "@/components/templates/TemplateSelectModal";
 import { getTemplates } from "@/lib/data/templates";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function TemplateGrid() {
   const [templates, setTemplates] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     getTemplates().then(setTemplates);
@@ -23,8 +25,8 @@ export default function TemplateGrid() {
             <Sparkle size={16} weight="fill" />
           </div>
           <div>
-            <h2 className="text-base font-semibold text-foreground leading-tight">Quick Start Templates</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">Select a pre-built template to quickly create agreements or quotations</p>
+            <h2 className="text-base font-semibold text-foreground leading-tight">{t('home.quickStartTemplates') || "Quick Start Templates"}</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">{t('home.quickStartDesc') || "Select a pre-built template to quickly create agreements or quotations"}</p>
           </div>
         </div>
 
@@ -32,7 +34,7 @@ export default function TemplateGrid() {
           href="/templates"
           className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline transition-colors"
         >
-          <span>View all templates</span>
+          <span>{t('home.viewAllTemplates') || "View all templates"}</span>
           <ArrowRight size={13} weight="bold" />
         </Link>
       </div>

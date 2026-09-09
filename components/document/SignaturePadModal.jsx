@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   X,
   PenTool,
@@ -16,6 +17,7 @@ export default function SignaturePadModal({
   onSave,
   onClose,
 }) {
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState("draw"); // 'draw' | 'upload'
   const canvasRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -115,7 +117,9 @@ export default function SignaturePadModal({
               <PenTool size={16} />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-gray-900 leading-tight">{title}</h3>
+              <h3 className="text-sm font-bold text-gray-900 leading-tight">
+                {title === "ลงลายมือชื่อดิจิทัล" ? t('signature.title') : title}
+              </h3>
               <p className="text-[11px] text-gray-500 mt-0.5">{partyName}</p>
             </div>
           </div>
@@ -139,7 +143,7 @@ export default function SignaturePadModal({
             }`}
           >
             <PenTool size={14} />
-            <span>วาดลายมือชื่อสด</span>
+            <span>{t('signature.drawLive')}</span>
           </button>
 
           <button
@@ -152,7 +156,7 @@ export default function SignaturePadModal({
             }`}
           >
             <Upload size={14} />
-            <span>อัปโหลดรูปภาพ</span>
+            <span>{t('signature.uploadImage')}</span>
           </button>
         </div>
 
@@ -209,7 +213,7 @@ export default function SignaturePadModal({
 
                 {!hasDrawn && (
                   <div className="absolute inset-0 pointer-events-none flex items-center justify-center text-gray-300 text-xs font-medium">
-                    ลงลายมือชื่อที่นี่...
+                    {t('signature.placeholder')}
                   </div>
                 )}
 
@@ -218,7 +222,7 @@ export default function SignaturePadModal({
                     type="button"
                     onClick={clearCanvas}
                     className="absolute top-2 right-2 p-1.5 rounded-lg bg-white/90 shadow-sm border border-gray-200 text-gray-500 hover:text-red-500 transition-colors cursor-pointer"
-                    title="ล้างลายเซ็น"
+                    title={t('signature.clear')}
                   >
                     <RotateCcw size={14} />
                   </button>
@@ -274,7 +278,7 @@ export default function SignaturePadModal({
             onClick={onClose}
             className="px-4 py-2 rounded-xl border border-gray-200 text-gray-700 hover:bg-white text-xs font-semibold transition-colors cursor-pointer"
           >
-            ยกเลิก
+            {t('actions.cancel')}
           </button>
 
           <button
@@ -284,7 +288,7 @@ export default function SignaturePadModal({
             className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] disabled:opacity-40 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
           >
             <Check size={14} />
-            <span>ประทับลายเซ็นนี้</span>
+            <span>{t('signature.apply')}</span>
           </button>
         </div>
       </div>

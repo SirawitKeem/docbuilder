@@ -18,6 +18,7 @@ import {
 import { listFieldProfiles, deleteFieldProfile } from "@/lib/data/fieldProfiles";
 import { getRelevantTemplates } from "@/lib/profiles/compatibility";
 import { getTemplates } from "@/lib/data/templates";
+import { useLanguage } from "@/context/LanguageContext";
 
 function formatThaiDateTime(isoString) {
   if (!isoString) return "-";
@@ -35,6 +36,7 @@ function formatThaiDateTime(isoString) {
 }
 
 export default function ProfileDataListPage() {
+  const { t } = useLanguage();
   const [profiles, setProfiles] = useState(null);
   const [allTemplatesList, setAllTemplatesList] = useState([]);
   
@@ -75,7 +77,7 @@ export default function ProfileDataListPage() {
   }, []);
 
   const handleDelete = async (id, name) => {
-    if (!confirm(`คุณต้องการลบชุดข้อมูล "${name}" ใช่หรือไม่?`)) return;
+    if (!confirm(t('profileData.deleteConfirm', { name }) || `คุณต้องการลบชุดข้อมูล "${name}" ใช่หรือไม่?`)) return;
     await deleteFieldProfile(id);
     if (selectedProfileId === id) {
       setSelectedProfileId(null);
@@ -141,9 +143,9 @@ export default function ProfileDataListPage() {
   return (
     <div>
       {/* Page Header */}
-      <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">Data Presets</h1>
+      <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">{t('profileData.title') || "Data Presets"}</h1>
       <p className="text-xs sm:text-sm text-muted-foreground mb-6">
-        Manage reusable shared entity data across templates to auto-fill dynamic fields in documents
+        {t('profileData.description') || "Manage reusable shared entity data across templates to auto-fill dynamic fields in documents"}
       </p>
 
       {/* Main Section */}
@@ -164,7 +166,7 @@ export default function ProfileDataListPage() {
                     setSearchQuery(e.target.value);
                     setCurrentPage(1);
                   }}
-                  placeholder="Search company, signatory, or entity..."
+                  placeholder={t('profileData.searchPlaceholder') || "Search company, signatory, or entity..."}
                   className="w-full h-9 pl-9 pr-3 rounded-xl border border-border bg-muted/30 text-xs text-foreground outline-none focus:border-primary focus:bg-surface transition-all placeholder:text-muted-foreground/70"
                 />
               </div>
@@ -207,7 +209,7 @@ export default function ProfileDataListPage() {
               className="primary-button inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-xl text-white text-xs font-semibold hover:opacity-95 transition-opacity shrink-0"
             >
               <Plus size={15} />
-              New Preset
+              {t('profileData.newPreset') || "New Preset"}
             </Link>
           </div>
 
@@ -215,7 +217,7 @@ export default function ProfileDataListPage() {
           <div className="space-y-2.5">
             {paginatedProfiles.length === 0 ? (
               <div className="p-10 text-center border border-dashed border-border rounded-xl bg-muted/20 text-muted-foreground text-xs">
-                {searchQuery ? "No preset data matching your search" : "No presets created yet — click 'New Preset' above"}
+                {searchQuery ? "No preset data matching your search" : (t('profileData.noPresetsFound') || "No presets created yet — click 'New Preset' above")}
               </div>
             ) : (
               paginatedProfiles.map((p) => {
@@ -280,7 +282,7 @@ export default function ProfileDataListPage() {
                           }}
                           className="px-3 py-1.5 rounded-lg border border-border bg-surface hover:bg-muted text-primary font-semibold text-xs transition-colors"
                         >
-                          View Details
+                          {t('profileData.viewDetails') || "View Details"}
                         </button>
 
                         <div className="relative">
@@ -305,7 +307,7 @@ export default function ProfileDataListPage() {
                                 className="w-full text-left px-3 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2 transition-colors"
                               >
                                 <Pencil size={14} className="text-muted-foreground" />
-                                Edit Preset
+                                {t('actions.edit') || "Edit"}
                               </Link>
                               <button
                                 onClick={(e) => {
@@ -316,7 +318,7 @@ export default function ProfileDataListPage() {
                                 className="w-full text-left px-3 py-2 text-xs font-medium text-destructive hover:bg-destructive/10 flex items-center gap-2 transition-colors"
                               >
                                 <Trash2 size={14} className="text-destructive" />
-                                Delete Preset
+                                {t('actions.delete') || "Delete"}
                               </button>
                             </div>
                           )}

@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   ArrowLeft,
   Building2,
@@ -38,6 +39,7 @@ function formatThaiDateTime(isoString) {
 }
 
 function ProfileSelectGateContent({ templateId }) {
+  const { t } = useLanguage();
   const searchParams = useSearchParams();
   const docIdFromUrl = searchParams.get("id") || searchParams.get("docId");
   const subTemplateId = searchParams.get("templateId");
@@ -100,7 +102,7 @@ function ProfileSelectGateContent({ templateId }) {
     return (
       <div>
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-1">เลือกชุดข้อมูลที่จะใช้</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">{t('profileGate.title') || "Select data preset"}</h1>
           <p className="text-sm text-gray-500">
             เทมเพลต: <span className="font-semibold text-gray-800">{shortTemplateTitle}</span>
           </p>
@@ -151,15 +153,15 @@ function ProfileSelectGateContent({ templateId }) {
           className="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 hover:text-gray-900 transition-colors"
         >
           <ArrowLeft size={15} />
-          ย้อนกลับไปเลือกเทมเพลต
+          {t('profileGate.backToTemplates')}
         </Link>
       </div>
 
       {/* Header Title Section */}
       <div className="mb-8 space-y-1">
-        <h1 className="text-2xl font-bold text-[#171717]">เลือกชุดข้อมูลที่จะใช้</h1>
+        <h1 className="text-2xl font-bold text-[#171717]">{t('profileGate.title')}</h1>
         <p className="text-sm text-[#646469]">
-          แสดงเฉพาะชุดข้อมูลที่สามารถใช้งานร่วมกับ <strong className="text-[#7C3AED] font-bold">{shortTemplateTitle}</strong> โดยอัตโนมัติ
+          {t('profileGate.description')} <strong className="text-[#7C3AED] font-bold">{shortTemplateTitle}</strong>
         </p>
       </div>
 
@@ -176,7 +178,7 @@ function ProfileSelectGateContent({ templateId }) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={`ค้นหาชุดข้อมูลสำหรับ ${shortTemplateTitle}...`}
+              placeholder={`${t('profileGate.searchPresets')} ${shortTemplateTitle}...`}
               className="w-full h-10 pl-10 pr-4 rounded-[10px] border border-[#E5E5E5] bg-gray-50/50 text-sm outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#F5F3FF] transition-all"
             />
           </div>
@@ -188,7 +190,7 @@ function ProfileSelectGateContent({ templateId }) {
               className="inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-[10px] bg-[#7C3AED] text-white text-xs font-bold hover:bg-[#4332D6] transition-colors cursor-pointer shadow-xs"
             >
               <FileText size={15} />
-              <span>เริ่มสร้างเอกสารทันที</span>
+              <span>{t('profileGate.startNow')}</span>
             </button>
 
             <Link
@@ -197,7 +199,7 @@ function ProfileSelectGateContent({ templateId }) {
               className="inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-[10px] border border-[#E5E5E5] bg-white text-gray-700 hover:bg-gray-50 text-xs font-semibold transition-colors shrink-0"
             >
               <Plus size={15} />
-              <span>เพิ่มชุดข้อมูลกลาง</span>
+              <span>{t('profileGate.addPreset')}</span>
             </Link>
           </div>
         </div>
@@ -207,7 +209,7 @@ function ProfileSelectGateContent({ templateId }) {
           <table className="w-full text-sm text-left">
             <thead>
               <tr className="border-b border-gray-200/90 text-xs font-semibold text-gray-500 bg-gray-50/70">
-                <th className="px-5 py-3.5">ชื่อชุดข้อมูล</th>
+                <th className="px-5 py-3.5">{t('profileGate.presetName')}</th>
                 <th className="px-5 py-3.5">สถานะสำหรับ {shortTemplateTitle}</th>
                 <th className="px-5 py-3.5">อัปเดตล่าสุด</th>
                 <th className="px-5 py-3.5 text-right w-36">การกระทำ</th>
@@ -258,11 +260,11 @@ function ProfileSelectGateContent({ templateId }) {
                       <td className="px-5 py-4 text-xs font-medium">
                         {compat.isComplete ? (
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-semibold">
-                            <CheckCircle2 size={13} /> ข้อมูลครบสมบูรณ์
+                            <CheckCircle2 size={13} /> {t('profileGate.complete')}
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 font-semibold">
-                            <AlertCircle size={13} /> ขาด {compat.missing.length} ฟิลด์ที่จำเป็น
+                            <AlertCircle size={13} /> {t('profileGate.missingFields', { count: compat.missing.length })}
                           </span>
                         )}
                       </td>
@@ -338,16 +340,16 @@ function ProfileSelectGateContent({ templateId }) {
             </div>
             <div className="min-w-0">
               <p className="font-bold text-[#171717] text-sm group-hover:text-[#7C3AED] transition-colors">
-                เริ่มจากเอกสารเปล่า (ไม่ใช้ข้อมูลที่บันทึกไว้)
+                {t('profileGate.blankDocument')}
               </p>
               <p className="text-xs text-[#646469] mt-0.5 truncate">
-                กรอกข้อมูลใหม่ทั้งหมดด้วยตัวเองตั้งแต่ต้น
+                {t('profileGate.blankDesc')}
               </p>
             </div>
           </div>
 
           <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[10px] bg-white border border-[#E5E5E5] text-[#171717] text-xs font-semibold group-hover:bg-[#7C3AED] group-hover:text-white group-hover:border-[#7C3AED] transition-all">
-            <span>เลือกเอกสารเปล่า</span>
+            <span>{t('profileGate.blankDocument')}</span>
             <ChevronRight size={15} />
           </div>
         </div>

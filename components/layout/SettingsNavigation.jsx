@@ -14,41 +14,43 @@ import {
 } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
-export const defaultSettingsGroups = [
+import { useLanguage } from "@/context/LanguageContext";
+
+export const getDefaultSettingsGroups = (t) => [
   {
-    label: "Account",
+    label: t('groups.account') || "Account",
     items: [
       {
         href: "/settings/account",
-        label: "Account & Security",
+        label: t('items.accountSecurity') || "Account & Security",
         description: "Personal profile and sign-in credentials",
         icon: UserCircle,
       },
       {
         href: "/settings/preferences",
-        label: "Preferences",
+        label: t('items.preferences') || "Preferences",
         description: "Appearance, theme, and notifications",
         icon: SlidersHorizontal,
       },
     ],
   },
   {
-    label: "Organization",
+    label: t('groups.organization') || "Organization",
     items: [
       {
         href: "/settings/general",
-        label: "General",
+        label: t('items.general') || "General",
         description: "Company details and authorized signers",
         icon: Buildings,
       },
     ],
   },
   {
-    label: "System",
+    label: t('groups.system') || "System",
     items: [
       {
         href: "/settings/email",
-        label: "Email Integration",
+        label: t('items.emailIntegration') || "Email Integration",
         description: "SMTP connection and delivery status",
         icon: EnvelopeSimple,
       },
@@ -57,13 +59,16 @@ export const defaultSettingsGroups = [
 ];
 
 export function SettingsNavigation({
-  groups = defaultSettingsGroups,
+  groups,
   onBack,
   onSignOut,
   onNavigate,
   collapsed = false,
-  backLabel = "Back to workspace",
+  backLabel,
 }) {
+  const { t } = useLanguage();
+  const activeGroups = groups || getDefaultSettingsGroups(t);
+  const activeBackLabel = backLabel || t('nav.backToWorkspace') || "Back to workspace";
   const pathname = usePathname();
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -88,7 +93,7 @@ export function SettingsNavigation({
     }
   };
 
-  const filtered = groups
+  const filtered = activeGroups
     .map((group) => ({
       ...group,
       items: group.items.filter((item) =>
@@ -113,7 +118,7 @@ export function SettingsNavigation({
         <button
           type="button"
           onClick={handleBack}
-          title={collapsed ? backLabel : undefined}
+          title={collapsed ? activeBackLabel : undefined}
           className={cn(
             sidebarButtonClass,
             sidebarButtonInactiveClass,
@@ -126,7 +131,7 @@ export function SettingsNavigation({
             className="shrink-0 text-[#737373] group-hover:text-[#171717] dark:group-hover:text-[#FAFAFA] transition-colors"
           />
           <span className={cn("truncate font-medium text-xs text-foreground", collapsed && "sr-only")}>
-            {backLabel}
+            {activeBackLabel}
           </span>
         </button>
 
@@ -138,8 +143,8 @@ export function SettingsNavigation({
             />
             <input
               type="search"
-              aria-label="Search settings"
-              placeholder="Search settings"
+              aria-label={t('settings.searchPlaceholder') || "Search settings"}
+              placeholder={t('settings.searchPlaceholder') || "Search settings..."}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => {
@@ -223,7 +228,7 @@ export function SettingsNavigation({
         <button
           type="button"
           onClick={handleSignOut}
-          title={collapsed ? "Sign out" : undefined}
+          title={collapsed ? (t('nav.signOut') || "Sign out") : undefined}
           className={cn(
             sidebarButtonClass,
             sidebarButtonInactiveClass,
@@ -236,7 +241,7 @@ export function SettingsNavigation({
             className="size-[18px] shrink-0 text-[#737373] group-hover:text-destructive transition-colors"
           />
           <span className={cn("truncate text-sm text-muted-foreground group-hover:text-destructive transition-colors", collapsed && "sr-only")}>
-            Sign out
+            {t('nav.signOut') || "Sign out"}
           </span>
         </button>
       </div>

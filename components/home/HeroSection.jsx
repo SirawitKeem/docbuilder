@@ -8,6 +8,8 @@ import {
   Sparkle,
 } from "@phosphor-icons/react";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 // 4-Point Diamond Sparkle Star (matches Login & Brand style)
 function SparkleStar({ className = "w-4 h-4 text-white fill-white" }) {
   return (
@@ -15,13 +17,6 @@ function SparkleStar({ className = "w-4 h-4 text-white fill-white" }) {
       <path d="M12 0C12 6.627 17.373 12 24 12C17.373 12 12 17.373 12 24C12 17.373 6.627 12 0 12C6.627 12 12 6.627 12 0Z" />
     </svg>
   );
-}
-
-function getGreeting() {
-  const hour = new Date().getHours();
-  if (hour >= 5 && hour < 12) return "Good morning";
-  if (hour >= 12 && hour < 17) return "Good afternoon";
-  return "Good evening";
 }
 
 function getFormattedDate() {
@@ -35,14 +30,20 @@ function getFormattedDate() {
 }
 
 export default function HeroSection({ userName }) {
-  const [greeting, setGreeting] = useState("Welcome back");
+  const { t } = useLanguage();
+  const [greeting, setGreeting] = useState(t('greetings.welcomeBack') || "Welcome back");
   const [formattedDate, setFormattedDate] = useState("");
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setGreeting(getGreeting());
+    const hour = new Date().getHours();
+    let currentGreeting = t('greetings.evening') || "Good evening";
+    if (hour >= 5 && hour < 12) currentGreeting = t('greetings.morning') || "Good morning";
+    else if (hour >= 12 && hour < 17) currentGreeting = t('greetings.afternoon') || "Good afternoon";
+    
+    setGreeting(currentGreeting);
     setFormattedDate(getFormattedDate());
-  }, []);
+  }, [t]);
 
   return (
     <section className="relative overflow-hidden rounded-[12px] bg-surface border border-border p-6 sm:p-8 shadow-2xs select-none">
@@ -73,12 +74,12 @@ export default function HeroSection({ userName }) {
 
           {/* Headline */}
           <h1 className="text-2xl sm:text-[28px] font-semibold tracking-tight text-foreground leading-tight mb-2 font-sans">
-            {userName || "Keem"} 👋
+            {t('home.headline', { name: userName || 'Keem' }) || `${userName || "Keem"} 👋`}
           </h1>
 
           {/* Description */}
           <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed mb-5 font-normal">
-            Enterprise workspace for generating agreements, quotations, and official business documents with verified profiles and standard PDF exports.
+            {t('home.description') || "ระบบสร้างจัดการเอกสาร"}
           </p>
 
           {/* Action Buttons: 2 buttons (Create Document & Templates Catalog) */}
@@ -88,7 +89,7 @@ export default function HeroSection({ userName }) {
               className="inline-flex items-center gap-2 h-9 px-4 rounded-[6px] bg-[#6E56CF] hover:bg-[#5E47BE] text-white font-medium text-xs shadow-2xs transition-all cursor-pointer select-none"
             >
               <FilePlus size={16} weight="bold" />
-              <span>Create Document</span>
+              <span>{t('home.createDocument') || "Create Document"}</span>
             </Link>
 
             <Link
@@ -96,7 +97,7 @@ export default function HeroSection({ userName }) {
               className="inline-flex items-center gap-2 h-9 px-3.5 rounded-[6px] border border-border bg-white dark:bg-[#1E1E1E] hover:bg-muted/60 text-foreground font-medium text-xs transition-colors cursor-pointer select-none shadow-2xs"
             >
               <Copy size={16} className="text-muted-foreground" />
-              <span>Templates Catalog</span>
+              <span>{t('home.templatesCatalog') || "Templates Catalog"}</span>
             </Link>
           </div>
         </div>

@@ -42,11 +42,14 @@ import {
 } from "@/components/ui/command";
 import { Badge } from "@/components/ui/badge";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 export function TopBar() {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [openCommand, setOpenCommand] = useState(false);
+  const { t } = useLanguage();
 
   const [notifications, setNotifications] = useState([
     {
@@ -114,23 +117,23 @@ export function TopBar() {
 
   const pathname = usePathname();
   const pageTitles = {
-    "/": "Dashboard",
-    "/create": "Create Document",
+    "/": t('nav.dashboard') || "Dashboard",
+    "/create": t('nav.createDocument') || "Create Document",
     "/create/quotation": "Quotation",
     "/create/partner": "Partner Agreement",
     "/create/nda": "NDA Agreement",
     "/create/distributor": "Distributor Agreement",
     "/create/notification": "Official Notification",
     "/create/custom": "Custom Document",
-    "/documents": "My Documents",
-    "/profile-data": "Profile Data",
-    "/templates": "Templates Catalog",
+    "/documents": t('nav.myDocuments') || "My Documents",
+    "/profile-data": t('nav.dataPresets') || "Profile Data",
+    "/templates": t('nav.templates') || "Templates Catalog",
     "/history": "Sent History",
-    "/settings": "Settings",
-    "/settings/account": "Settings",
-    "/settings/general": "Settings",
-    "/settings/email": "Settings",
-    "/settings/preferences": "Settings",
+    "/settings": t('nav.settings') || "Settings",
+    "/settings/account": t('nav.settings') || "Settings",
+    "/settings/general": t('nav.settings') || "Settings",
+    "/settings/email": t('nav.settings') || "Settings",
+    "/settings/preferences": t('nav.settings') || "Settings",
   };
   const title = pageTitles[pathname] || "DocBuilder Workspace";
 
@@ -154,7 +157,7 @@ export function TopBar() {
           >
             <div className="flex items-center gap-2 truncate">
               <Search size={14} className="text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
-              <span className="truncate">Search pages...</span>
+              <span className="truncate">{t('topbar.searchPlaceholder') || "Search documents, templates, presets..."}</span>
             </div>
             <kbd className="inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] font-semibold bg-muted/60 border border-border rounded text-muted-foreground shadow-2xs shrink-0">
               <span className="text-[10px]">⌘</span>K
@@ -178,7 +181,7 @@ export function TopBar() {
             <DropdownMenuTrigger asChild>
               <button
                 className="relative h-9 w-9 rounded-lg border border-border bg-surface text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center justify-center shadow-2xs"
-                title="Notifications"
+                title={t('topbar.notifications') || "Notifications"}
               >
                 <Bell size={17} />
                 {unreadCount > 0 && (
@@ -193,7 +196,7 @@ export function TopBar() {
             >
               <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/40">
                 <DropdownMenuLabel className="p-0 font-semibold text-xs uppercase tracking-wider text-muted-foreground">
-                  Notifications
+                  {t('topbar.notifications') || "Notifications"}
                 </DropdownMenuLabel>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="text-[10px] font-normal border-primary/30 text-primary">
@@ -204,7 +207,7 @@ export function TopBar() {
                       onClick={markAllAsRead}
                       className="text-[10px] text-muted-foreground hover:text-foreground font-medium underline"
                     >
-                      Mark all as read
+                      {t('topbar.markAllRead') || "Mark all as read"}
                     </button>
                   )}
                 </div>
@@ -240,7 +243,7 @@ export function TopBar() {
 
               <div className="p-2 border-t border-border text-center bg-muted/20">
                 <Button variant="ghost" size="sm" className="w-full text-xs text-primary h-7">
-                  View all notifications
+                  {t('topbar.viewAllNotifications') || "View all notifications"}
                 </Button>
               </div>
             </DropdownMenuContent>
@@ -271,24 +274,24 @@ export function TopBar() {
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => handleSelectRoute("/settings/account")} className="cursor-pointer">
                 <User className="mr-2 h-4 w-4 text-muted-foreground" />
-                <span>Account Settings</span>
+                <span>{t('topbar.accountSettings') || "Account Settings"}</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleSelectRoute("/documents")} className="cursor-pointer">
                 <FolderOpen className="mr-2 h-4 w-4 text-muted-foreground" />
-                <span>My Documents</span>
+                <span>{t('nav.myDocuments') || "My Documents"}</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleSelectRoute("/profile-data")} className="cursor-pointer">
                 <FileText className="mr-2 h-4 w-4 text-muted-foreground" />
-                <span>Data Presets</span>
+                <span>{t('nav.dataPresets') || "Data Presets"}</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => handleSelectRoute("/settings/account")} className="cursor-pointer">
                 <Settings className="mr-2 h-4 w-4 text-muted-foreground" />
-                <span>Settings</span>
+                <span>{t('nav.settings') || "Settings"}</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => handleSelectRoute("/login")} className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer">
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>Sign out</span>
+                <span>{t('nav.signOut') || "Sign out"}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -297,7 +300,7 @@ export function TopBar() {
 
       {/* Command Search Dialog (Cmd+K) */}
       <CommandDialog open={openCommand} onOpenChange={setOpenCommand}>
-        <CommandInput placeholder="Search documents, pages, or templates..." />
+        <CommandInput placeholder={t('topbar.searchPlaceholder') || "Search documents, templates, presets..."} />
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Workspace">

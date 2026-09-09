@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   ArrowLeft,
   Undo2,
@@ -37,6 +38,7 @@ export default function EditorToolbar({
   isFormOpen,
   onToggleForm,
 }) {
+  const { t } = useLanguage();
   const [isEditingName, setIsEditingName] = useState(false);
   const [nameInput, setNameInput] = useState(docName || template?.fullName || "เอกสาร");
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
@@ -88,7 +90,7 @@ export default function EditorToolbar({
               <div
                 onClick={() => setIsEditingName(true)}
                 className="flex items-center gap-1.5 cursor-pointer hover:bg-gray-100/70 px-1 py-0.5 rounded-md transition-colors"
-                title="คลิกเพื่อแก้ไขชื่อเอกสาร"
+                title={t('toolbar.clickToRename')}
               >
                 <p className="text-sm font-bold text-gray-900 truncate max-w-[280px]">
                   {docName || template.fullName}
@@ -102,7 +104,7 @@ export default function EditorToolbar({
             {savedAt && (
               <span className="text-[11px] text-gray-400 font-normal hidden sm:inline-flex items-center gap-1">
                 <Check size={12} className="text-success-600" />
-                บันทึกเมื่อ {savedAt}
+                {t('toolbar.savedAt', { time: savedAt })}
               </span>
             )}
           </div>
@@ -131,7 +133,7 @@ export default function EditorToolbar({
             title="เปิด/ปิด แถบฟอร์มกรอกข้อมูล"
           >
             <SlidersHorizontal size={15} />
-            <span className="hidden sm:inline">{isFormOpen ? "ซ่อนฟอร์ม" : "เปิดฟอร์ม"}</span>
+            <span className="hidden sm:inline">{isFormOpen ? t('toolbar.hideForm') : t('toolbar.showForm')}</span>
           </button>
         )}
         {/* ปุ่ม สร้าง Rev ใหม่ (เมื่อเป็นเอกสารที่บันทึกแล้ว) */}
@@ -159,7 +161,7 @@ export default function EditorToolbar({
           title="บันทึกเอกสารนี้ไว้ในคลัง 'เอกสารของฉัน'"
         >
           {isSaving ? <Loader2 size={16} className="animate-spin text-[#7C3AED]" /> : <Save size={16} className="text-[#646469]" />}
-          <span className="hidden sm:inline">{isSaving ? "กำลังบันทึก..." : "บันทึกเอกสาร"}</span>
+          <span className="hidden sm:inline">{isSaving ? t('actions.saving') : t('toolbar.saveDocument')}</span>
         </button>
 
         {/* ปุ่ม Preview */}
@@ -168,7 +170,7 @@ export default function EditorToolbar({
           className="flex items-center gap-2 h-10 px-4 rounded-[10px] border border-[#E5E5E5] text-[#171717] text-sm font-medium hover:bg-[#F6F6FA] transition-colors"
         >
           <Eye size={16} />
-          <span className="hidden sm:inline">Preview</span>
+          <span className="hidden sm:inline">{t('actions.preview')}</span>
         </button>
 
         {/* ปุ่ม Multi-Format Export (PDF, HTML, WebP) */}
@@ -281,11 +283,12 @@ export default function EditorToolbar({
 }
 
 function StatusBadge({ status }) {
+  const { t } = useLanguage();
   if (status.isComplete) {
     return (
       <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#17682F]">
         <span className="w-1.5 h-1.5 rounded-full bg-[#239742]" />
-        กรอกข้อมูลครบแล้ว
+        {t('toolbar.allFieldsFilled')}
       </span>
     );
   }

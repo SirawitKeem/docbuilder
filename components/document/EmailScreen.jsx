@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   ArrowLeft,
   Mail,
@@ -37,6 +38,7 @@ export default function EmailScreen({
   onBack,
   onSent,
 }) {
+  const { t } = useLanguage();
   const [to, setTo] = useState("");
   const [subject, setSubject] = useState(defaultSubject || "");
   const [message, setMessage] = useState(
@@ -170,7 +172,7 @@ export default function EmailScreen({
             <div>
               <div className="mb-2">
                 <h3 className="text-sm font-bold text-gray-900">
-                  1. ผู้รับ (Recipient Email) <span className="text-red-500">*</span>
+                  {t('email.recipientLabel')}
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">กรอกอีเมลของผู้รับที่ต้องการส่งเอกสาร</p>
               </div>
@@ -192,7 +194,7 @@ export default function EmailScreen({
             <div>
               <div className="mb-2">
                 <h3 className="text-sm font-bold text-gray-900">
-                  2. หัวข้อ (Subject) <span className="text-red-500">*</span>
+                  {t('email.subjectLabel')}
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">กำหนดหัวข้อของอีเมลที่ผู้รับจะเห็น</p>
               </div>
@@ -212,7 +214,7 @@ export default function EmailScreen({
             {/* Step 3: Email Message */}
             <div>
               <div className="mb-2">
-                <h3 className="text-sm font-bold text-gray-900">3. ข้อความ (Message)</h3>
+                <h3 className="text-sm font-bold text-gray-900">{t('email.messageLabel')}</h3>
                 <p className="text-xs text-gray-500 mt-0.5">เขียนข้อความเพิ่มเติมที่ต้องการส่งถึงผู้รับ</p>
               </div>
               <div className="relative">
@@ -235,7 +237,7 @@ export default function EmailScreen({
             <div>
               <div className="mb-2">
                 <h3 className="text-sm font-bold text-gray-900">
-                  4. รูปแบบไฟล์แนบ (Attachment Format) <span className="text-red-500">*</span>
+                  {t('email.attachmentLabel')}
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">เลือกรูปแบบเอกสารที่ต้องการแนบไปกับอีเมล</p>
               </div>
@@ -337,7 +339,7 @@ export default function EmailScreen({
                         </>
                       ) : (
                         <span>
-                          {selectedFormat === "pdf" ? "PDF Document • พร้อมแนบส่ง" :
+                          {selectedFormat === "pdf" ? t('email.pdfBadge') :
                            selectedFormat === "html" ? "HTML Webpage (Standalone) • พร้อมแนบส่ง" :
                            "WebP High-Res Image • พร้อมแนบส่ง"}
                         </span>
@@ -374,7 +376,7 @@ export default function EmailScreen({
                 className="w-full sm:w-auto px-7 h-11 rounded-[10px] bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-sm font-semibold hover:opacity-95 disabled:opacity-50 flex items-center justify-center gap-2 shrink-0 transition-opacity cursor-pointer"
               >
                 {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
-                {sending ? "กำลังส่ง..." : "ส่งอีเมล"}
+                {sending ? t('email.sending') : t('email.confirmSend')}
               </button>
             </div>
 

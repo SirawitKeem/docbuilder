@@ -1,5 +1,6 @@
 import { Inter, Noto_Sans_Thai } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { LanguageProvider } from "@/context/LanguageContext";
 import "./globals.css";
 
 const inter = Inter({
@@ -24,9 +25,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="th" suppressHydrationWarning className="h-full">
       <body className={`${inter.variable} ${notoSansThai.variable} font-sans bg-background text-foreground antialiased min-h-full`}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          {children}
-        </ThemeProvider>
+        <LanguageProvider>
+          <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+            {children}
+          </ThemeProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

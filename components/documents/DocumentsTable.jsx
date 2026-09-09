@@ -34,6 +34,8 @@ import DocumentHeader from "@/components/document/DocumentHeader";
 import DocumentFooter from "@/components/document/DocumentFooter";
 import EmailScreen from "@/components/document/EmailScreen";
 import { extractDocumentMeta } from "@/lib/data/documentMeta";
+import { useLanguage } from "@/context/LanguageContext";
+import DeleteConfirmModal from "@/components/common/DeleteConfirmModal";
 
 const getCounterpartyName = (doc) => {
   if (doc?.values) {
@@ -71,7 +73,7 @@ function getContractFullName(doc) {
   if (doc.templateId === "partner" || doc.name?.includes("Partner")) {
     return "Partner Distribution Agreement";
   }
-  if (doc.templateId === "notification" || doc.name?.includes("Notification") || doc.name?.includes("หนังสือแจ้ง")) {
+  if (doc.templateId === "notification" || doc.name?.includes("หนังสือแจ้ง") || doc.name?.toLowerCase().includes("notification")) {
     return "Headquarters Relocation Notice";
   }
   return doc.templateName || "Agreement";
@@ -98,6 +100,7 @@ export default function DocumentsTable({
   allowEdit = true,
   onRefresh,
 }) {
+  const { t } = useLanguage();
   const router = useRouter();
   const [deletingId, setDeletingId] = useState(null);
   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
@@ -434,18 +437,19 @@ export default function DocumentsTable({
                   title={isAllSelected ? "Deselect all" : "Select all"}
                 />
               </th>
-              <th className="px-4 py-3.5">Document Name</th>
-              <th className="w-[24%] px-4 py-3.5">{showSentTo ? "Sent To" : "Counterparty / Recipient"}</th>
-              <th className="w-[18%] px-4 py-3.5">Template</th>
-              <th className="w-[14%] px-4 py-3.5">Last Modified</th>
-              <th className="w-[110px] px-4 py-3.5 text-right whitespace-nowrap">Actions</th>
+              <th className="px-4 py-3.5">{t('table.documentName')}</th>
+              <th className="w-[24%] px-4 py-3.5">{showSentTo ? t('table.sentTo') : t('table.counterparty')}</th>
+              <th className="w-[18%] px-4 py-3.5">{t('table.template')}</th>
+              <th className="w-[14%] px-4 py-3.5">{t('table.lastModified')}</th>
+              <th className="w-[110px] px-4 py-3.5 text-right whitespace-nowrap">{t('table.actions')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {documents.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-5 py-12 text-center text-muted-foreground">
-                  {emptyMessage}
+                  <div className="font-medium mb-1">{t('table.noDocuments')}</div>
+                  <div className="text-xs">{emptyMessage || t('table.noDocumentsDesc')}</div>
                 </td>
               </tr>
             ) : (
@@ -552,19 +556,6 @@ export default function DocumentsTable({
                         </button>
 
                         <button
-                          onClick={() => {
-                            const targetPath = doc.templateId === "quotation"
-                              ? `/create/quotation?id=${doc.id}`
-                              : `/create/${doc.templateId || "nda"}?id=${doc.id}`;
-                            router.push(targetPath);
-                          }}
-                          className="p-1.5 rounded-[6px] hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-                          title="Edit document"
-                        >
-                          <Edit3 size={15} />
-                        </button>
-
-                        <button
                           onClick={(e) => {
                             e.stopPropagation();
                             if (openMenuId === doc.id) {
@@ -586,168 +577,168 @@ export default function DocumentsTable({
                             ref={menuRef}
                             className={`absolute right-4 ${isNearBottom ? "bottom-10" : "top-11"} w-56 bg-surface text-foreground rounded-xl shadow-xl border border-border py-1 z-50 animate-in fade-in zoom-in-95 duration-100 opacity-100 text-left`}
                           >
-                            <button
-                              onClick={() => {
-                                setOpenMenuId(null);
-                                handleDuplicate(doc);
-                              }}
-                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
-                            >
-                              <Copy size={14} className="text-muted-foreground" />
-                              <span>Duplicate document</span>
-                            </button>
-                            <button
-                              onClick={() => {
-                                setOpenMenuId(null);
-                                setRenameDoc(doc);
-                              }}
-                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
-                            >
-                              <Pencil size={14} className="text-muted-foreground" />
-                              <span>Rename document</span>
-                            </button>
-                            <button
-                              onClick={() => {
-                                setOpenMenuId(null);
-                                setEmailDoc(doc);
-                              }}
-                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
-                            >
-                              <Send size={14} className="text-muted-foreground" />
-                              <span>Send email</span>
-                            </button>
-                            {allowEdit && (
                               <button
                                 onClick={() => {
                                   setOpenMenuId(null);
-                                  const targetPath = doc.templateId === "quotation"
-                                    ? `/create/quotation?id=${doc.id}`
-                                    : `/create/${doc.templateId || "nda"}?id=${doc.id}`;
-                                  router.push(targetPath);
+                                  handleDuplicate(doc);
                                 }}
                                 className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
                               >
-                                <Edit3 size={14} className="text-muted-foreground" />
-                                <span>Edit document</span>
+                                <Copy size={14} className="text-muted-foreground" />
+                                <span>{t('actions.duplicateDocument') || "Duplicate document"}</span>
                               </button>
-                            )}
-                            {doc.templateId === "quotation" && (
-                              <>
+                              <button
+                                onClick={() => {
+                                  setOpenMenuId(null);
+                                  setRenameDoc(doc);
+                                }}
+                                className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
+                              >
+                                <Pencil size={14} className="text-muted-foreground" />
+                                <span>{t('actions.renameDocument') || "Rename document"}</span>
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setOpenMenuId(null);
+                                  setEmailDoc(doc);
+                                }}
+                                className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
+                              >
+                                <Send size={14} className="text-muted-foreground" />
+                                <span>{t('actions.sendEmail') || "Send email"}</span>
+                              </button>
+                              {allowEdit && (
                                 <button
-                                  onClick={() => handleCreateReceiptFromQuotation(doc)}
-                                  className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
-                                >
-                                  <Receipt size={14} className="text-muted-foreground" />
-                                  <span>Generate receipt</span>
-                                </button>
-                                <button
-                                  onClick={async () => {
+                                  onClick={() => {
                                     setOpenMenuId(null);
-                                    try {
-                                      const res = await fetch(`/api/quotations/${doc.id}/revision`, { method: "POST" });
-                                      if (!res.ok) throw new Error();
-                                      const newRev = await res.json();
-                                      router.push(`/create/quotation?id=${newRev.id}`);
-                                    } catch {
-                                      alert("Failed to create revision");
-                                    }
+                                    const targetPath = doc.templateId === "quotation"
+                                      ? `/create/quotation?id=${doc.id}`
+                                      : `/create/${doc.templateId || "nda"}?id=${doc.id}`;
+                                    router.push(targetPath);
                                   }}
                                   className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
                                 >
-                                  <CopyPlus size={14} className="text-muted-foreground" />
-                                  <span>Create new revision</span>
+                                  <Edit3 size={14} className="text-muted-foreground" />
+                                  <span>{t('actions.editDocument') || "Edit document"}</span>
                                 </button>
-                              </>
-                            )}
-
-                            {/* 📥 Unified Export Item (Click to expand 3 formats) */}
-                            <div className="border-t border-border/50 my-1 pt-1">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setExpandedExportDocId(expandedExportDocId === doc.id ? null : doc.id);
-                                }}
-                                className={`w-full text-left px-3.5 py-2 text-xs font-medium flex items-center justify-between transition-colors whitespace-nowrap cursor-pointer ${
-                                  expandedExportDocId === doc.id
-                                    ? "bg-primary/10 text-primary font-semibold"
-                                    : "text-foreground hover:bg-muted"
-                                }`}
-                              >
-                                <div className="flex items-center gap-2.5">
-                                  <Download
-                                    size={14}
-                                    className={expandedExportDocId === doc.id ? "text-primary" : "text-muted-foreground"}
-                                  />
-                                  <span>Export document</span>
-                                </div>
-                                <ChevronRight
-                                  size={13}
-                                  className={`text-muted-foreground transition-transform duration-200 ${
-                                    expandedExportDocId === doc.id ? "rotate-90 text-primary" : ""
-                                  }`}
-                                />
-                              </button>
-
-                              {expandedExportDocId === doc.id && (
-                                <div className="mx-2 my-1 p-1 bg-muted/60 rounded-lg border border-border/60 space-y-0.5 animate-in fade-in slide-in-from-top-1 duration-150">
-                                  <button
-                                    onClick={() => {
-                                      setOpenMenuId(null);
-                                      setExpandedExportDocId(null);
-                                      handlePrintOrExport(doc);
-                                    }}
-                                    className="w-full text-left px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-background hover:shadow-xs rounded-md flex items-center gap-2 transition-all whitespace-nowrap cursor-pointer"
-                                  >
-                                    <FileText size={13} className="text-red-500 shrink-0" />
-                                    <span>Export PDF / Print</span>
-                                  </button>
-                                  <button
-                                    onClick={() => {
-                                      setOpenMenuId(null);
-                                      setExpandedExportDocId(null);
-                                      handleDirectExport(doc, "html");
-                                    }}
-                                    disabled={downloadingDocId === `${doc.id}_html`}
-                                    className="w-full text-left px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-background hover:shadow-xs rounded-md flex items-center gap-2 transition-all whitespace-nowrap cursor-pointer disabled:opacity-50"
-                                  >
-                                    {downloadingDocId === `${doc.id}_html` ? (
-                                      <Loader2 size={13} className="animate-spin text-blue-500 shrink-0" />
-                                    ) : (
-                                      <Globe size={13} className="text-blue-500 shrink-0" />
-                                    )}
-                                    <span>Export HTML (.html)</span>
-                                  </button>
-                                  <button
-                                    onClick={() => {
-                                      setOpenMenuId(null);
-                                      setExpandedExportDocId(null);
-                                      handleDirectExport(doc, "webp");
-                                    }}
-                                    disabled={downloadingDocId === `${doc.id}_webp`}
-                                    className="w-full text-left px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-background hover:shadow-xs rounded-md flex items-center gap-2 transition-all whitespace-nowrap cursor-pointer disabled:opacity-50"
-                                  >
-                                    {downloadingDocId === `${doc.id}_webp` ? (
-                                      <Loader2 size={13} className="animate-spin text-purple-500 shrink-0" />
-                                    ) : (
-                                      <ImageIcon size={13} className="text-purple-500 shrink-0" />
-                                    )}
-                                    <span>Export WebP (.webp)</span>
-                                  </button>
-                                </div>
                               )}
+                              {doc.templateId === "quotation" && (
+                                <>
+                                  <button
+                                    onClick={() => handleCreateReceiptFromQuotation(doc)}
+                                    className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
+                                  >
+                                    <Receipt size={14} className="text-muted-foreground" />
+                                    <span>Generate receipt</span>
+                                  </button>
+                                  <button
+                                    onClick={async () => {
+                                      setOpenMenuId(null);
+                                      try {
+                                        const res = await fetch(`/api/quotations/${doc.id}/revision`, { method: "POST" });
+                                        if (!res.ok) throw new Error();
+                                        const newRev = await res.json();
+                                        router.push(`/create/quotation?id=${newRev.id}`);
+                                      } catch {
+                                        alert("Failed to create revision");
+                                      }
+                                    }}
+                                    className="w-full text-left px-3.5 py-2 text-xs font-medium text-foreground hover:bg-muted flex items-center gap-2.5 transition-colors whitespace-nowrap cursor-pointer"
+                                  >
+                                    <CopyPlus size={14} className="text-muted-foreground" />
+                                    <span>Create new revision</span>
+                                  </button>
+                                </>
+                              )}
+  
+                              {/* 📥 Unified Export Item (Click to expand 3 formats) */}
+                              <div className="border-t border-border/50 my-1 pt-1">
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setExpandedExportDocId(expandedExportDocId === doc.id ? null : doc.id);
+                                  }}
+                                  className={`w-full text-left px-3.5 py-2 text-xs font-medium flex items-center justify-between transition-colors whitespace-nowrap cursor-pointer ${
+                                    expandedExportDocId === doc.id
+                                      ? "bg-primary/10 text-primary font-semibold"
+                                      : "text-foreground hover:bg-muted"
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-2.5">
+                                    <Download
+                                      size={14}
+                                      className={expandedExportDocId === doc.id ? "text-primary" : "text-muted-foreground"}
+                                    />
+                                    <span>Export document</span>
+                                  </div>
+                                  <ChevronRight
+                                    size={13}
+                                    className={`text-muted-foreground transition-transform duration-200 ${
+                                      expandedExportDocId === doc.id ? "rotate-90 text-primary" : ""
+                                    }`}
+                                  />
+                                </button>
+  
+                                {expandedExportDocId === doc.id && (
+                                  <div className="mx-2 my-1 p-1 bg-muted/60 rounded-lg border border-border/60 space-y-0.5 animate-in fade-in slide-in-from-top-1 duration-150">
+                                    <button
+                                      onClick={() => {
+                                        setOpenMenuId(null);
+                                        setExpandedExportDocId(null);
+                                        handlePrintOrExport(doc);
+                                      }}
+                                      className="w-full text-left px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-background hover:shadow-xs rounded-md flex items-center gap-2 transition-all whitespace-nowrap cursor-pointer"
+                                    >
+                                      <FileText size={13} className="text-red-500 shrink-0" />
+                                      <span>{t('actions.exportPdfPrint') || "Export PDF / Print"}</span>
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        setOpenMenuId(null);
+                                        setExpandedExportDocId(null);
+                                        handleDirectExport(doc, "html");
+                                      }}
+                                      disabled={downloadingDocId === `${doc.id}_html`}
+                                      className="w-full text-left px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-background hover:shadow-xs rounded-md flex items-center gap-2 transition-all whitespace-nowrap cursor-pointer disabled:opacity-50"
+                                    >
+                                      {downloadingDocId === `${doc.id}_html` ? (
+                                        <Loader2 size={13} className="animate-spin text-blue-500 shrink-0" />
+                                      ) : (
+                                        <Globe size={13} className="text-blue-500 shrink-0" />
+                                      )}
+                                      <span>Export HTML (.html)</span>
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        setOpenMenuId(null);
+                                        setExpandedExportDocId(null);
+                                        handleDirectExport(doc, "webp");
+                                      }}
+                                      disabled={downloadingDocId === `${doc.id}_webp`}
+                                      className="w-full text-left px-2.5 py-1.5 text-xs font-medium text-foreground hover:bg-background hover:shadow-xs rounded-md flex items-center gap-2 transition-all whitespace-nowrap cursor-pointer disabled:opacity-50"
+                                    >
+                                      {downloadingDocId === `${doc.id}_webp` ? (
+                                        <Loader2 size={13} className="animate-spin text-purple-500 shrink-0" />
+                                      ) : (
+                                        <ImageIcon size={13} className="text-purple-500 shrink-0" />
+                                      )}
+                                      <span>Export WebP (.webp)</span>
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                              <button
+                                onClick={() => {
+                                  setOpenMenuId(null);
+                                  requestSingleDelete(doc);
+                                }}
+                                disabled={deletingId === doc.id}
+                                className="w-full text-left px-3.5 py-2 text-xs font-medium text-destructive hover:bg-destructive/10 flex items-center gap-2.5 transition-colors disabled:opacity-40 whitespace-nowrap cursor-pointer"
+                              >
+                                <Trash2 size={14} className="text-destructive" />
+                                <span>{t('actions.deleteDocument') || "Delete document"}</span>
+                              </button>
                             </div>
-                            <button
-                              onClick={() => {
-                                setOpenMenuId(null);
-                                requestSingleDelete(doc);
-                              }}
-                              disabled={deletingId === doc.id}
-                              className="w-full text-left px-3.5 py-2 text-xs font-medium text-destructive hover:bg-destructive/10 flex items-center gap-2.5 transition-colors disabled:opacity-40 whitespace-nowrap cursor-pointer"
-                            >
-                              <Trash2 size={14} className="text-destructive" />
-                              <span>Delete document</span>
-                            </button>
-                          </div>
                         )}
                       </div>
                     </td>
@@ -759,69 +750,32 @@ export default function DocumentsTable({
         </table>
       </div>
 
-      {/* 1-to-1 Match Pop-Up Confirmation Delete Modal UI */}
-      {deleteModalState && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-surface border border-border rounded-[24px] shadow-2xl w-full max-w-sm p-6 flex flex-col items-center text-center space-y-4 animate-in fade-in zoom-in-95 duration-150 relative overflow-hidden">
-            
-            {/* Trash Can Illustration with Sparkles */}
-            <div className="relative flex flex-col items-center justify-center pt-2">
-              <div className="relative w-24 h-20 flex items-center justify-center">
-                {/* Decorative Sparkles */}
-                <span className="absolute top-0 left-1 text-[#FF3B30] text-sm font-bold animate-pulse">+</span>
-                <span className="absolute top-3 right-2 text-[#FF3B30] text-xs font-bold">+</span>
-                <span className="absolute bottom-5 left-0 text-[#FF3B30] text-xs font-bold">+</span>
-                <span className="absolute top-8 right-0 w-2 h-2 rounded-full bg-[#FF3B30]/60" />
-                <span className="absolute bottom-3 right-4 w-1.5 h-1.5 rounded-full bg-[#FF3B30]/70" />
-                
-                {/* Trash Icon Badge */}
-                <div className="w-16 h-16 rounded-2xl bg-red-500/10 flex items-center justify-center text-[#FF3B30]">
-                  <Trash2 size={36} className="text-[#FF3B30] stroke-[2.2]" />
-                </div>
-              </div>
-              
-              {/* Soft Oval Shadow Ground */}
-              <div className="w-24 h-2 bg-red-500/20 rounded-full blur-[2px] mt-1" />
-            </div>
-
-            {/* Title & Description */}
-            <div className="space-y-1.5">
-              <h3 className="text-lg font-bold text-foreground tracking-tight">
-                {deleteModalState.type === "bulk"
-                  ? `Delete ${deleteModalState.count} selected documents?`
-                  : "Delete document?"}
-              </h3>
-              <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
-                {deleteModalState.type === "bulk"
-                  ? `All ${deleteModalState.count} selected documents will be permanently removed from workspace. This action cannot be undone.`
-                  : `Document "${deleteModalState.docName}" will be permanently removed from workspace. This action cannot be undone.`}
-              </p>
-            </div>
-
-            {/* 2-Column Action Buttons matching reference image */}
-            <div className="grid grid-cols-2 gap-3 pt-3 w-full">
-              <button
-                onClick={() => setDeleteModalState(null)}
-                className="w-full h-11 rounded-2xl border border-[#FF3B30] text-[#FF3B30] bg-surface hover:bg-[#FF3B30]/10 text-sm font-bold transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => {
-                  if (deleteModalState.type === "bulk") {
-                    confirmBulkDelete();
-                  } else {
-                    confirmSingleDelete(deleteModalState.id);
-                  }
-                }}
-                className="w-full h-11 rounded-2xl bg-[#FF3B30] hover:bg-[#E03126] text-white text-sm font-bold transition-colors shadow-xs flex items-center justify-center cursor-pointer"
-              >
-                <span className="text-white font-bold">Delete</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Reusable Delete Confirmation Modal */}
+      <DeleteConfirmModal
+        isOpen={Boolean(deleteModalState)}
+        onClose={() => setDeleteModalState(null)}
+        onConfirm={() => {
+          if (!deleteModalState) return;
+          if (deleteModalState.type === "bulk") {
+            confirmBulkDelete();
+          } else {
+            confirmSingleDelete(deleteModalState.id);
+          }
+        }}
+        isLoading={Boolean(deletingId || isBulkDeleting)}
+        title={
+          deleteModalState?.type === "bulk"
+            ? `Delete ${deleteModalState.count} selected documents?`
+            : t('deleteModal.title') || "Delete document?"
+        }
+        description={
+          deleteModalState?.type === "bulk"
+            ? `All ${deleteModalState.count} selected documents will be permanently removed from workspace. This action cannot be undone.`
+            : t('deleteModal.message') || `Document "${deleteModalState?.docName}" will be permanently removed from workspace. This action cannot be undone.`
+        }
+        cancelText={t('actions.cancel') || "Cancel"}
+        confirmText={t('actions.delete') || "Delete"}
+      />
 
       {/* Pop-Up Modal Preview */}
       {previewDoc && (

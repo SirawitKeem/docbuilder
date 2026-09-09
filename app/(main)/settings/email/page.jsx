@@ -8,8 +8,10 @@ import {
   SettingsCard,
 } from "@/components/settings/SettingsUI";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function EmailSettingsPage() {
+  const { t } = useLanguage();
   const [emailStatus, setEmailStatus] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -34,14 +36,14 @@ export default function EmailSettingsPage() {
   return (
     <div className="mx-auto max-w-[640px] pb-12 text-left">
       <SettingsPageHeader
-        title="Email Integration"
-        description="Monitor outgoing SMTP email transport services for delivering agreements and documents."
+        title={t('email.title') || "Email Integration"}
+        description={t('email.description') || "Monitor outgoing SMTP email transport services for delivering agreements and documents."}
       />
 
       <div className="space-y-8">
         <div>
           <SettingsSectionHeading
-            title="Service status"
+            title={t('email.smtpConfig') || "Service status"}
             description="Active mail transport provider and delivery health status."
           />
           <SettingsCard className="p-6 space-y-4">
@@ -64,7 +66,7 @@ export default function EmailSettingsPage() {
                 <XCircle size={18} className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                 <div className="space-y-1">
                   <p className="text-xs font-semibold text-amber-900 dark:text-amber-300">
-                    SMTP server not configured
+                    {t('email.notConfigured') || "SMTP server not configured"}
                   </p>
                   <p className="text-[11px] text-amber-800/80 dark:text-amber-400 leading-relaxed">
                     System operates in Mock Delivery Mode. Sent emails will be logged locally without reaching external recipients until configured.
@@ -85,7 +87,7 @@ export default function EmailSettingsPage() {
 
               <div className="space-y-1">
                 <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
-                  Sender Address
+                  {t('email.senderEmail') || "Sender Address"}
                 </span>
                 <p className="text-xs font-medium text-foreground">
                   {emailStatus?.email || "notifications@crestzendo.com"}
@@ -107,7 +109,7 @@ export default function EmailSettingsPage() {
                 className="text-xs h-8 gap-1.5"
               >
                 <RefreshCw size={13} className={loading ? "animate-spin" : ""} />
-                Check status
+                {t('email.testConnection') || "Check status"}
               </Button>
             </div>
           </SettingsCard>

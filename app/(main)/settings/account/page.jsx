@@ -9,8 +9,10 @@ import {
 } from "@/components/settings/SettingsUI";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function AccountSettingsPage() {
+  const { t } = useLanguage();
   const [name, setName] = useState("Crest Zendo Admin");
   const [saved, setSaved] = useState(false);
 
@@ -23,16 +25,16 @@ export default function AccountSettingsPage() {
   return (
     <div className="mx-auto max-w-[640px] pb-12 text-left">
       <SettingsPageHeader
-        title="Account & Security"
-        description="Manage your personal profile identity, workspace role, and security credentials."
+        title={t('account.title') || "Account & Security"}
+        description={t('account.description') || "Manage your personal profile identity, workspace role, and security credentials."}
       />
 
       <form onSubmit={handleSave} className="space-y-8">
         {/* Personal Profile Section */}
         <div>
           <SettingsSectionHeading
-            title="Personal profile"
-            description="Your name and identity displayed across documents and revisions."
+            title={t('account.profileInfo') || "Personal profile"}
+            description={t('account.updatePhoto') || "Your name and identity displayed across documents and revisions."}
           />
           <SettingsCard className="p-6 space-y-6">
             <div className="flex items-center gap-4">
@@ -45,7 +47,7 @@ export default function AccountSettingsPage() {
                 <div className="flex items-center gap-2">
                   <h3 className="text-sm font-semibold text-foreground leading-none">{name}</h3>
                   <span className="px-2 py-0.5 rounded-full bg-violet-50 dark:bg-violet-950/50 text-primary text-[10px] font-bold border border-violet-100 dark:border-violet-900/40">
-                    Admin
+                    {t('account.roleTitle') || "Admin"}
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground">admin@crestzendo.com</p>
@@ -55,7 +57,7 @@ export default function AccountSettingsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-border/50">
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-foreground">
-                  Full name
+                  {t('account.fullName') || "Full name"}
                 </label>
                 <input
                   type="text"
@@ -67,7 +69,7 @@ export default function AccountSettingsPage() {
 
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-foreground">
-                  Email address
+                  {t('account.emailAddress') || "Email address"}
                 </label>
                 <input
                   type="email"
@@ -83,13 +85,13 @@ export default function AccountSettingsPage() {
         {/* Security Credentials Section */}
         <div>
           <SettingsSectionHeading
-            title="Sign-in credentials"
-            description="Ensure your account is protected with a secure password."
+            title={t('account.signInCredentials') || "Sign-in credentials"}
+            description={t('account.changePassword') || "Ensure your account is protected with a secure password."}
           />
           <SettingsCard className="p-6 space-y-4">
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold text-foreground">
-                Current password
+                {t('account.currentPassword') || "Current password"}
               </label>
               <input
                 type="password"
@@ -101,7 +103,7 @@ export default function AccountSettingsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-foreground">
-                  New password
+                  {t('account.newPassword') || "New password"}
                 </label>
                 <input
                   type="password"
@@ -112,7 +114,7 @@ export default function AccountSettingsPage() {
 
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-foreground">
-                  Confirm new password
+                  {t('account.confirmPassword') || "Confirm new password"}
                 </label>
                 <input
                   type="password"
@@ -125,7 +127,7 @@ export default function AccountSettingsPage() {
             <div className="flex items-center justify-between pt-4 border-t border-border/50">
               <span className="text-[11px] text-muted-foreground flex items-center gap-1.5">
                 <ShieldCheck size={14} className="text-emerald-600" />
-                Two-factor authentication is active
+                {t('account.twoFactor') || "Two-factor authentication is active"}
               </span>
               <div className="flex items-center gap-2">
                 <Button
@@ -142,7 +144,7 @@ export default function AccountSettingsPage() {
                   size="sm"
                   className="text-xs h-8 primary-button"
                 >
-                  Save changes
+                  {t('account.saveChanges') || "Save changes"}
                 </Button>
               </div>
             </div>

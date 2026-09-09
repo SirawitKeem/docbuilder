@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import TemplateCard from "@/components/templates/TemplateCard";
 import TemplateSelectModal from "@/components/templates/TemplateSelectModal";
 import { getTemplates } from "@/lib/data/templates";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function CreateDocumentPage() {
+  const { t } = useLanguage();
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -19,9 +21,9 @@ export default function CreateDocumentPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">Create Document</h1>
+      <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">{t('create.title') || "Create Document"}</h1>
       <p className="text-sm text-muted-foreground mb-8">
-        Select a template category to start generating your business document
+        {t('create.description') || "Select a template category to start generating your business document"}
       </p>
 
       {loading ? (

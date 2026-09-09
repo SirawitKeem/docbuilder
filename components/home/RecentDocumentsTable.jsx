@@ -5,9 +5,11 @@ import Link from "next/link";
 import { ArrowRight, ClockCounterClockwise } from "@phosphor-icons/react";
 import DocumentsTable from "@/components/documents/DocumentsTable";
 import { getRecentDocuments } from "@/lib/data/documents";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function RecentDocumentsTable() {
   const [documents, setDocuments] = useState([]);
+  const { t } = useLanguage();
 
   useEffect(() => {
     getRecentDocuments(5).then(setDocuments);
@@ -21,8 +23,8 @@ export default function RecentDocumentsTable() {
             <ClockCounterClockwise size={16} weight="bold" />
           </div>
           <div>
-            <h2 className="text-base font-semibold text-foreground leading-tight">Recently Updated Documents</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">Documents and contracts recently created or modified in workspace</p>
+            <h2 className="text-base font-semibold text-foreground leading-tight">{t('home.recentDocuments') || "Recently Updated Documents"}</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">{t('home.recentDocumentsDesc') || "Documents and contracts recently created or modified in workspace"}</p>
           </div>
         </div>
 
@@ -30,7 +32,7 @@ export default function RecentDocumentsTable() {
           href="/documents"
           className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:underline transition-colors"
         >
-          <span>View all documents</span>
+          <span>{t('home.viewAllDocuments') || "View all documents"}</span>
           <ArrowRight size={13} weight="bold" />
         </Link>
       </div>

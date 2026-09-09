@@ -22,9 +22,9 @@ import {
   CreditCard,
   Folder,
   Sparkles,
-  FolderOpen,
   ChevronRight,
 } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export const EXTENDED_ICON_MAP = {
   FileText: { icon: FileText, label: "เอกสารทั่วไป" },
@@ -46,20 +46,20 @@ export const EXTENDED_ICON_MAP = {
 };
 
 const COLOR_OPTIONS = [
-  { id: "purple", name: "ม่วง (Purple)", hex: "#7C3AED", bg: "bg-[#F5F3FF]", text: "text-[#7C3AED]", border: "border-[#EDE9FE]" },
-  { id: "blue", name: "น้ำเงิน (Blue)", hex: "#2563EB", bg: "bg-[#EFF6FF]", text: "text-[#2563EB]", border: "border-[#DBEAFE]" },
-  { id: "emerald", name: "เขียว (Emerald)", hex: "#059669", bg: "bg-[#ECFDF5]", text: "text-[#059669]", border: "border-[#D1FAE5]" },
-  { id: "amber", name: "ส้ม/ทอง (Amber)", hex: "#D97706", bg: "bg-[#FFFBEB]", text: "text-[#D97706]", border: "border-[#FEF3C7]" },
-  { id: "rose", name: "ชมพู/แดง (Rose)", hex: "#E11D48", bg: "bg-[#FFF1F2]", text: "text-[#E11D48]", border: "border-[#FFE4E6]" },
-  { id: "indigo", name: "คราม (Indigo)", hex: "#4F46E5", bg: "bg-[#EEF2FF]", text: "text-[#4F46E5]", border: "border-[#E0E7FF]" },
-  { id: "cyan", name: "ฟ้า (Cyan)", hex: "#0891B2", bg: "bg-[#ECFEFF]", text: "text-[#0891B2]", border: "border-[#CFFAFE]" },
+  { id: "purple", name: "Purple", nameTH: "ม่วง", hex: "#7C3AED", bg: "bg-[#F5F3FF]", text: "text-[#7C3AED]", border: "border-[#EDE9FE]" },
+  { id: "blue", name: "Blue", nameTH: "น้ำเงิน", hex: "#2563EB", bg: "bg-[#EFF6FF]", text: "text-[#2563EB]", border: "border-[#DBEAFE]" },
+  { id: "emerald", name: "Emerald", nameTH: "เขียว", hex: "#059669", bg: "bg-[#ECFDF5]", text: "text-[#059669]", border: "border-[#D1FAE5]" },
+  { id: "amber", name: "Amber", nameTH: "ส้ม/ทอง", hex: "#D97706", bg: "bg-[#FFFBEB]", text: "text-[#D97706]", border: "border-[#FEF3C7]" },
+  { id: "rose", name: "Rose", nameTH: "ชมพู", hex: "#E11D48", bg: "bg-[#FFF1F2]", text: "text-[#E11D48]", border: "border-[#FFE4E6]" },
+  { id: "indigo", name: "Indigo", nameTH: "คราม", hex: "#4F46E5", bg: "bg-[#EEF2FF]", text: "text-[#4F46E5]", border: "border-[#E0E7FF]" },
+  { id: "cyan", name: "Cyan", nameTH: "ฟ้า", hex: "#0891B2", bg: "bg-[#ECFEFF]", text: "text-[#0891B2]", border: "border-[#CFFAFE]" },
 ];
 
 export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
+  const { t, locale } = useLanguage();
   const [formData, setFormData] = useState({
     name: "",
     fullName: "",
-    description: "",
     icon: "FileText",
     color: "purple",
     badge: "หมวดใหม่",
@@ -76,7 +76,7 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name.trim()) {
-      setErrorMsg("กรุณาระบุชื่อประเภทเอกสาร (ภาษาอังกฤษ)");
+      setErrorMsg(t('createCategory.errorEmptyName') || "Please enter a category name");
       return;
     }
 
@@ -90,7 +90,7 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
         body: JSON.stringify({
           name: formData.name.trim(),
           fullName: formData.fullName.trim() || formData.name.trim(),
-          description: formData.description.trim() || `คลังรวบรวมเทมเพลตสำหรับ ${formData.name.trim()}`,
+          description: "",
           icon: formData.icon,
           color: formData.color,
           badge: formData.badge || "หมวดใหม่",
@@ -99,7 +99,7 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.error || "เกิดข้อผิดพลาดในการสร้างหมวดหมู่");
+        throw new Error(err.error || t('createCategory.errorSave') || "Failed to create category");
       }
 
       if (onCreated) {
@@ -107,27 +107,27 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
       }
       onClose();
     } catch (err) {
-      setErrorMsg(err.message || "เกิดข้อผิดพลาดในการบันทึก");
+      setErrorMsg(err.message || t('createCategory.errorSave') || "Failed to save");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
-      <div className="bg-white rounded-3xl border border-gray-200 shadow-2xl w-full max-w-4xl max-h-[92vh] flex flex-col overflow-hidden text-left animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-surface border border-border rounded-[14px] shadow-lg w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden text-left animate-in fade-in zoom-in-98 duration-150">
         {/* Modal Header */}
-        <div className="px-6 py-4.5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-purple-50/50 via-white to-gray-50/30">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#F5F3FF] text-[#7C3AED] border border-[#EDE9FE] flex items-center justify-center shadow-2xs">
-              <FolderPlus size={20} />
+        <div className="px-5 py-3.5 border-b border-border flex items-center justify-between bg-surface">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-[8px] bg-primary/10 text-primary border border-primary/20 flex items-center justify-center shadow-2xs">
+              <FolderPlus size={18} />
             </div>
             <div>
-              <h2 className="text-base sm:text-lg font-black text-gray-900 leading-tight">
-                เพิ่มประเภทเอกสารใหม่
+              <h2 className="text-sm font-semibold text-foreground leading-tight">
+                {t('createCategory.title') || "New Category"}
               </h2>
-              <p className="text-xs text-gray-500 mt-0.5">
-                สร้างโฟลเดอร์หมวดหมู่สำหรับจัดเก็บและรวบรวมเทมเพลตเอกสารประเภทใหม่
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {t('createCategory.description') || "Create a new folder category to organize document templates"}
               </p>
             </div>
           </div>
@@ -135,75 +135,62 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-200/60 flex items-center justify-center transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-[6px] text-muted-foreground hover:text-foreground hover:bg-muted flex items-center justify-center transition-colors cursor-pointer"
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
 
         {/* Modal Form Body */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-5 space-y-5">
           {errorMsg && (
-            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-xs font-semibold text-red-700">
+            <div className="p-3 rounded-[8px] bg-destructive/10 border border-destructive/20 text-xs font-medium text-destructive">
               {errorMsg}
             </div>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
             {/* Left: Input Form (7 cols) */}
             <div className="lg:col-span-7 space-y-4">
               {/* Category English / Main Name */}
               <div>
-                <label className="block text-xs font-bold text-gray-800 mb-1.5">
-                  ชื่อประเภทเอกสาร (ภาษาอังกฤษ / ชื่อหลัก) <span className="text-red-500">*</span>
+                <label className="block text-xs font-semibold text-foreground mb-1.5">
+                  {t('createCategory.nameLabel') || "Category Name (English / Primary)"}{" "}
+                  <span className="text-destructive">*</span>
                 </label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="เช่น Purchase Order, Invoice, MOU, Certificate..."
-                  className="w-full h-10 px-3.5 rounded-xl border border-gray-200 bg-white text-xs font-bold text-gray-900 outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all"
+                  placeholder={t('createCategory.namePlaceholder') || "e.g. Purchase Order, Invoice, MOU..."}
+                  className="w-full h-9 px-3 rounded-[8px] border border-border bg-surface text-xs font-medium text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-primary focus:ring-1 focus:ring-primary/20 shadow-2xs"
                 />
-                <p className="text-[11px] text-gray-400 mt-1">
-                  ใช้แสดงเป็นหัวข้อหลักของการ์ดโฟลเดอร์ในคลังเทมเพลต
+                <p className="text-[11px] text-muted-foreground mt-1">
+                  {t('createCategory.nameHelper') || "Main title for this category in the templates catalog"}
                 </p>
               </div>
 
               {/* Category Full Thai Name */}
               <div>
-                <label className="block text-xs font-bold text-gray-800 mb-1.5">
-                  ชื่อภาษาไทยเต็ม (Thai Full Name)
+                <label className="block text-xs font-semibold text-foreground mb-1.5">
+                  {t('createCategory.fullNameLabel') || "Thai Full Name"}
                 </label>
                 <input
                   type="text"
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  placeholder="เช่น ใบสั่งซื้อสินค้า (Purchase Order), ใบแจ้งหนี้..."
-                  className="w-full h-10 px-3.5 rounded-xl border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all"
-                />
-              </div>
-
-              {/* Description */}
-              <div>
-                <label className="block text-xs font-bold text-gray-800 mb-1.5">
-                  คำอธิบายวัตถุประสงค์และการใช้งาน (Description)
-                </label>
-                <textarea
-                  rows={2}
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="อธิบายการใช้งาน เช่น เอกสารสำหรับสั่งซื้อสินค้าและบริการ พร้อมระบบเงื่อนไขการส่งมอบ..."
-                  className="w-full p-3 rounded-xl border border-gray-200 bg-white text-xs text-gray-800 outline-none focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] transition-all resize-none"
+                  placeholder={t('createCategory.fullNamePlaceholder') || "e.g. ใบสั่งซื้อสินค้า (Purchase Order)..."}
+                  className="w-full h-9 px-3 rounded-[8px] border border-border bg-surface text-xs text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-primary focus:ring-1 focus:ring-primary/20 shadow-2xs"
                 />
               </div>
 
               {/* Icon Picker */}
               <div>
-                <label className="block text-xs font-bold text-gray-800 mb-2">
-                  เลือกไอคอนประจำประเภทเอกสาร
+                <label className="block text-xs font-semibold text-foreground mb-2">
+                  {t('createCategory.selectIcon') || "Select Category Icon"}
                 </label>
-                <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
+                <div className="grid grid-cols-8 gap-1.5">
                   {Object.entries(EXTENDED_ICON_MAP).map(([key, item]) => {
                     const Icon = item.icon;
                     const isSelected = formData.icon === key;
@@ -212,14 +199,14 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
                         key={key}
                         type="button"
                         onClick={() => setFormData({ ...formData, icon: key })}
-                        className={`h-11 rounded-xl flex flex-col items-center justify-center transition-all cursor-pointer ${
+                        className={`h-9 rounded-[8px] flex items-center justify-center transition-all cursor-pointer border ${
                           isSelected
-                            ? "bg-[#7C3AED] text-white shadow-xs scale-105"
-                            : "bg-gray-50 hover:bg-gray-100 text-gray-600 border border-gray-200/80"
+                            ? "bg-primary/10 text-primary border-primary ring-1 ring-primary/20 shadow-2xs"
+                            : "bg-surface hover:bg-muted text-muted-foreground border-border"
                         }`}
                         title={item.label}
                       >
-                        <Icon size={18} />
+                        <Icon size={16} />
                       </button>
                     );
                   })}
@@ -228,28 +215,29 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
 
               {/* Color Theme Presets */}
               <div>
-                <label className="block text-xs font-bold text-gray-800 mb-2">
-                  ธีมสีประจำประเภท
+                <label className="block text-xs font-semibold text-foreground mb-2">
+                  {t('createCategory.colorTheme') || "Color Theme"}
                 </label>
-                <div className="flex items-center flex-wrap gap-2">
+                <div className="flex items-center flex-wrap gap-1.5">
                   {COLOR_OPTIONS.map((c) => {
                     const isSelected = formData.color === c.id;
+                    const colorLabel = locale === "th" ? c.nameTH : c.name;
                     return (
                       <button
                         key={c.id}
                         type="button"
                         onClick={() => setFormData({ ...formData, color: c.id })}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-medium transition-all cursor-pointer border ${
                           isSelected
-                            ? `${c.bg} ${c.text} ${c.border} ring-2 ring-offset-1 ring-[#7C3AED] shadow-2xs`
-                            : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50"
+                            ? `${c.bg} ${c.text} ${c.border} ring-1 ring-primary/30 shadow-2xs`
+                            : "bg-surface text-muted-foreground border-border hover:bg-muted hover:text-foreground"
                         }`}
                       >
                         <span
-                          className="w-3 h-3 rounded-full shrink-0"
+                          className="w-2.5 h-2.5 rounded-full shrink-0"
                           style={{ backgroundColor: c.hex }}
                         />
-                        <span>{c.name.split(" ")[0]}</span>
+                        <span>{colorLabel}</span>
                       </button>
                     );
                   })}
@@ -257,77 +245,77 @@ export default function CreateCategoryModal({ isOpen, onClose, onCreated }) {
               </div>
             </div>
 
-            {/* Right: Real-time Live Card Preview (5 cols) */}
+            {/* Right: Live Preview (5 cols) */}
             <div className="lg:col-span-5 space-y-3">
-              <div className="flex items-center justify-between px-1">
-                <span className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
-                  <Sparkles size={14} className="text-[#7C3AED]" />
-                  <span>ตัวอย่างการ์ดในคลังเทมเพลต (Live Preview)</span>
+              <div className="flex items-center justify-between px-0.5">
+                <span className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                  <Sparkles size={13} className="text-primary" />
+                  <span>{t('createCategory.livePreview') || "Live Preview"}</span>
                 </span>
               </div>
 
-              {/* Preview Card */}
-              <div className="bg-white rounded-2xl border-2 border-dashed border-[#7C3AED]/40 p-6 shadow-sm flex flex-col justify-between group text-left relative overflow-hidden bg-gradient-to-b from-purple-50/20 to-white">
-                <div>
-                  <div className="flex items-center justify-between gap-2 mb-4">
-                    <div
-                      className={`w-12 h-12 rounded-2xl ${selectedColorStyle.bg} ${selectedColorStyle.text} ${selectedColorStyle.border} border flex items-center justify-center shadow-2xs`}
-                    >
-                      <SelectedIconComp size={22} />
-                    </div>
-
-                    <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-purple-50 text-[#7C3AED] border border-purple-100/80">
-                      0 รูปแบบเทมเพลต
-                    </span>
+              {/* Authentic Minimal Clean Preview Card matching /templates */}
+              <div className="bg-surface border border-border rounded-[12px] shadow-2xs p-4 flex flex-col justify-between h-40 select-none text-left relative overflow-hidden">
+                {/* Top: Icon + Count Badge */}
+                <div className="flex items-center justify-between gap-2">
+                  <div
+                    className={`w-9 h-9 rounded-[6px] ${selectedColorStyle.bg} ${selectedColorStyle.text} ${selectedColorStyle.border} border flex items-center justify-center shadow-2xs`}
+                  >
+                    <SelectedIconComp size={18} />
                   </div>
 
-                  <h3 className="text-base font-black text-gray-900 leading-snug">
-                    {formData.name || "ชื่อประเภทเอกสารใหม่"}
-                  </h3>
-                  <p className="text-xs text-gray-500 mt-2 line-clamp-2 leading-relaxed">
-                    {formData.description || "คลังรวบรวมเทมเพลตสำหรับเอกสารประเภทนี้"}
-                  </p>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-medium border border-border bg-muted/70 text-muted-foreground tabular-nums">
+                    {t('createCategory.templateCount') || "0 templates"}
+                  </span>
                 </div>
 
-                <div className="pt-4 mt-5 border-t border-gray-100 flex items-center justify-between text-xs font-bold text-[#7C3AED]">
-                  <span className="flex items-center gap-1.5">
-                    <FolderOpen size={15} />
-                    <span>เปิดดูคลังเทมเพลต</span>
-                  </span>
-                  <ChevronRight size={16} />
+                {/* Title */}
+                <div className="my-auto">
+                  <h3 className="font-semibold text-foreground text-sm line-clamp-1 font-sans">
+                    {formData.name || (t('createCategory.previewTitle') || "New Category Title")}
+                  </h3>
+                </div>
+
+                {/* Bottom CTA */}
+                <div className="pt-2 border-t border-border/50 flex items-center justify-between text-xs font-medium text-muted-foreground">
+                  <span>{t('createCategory.browse') || "Browse templates"}</span>
+                  <div className="size-5 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
+                    <ChevronRight size={11} />
+                  </div>
                 </div>
               </div>
 
-              <div className="p-3.5 rounded-xl bg-gray-50 border border-gray-200/80 text-[11px] text-gray-500 leading-relaxed">
-                💡 <strong>คำแนะนำ:</strong> เมื่อสร้างประเภทเอกสารใหม่แล้ว ระบบจะสร้างโฟลเดอร์หมวดหมู่ในคลังเทมเพลตให้ทันที จากนั้นคุณสามารถกดเข้าไปเพื่อสร้างเทมเพลตใหม่แบบกระดาษเปล่า A4 ในหมวดหมู่นี้ได้ทันที
+              {/* Tip Callout */}
+              <div className="p-3 rounded-[8px] bg-muted/40 border border-border text-[11px] text-muted-foreground leading-relaxed">
+                💡 {t('createCategory.tip') || "Once created, the category folder will be ready in your templates catalog immediately."}
               </div>
             </div>
           </div>
 
           {/* Modal Actions */}
-          <div className="pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
+          <div className="pt-3 border-t border-border flex items-center justify-end gap-2 bg-surface">
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-xs font-bold text-gray-700 transition-colors cursor-pointer"
+              className="h-9 px-3.5 rounded-[8px] border border-border bg-surface hover:bg-muted text-xs font-medium text-foreground transition-all cursor-pointer"
             >
-              ยกเลิก
+              {t('createCategory.cancel') || t('actions.cancel') || "Cancel"}
             </button>
 
             <button
               type="submit"
               disabled={loading || !formData.name.trim()}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] disabled:opacity-50 text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
+              className="primary-button h-9 px-4 rounded-[8px] text-white text-xs font-medium shadow-xs hover:opacity-95 disabled:opacity-50 transition-all cursor-pointer inline-flex items-center gap-1.5"
             >
               {loading ? (
                 <>
-                  <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>กำลังสร้างประเภทเอกสาร...</span>
+                  <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>{t('createCategory.creating') || "Creating..."}</span>
                 </>
               ) : (
                 <>
-                  <Plus size={15} />
-                  <span>สร้างประเภทเอกสารใหม่</span>
+                  <Plus size={14} />
+                  <span>{t('createCategory.createBtn') || "Create Category"}</span>
                 </>
               )}
             </button>

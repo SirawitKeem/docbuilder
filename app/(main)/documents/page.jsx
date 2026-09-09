@@ -7,13 +7,17 @@ import {
   Plus,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  X,
 } from "lucide-react";
 import { getDocumentHistory } from "@/lib/data/documents";
 import DocumentsTable from "@/components/documents/DocumentsTable";
 import { getTemplates } from "@/lib/data/templates";
 import { extractDocumentMeta } from "@/lib/data/documentMeta";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function DocumentsPage() {
+  const { t } = useLanguage();
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [allTemplatesList, setAllTemplatesList] = useState([]);
@@ -81,10 +85,10 @@ export default function DocumentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">
-            My Documents
+            {t('documents.title') || "My Documents"}
           </h1>
           <p className="text-xs sm:text-sm text-muted-foreground">
-            Manage and organize all business contracts, agreements, and export logs
+            {t('documents.description') || "View, filter, and manage all your generated agreements and official documents."}
           </p>
         </div>
 
@@ -93,56 +97,73 @@ export default function DocumentsPage() {
           className="primary-button inline-flex items-center gap-2 h-9 px-4 rounded-[6px] text-white font-medium text-xs shadow-xs hover:opacity-95 transition-all cursor-pointer select-none"
         >
           <Plus size={15} strokeWidth={2.5} />
-          <span>New Document</span>
+          <span>{t('documents.newDocument') || "New Document"}</span>
         </Link>
       </div>
 
-      {/* Toolbar & Filter Bar Container */}
-      <div className="bg-surface border border-border rounded-2xl p-4 shadow-xs space-y-3">
-        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+      {/* Toolbar & Filter Bar Container (Minimal & Clean) */}
+      <div className="bg-surface border border-border rounded-xl p-3 shadow-2xs">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           
-          {/* Tabs: All Documents vs Export & Sent Logs */}
-          <div className="flex items-center gap-1 p-1 bg-muted/60 rounded-xl border border-border/70 self-start sm:self-auto overflow-x-auto">
+          {/* Segmented Tabs: All Documents vs Export History */}
+          <div className="inline-flex items-center h-9 p-1 bg-muted/50 rounded-[8px] border border-border/60 self-start sm:self-auto shrink-0">
             <button
+              type="button"
               onClick={() => {
                 setActiveTab("all");
                 setCurrentPage(1);
               }}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+              className={`h-7 px-3 rounded-[6px] text-xs font-medium transition-all inline-flex items-center gap-2 select-none cursor-pointer ${
                 activeTab === "all"
-                  ? "bg-surface text-foreground shadow-2xs border border-border"
+                  ? "bg-surface text-foreground shadow-2xs font-semibold"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <span>All Documents</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-muted text-[10px] font-bold text-muted-foreground">
+              <span>{t('status.all')}</span>
+              <span
+                className={`px-1.5 py-0.5 rounded-full text-[10px] font-semibold tabular-nums leading-none transition-colors ${
+                  activeTab === "all"
+                    ? "bg-muted text-foreground"
+                    : "bg-muted/70 text-muted-foreground"
+                }`}
+              >
                 {allCount}
               </span>
             </button>
 
             <button
+              type="button"
               onClick={() => {
                 setActiveTab("exported");
                 setCurrentPage(1);
               }}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+              className={`h-7 px-3 rounded-[6px] text-xs font-medium transition-all inline-flex items-center gap-2 select-none cursor-pointer ${
                 activeTab === "exported"
-                  ? "bg-surface text-foreground shadow-2xs border border-border"
+                  ? "bg-surface text-foreground shadow-2xs font-semibold"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              <span>Export History</span>
-              <span className="px-1.5 py-0.2 rounded-full bg-muted text-[10px] font-bold text-muted-foreground">
+              <span>{t('documents.exportHistory') || "Export History"}</span>
+              <span
+                className={`px-1.5 py-0.5 rounded-full text-[10px] font-semibold tabular-nums leading-none transition-colors ${
+                  activeTab === "exported"
+                    ? "bg-muted text-foreground"
+                    : "bg-muted/70 text-muted-foreground"
+                }`}
+              >
                 {exportedCount}
               </span>
             </button>
           </div>
 
-          {/* Search Input & Template Filter */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 flex-1 max-w-xl">
+          {/* Search Input & Template Filter Controls */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1 max-w-xl">
             {/* Search Input */}
             <div className="relative flex-1">
-              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Search
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/70 pointer-events-none"
+              />
               <input
                 type="text"
                 value={searchQuery}
@@ -150,27 +171,46 @@ export default function DocumentsPage() {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                placeholder="Search documents by name, number, counterparty, template..."
-                className="w-full h-9 pl-9 pr-3 rounded-xl border border-border bg-muted/20 text-xs text-foreground outline-none focus:border-primary focus:bg-surface transition-all placeholder:text-muted-foreground/70"
+                placeholder={t('documents.searchPlaceholder')}
+                className="w-full h-9 pl-9 pr-8 rounded-[8px] border border-border bg-surface text-xs text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/10"
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setCurrentPage(1);
+                  }}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-0.5 rounded-sm transition-colors cursor-pointer"
+                  title="Clear search"
+                >
+                  <X size={13} />
+                </button>
+              )}
             </div>
 
-            {/* Template Filter Select */}
-            <select
-              value={templateFilter}
-              onChange={(e) => {
-                setTemplateFilter(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="h-9 px-3 rounded-xl border border-border bg-surface text-xs font-medium text-foreground outline-none cursor-pointer shrink-0"
-            >
-              <option value="all">All Templates</option>
-              {allTemplatesList.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.name}
-                </option>
-              ))}
-            </select>
+            {/* Template Filter Select with Custom Arrow */}
+            <div className="relative shrink-0 sm:w-44">
+              <select
+                value={templateFilter}
+                onChange={(e) => {
+                  setTemplateFilter(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="w-full h-9 pl-3.5 pr-8.5 rounded-[8px] border border-border bg-surface text-xs font-medium text-foreground outline-none cursor-pointer appearance-none transition-all hover:bg-muted/20 focus:border-primary focus:ring-2 focus:ring-primary/10 truncate"
+              >
+                <option value="all">{t('documents.allTemplates') || t('documents.templateFilter')}</option>
+                {allTemplatesList.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                size={14}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -190,7 +230,7 @@ export default function DocumentsPage() {
           {/* Pagination Controls */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-2 text-xs text-muted-foreground">
             <div>
-              Showing <strong className="font-semibold text-foreground">{totalItems > 0 ? startIndex + 1 : 0} - {Math.min(startIndex + pageSize, totalItems)}</strong> of <strong className="font-semibold text-foreground">{totalItems}</strong> documents
+              {t('pagination.showing', { start: totalItems > 0 ? startIndex + 1 : 0, end: Math.min(startIndex + pageSize, totalItems), total: totalItems })}
             </div>
 
             <div className="flex items-center gap-3">

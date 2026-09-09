@@ -30,20 +30,22 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const navigationGroups = [
+import { useLanguage } from "@/context/LanguageContext";
+
+const getNavigationGroups = (t) => [
   {
-    title: "WORKSPACE",
+    title: t('nav.workspace') || "WORKSPACE",
     items: [
-      { name: "Dashboard", href: "/", icon: SquaresFour },
-      { name: "Create Document", href: "/create", icon: FilePlus, highlight: true },
-      { name: "My Documents", href: "/documents", icon: Folder },
-      { name: "Templates", href: "/templates", icon: Copy },
+      { name: t('nav.dashboard') || "Dashboard", href: "/", icon: SquaresFour, key: "Dashboard" },
+      { name: t('nav.createDocument') || "Create Document", href: "/create", icon: FilePlus, highlight: true, key: "Create Document" },
+      { name: t('nav.myDocuments') || "My Documents", href: "/documents", icon: Folder, key: "My Documents" },
+      { name: t('nav.templates') || "Templates", href: "/templates", icon: Copy, key: "Templates" },
     ],
   },
   {
-    title: "DATA & ASSETS",
+    title: t('nav.dataAndAssets') || "DATA & ASSETS",
     items: [
-      { name: "Data Presets", href: "/profile-data", icon: FileText },
+      { name: t('nav.dataPresets') || "Data Presets", href: "/profile-data", icon: FileText, key: "Data Presets" },
     ],
   },
 ];
@@ -52,6 +54,9 @@ export function AppSidebar() {
   const pathname = usePathname();
   const { state, toggleSidebar } = useSidebar();
   const settingsMode = pathname.startsWith("/settings");
+  const { t } = useLanguage();
+
+  const navigationGroups = getNavigationGroups(t);
 
   return (
     <Sidebar
@@ -68,7 +73,7 @@ export function AppSidebar() {
           <SidebarHeader className="h-14 flex flex-row items-center justify-between px-4 border-b-0 shrink-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
             <Link
               href="/"
-              aria-label="Workspace home"
+              aria-label={t('nav.workspace') || "Workspace home"}
               className="flex items-center gap-2.5 min-w-0 group-data-[collapsible=icon]:hidden outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar rounded-[6px]"
             >
               <BrandMark />
@@ -79,8 +84,8 @@ export function AppSidebar() {
             <button
               type="button"
               onClick={toggleSidebar}
-              aria-label={state === "collapsed" ? "Expand sidebar" : "Collapse sidebar"}
-              title={state === "collapsed" ? "Expand sidebar" : "Collapse sidebar"}
+              aria-label={state === "collapsed" ? (t('nav.expandSidebar') || "Expand sidebar") : (t('nav.collapseSidebar') || "Collapse sidebar")}
+              title={state === "collapsed" ? (t('nav.expandSidebar') || "Expand sidebar") : (t('nav.collapseSidebar') || "Collapse sidebar")}
               className="size-8 rounded-[6px] text-muted-foreground hover:text-foreground hover:bg-[#EEEEEE] dark:hover:bg-[#242424] transition-colors shrink-0 flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring cursor-pointer"
             >
               <SidebarSimple
@@ -106,7 +111,7 @@ export function AppSidebar() {
                       const Icon = item.icon;
 
                       return (
-                        <SidebarMenuItem key={item.name} className="flex justify-center">
+                        <SidebarMenuItem key={item.key} className="flex justify-center">
                           <SidebarMenuButton
                             asChild
                             isActive={isActive}
@@ -157,7 +162,7 @@ export function AppSidebar() {
                 <SidebarMenuButton
                   asChild
                   isActive={settingsMode}
-                  tooltip="Settings"
+                  tooltip={t('nav.settings') || "Settings"}
                   className={`relative h-9 text-sm leading-5 rounded-[6px] transition-colors duration-100 outline-none select-none focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar ${
                     settingsMode
                       ? "!bg-white !text-[#171717] font-medium shadow-card hover:!bg-white hover:!text-[#171717] dark:!bg-[#2B2B2B] dark:!text-[#FAFAFA] dark:shadow-none dark:hover:!bg-[#2B2B2B]"
@@ -183,7 +188,7 @@ export function AppSidebar() {
                       }`}
                     />
                     <span className="truncate group-data-[collapsible=icon]:hidden leading-normal py-0.5">
-                      Settings
+                      {t('nav.settings') || "Settings"}
                     </span>
                   </Link>
                 </SidebarMenuButton>
@@ -192,7 +197,7 @@ export function AppSidebar() {
               <SidebarMenuItem className="flex justify-center">
                 <SidebarMenuButton
                   asChild
-                  tooltip="Sign out"
+                  tooltip={t('nav.signOut') || "Sign out"}
                   className="relative h-9 text-sm leading-5 rounded-[6px] transition-colors duration-100 outline-none select-none font-normal text-[#525252] hover:bg-[#EEEEEE] hover:text-destructive dark:text-[#A3A3A3] dark:hover:bg-[#242424] dark:hover:text-destructive focus-visible:ring-2 focus-visible:ring-sidebar-ring group-data-[collapsible=icon]:size-9 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
                 >
                   <Link
@@ -204,7 +209,7 @@ export function AppSidebar() {
                       className="size-[18px] shrink-0 text-[#737373] group-hover:text-destructive transition-colors"
                     />
                     <span className="truncate group-data-[collapsible=icon]:hidden leading-normal py-0.5">
-                      Sign out
+                      {t('nav.signOut') || "Sign out"}
                     </span>
                   </Link>
                 </SidebarMenuButton>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   X,
   Check,
@@ -168,6 +169,7 @@ function RealTemplatePreview({ categoryId, scale = 0.151 }) {
 
 export default function TemplateSelectModal({ category, onClose }) {
   const router = useRouter();
+  const { t } = useLanguage();
 
   const [subTemplates, setSubTemplates] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -262,7 +264,7 @@ export default function TemplateSelectModal({ category, onClose }) {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search templates..."
+              placeholder={t('templateSelect.searchPlaceholder') || "Search templates..."}
               className="w-full pl-8.5 pr-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#7C3AED]/20 focus:border-[#7C3AED] transition-all"
             />
           </div>
@@ -375,7 +377,7 @@ export default function TemplateSelectModal({ category, onClose }) {
                 <div className="space-y-1.5 pt-2.5 border-t border-gray-200/60 text-xs">
                   <div className="flex items-center gap-1.5 font-bold text-gray-800 mb-1">
                     <Info size={13} className="text-gray-400" />
-                    <span>Template Specifications</span>
+                    <span>{t('templateSelect.specs') || "Template Specifications"}</span>
                   </div>
 
                   {selectedTemplate.pageCount && (
@@ -401,7 +403,7 @@ export default function TemplateSelectModal({ category, onClose }) {
                 {/* Highlights Block */}
                 {selectedTemplate.features && selectedTemplate.features.length > 0 && (
                   <div className="space-y-1.5 pt-2 border-t border-gray-200/60 text-xs">
-                    <div className="font-bold text-gray-800">Key Features</div>
+                    <div className="font-bold text-gray-800">{t('templateSelect.features') || "Key Features"}</div>
                     <div className="space-y-1">
                       {selectedTemplate.features.map((feat, idx) => (
                         <div key={idx} className="flex items-start gap-1.5 text-gray-600 font-normal text-[11.5px]">
@@ -423,7 +425,7 @@ export default function TemplateSelectModal({ category, onClose }) {
             onClick={onClose}
             className="px-4 py-2 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold transition-colors cursor-pointer shadow-2xs"
           >
-            Cancel
+            {t('actions.cancel') || "Cancel"}
           </button>
 
           <button
@@ -431,7 +433,7 @@ export default function TemplateSelectModal({ category, onClose }) {
             className="px-5 py-2 rounded-xl bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-xs font-semibold hover:opacity-95 transition-opacity shadow-sm flex items-center gap-1.5 cursor-pointer"
           >
             <FileText size={14} />
-            <span>Use Template</span>
+            <span>{t('templates.useTemplate') || "Use Template"}</span>
             <ArrowRight size={13} />
           </button>
         </div>

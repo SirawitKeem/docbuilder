@@ -11,10 +11,12 @@ import {
   Lock,
 } from "lucide-react";
 import CorporateSeal from "@/components/document/CorporateSeal";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function VerificationPage() {
   const params = useParams();
   const id = params?.id;
+  const { t } = useLanguage();
 
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
@@ -45,7 +47,7 @@ export default function VerificationPage() {
             CZ
           </div>
           <div>
-            <p className="text-xs font-black text-gray-900 leading-tight">ระบบตรวจสอบความถูกต้องเอกสาร</p>
+            <p className="text-xs font-black text-gray-900 leading-tight">{t('verification.title') || "ระบบตรวจสอบความถูกต้องเอกสาร"}</p>
             <p className="text-[10px] text-gray-400">Crest Zendo Document Verification Portal</p>
           </div>
         </div>
@@ -54,7 +56,7 @@ export default function VerificationPage() {
           href="/"
           className="text-xs font-bold text-[#7C3AED] hover:underline flex items-center gap-1"
         >
-          <span>เข้าสู่ระบบหลัก</span>
+          <span>{t('verification.enterSystem') || "เข้าสู่ระบบหลัก"}</span>
         </Link>
       </div>
 
@@ -63,7 +65,7 @@ export default function VerificationPage() {
         {loading ? (
           <div className="p-16 text-center space-y-3">
             <div className="w-10 h-10 border-4 border-[#7C3AED] border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-xs text-gray-500 font-medium">กำลังตรวจสอบความถูกต้องของเอกสาร...</p>
+            <p className="text-xs text-gray-500 font-medium">{t('verification.checking') || "กำลังตรวจสอบความถูกต้องของเอกสาร..."}</p>
           </div>
         ) : errorMsg || !data ? (
           <div className="p-8 text-center space-y-4">
@@ -71,7 +73,7 @@ export default function VerificationPage() {
               <ShieldAlert size={32} />
             </div>
             <div>
-              <h1 className="text-lg font-black text-gray-900">ไม่สามารถยืนยันเอกสารนี้ได้</h1>
+              <h1 className="text-lg font-black text-gray-900">{t('verification.cannotVerify') || "ไม่สามารถยืนยันเอกสารนี้ได้"}</h1>
               <p className="text-xs text-gray-500 mt-1 max-w-sm mx-auto">
                 {errorMsg || "ไม่พบเอกสารนี้ในฐานข้อมูล หรือรหัสการยืนยันไม่ถูกต้อง โปรดติดต่อผู้ออกเอกสาร"}
               </p>
@@ -94,7 +96,7 @@ export default function VerificationPage() {
                     Verified Authenticity
                   </span>
                   <h1 className="text-base sm:text-lg font-black mt-0.5">
-                    เอกสารของแท้ได้รับการรับรอง
+                    {t('verification.verified') || "เอกสารของแท้ได้รับการรับรอง"}
                   </h1>
                 </div>
               </div>
@@ -109,7 +111,7 @@ export default function VerificationPage() {
               {/* Document Identity */}
               <div className="space-y-1 pb-4 border-b border-gray-100">
                 <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                  ชื่อเอกสารที่ออก
+                  {t('verification.documentName') || "ชื่อเอกสารที่ออก"}
                 </span>
                 <h2 className="text-base font-black text-gray-900">{data.name}</h2>
                 <p className="text-xs text-gray-500 font-medium">{data.templateName}</p>
@@ -120,7 +122,7 @@ export default function VerificationPage() {
                 <div className="p-3.5 rounded-2xl bg-gray-50/80 border border-gray-100 space-y-1">
                   <span className="text-[10px] font-bold text-gray-400 flex items-center gap-1">
                     <Building2 size={12} className="text-[#7C3AED]" />
-                    <span>นิติบุคคลผู้ออกเอกสาร</span>
+                    <span>{t('verification.issuingEntity') || "นิติบุคคลผู้ออกเอกสาร"}</span>
                   </span>
                   <p className="font-bold text-gray-900">{data.organization?.nameTh}</p>
                   <p className="text-[11px] text-gray-500">เลขภาษี: {data.organization?.taxId}</p>
@@ -129,11 +131,11 @@ export default function VerificationPage() {
                 <div className="p-3.5 rounded-2xl bg-gray-50/80 border border-gray-100 space-y-1">
                   <span className="text-[10px] font-bold text-gray-400 flex items-center gap-1">
                     <UserCheck size={12} className="text-emerald-600" />
-                    <span>ผู้มีอำนาจอนุมัติและลงนาม</span>
+                    <span>{t('verification.authorizedSignatory') || "ผู้มีอำนาจอนุมัติและลงนาม"}</span>
                   </span>
                   <p className="font-bold text-gray-900">{data.approvedBy}</p>
                   <p className="text-[11px] text-gray-500">
-                    อนุมัติเมื่อ: {new Date(data.approvedAt).toLocaleDateString("th-TH", {
+                    {t('verification.approvedAt') || "อนุมัติเมื่อ: "}{new Date(data.approvedAt).toLocaleDateString("th-TH", {
                       year: "numeric",
                       month: "long",
                       day: "numeric",
@@ -150,7 +152,7 @@ export default function VerificationPage() {
                     <span>Verification Token (รหัสป้องกันการปลอมแปลง)</span>
                   </span>
                   <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-                    Active Valid
+                    {t('verification.activeValid') || "Active Valid"}
                   </span>
                 </div>
                 <p className="font-mono text-xs text-purple-800 break-all select-all font-bold bg-white p-2.5 rounded-xl border border-purple-200/80">

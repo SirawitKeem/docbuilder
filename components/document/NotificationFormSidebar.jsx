@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import {
@@ -18,9 +18,11 @@ import {
   formatEffectiveDateBadge,
   getTodayIsoDate,
 } from "@/lib/utils/dateFormatter";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function NotificationFormSidebar({ template, isOpen }) {
   const { values, setField } = useDocumentFields();
+  const { t } = useLanguage();
 
   if (!isOpen) return null;
 
@@ -58,7 +60,7 @@ export default function NotificationFormSidebar({ template, isOpen }) {
               <Megaphone size={18} />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-gray-900 leading-none">กรอกข้อมูลหนังสือแจ้ง</h2>
+              <h2 className="text-sm font-bold text-gray-900 leading-none">{t('notificationForm.title') || "กรอกข้อมูลหนังสือแจ้ง"}</h2>
               <span className="text-[11px] text-gray-500">{template?.fullName || "หนังสือแจ้งและประกาศ"}</span>
             </div>
           </div>
@@ -102,7 +104,7 @@ export default function NotificationFormSidebar({ template, isOpen }) {
         <div className="space-y-3 p-3.5 rounded-xl border border-gray-100 bg-[#FAFAFC]">
           <div className="flex items-center gap-2 text-xs font-bold text-gray-800">
             <Calendar size={15} className="text-rose-600" />
-            <span>1. ข้อมูลหนังสือและวันที่ออกเอกสาร</span>
+            <span>{t('notificationForm.section1') || "1. ข้อมูลหนังสือและวันที่ออกเอกสาร"}</span>
           </div>
 
           {/* Smart Date Picker for Document Date */}
@@ -164,7 +166,7 @@ export default function NotificationFormSidebar({ template, isOpen }) {
           <div className="flex items-center justify-between text-xs font-bold text-gray-800">
             <div className="flex items-center gap-2">
               <Clock size={15} className="text-rose-600" />
-              <span>2. วันที่มีผลบังคับใช้ (Effective Date)</span>
+              <span>{t('notificationForm.section2') || "2. วันที่มีผลบังคับใช้ (Effective Date)"}</span>
             </div>
             <div className="flex items-center gap-1">
               <span className="text-[10px] text-rose-600 font-normal">เลือกปฏิทิน:</span>
@@ -180,7 +182,7 @@ export default function NotificationFormSidebar({ template, isOpen }) {
           {/* Thai Effective Date */}
           <div className="space-y-1">
             <label className="text-[11px] font-semibold text-gray-600">
-              วันที่มีผล (ภาษาไทย) <span className="text-red-500">*</span>
+              {t('notificationForm.effectiveDateTH') || "วันที่มีผล (ภาษาไทย)"} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -194,7 +196,7 @@ export default function NotificationFormSidebar({ template, isOpen }) {
           {/* English Effective Date */}
           <div className="space-y-1">
             <label className="text-[11px] font-semibold text-gray-600">
-              วันที่มีผล (ภาษาอังกฤษ) <span className="text-red-500">*</span>
+              {t('notificationForm.effectiveDateEN') || "Effective Date (English)"} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -210,12 +212,12 @@ export default function NotificationFormSidebar({ template, isOpen }) {
         <div className="space-y-3 p-3.5 rounded-xl border border-gray-100 bg-[#FAFAFC]">
           <div className="flex items-center gap-2 text-xs font-bold text-gray-800">
             <Building2 size={15} className="text-gray-600" />
-            <span>3. ที่อยู่เดิม (Previous Address)</span>
+            <span>{t('notificationForm.section3') || "3. ที่อยู่เดิม (Previous Address)"}</span>
           </div>
 
           <div className="space-y-1">
             <label className="text-[11px] font-semibold text-gray-600">
-              ที่อยู่เดิม (ภาษาไทย) <span className="text-red-500">*</span>
+              {t('notificationForm.prevAddressTH') || "ที่อยู่เดิม (ภาษาไทย)"} <span className="text-red-500">*</span>
             </label>
             <textarea
               rows={2}
@@ -228,7 +230,7 @@ export default function NotificationFormSidebar({ template, isOpen }) {
 
           <div className="space-y-1">
             <label className="text-[11px] font-semibold text-gray-600">
-              Previous Address (ภาษาอังกฤษ) <span className="text-red-500">*</span>
+              {t('notificationForm.prevAddressEN') || "Previous Address (ภาษาอังกฤษ)"} <span className="text-red-500">*</span>
             </label>
             <textarea
               rows={2}
@@ -249,7 +251,7 @@ export default function NotificationFormSidebar({ template, isOpen }) {
 
           <div className="space-y-1">
             <label className="text-[11px] font-semibold text-gray-600">
-              ที่อยู่ใหม่ (ภาษาไทย) <span className="text-red-500">*</span>
+              {t('notificationForm.newAddressTH') || "ที่อยู่ใหม่ (ภาษาไทย)"} <span className="text-red-500">*</span>
             </label>
             <textarea
               rows={2}
@@ -262,7 +264,7 @@ export default function NotificationFormSidebar({ template, isOpen }) {
 
           <div className="space-y-1">
             <label className="text-[11px] font-semibold text-gray-600">
-              New Address (ภาษาอังกฤษ) <span className="text-red-500">*</span>
+              {t('notificationForm.newAddressEN') || "New Address (ภาษาอังกฤษ)"} <span className="text-red-500">*</span>
             </label>
             <textarea
               rows={2}
@@ -278,7 +280,7 @@ export default function NotificationFormSidebar({ template, isOpen }) {
         <div className="space-y-3 p-3.5 rounded-xl border border-gray-100 bg-[#FAFAFC]">
           <div className="flex items-center gap-2 text-xs font-bold text-gray-800">
             <UserCheck size={15} className="text-rose-600" />
-            <span>5. ผู้มีอำนาจลงนาม (Signatory)</span>
+            <span>{t('notificationForm.section4') || "5. ผู้มีอำนาจลงนาม (Signatory)"}</span>
           </div>
 
           <div className="space-y-1">

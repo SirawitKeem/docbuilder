@@ -8,8 +8,10 @@ import {
   SettingsCard,
 } from "@/components/settings/SettingsUI";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function GeneralSettingsPage() {
+  const { t } = useLanguage();
   const [companyName, setCompanyName] = useState("Crest Zendo Co., Ltd.");
   const [taxId, setTaxId] = useState("0105558073755");
   const [address, setAddress] = useState(
@@ -28,15 +30,15 @@ export default function GeneralSettingsPage() {
   return (
     <div className="mx-auto max-w-[640px] pb-12 text-left">
       <SettingsPageHeader
-        title="General"
-        description="Manage organization identity, head office legal address, and default signatories."
+        title={t('general.title') || "General"}
+        description={t('general.description') || "Manage organization identity, head office legal address, and default signatories."}
       />
 
       <form onSubmit={handleSave} className="space-y-8">
         {/* Organization Details Section */}
         <div>
           <SettingsSectionHeading
-            title="Organization identity"
+            title={t('general.companyDetails') || "Organization identity"}
             description="Official corporate registration information used across all issued documents."
           />
           <SettingsCard className="p-6 space-y-4">
@@ -46,14 +48,14 @@ export default function GeneralSettingsPage() {
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-foreground leading-none">Crest Zendo Co., Ltd.</h3>
-                <p className="text-xs text-muted-foreground mt-0.5">Headquarters</p>
+                <p className="text-xs text-muted-foreground mt-0.5">{t('general.headOffice') || "Headquarters"}</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-foreground">
-                  Company name (English / Thai)
+                  {t('general.companyNameEN') || "Company name (English / Thai)"}
                 </label>
                 <input
                   type="text"
@@ -65,7 +67,7 @@ export default function GeneralSettingsPage() {
 
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-foreground">
-                  Tax Registration Number (13 Digits)
+                  {t('general.taxId') || "Tax Registration Number (13 Digits)"}
                 </label>
                 <input
                   type="text"
@@ -78,7 +80,7 @@ export default function GeneralSettingsPage() {
 
             <div className="space-y-1.5 pt-2">
               <label className="block text-xs font-semibold text-foreground">
-                Head office address
+                {t('general.addressEN') || "Head office address"}
               </label>
               <textarea
                 rows={2}
@@ -93,14 +95,14 @@ export default function GeneralSettingsPage() {
         {/* Authorized Signatory Section */}
         <div>
           <SettingsSectionHeading
-            title="Default contract signatory"
+            title={t('general.authorizedSignatory') || "Default contract signatory"}
             description="The authorized representative who signs official quotations and agreements."
           />
           <SettingsCard className="p-6 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-foreground">
-                  Signatory full name
+                  {t('general.signatoryName') || "Signatory full name"}
                 </label>
                 <input
                   type="text"
@@ -112,7 +114,7 @@ export default function GeneralSettingsPage() {
 
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-foreground">
-                  Designation / Position
+                  {t('general.signatoryTitle') || "Designation / Position"}
                 </label>
                 <input
                   type="text"
@@ -144,7 +146,7 @@ export default function GeneralSettingsPage() {
                 size="sm"
                 className="text-xs h-8 primary-button"
               >
-                Save changes
+                {t('account.saveChanges') || "Save changes"}
               </Button>
             </div>
 

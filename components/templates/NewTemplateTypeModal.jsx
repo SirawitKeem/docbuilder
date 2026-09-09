@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { X, FileText, Presentation, Table, Sparkles } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function NewTemplateTypeModal({
   isOpen,
@@ -9,6 +10,7 @@ export default function NewTemplateTypeModal({
   onSelect,
   categoryName = "",
 }) {
+  const { t } = useLanguage();
   // Close on ESC key press
   useEffect(() => {
     if (!isOpen) return;
@@ -38,7 +40,7 @@ export default function NewTemplateTypeModal({
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-gray-900 tracking-tight">
-                เลือกรูปแบบการสร้างเทมเพลต {categoryName ? `(${categoryName})` : ""}
+                {t('newTemplate.title') || "เลือกรูปแบบการสร้างเทมเพลต"} {categoryName ? `(${categoryName})` : ""}
               </h2>
               <p className="text-xs text-gray-500 font-medium">
                 เลือกประเภทเครื่องมือออกแบบที่คุณต้องการใช้สร้างแม่แบบเอกสาร
@@ -66,7 +68,7 @@ export default function NewTemplateTypeModal({
               {/* Highlight Ribbon */}
               <div className="absolute top-0 right-0 w-24 h-24 overflow-hidden pointer-events-none">
                 <div className="absolute transform rotate-45 bg-gradient-to-r from-[#7C3AED] to-[#7C3AED] text-white text-[9px] font-black py-0.5 right-[-32px] top-[18px] w-[120px] text-center shadow-xs">
-                  พร้อมใช้งาน
+                  {t('status.readyToUse') || "พร้อมใช้งาน"}
                 </div>
               </div>
 
@@ -77,12 +79,12 @@ export default function NewTemplateTypeModal({
 
                 <div className="flex items-center gap-2 mb-1.5">
                   <h3 className="text-base font-black text-gray-900 group-hover:text-[#7C3AED] transition-colors">
-                    Docs (เอกสาร A4)
+                    {t('newTemplate.docs') || "Docs (เอกสาร A4)"}
                   </h3>
                 </div>
 
                 <p className="text-xs text-gray-500 leading-relaxed">
-                  สร้างเอกสาร สัญญา ใบเสนอราคา ใบเสร็จ หรือประกาศทางการ ขนาดกระดาษ A4 เสมือนจริง พร้อมระบบตารางและตัวแปรไดนามิก
+                  {t('newTemplate.docsDesc') || "สร้างเอกสาร สัญญา ใบเสนอราคา ใบเสร็จ หรือประกาศทางการ ขนาดกระดาษ A4 เสมือนจริง พร้อมระบบตารางและตัวแปรไดนามิก"}
                 </p>
               </div>
 
@@ -106,7 +108,7 @@ export default function NewTemplateTypeModal({
               {/* Highlight Ribbon */}
               <div className="absolute top-0 right-0 w-24 h-24 overflow-hidden pointer-events-none">
                 <div className="absolute transform rotate-45 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-black py-0.5 right-[-32px] top-[18px] w-[120px] text-center shadow-xs">
-                  พร้อมใช้งาน
+                  {t('status.readyToUse') || "พร้อมใช้งาน"}
                 </div>
               </div>
 
@@ -117,12 +119,12 @@ export default function NewTemplateTypeModal({
 
                 <div className="flex items-center gap-2 mb-1.5">
                   <h3 className="text-base font-black text-gray-900 group-hover:text-amber-600 transition-colors">
-                    Slides (งานนำเสนอ 16:9)
+                    {t('newTemplate.slides') || "Slides (งานนำเสนอ 16:9)"}
                   </h3>
                 </div>
 
                 <p className="text-xs text-gray-500 leading-relaxed">
-                  สร้างสไลด์งานนำเสนออัตราส่วน 16:9 สไตล์ PowerPoint / Canva พร้อมรองรับหลายหน้าสไลด์และส่งออกเป็น PDF เวกเตอร์
+                  {t('newTemplate.slidesDesc') || "สร้างสไลด์งานนำเสนออัตราส่วน 16:9 สไตล์ PowerPoint / Canva พร้อมรองรับหลายหน้าสไลด์และส่งออกเป็น PDF เวกเตอร์"}
                 </p>
               </div>
 
@@ -146,7 +148,7 @@ export default function NewTemplateTypeModal({
               {/* Highlight Ribbon */}
               <div className="absolute top-0 right-0 w-24 h-24 overflow-hidden pointer-events-none">
                 <div className="absolute transform rotate-45 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[9px] font-black py-0.5 right-[-32px] top-[18px] w-[120px] text-center shadow-xs">
-                  พร้อมใช้งาน
+                  {t('status.readyToUse') || "พร้อมใช้งาน"}
                 </div>
               </div>
 
@@ -157,7 +159,7 @@ export default function NewTemplateTypeModal({
 
                 <div className="flex items-center gap-2 mb-1.5">
                   <h3 className="text-base font-black text-gray-900 group-hover:text-emerald-600 transition-colors">
-                    Sheets (ตารางคำนวณ .xlsx)
+                    {t('newTemplate.sheets') || "Sheets (ตารางคำนวณ .xlsx)"}
                   </h3>
                 </div>
 
@@ -188,7 +190,7 @@ export default function NewTemplateTypeModal({
             onClick={onClose}
             className="px-4 py-1.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-600 text-xs font-semibold transition-colors cursor-pointer"
           >
-            ยกเลิก
+            {t('actions.cancel') || "ยกเลิก"}
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useContext, useState, useRef, useEffect } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   ArrowLeft,
   Send,
@@ -28,6 +29,7 @@ export default function ReviewScreen({
   onBackToEdit,
   customRender = false,
 }) {
+  const { t } = useLanguage();
   const docFieldsCtx = useContext(DocumentFieldsContext);
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState("pdf");
@@ -60,7 +62,7 @@ export default function ReviewScreen({
           <button onClick={handleBack} className="p-2 -ml-2 rounded-lg hover:bg-gray-100 text-gray-700">
             <ArrowLeft size={20} />
           </button>
-          <p className="text-sm font-semibold text-gray-900">ตรวจสอบเอกสารก่อนส่ง</p>
+          <p className="text-sm font-semibold text-gray-900">{t('review.title')}</p>
         </div>
       </div>
 
@@ -70,7 +72,7 @@ export default function ReviewScreen({
             <span className={`w-2.5 h-2.5 rounded-full ${status.isComplete ? "bg-[#239742]" : "bg-[#B2AFBC]"}`} />
             <div>
               <p className={`text-sm font-semibold ${status.isComplete ? "text-[#17682F]" : "text-[#171717]"}`}>
-                {status.isComplete ? "✓ กรอกข้อมูลครบแล้ว" : `กรอกข้อมูลแล้ว ${status.filled}/${status.total} รายการ`}
+                {status.isComplete ? t('review.allFilled') : `กรอกข้อมูลแล้ว ${status.filled}/${status.total} รายการ`}
               </p>
               <p className="text-xs text-[#646469]">
                 {status.isComplete ? "พร้อมสำหรับการตรวจสอบเอกสาร" : "กรุณากลับไปกรอกข้อมูลให้ครบก่อนส่งออก"}
@@ -85,7 +87,7 @@ export default function ReviewScreen({
               className="flex items-center gap-2 h-11 px-5 rounded-[10px] border border-[#E5E5E5] bg-white text-[#171717] text-sm font-medium hover:bg-[#F6F6FA] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               <Send size={16} />
-              ส่ง Email
+              {t('actions.sendEmail')}
             </button>
 
             {/* ปุ่ม Multi-Format Export (PDF, HTML, WebP) */}
@@ -112,7 +114,7 @@ export default function ReviewScreen({
               {exportMenuOpen && (
                 <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-xl shadow-xl border border-gray-200 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-150 text-left">
                   <div className="px-3 py-1.5 border-b border-gray-100 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                    เลือกรูปแบบการ Export
+                    {t('review.selectExport')}
                   </div>
 
                   {/* 1. PDF */}

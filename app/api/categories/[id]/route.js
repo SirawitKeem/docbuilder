@@ -29,7 +29,7 @@ export async function DELETE(req, { params }) {
     const { id } = await params;
 
     // Check if category is built-in protected
-    if (["contracts", "partnerships", "finance"].includes(id)) {
+    if (["quotation", "nda", "partner", "distributor", "notification", "contracts", "partnerships", "finance"].includes(id.toLowerCase())) {
       return NextResponse.json(
         { error: "ไม่สามารถลบหมวดหมู่พื้นฐานของระบบได้" },
         { status: 400 }

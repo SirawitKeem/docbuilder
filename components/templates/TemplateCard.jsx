@@ -2,8 +2,10 @@ import Link from "next/link";
 import { FileText, Lock, ArrowRight } from "lucide-react";
 import { EXTENDED_ICON_MAP } from "@/components/templates/CreateCategoryModal";
 import { COLOR_MAP } from "@/components/templates/CategoryManagerModal";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function TemplateCard({ template, variant = "compact", onSelect }) {
+  const { t } = useLanguage();
   const iconData = EXTENDED_ICON_MAP[template.icon];
   const Icon = iconData ? iconData.icon : FileText;
   const colorClass = COLOR_MAP[template.color] || COLOR_MAP.purple;
@@ -18,7 +20,7 @@ export default function TemplateCard({ template, variant = "compact", onSelect }
         </div>
         {!isAvailable && (
           <span className="px-2 py-0.5 rounded-full text-[10px] font-medium border border-border bg-muted text-muted-foreground">
-            Coming soon
+            {t('status.comingSoon') || "Coming soon"}
           </span>
         )}
       </div>
@@ -41,7 +43,7 @@ export default function TemplateCard({ template, variant = "compact", onSelect }
         {isAvailable ? (
           <>
             <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-150">
-              Use template
+              {t('templates.useTemplate') || "Use template"}
             </span>
             <div className="size-6 rounded-full bg-muted/80 group-hover:bg-neutral-200/80 dark:group-hover:bg-neutral-700/80 flex items-center justify-center text-muted-foreground group-hover:text-foreground transition-all duration-150">
               <ArrowRight size={12} className="transition-transform duration-150 group-hover:translate-x-0.5" />
@@ -50,7 +52,7 @@ export default function TemplateCard({ template, variant = "compact", onSelect }
         ) : (
           <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground/70">
             <Lock size={12} />
-            <span>Coming soon</span>
+            <span>{t('status.comingSoon') || "Coming soon"}</span>
           </div>
         )}
       </div>

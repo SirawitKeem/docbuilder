@@ -9,36 +9,73 @@ import {
   SettingsCard,
 } from "@/components/settings/SettingsUI";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function PreferencesPage() {
   const { theme, setTheme } = useTheme();
+  const { locale, setLocale, t } = useLanguage();
   const [mounted, setMounted] = useState(false);
   const [currency, setCurrency] = useState("THB");
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    // Fetch current settings
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          if (data.currency) setCurrency(data.currency);
+          if (data.language && data.language !== locale) {
+            setLocale(data.language);
+          }
+        }
+      })
+      .catch((err) => console.error("Failed to fetch settings:", err));
   }, []);
 
-  const handleSave = (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
-    setSaved(true);
-    setTimeout(() => setSaved(false), 3000);
+    setSaving(true);
+    try {
+      await fetch("/api/settings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          language: locale,
+          currency,
+          theme,
+        }),
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (err) {
+      console.error("Failed to save settings:", err);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="mx-auto max-w-[640px] pb-12 text-left">
       <SettingsPageHeader
-        title="Preferences"
-        description="Customize your interface appearance, display theme, and workspace defaults."
+        title={t("preferences.title") || "Preferences"}
+        description={
+          t("preferences.description") ||
+          "Customize your interface appearance, display theme, and workspace defaults."
+        }
       />
 
       <form onSubmit={handleSave} className="space-y-8">
         {/* Theme Section */}
         <div>
           <SettingsSectionHeading
-            title="Appearance theme"
-            description="Select how the DocBuilder workspace looks to you."
+            title={t("preferences.appearanceTheme") || "Appearance theme"}
+            description={
+              t("preferences.themeDescription") ||
+              "Select how the DocBuilder workspace looks to you."
+            }
           />
           <SettingsCard className="p-6 space-y-4">
             {mounted ? (
@@ -53,7 +90,7 @@ export default function PreferencesPage() {
                   }`}
                 >
                   <Sun size={20} />
-                  <span>Light</span>
+                  <span>{t("preferences.light") || "Light"}</span>
                 </button>
 
                 <button
@@ -66,7 +103,7 @@ export default function PreferencesPage() {
                   }`}
                 >
                   <Moon size={20} />
-                  <span>Dark</span>
+                  <span>{t("preferences.dark") || "Dark"}</span>
                 </button>
 
                 <button
@@ -79,7 +116,7 @@ export default function PreferencesPage() {
                   }`}
                 >
                   <Monitor size={20} />
-                  <span>System</span>
+                  <span>{t("preferences.system") || "System"}</span>
                 </button>
               </div>
             ) : (
@@ -91,19 +128,22 @@ export default function PreferencesPage() {
         {/* Regional & Defaults Section */}
         <div>
           <SettingsSectionHeading
-            title="Workspace defaults"
-            description="Set default regional currency and language formats."
+            title={t("preferences.workspaceDefaults") || "Workspace defaults"}
+            description={
+              t("preferences.workspaceDefaultsDesc") ||
+              "Set default regional currency and language formats."
+            }
           />
           <SettingsCard className="p-6 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-foreground">
-                  Default currency
+                  {t("preferences.defaultCurrency") || "Default currency"}
                 </label>
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
-                  className="w-full h-9 px-3 rounded-[8px] border border-border bg-background text-xs text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all shadow-2xs"
+                  className="w-full h-9 px-3 rounded-[8px] border border-border bg-background text-xs text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all shadow-2xs cursor-pointer"
                 >
                   <option value="THB">THB (฿) - Thai Baht</option>
                   <option value="USD">USD ($) - US Dollar</option>
@@ -113,14 +153,16 @@ export default function PreferencesPage() {
 
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-foreground">
-                  Display language
+                  {t("preferences.displayLanguage") || "Display language"}
                 </label>
-                <input
-                  type="text"
-                  value="English (United States)"
-                  disabled
-                  className="w-full h-9 px-3 rounded-[8px] border border-border bg-muted/40 text-xs text-muted-foreground outline-none cursor-not-allowed"
-                />
+                <select
+                  value={locale}
+                  onChange={(e) => setLocale(e.target.value)}
+                  className="w-full h-9 px-3 rounded-[8px] border border-border bg-background text-xs text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all shadow-2xs cursor-pointer"
+                >
+                  <option value="th">ไทย (Thai)</option>
+                  <option value="en">English (US)</option>
+                </select>
               </div>
             </div>
 
@@ -128,16 +170,19 @@ export default function PreferencesPage() {
               <Button
                 type="submit"
                 size="sm"
+                disabled={saving}
                 className="text-xs h-8 primary-button"
               >
-                Save preferences
+                {saving
+                  ? (t("actions.saving") || "Saving...")
+                  : (t("preferences.savePreferences") || "Save preferences")}
               </Button>
             </div>
 
             {saved && (
               <div className="flex items-center gap-2 p-2.5 rounded-[8px] bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/40 text-emerald-800 dark:text-emerald-300 text-xs font-medium animate-in fade-in">
                 <CheckCircle2 size={15} className="text-emerald-600 shrink-0" />
-                Preferences updated successfully.
+                {t("preferences.savedSuccess") || "Preferences updated successfully."}
               </div>
             )}
           </SettingsCard>

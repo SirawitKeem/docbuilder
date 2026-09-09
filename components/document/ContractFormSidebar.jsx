@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   Calendar,
   Building2,
@@ -15,6 +16,7 @@ import { useDocumentFields } from "@/context/DocumentFieldsContext";
 import SignaturePadModal from "./SignaturePadModal";
 
 export default function ContractFormSidebar({ template, isOpen }) {
+  const { t } = useLanguage();
   const { values, setField } = useDocumentFields();
   const [sigModalTarget, setSigModalTarget] = useState(null); // 'our' | 'counterparty' | null
 
@@ -67,7 +69,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
             title="ใส่วันที่ปัจจุบันอัตโนมัติ"
           >
             <Sparkles size={12} />
-            <span>ใส่วันที่วันนี้</span>
+            <span>{t('contractForm.todayDate')}</span>
           </button>
         </div>
 
@@ -99,7 +101,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
         <div className="space-y-3 p-3.5 rounded-xl border border-gray-100 bg-[#FAFAFC]">
           <div className="flex items-center gap-2 text-xs font-bold text-gray-800">
             <Calendar size={15} className="text-[#7C3AED]" />
-            <span>1. วันที่และสถานที่ทำสัญญา</span>
+            <span>{t('contractForm.section1')}</span>
           </div>
 
           {template?.id !== "partner" && (
@@ -154,7 +156,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
           <div className="flex items-center gap-2 text-xs font-bold text-gray-800">
             <Building2 size={15} className="text-[#7C3AED]" />
             <span>
-              2. {isDistributorOrPartner ? "ข้อมูลตัวแทนจำหน่าย (Reseller)" : "ข้อมูลคู่สัญญา (ผู้รับข้อมูล)"}
+              {isDistributorOrPartner ? t('contractForm.section2') : "ข้อมูลคู่สัญญา (ผู้รับข้อมูล)"}
             </span>
           </div>
 
@@ -232,7 +234,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
         <div className="space-y-3 p-3.5 rounded-xl border border-gray-100 bg-[#FAFAFC]">
           <div className="flex items-center gap-2 text-xs font-bold text-gray-800">
             <UserCheck size={15} className="text-[#7C3AED]" />
-            <span>3. ผู้ลงนาม ({isDistributorOrPartner ? "Reseller" : "คู่สัญญา"})</span>
+            <span>{t('contractForm.section3')} ({isDistributorOrPartner ? "Reseller" : "คู่สัญญา"})</span>
           </div>
 
           <div className="space-y-1">
@@ -326,7 +328,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
         <div className="p-3.5 rounded-xl border border-purple-100 bg-[#FBF9FF] text-xs text-gray-600 space-y-2.5">
           <div className="flex items-center justify-between">
             <p className="font-bold text-[#7C3AED] flex items-center gap-1.5">
-              <CheckCircle2 size={14} /> {isDistributorOrPartner ? "ฝ่ายผู้จัดจำหน่ายหลัก (ฝ่ายเรา):" : "ฝ่ายผู้เปิดเผยข้อมูล (ฝ่ายเรา):"}
+              <CheckCircle2 size={14} /> {t('contractForm.section4')}
             </p>
             <button
               type="button"
@@ -367,7 +369,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
 
           {/* ตราประทับบริษัทสีแดง Toggle */}
           <label className="flex items-center justify-between pt-2 border-t border-purple-100/80 text-gray-700 cursor-pointer">
-            <span className="text-[11px] font-semibold text-gray-700">ประทับตราสำคัญบริษัท (Red Seal)</span>
+            <span className="text-[11px] font-semibold text-gray-700">{t('contractForm.companySeal')}</span>
             <input
               type="checkbox"
               checked={values.include_seal !== false}
@@ -382,7 +384,7 @@ export default function ContractFormSidebar({ template, isOpen }) {
           <div className="flex items-center justify-between text-xs font-bold text-gray-800">
             <div className="flex items-center gap-2">
               <span className="text-[#7C3AED]">🛡️</span>
-              <span>5. ลายน้ำบน PDF (Watermark)</span>
+              <span>{t('contractForm.section5')}</span>
             </div>
           </div>
           <select
@@ -390,10 +392,10 @@ export default function ContractFormSidebar({ template, isOpen }) {
             onChange={(e) => setField("watermark", e.target.value)}
             className="w-full h-9 px-2.5 text-xs rounded-lg border border-gray-200 bg-white focus:border-[#7C3AED] focus:ring-1 focus:ring-[#7C3AED] outline-none transition-all cursor-pointer font-medium"
           >
-            <option value="none">⚪ ไม่มีลายน้ำ (ต้นฉบับปกติ)</option>
-            <option value="DRAFT">🟡 ฉบับร่าง (DRAFT)</option>
-            <option value="COPY">🔵 สำเนาถูกต้อง (COPY)</option>
-            <option value="CONFIDENTIAL">🔴 ลับเฉพาะ (CONFIDENTIAL)</option>
+            <option value="none">⚪ {t('watermark.none')}</option>
+            <option value="DRAFT">🟡 {t('watermark.draft')}</option>
+            <option value="COPY">🔵 {t('watermark.copy')}</option>
+            <option value="CONFIDENTIAL">🔴 {t('watermark.confidential')}</option>
           </select>
         </div>
 

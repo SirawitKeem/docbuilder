@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 import DocumentsTable from "@/components/documents/DocumentsTable";
 import { getTemplates } from "@/lib/data/templates";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function HistoryPage() {
+  const { t } = useLanguage();
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [allTemplatesList, setAllTemplatesList] = useState([]);
@@ -65,10 +67,10 @@ export default function HistoryPage() {
       {/* Header Title */}
       <div>
         <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">
-          ประวัติการส่ง
+          {t('history.title') || "Sent History"}
         </h1>
         <p className="text-xs sm:text-sm text-muted-foreground">
-          รายการเอกสารที่ถูกส่งออกทางอีเมลแล้วทั้งหมด (ประวัตินี้คงอยู่ถาวร แม้เอกสารต้นทางจะถูกลบ)
+          {t('history.description') || "ตรวจสอบและติดตามเอกสารทั้งหมด..."}
         </p>
       </div>
 
@@ -86,7 +88,7 @@ export default function HistoryPage() {
                 setSearchQuery(e.target.value);
                 setCurrentPage(1);
               }}
-              placeholder="ค้นหาชื่อเอกสาร, อีเมลผู้รับ (sentTo)..."
+              placeholder={t('history.searchPlaceholder') || "ค้นหาตามชื่อเอกสาร หรือ ผู้รับ..."}
               className="w-full h-9 pl-9 pr-3 rounded-xl border border-border bg-muted/20 text-xs text-foreground outline-none focus:border-primary focus:bg-surface transition-all"
             />
           </div>
@@ -100,7 +102,7 @@ export default function HistoryPage() {
             }}
             className="h-9 px-3 rounded-xl border border-border bg-surface text-xs font-medium text-foreground outline-none cursor-pointer shrink-0"
           >
-            <option value="all">ทุกเทมเพลต</option>
+            <option value="all">{t('documents.allTemplates') || "ทุกเทมเพลต"}</option>
             {allTemplatesList.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.name}
@@ -120,14 +122,14 @@ export default function HistoryPage() {
             deleteApiUrl="/api/sent-history"
             showSentTo
             allowEdit={false}
-            emptyMessage="ไม่พบประวัติการส่งเอกสารที่ตรงกับการค้นหา"
+            emptyMessage={t('history.noResults') || "ไม่พบประวัติการส่งเอกสารที่ตรงกับการค้นหา"}
             onRefresh={fetchHistory}
           />
 
           {/* Pagination Controls */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-2 text-xs text-muted-foreground">
             <div>
-              แสดง <strong className="font-semibold text-foreground">{totalItems > 0 ? startIndex + 1 : 0} - {Math.min(startIndex + pageSize, totalItems)}</strong> จาก <strong className="font-semibold text-foreground">{totalItems}</strong> รายการ
+              {t('pagination.showing', { start: totalItems > 0 ? startIndex + 1 : 0, end: Math.min(startIndex + pageSize, totalItems), total: totalItems })}
             </div>
 
             <div className="flex items-center gap-3">
@@ -169,9 +171,9 @@ export default function HistoryPage() {
                 }}
                 className="h-8 px-2 rounded-lg border border-border bg-surface text-xs text-muted-foreground outline-none cursor-pointer"
               >
-                <option value={5}>5 / หน้า</option>
-                <option value={10}>10 / หน้า</option>
-                <option value={20}>20 / หน้า</option>
+                <option value={5}>{t('pagination.perPage', { count: 5 })}</option>
+                <option value={10}>{t('pagination.perPage', { count: 10 })}</option>
+                <option value={20}>{t('pagination.perPage', { count: 20 })}</option>
               </select>
             </div>
           </div>

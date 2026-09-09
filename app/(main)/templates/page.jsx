@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   Folder,
   Search,
@@ -16,145 +17,20 @@ import {
   FileText,
   FolderOpen,
   Edit3,
-  X,
+  Table,
+  Presentation,
   Check,
+  X,
 } from "lucide-react";
 import CategoryManagerModal, { ICON_MAP, COLOR_MAP } from "@/components/templates/CategoryManagerModal";
 import CreateCategoryModal, { EXTENDED_ICON_MAP } from "@/components/templates/CreateCategoryModal";
 import TemplateDetailModal from "@/components/templates/TemplateDetailModal";
 import NewTemplateTypeModal from "@/components/templates/NewTemplateTypeModal";
-import UniversalTemplateRenderer from "@/components/document/UniversalTemplateRenderer";
-import { QuotationDataProvider } from "@/context/QuotationDataContext";
-import QuotationDocument from "@/components/document/quotation/QuotationDocument";
-import { DocumentFieldsProvider } from "@/context/DocumentFieldsContext";
-import DocumentHeader from "@/components/document/DocumentHeader";
-import DocumentFooter from "@/components/document/DocumentFooter";
-import NdaPage1 from "@/components/document/nda/NdaPage1";
-import DistributorPage1 from "@/components/document/distributor/DistributorPage1";
-import PartnerPage1 from "@/components/document/partner/PartnerPage1";
-import NotificationRelocationDocument from "@/components/document/notification/NotificationRelocationDocument";
-
-const emptyQuotationPreviewData = {
-  id: "preview",
-  quotationNo: "QT-YYYYMM-XXXX",
-  revision: "01",
-  quotationDate: "",
-  priceValidity: "",
-  deliveryTerm: "",
-  creditTerm: "",
-  billTo: {
-    companyName: "",
-    attn: "",
-    endUser: "",
-    subject: "",
-    am: "",
-  },
-  lineItems: [],
-  vatRate: 7,
-  specialDiscount: 0,
-  remarks: "",
-  remarksList: [],
-  senderName: "",
-  senderPosition: "",
-  senderEmail: "",
-  senderPhone: "",
-};
-
-function renderAuthenticDocumentContent(template) {
-  const catId = (template.categoryId || "").toLowerCase();
-  const tmplId = (template.id || "").toLowerCase();
-
-  if (catId === "quotation" || tmplId.includes("quotation")) {
-    return (
-      <QuotationDataProvider initialQuotation={emptyQuotationPreviewData} defaultReadOnly={true}>
-        <div style={{ width: 794, height: 1123 }} className="bg-white overflow-hidden text-left font-sans">
-          <QuotationDocument currentPage={1} />
-        </div>
-      </QuotationDataProvider>
-    );
-  }
-
-  if (catId === "nda" || tmplId.includes("nda")) {
-    return (
-      <DocumentFieldsProvider initialValues={{}} defaultReadOnly={true}>
-        <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-sans px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden">
-          <DocumentHeader logo="/quotation.png" />
-          <div className="flex-1 min-h-0 overflow-hidden text-gray-900 text-sm">
-            <NdaPage1 />
-          </div>
-          <DocumentFooter currentPage={1} totalPages={4} />
-        </div>
-      </DocumentFieldsProvider>
-    );
-  }
-
-  if (catId === "partner" || tmplId.includes("partner")) {
-    return (
-      <DocumentFieldsProvider initialValues={{}} defaultReadOnly={true}>
-        <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-sans px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden">
-          <DocumentHeader logo="/quotation.png" />
-          <div className="flex-1 min-h-0 overflow-hidden text-gray-900 text-sm">
-            <PartnerPage1 />
-          </div>
-          <DocumentFooter currentPage={1} totalPages={5} />
-        </div>
-      </DocumentFieldsProvider>
-    );
-  }
-
-  if (catId === "distributor" || tmplId.includes("distributor")) {
-    return (
-      <DocumentFieldsProvider initialValues={{}} defaultReadOnly={true}>
-        <div style={{ width: 794, height: 1123 }} className="bg-white text-left font-sans px-14 pt-10 pb-6 flex flex-col justify-between overflow-hidden">
-          <DocumentHeader logo="/quotation.png" />
-          <div className="flex-1 min-h-0 overflow-hidden text-gray-900 text-sm">
-            <DistributorPage1 />
-          </div>
-          <DocumentFooter currentPage={1} totalPages={5} />
-        </div>
-      </DocumentFieldsProvider>
-    );
-  }
-
-  if (catId === "notification" || tmplId.includes("notification") || tmplId.includes("relocation")) {
-    return (
-      <div style={{ width: 794, height: 1123 }} className="bg-white overflow-hidden text-left font-sans select-none">
-        <NotificationRelocationDocument />
-      </div>
-    );
-  }
-
-  return <UniversalTemplateRenderer template={template} scale={1} />;
-}
-
-/**
- * Miniature Live Document Preview for Level 2 Cards
- * Dynamically renders each template based strictly on its own blocks, theme, and logo.
- */
-function CardMiniaturePreview({ template }) {
-  const isLandscape = template.orientation === "landscape";
-  const targetScale = isLandscape ? 0.13 : 0.165;
-
-  return (
-    <div className="w-full h-44 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center p-2 mb-3.5 overflow-hidden shadow-2xs group-hover:border-purple-200 transition-colors">
-      <div
-        className="origin-top-left pointer-events-none select-none shadow-md rounded-xs border border-gray-200"
-        style={{
-          width: isLandscape ? 1123 : 794,
-          height: isLandscape ? 794 : 1123,
-          transform: `scale(${targetScale})`,
-          marginBottom: `-${(isLandscape ? 794 : 1123) * (1 - targetScale)}px`,
-          marginRight: `-${(isLandscape ? 1123 : 794) * (1 - targetScale)}px`,
-        }}
-      >
-        {renderAuthenticDocumentContent(template)}
-      </div>
-    </div>
-  );
-}
+import DeleteConfirmModal from "@/components/common/DeleteConfirmModal";
 
 export default function TemplatesHubPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [categories, setCategories] = useState([]);
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -171,6 +47,10 @@ export default function TemplatesHubPage() {
   const [renamingTemplate, setRenamingTemplate] = useState(null);
   const [newName, setNewName] = useState("");
   const [isRenamingLoading, setIsRenamingLoading] = useState(false);
+
+  // Delete Template State
+  const [templateToDelete, setTemplateToDelete] = useState(null);
+  const [isDeletingTemplate, setIsDeletingTemplate] = useState(false);
 
   const handleSelectType = (editorType) => {
     setIsTypeModalOpen(false);
@@ -245,8 +125,8 @@ export default function TemplatesHubPage() {
       const copyPayload = {
         ...tmpl,
         id: undefined,
-        name: `${tmpl.name} (คัดลอก)`,
-        badge: "ฉบับคัดลอก",
+        name: t('templates.copyName', { name: tmpl.name }) || `${tmpl.name} (คัดลอก)`,
+        badge: t('templates.copyBadge') || "ฉบับคัดลอก",
         status: "published",
       };
 
@@ -264,17 +144,20 @@ export default function TemplatesHubPage() {
     }
   };
 
-  // Delete a Custom Template
-  const handleDeleteTemplate = async (tmplId) => {
-    if (!confirm("คุณแน่ใจหรือไม่ว่าต้องการลบเทมเพลตนี้ออกจากคลัง?")) return;
-
+  // Confirm Delete Custom Template
+  const handleConfirmDeleteTemplate = async () => {
+    if (!templateToDelete) return;
+    setIsDeletingTemplate(true);
     try {
-      const res = await fetch(`/api/templates/${tmplId}`, { method: "DELETE" });
+      const res = await fetch(`/api/templates/${templateToDelete.id}`, { method: "DELETE" });
       if (res.ok) {
         await loadData();
+        setTemplateToDelete(null);
       }
     } catch (err) {
       console.error("Error deleting template:", err);
+    } finally {
+      setIsDeletingTemplate(false);
     }
   };
 
@@ -306,83 +189,98 @@ export default function TemplatesHubPage() {
   };
 
   return (
-    <div className="space-y-6 text-left pb-20">
-      {/* LEVEL 1: All Document Types / Collections View */}
+    <div className="space-y-6 text-left pb-16">
+      {/* LEVEL 1: Categories Collection View */}
       {!selectedCategory ? (
         <>
-          {/* Header & Action Bar */}
+          {/* Header & Actions */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-foreground tracking-tight mb-1">
-                Template Catalog
+              <h1 className="text-2xl font-bold tracking-tight text-foreground mb-1">
+                {t('templates.title') || "Templates"}
               </h1>
               <p className="text-xs sm:text-sm text-muted-foreground">
-                Browse organization document types, agreements, and pre-built templates
+                {t('templates.description') || "Select a document category to browse or customize templates"}
               </p>
             </div>
 
             <div className="flex items-center flex-wrap gap-2.5">
-              {/* Button 1: Manage Categories List (Reorder, Edit, Delete) */}
               <button
                 type="button"
                 onClick={() => setIsCategoryModalOpen(true)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-border bg-surface hover:bg-muted text-xs font-semibold text-foreground shadow-2xs hover:shadow-xs transition-all cursor-pointer"
-                title="Manage, reorder, or edit template categories"
+                className="h-9 px-3.5 rounded-[8px] border border-border bg-surface hover:bg-muted text-xs font-medium text-foreground transition-all cursor-pointer inline-flex items-center gap-2 shadow-2xs"
+                title="Manage template categories"
               >
                 <Settings size={15} className="text-muted-foreground" />
                 <span>Manage Categories</span>
               </button>
 
-              {/* Button 2: Dedicated Create Document Type / Folder Modal */}
               <button
                 type="button"
                 onClick={() => setIsCreateCategoryModalOpen(true)}
-                className="primary-button inline-flex items-center gap-2 px-4 py-2 rounded-xl text-white text-xs font-semibold shadow-xs hover:shadow-md transition-all cursor-pointer"
-                title="Create a new document category or template collection"
+                className="primary-button h-9 px-4 rounded-[8px] text-white text-xs font-medium inline-flex items-center gap-2 shadow-xs cursor-pointer hover:opacity-95 transition-all"
+                title="Create a new document category"
               >
-                <Plus size={16} />
+                <Plus size={15} />
                 <span>New Category</span>
               </button>
             </div>
           </div>
 
-          {/* Search Bar */}
-          <div className="bg-surface rounded-2xl border border-border p-3.5 shadow-2xs">
-            <div className="relative">
-              <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          {/* Minimal Search Toolbar */}
+          <div className="bg-surface border border-border rounded-xl p-3 shadow-2xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="relative flex-1 max-w-md">
+              <Search
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/70 pointer-events-none"
+              />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search categories or templates (e.g. Quotation, NDA, Partner Agreement...)"
-                className="w-full h-10 pl-10 pr-4 rounded-xl border border-border bg-muted/20 hover:bg-surface focus:bg-surface text-xs text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-muted-foreground/70"
+                placeholder={t('templates.searchPlaceholder') || "Search categories..."}
+                className="w-full h-9 pl-9 pr-8 rounded-[8px] border border-border bg-surface text-xs text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/10"
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-0.5 rounded-sm transition-colors cursor-pointer"
+                >
+                  <X size={13} />
+                </button>
+              )}
             </div>
+
+            <span className="text-xs text-muted-foreground font-medium shrink-0">
+              {filteredCategories.length} {filteredCategories.length === 1 ? "category" : "categories"}
+            </span>
           </div>
 
-          {/* Document Collections Grid */}
+          {/* Categories Grid (Minimal Clean matching /create) */}
           {loading ? (
-            <div className="p-16 text-center space-y-3 bg-surface rounded-2xl border border-border">
-              <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-              <p className="text-xs text-muted-foreground font-medium">Loading template catalog...</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-44 rounded-[12px] bg-muted animate-pulse" />
+              ))}
             </div>
           ) : filteredCategories.length === 0 ? (
-            <div className="p-12 text-center bg-surface rounded-2xl border border-dashed border-border space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto">
-                <Folder size={24} />
+            <div className="p-12 text-center bg-surface rounded-[12px] border border-dashed border-border space-y-3">
+              <div className="w-10 h-10 rounded-[8px] bg-primary/10 text-primary flex items-center justify-center mx-auto">
+                <Folder size={20} />
               </div>
-              <h3 className="text-sm font-bold text-foreground">No categories found matching your search</h3>
+              <h3 className="text-sm font-semibold text-foreground">No categories found matching your search</h3>
               <button
                 type="button"
                 onClick={() => setIsCreateCategoryModalOpen(true)}
-                className="primary-button inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-white text-xs font-semibold cursor-pointer"
+                className="primary-button inline-flex items-center gap-1.5 h-8 px-3 rounded-[6px] text-white text-xs font-medium cursor-pointer"
               >
-                <Plus size={14} />
+                <Plus size={13} />
                 <span>New Category</span>
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {filteredCategories.map((cat) => {
                 const IconData = EXTENDED_ICON_MAP[cat.icon];
                 const IconComp = IconData ? IconData.icon : (ICON_MAP[cat.icon] || FileText);
@@ -396,33 +294,33 @@ export default function TemplatesHubPage() {
                       setSelectedCategory(cat);
                       setSearchQuery("");
                     }}
-                    className="bg-surface rounded-2xl border border-border p-6 shadow-2xs hover:shadow-lg hover:border-primary/60 transition-all duration-200 flex flex-col justify-between group text-left cursor-pointer relative overflow-hidden"
+                    className="bg-surface border border-border rounded-[12px] shadow-2xs p-4 sm:p-5 h-full flex flex-col justify-between transition-all duration-200 hover:border-neutral-300 dark:hover:border-neutral-700 hover:shadow-card text-left relative overflow-hidden select-none cursor-pointer group"
                   >
-                    <div>
-                      <div className="flex items-center justify-between gap-2 mb-4">
-                        <div className={`w-12 h-12 rounded-2xl ${colorStyle.bg} ${colorStyle.text} border ${colorStyle.border} flex items-center justify-center group-hover:scale-105 transition-all duration-200 shadow-2xs`}>
-                          <IconComp size={22} />
-                        </div>
-
-                        <span className={`text-[11px] font-bold px-3 py-1 rounded-full border ${colorStyle.bg} ${colorStyle.text} ${colorStyle.border}`}>
-                          {tmplCount} {tmplCount === 1 ? "template" : "templates"}
-                        </span>
+                    {/* Top Bar: Icon + Count Badge */}
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <div className={`w-9 h-9 rounded-[6px] flex items-center justify-center border ${colorStyle.bg} ${colorStyle.text} ${colorStyle.border} shadow-2xs transition-transform group-hover:scale-105 duration-200`}>
+                        <IconComp size={18} />
                       </div>
-
-                      <h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors leading-snug">
-                        {cat.name}
-                      </h3>
-                      <p className="text-xs text-muted-foreground mt-2 line-clamp-2 leading-relaxed">
-                        {cat.description || "Collection of document templates for this category"}
-                      </p>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-medium border border-border bg-muted/70 text-muted-foreground tabular-nums">
+                        {tmplCount} {tmplCount === 1 ? "template" : "templates"}
+                      </span>
                     </div>
 
-                    <div className="pt-4 mt-5 border-t border-border/50 flex items-center justify-between text-xs font-semibold text-primary group-hover:translate-x-0.5 transition-transform">
-                      <span className="flex items-center gap-1.5">
-                        <FolderOpen size={15} />
-                        <span>Browse Templates</span>
+                    {/* Title */}
+                    <div className="flex-1 my-1">
+                      <h3 className="font-semibold text-foreground text-sm sm:text-[15px] group-hover:text-primary transition-colors line-clamp-1 font-sans">
+                        {cat.name}
+                      </h3>
+                    </div>
+
+                    {/* Bottom Action CTA */}
+                    <div className="mt-auto pt-2 flex items-center justify-between">
+                      <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-150">
+                        {t('templates.browseTemplates') || "Browse templates"}
                       </span>
-                      <ChevronRight size={16} />
+                      <div className="size-6 rounded-full bg-muted/80 group-hover:bg-neutral-200/80 dark:group-hover:bg-neutral-700/80 flex items-center justify-center text-muted-foreground group-hover:text-foreground transition-all duration-150">
+                        <ChevronRight size={12} className="transition-transform duration-150 group-hover:translate-x-0.5" />
+                      </div>
                     </div>
                   </div>
                 );
@@ -431,9 +329,9 @@ export default function TemplatesHubPage() {
           )}
         </>
       ) : (
-        /* LEVEL 2: Selected Category's Template Variants View */
+        /* LEVEL 2: Inside Selected Category */
         <>
-          {/* Breadcrumb Navigation & Back Button */}
+          {/* Breadcrumbs Navigation & Header */}
           <div className="flex items-center justify-between gap-3 border-b border-border pb-4">
             <div className="flex items-center gap-3">
               <button
@@ -442,24 +340,26 @@ export default function TemplatesHubPage() {
                   setSelectedCategory(null);
                   setSearchQuery("");
                 }}
-                className="w-9 h-9 rounded-xl border border-border bg-surface hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shadow-2xs cursor-pointer"
+                className="w-8 h-8 rounded-[8px] border border-border bg-surface hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors shadow-2xs cursor-pointer"
                 title="Back to categories"
               >
-                <ChevronLeft size={18} />
+                <ChevronLeft size={16} />
               </button>
+
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   <button
+                    type="button"
                     onClick={() => setSelectedCategory(null)}
-                    className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                    className="hover:text-foreground transition-colors cursor-pointer"
                   >
-                    Templates
+                    {t('templates.title') || "Templates"}
                   </button>
-                  <span className="text-muted-foreground/40 text-xs">/</span>
-                  <span className="text-xs font-bold text-primary">{selectedCategory.name}</span>
+                  <span>/</span>
+                  <span className="font-semibold text-foreground">{selectedCategory?.name}</span>
                 </div>
-                <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground leading-tight mt-0.5">
-                  {selectedCategory.name} Templates
+                <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground leading-tight mt-0.5">
+                  {selectedCategory?.name}
                 </h2>
               </div>
             </div>
@@ -468,163 +368,183 @@ export default function TemplatesHubPage() {
             <button
               type="button"
               onClick={() => setIsTypeModalOpen(true)}
-              className="primary-button inline-flex items-center gap-2 px-4 py-2 rounded-xl text-white text-xs font-semibold shadow-xs hover:shadow-md transition-all cursor-pointer"
+              className="primary-button h-9 px-3.5 rounded-[8px] text-white text-xs font-medium inline-flex items-center gap-2 shadow-xs hover:opacity-95 transition-all cursor-pointer"
             >
               <Plus size={15} />
-              <span>New Template</span>
+              <span>{t('templates.newTemplate') || "New Template"}</span>
             </button>
           </div>
 
-          {/* Search in this category */}
-          <div className="bg-surface rounded-2xl border border-border p-3 shadow-2xs">
-            <div className="relative">
-              <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          {/* Minimal Search Toolbar */}
+          <div className="bg-surface border border-border rounded-xl p-3 shadow-2xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="relative flex-1 max-w-md">
+              <Search
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/70 pointer-events-none"
+              />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={`Search within ${selectedCategory.name}...`}
-                className="w-full h-9 pl-9 pr-4 rounded-xl border border-border bg-muted/20 hover:bg-surface focus:bg-surface text-xs text-foreground outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-muted-foreground/70"
+                placeholder={`${t('actions.search') || "Search"} ${selectedCategory?.name}...`}
+                className="w-full h-9 pl-9 pr-8 rounded-[8px] border border-border bg-surface text-xs text-foreground outline-none transition-all placeholder:text-muted-foreground/60 focus:border-primary focus:ring-2 focus:ring-primary/10"
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-0.5 rounded-sm transition-colors cursor-pointer"
+                >
+                  <X size={13} />
+                </button>
+              )}
             </div>
+
+            <span className="text-xs text-muted-foreground font-medium shrink-0">
+              {currentCategoryTemplates.length} {currentCategoryTemplates.length === 1 ? "template" : "templates"}
+            </span>
           </div>
 
-          {/* Level 2 Templates Grid */}
+          {/* Templates Grid (Clean & Essential Information Only) */}
           {currentCategoryTemplates.length === 0 ? (
-            <div className="p-12 text-center bg-surface rounded-2xl border border-dashed border-border space-y-3">
-              <div className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto">
-                <FileText size={24} />
+            <div className="p-12 text-center bg-surface rounded-[12px] border border-dashed border-border space-y-3">
+              <div className="w-10 h-10 rounded-[8px] bg-primary/10 text-primary flex items-center justify-center mx-auto">
+                <FileText size={20} />
               </div>
-              <h3 className="text-sm font-bold text-foreground">No templates found in this category</h3>
+              <h3 className="text-sm font-semibold text-foreground">
+                {t('templates.noTemplates') || "No templates found in this category"}
+              </h3>
               <p className="text-xs text-muted-foreground">
-                Create a new template for {selectedCategory.name} to get started.
+                {t('templates.noTemplatesDesc', { name: selectedCategory?.name }) || `Create a new template for ${selectedCategory?.name} to get started.`}
               </p>
               <button
                 type="button"
                 onClick={() => setIsTypeModalOpen(true)}
-                className="primary-button inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-white text-xs font-semibold cursor-pointer transition-colors"
+                className="primary-button inline-flex items-center gap-1.5 h-8 px-3 rounded-[6px] text-white text-xs font-medium cursor-pointer"
               >
-                <Plus size={14} />
-                <span>Create Template</span>
+                <Plus size={13} />
+                <span>{t('templates.newTemplate') || "New Template"}</span>
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {currentCategoryTemplates.map((tmpl) => (
-                <div
-                  key={tmpl.id}
-                  className="bg-surface rounded-2xl border border-border p-5 shadow-2xs hover:shadow-lg hover:border-primary/50 transition-all duration-200 flex flex-col justify-between group text-left relative"
-                >
-                  <div>
-                    {/* Live Document Preview Miniature */}
-                    <CardMiniaturePreview template={tmpl} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              {currentCategoryTemplates.map((tmpl) => {
+                const isSheet = tmpl.editorType === "sheet";
+                const isSlide = tmpl.editorType === "slide";
+                const FormatIcon = isSheet ? Table : isSlide ? Presentation : FileText;
 
-                    {/* Badge & Info Header */}
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
-                        {tmpl.badge || "Template"}
-                      </span>
-                      <span className="text-[10px] font-medium text-muted-foreground">
-                        {tmpl.orientation === "landscape" ? "A4 Landscape" : "A4 Portrait"}
-                      </span>
-                    </div>
-
-                    {/* Renaming inline or Title display */}
-                    {renamingTemplate?.id === tmpl.id ? (
-                      <div className="flex items-center gap-1.5 my-1">
-                        <input
-                          type="text"
-                          value={newName}
-                          onChange={(e) => setNewName(e.target.value)}
-                          className="flex-1 text-sm font-bold text-foreground border border-primary bg-surface rounded-lg px-2 py-1 outline-none"
-                          autoFocus
-                        />
-                        <button
-                          type="button"
-                          onClick={handleSaveRename}
-                          disabled={isRenamingLoading}
-                          className="p-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer"
-                          title="Save name"
-                        >
-                          <Check size={14} />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setRenamingTemplate(null)}
-                          className="p-1.5 rounded-lg bg-muted text-muted-foreground hover:text-foreground cursor-pointer"
-                          title="Cancel"
-                        >
-                          <X size={14} />
-                        </button>
+                return (
+                  <div
+                    key={tmpl.id}
+                    className="bg-surface border border-border rounded-[12px] shadow-2xs p-4 sm:p-5 flex flex-col justify-between transition-all duration-200 hover:border-neutral-300 dark:hover:border-neutral-700 hover:shadow-card group text-left relative"
+                  >
+                    <div>
+                      {/* Top: Format Icon + Badge */}
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <div className="w-8 h-8 rounded-[6px] bg-primary/10 text-primary border border-primary/20 flex items-center justify-center shrink-0 shadow-2xs">
+                          <FormatIcon size={16} />
+                        </div>
+                        <span className="text-[10px] font-medium px-2 py-0.5 rounded-full border border-border bg-muted/70 text-muted-foreground tabular-nums">
+                          {tmpl.badge || (isSheet ? "Sheet" : isSlide ? "Slide" : "A4")}
+                        </span>
                       </div>
-                    ) : (
-                      <div className="flex items-start justify-between gap-2">
-                        <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors leading-snug line-clamp-2">
-                          {tmpl.name}
-                        </h3>
-                        <button
-                          type="button"
-                          onClick={() => handleStartRename(tmpl)}
-                          className="p-1 text-muted-foreground hover:text-foreground rounded transition-colors cursor-pointer"
-                          title="Rename template"
-                        >
-                          <Edit3 size={13} />
-                        </button>
-                      </div>
-                    )}
 
-                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
-                      {tmpl.description || "Pre-configured document structure ready for use"}
-                    </p>
-                  </div>
-
-                  {/* Card Actions Bar */}
-                  <div className="pt-3.5 mt-4 border-t border-border/60 flex items-center justify-between gap-2 text-xs">
-                    {/* View Preview Button */}
-                    <button
-                      type="button"
-                      onClick={() => setPreviewTemplate(tmpl)}
-                      className="inline-flex items-center gap-1 text-primary font-semibold hover:underline cursor-pointer"
-                    >
-                      <Eye size={13} />
-                      <span>Preview</span>
-                    </button>
-
-                    <div className="flex items-center gap-1.5">
-                      {/* Duplicate Template */}
-                      <button
-                        type="button"
-                        onClick={() => handleDuplicateTemplate(tmpl)}
-                        className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
-                        title="Duplicate template"
-                      >
-                        <Copy size={13} />
-                      </button>
-
-                      {/* Delete Custom Template */}
-                      {tmpl.badge !== "มาตรฐาน" && (
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteTemplate(tmpl.id)}
-                          className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors cursor-pointer"
-                          title="Delete template"
-                        >
-                          <Trash2 size={13} />
-                        </button>
+                      {/* Renaming inline or Title display */}
+                      {renamingTemplate?.id === tmpl.id ? (
+                        <div className="flex items-center gap-1.5 my-1">
+                          <input
+                            type="text"
+                            value={newName}
+                            onChange={(e) => setNewName(e.target.value)}
+                            className="flex-1 text-xs font-semibold text-foreground border border-primary bg-surface rounded-[6px] px-2 py-1 outline-none"
+                            autoFocus
+                          />
+                          <button
+                            type="button"
+                            onClick={handleSaveRename}
+                            disabled={isRenamingLoading}
+                            className="p-1 rounded-[6px] bg-emerald-600 text-white hover:bg-emerald-700 cursor-pointer"
+                            title="Save"
+                          >
+                            <Check size={12} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setRenamingTemplate(null)}
+                            className="p-1 rounded-[6px] bg-muted text-muted-foreground hover:text-foreground cursor-pointer"
+                            title="Cancel"
+                          >
+                            <X size={12} />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-start justify-between gap-2 my-1">
+                          <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors leading-snug line-clamp-1 font-sans">
+                            {tmpl.name}
+                          </h3>
+                          <button
+                            type="button"
+                            onClick={() => handleStartRename(tmpl)}
+                            className="opacity-0 group-hover:opacity-100 p-0.5 text-muted-foreground hover:text-foreground rounded transition-opacity cursor-pointer"
+                            title="Rename template"
+                          >
+                            <Edit3 size={11} />
+                          </button>
+                        </div>
                       )}
 
-                      {/* Edit in Studio */}
-                      <Link
-                        href={`/templates/new?edit=${tmpl.id}`}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border bg-muted/40 hover:bg-muted text-foreground font-semibold transition-all cursor-pointer shadow-2xs"
+                      {/* Description */}
+                      <p className="text-xs text-muted-foreground/80 mt-1 mb-3 line-clamp-2 leading-relaxed font-normal">
+                        {tmpl.description || "Standard document blueprint ready for use"}
+                      </p>
+                    </div>
+
+                    {/* Bottom: Actions Bar */}
+                    <div className="mt-auto pt-3 border-t border-border/60 flex items-center justify-between gap-2 text-xs">
+                      <button
+                        type="button"
+                        onClick={() => setPreviewTemplate(tmpl)}
+                        className="text-xs font-medium text-muted-foreground hover:text-foreground inline-flex items-center gap-1 transition-colors cursor-pointer"
+                        title="Quick preview"
                       >
-                        <Edit3 size={12} />
-                        <span>Edit</span>
-                      </Link>
+                        <Eye size={13} />
+                        <span>{t('actions.preview') || "Preview"}</span>
+                      </button>
+
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => handleDuplicateTemplate(tmpl)}
+                          className="size-7 rounded-[6px] hover:bg-muted text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors cursor-pointer"
+                          title="Duplicate template"
+                        >
+                          <Copy size={13} />
+                        </button>
+
+                        {(!tmpl.isSystem && tmpl.badge !== "มาตรฐาน" && tmpl.badge !== "Standard") && (
+                          <button
+                            type="button"
+                            onClick={() => setTemplateToDelete(tmpl)}
+                            className="size-7 rounded-[6px] hover:bg-destructive/10 text-muted-foreground hover:text-destructive flex items-center justify-center transition-colors cursor-pointer"
+                            title="Delete template"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        )}
+
+                        <Link
+                          href={`/templates/new?edit=${tmpl.id}`}
+                          className="h-7 px-2.5 rounded-[6px] bg-muted/70 hover:bg-muted text-xs font-medium text-foreground inline-flex items-center gap-1 border border-border/80 transition-colors shadow-2xs"
+                          title="Edit in Studio"
+                        >
+                          <Edit3 size={11} />
+                          <span>{t('actions.edit') || "Edit"}</span>
+                        </Link>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </>
@@ -670,6 +590,23 @@ export default function TemplatesHubPage() {
         onClose={() => setIsTypeModalOpen(false)}
         onSelect={handleSelectType}
         categoryName={selectedCategory?.name}
+      />
+
+      {/* Reusable Delete Confirmation Modal */}
+      <DeleteConfirmModal
+        isOpen={Boolean(templateToDelete)}
+        onClose={() => {
+          if (!isDeletingTemplate) setTemplateToDelete(null);
+        }}
+        onConfirm={handleConfirmDeleteTemplate}
+        isLoading={isDeletingTemplate}
+        title={t('templates.deleteModalTitle') || "Delete template?"}
+        description={
+          t('templates.deleteModalMessage', { name: templateToDelete?.name || "" }) ||
+          `Are you sure you want to delete template "${templateToDelete?.name || ""}" from catalog? This action cannot be undone.`
+        }
+        cancelText={t('actions.cancel') || "Cancel"}
+        confirmText={t('actions.delete') || "Delete"}
       />
     </div>
   );
