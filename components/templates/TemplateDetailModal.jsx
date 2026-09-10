@@ -36,8 +36,6 @@ import PartnerPage3 from "@/components/document/partner/PartnerPage3";
 import PartnerPage4 from "@/components/document/partner/PartnerPage4";
 import PartnerPage5 from "@/components/document/partner/PartnerPage5";
 import NotificationRelocationDocument from "@/components/document/notification/NotificationRelocationDocument";
-import FabricPrintRenderer from "@/components/document/FabricPrintRenderer";
-import { DEFAULT_SAMPLE_TOKEN_MAP } from "@/lib/tokens/tokenEngine";
 
 const emptyQuotationPreviewData = {
   id: "preview",
@@ -71,39 +69,6 @@ function AuthenticDocumentPreview({ template, currentPage = 1, scale = 0.58 }) {
 
   const isLandscape = template.orientation === "landscape";
   const effectiveScale = isLandscape ? 0.48 : scale;
-
-  // A saved Fabric page is the edited source of truth. Render it before the
-  // built-in previews so edits to system templates are visible immediately.
-  if (Array.isArray(template.pages) && template.pages.length > 0 && template.pages[0]?.json) {
-    const pageWidth = isLandscape ? 1123 : 794;
-    const pageHeight = isLandscape ? 632 : 1123;
-    return (
-      <div
-        className="origin-top rounded-sm shadow-xl border border-gray-300 overflow-hidden"
-        style={{
-          width: pageWidth * effectiveScale,
-          minHeight: pageHeight * effectiveScale,
-        }}
-      >
-        <div
-          style={{
-            width: pageWidth,
-            height: pageHeight,
-            transform: `scale(${effectiveScale})`,
-            transformOrigin: "top left",
-          }}
-        >
-          <FabricPrintRenderer
-            template={{
-              ...template,
-              pages: [template.pages[Math.max(0, currentPage - 1)] || template.pages[0]],
-            }}
-            values={DEFAULT_SAMPLE_TOKEN_MAP}
-          />
-        </div>
-      </div>
-    );
-  }
 
   if (catId === "quotation" || tmplId.includes("quotation")) {
     return (
@@ -306,6 +271,10 @@ export default function TemplateDetailModal({ template, onClose }) {
 
   const catId = (template.categoryId || "").toLowerCase();
   const tmplId = (template.id || "").toLowerCase();
+  const isNdaTemplate = catId === "nda"
+    || tmplId === "nda"
+    || tmplId.includes("-nda-")
+    || tmplId.startsWith("nda-");
 
   let totalPages = Array.isArray(template.pages) && template.pages.length > 0
     ? template.pages.length
