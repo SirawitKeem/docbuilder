@@ -11,11 +11,13 @@ export async function PUT(request, { params }) {
   const { id } = await params;
   const body = await request.json();
   const updated = await quotationsRepo.update(id, body);
+  if (!updated) return Response.json({ error: "ไม่พบใบเสนอราคาที่จะแก้ไข" }, { status: 404 });
   return Response.json(updated);
 }
 
 export async function DELETE(request, { params }) {
   const { id } = await params;
-  await quotationsRepo.delete(id);
-  return Response.json({ success: true });
+  const result = await quotationsRepo.delete(id);
+  if (!result.success) return Response.json({ error: "ไม่พบใบเสนอราคาที่จะลบ" }, { status: 404 });
+  return Response.json(result);
 }

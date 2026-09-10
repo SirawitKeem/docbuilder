@@ -14,8 +14,8 @@ export async function GET() {
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { key, label, example, scope, category } = body;
-    const created = await customTokensRepo.create({ key, label, example, scope, category });
+    const { key, label, example, scope, dataType, category, templateId } = body;
+    const created = await customTokensRepo.create({ key, label, example, scope, dataType, category, templateId });
     return NextResponse.json(created, { status: 201 });
   } catch (err) {
     console.error("Error creating custom token:", err);

@@ -45,8 +45,11 @@ export async function DELETE(req, { params }) {
       );
     }
 
-    await categoriesRepo.delete(id);
-    return NextResponse.json({ success: true });
+    const result = await categoriesRepo.delete(id);
+    if (!result.success) {
+      return NextResponse.json({ error: "ไม่พบหมวดหมู่ที่จะลบ" }, { status: 404 });
+    }
+    return NextResponse.json(result);
   } catch (err) {
     console.error("Error deleting category:", err);
     return NextResponse.json({ error: "Failed to delete category" }, { status: 500 });

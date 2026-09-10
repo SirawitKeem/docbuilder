@@ -32,6 +32,9 @@ export async function DELETE(request, { params }) {
   try {
     const { id } = await params;
     const result = await documentsRepo.delete(id);
+    if (!result.success) {
+      return NextResponse.json({ error: "ไม่พบเอกสารที่จะลบ" }, { status: 404 });
+    }
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

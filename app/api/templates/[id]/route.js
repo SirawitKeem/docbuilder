@@ -29,8 +29,17 @@ export async function PUT(req, { params }) {
   try {
     const { id } = await params;
     const body = await req.json();
+    const updateData = {
+      ...body,
+      publishSnapshot: body.publishSnapshot === true || (
+        body.publishSnapshot === undefined && body.status === "published"
+      ),
+    };
 
-    const updated = await customTemplatesRepo.update(id, body);
+    const updated = await customTemplatesRepo.update(id, updateData);
+    if (!updated) {
+      return NextResponse.json({ error: "ไม่พบเทมเพลตนี้" }, { status: 404 });
+    }
     return NextResponse.json(updated);
   } catch (err) {
     console.error("Error updating template:", err);
@@ -41,8 +50,11 @@ export async function PUT(req, { params }) {
 export async function DELETE(req, { params }) {
   try {
     const { id } = await params;
-    await customTemplatesRepo.delete(id);
-    return NextResponse.json({ success: true });
+    const result = await customTemplatesRepo.delete(id);
+    if (!result.success) {
+      return NextResponse.json({ error: "ไม่พบเทมเพลตที่จะลบ" }, { status: 404 });
+    }
+    return NextResponse.json(result);
   } catch (err) {
     console.error("Error deleting template:", err);
     return NextResponse.json({ error: "Failed to delete template" }, { status: 500 });

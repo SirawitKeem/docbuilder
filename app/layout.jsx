@@ -23,7 +23,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="th" suppressHydrationWarning className="h-full">
+    <html lang="en" suppressHydrationWarning className="h-full">
       <body className={`${inter.variable} ${notoSansThai.variable} font-sans bg-background text-foreground antialiased min-h-full`}>
         <LanguageProvider>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>

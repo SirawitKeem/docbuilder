@@ -72,6 +72,39 @@ function AuthenticDocumentPreview({ template, currentPage = 1, scale = 0.58 }) {
   const isLandscape = template.orientation === "landscape";
   const effectiveScale = isLandscape ? 0.48 : scale;
 
+  // A saved Fabric page is the edited source of truth. Render it before the
+  // built-in previews so edits to system templates are visible immediately.
+  if (Array.isArray(template.pages) && template.pages.length > 0 && template.pages[0]?.json) {
+    const pageWidth = isLandscape ? 1123 : 794;
+    const pageHeight = isLandscape ? 632 : 1123;
+    return (
+      <div
+        className="origin-top rounded-sm shadow-xl border border-gray-300 overflow-hidden"
+        style={{
+          width: pageWidth * effectiveScale,
+          minHeight: pageHeight * effectiveScale,
+        }}
+      >
+        <div
+          style={{
+            width: pageWidth,
+            height: pageHeight,
+            transform: `scale(${effectiveScale})`,
+            transformOrigin: "top left",
+          }}
+        >
+          <FabricPrintRenderer
+            template={{
+              ...template,
+              pages: [template.pages[Math.max(0, currentPage - 1)] || template.pages[0]],
+            }}
+            values={DEFAULT_SAMPLE_TOKEN_MAP}
+          />
+        </div>
+      </div>
+    );
+  }
+
   if (catId === "quotation" || tmplId.includes("quotation")) {
     return (
       <div
@@ -99,7 +132,12 @@ function AuthenticDocumentPreview({ template, currentPage = 1, scale = 0.58 }) {
     );
   }
 
-  if (catId === "nda" || tmplId.includes("nda")) {
+  const isNdaTemplate = catId === "nda"
+    || tmplId === "nda"
+    || tmplId.includes("-nda-")
+    || tmplId.startsWith("nda-");
+
+  if (isNdaTemplate) {
     const renderNdaPage = () => {
       switch (currentPage) {
         case 2: return <NdaPage2 />;
@@ -250,34 +288,6 @@ function AuthenticDocumentPreview({ template, currentPage = 1, scale = 0.58 }) {
     );
   }
 
-  if (Array.isArray(template.pages) && template.pages.length > 0 && template.pages[0]?.json) {
-    const pageWidth = isLandscape ? 1123 : 794;
-    const pageHeight = isLandscape ? 632 : 1123;
-    return (
-      <div
-        className="origin-top rounded-sm shadow-xl border border-gray-300 overflow-hidden"
-        style={{
-          width: pageWidth * effectiveScale,
-          minHeight: pageHeight * effectiveScale,
-        }}
-      >
-        <div
-          style={{
-            width: pageWidth,
-            height: pageHeight,
-            transform: `scale(${effectiveScale})`,
-            transformOrigin: "top left",
-          }}
-        >
-          <FabricPrintRenderer
-            template={template}
-            values={DEFAULT_SAMPLE_TOKEN_MAP}
-          />
-        </div>
-      </div>
-    );
-  }
-
   return (
     <UniversalTemplateRenderer
       template={template}
@@ -297,8 +307,10 @@ export default function TemplateDetailModal({ template, onClose }) {
   const catId = (template.categoryId || "").toLowerCase();
   const tmplId = (template.id || "").toLowerCase();
 
-  let totalPages = 1;
-  if (catId === "nda" || tmplId.includes("nda")) totalPages = 4;
+  let totalPages = Array.isArray(template.pages) && template.pages.length > 0
+    ? template.pages.length
+    : 1;
+  if (totalPages === 1 && isNdaTemplate) totalPages = 4;
   else if (catId === "partner" || tmplId.includes("partner")) totalPages = 5;
   else if (catId === "distributor" || tmplId.includes("distributor")) totalPages = 5;
 

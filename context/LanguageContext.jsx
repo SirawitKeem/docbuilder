@@ -3,18 +3,16 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 
 const LanguageContext = createContext();
+const DEFAULT_LOCALE = 'en';
+const LANGUAGE_STORAGE_KEY = 'docbuilder-language-v2';
 
-export function LanguageProvider({ children, initialLocale = 'th' }) {
-  const [locale, setLocaleState] = useState(initialLocale);
+export function LanguageProvider({ children, initialLocale = DEFAULT_LOCALE }) {
+  const [locale, setLocaleState] = useState(() => {
+    if (typeof window === 'undefined') return initialLocale;
+    return localStorage.getItem(LANGUAGE_STORAGE_KEY) || initialLocale;
+  });
   const [dictionary, setDictionary] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    const savedLanguage = localStorage.getItem('docbuilder-language');
-    if (savedLanguage) {
-      setLocaleState(savedLanguage);
-    }
-  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -64,7 +62,7 @@ export function LanguageProvider({ children, initialLocale = 'th' }) {
 
   const setLocale = useCallback((newLocale) => {
     setLocaleState(newLocale);
-    localStorage.setItem('docbuilder-language', newLocale);
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, newLocale);
     
     // Background API call to save settings
     fetch('/api/settings', {

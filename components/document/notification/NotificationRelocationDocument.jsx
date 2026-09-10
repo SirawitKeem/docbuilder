@@ -38,8 +38,8 @@ export default function NotificationRelocationDocument({ data, values, quotation
       {/* ── TOP & MAIN CONTENT ── */}
       <div>
         {/* ── TOP FLUSH GRAPHIC STRIPE (Flush to top edge of paper) ── */}
-        <div className="-mx-12 -mt-0 mb-4 overflow-hidden pointer-events-none">
-          <svg viewBox="0 0 1000 48" className="w-full h-[36px] block" preserveAspectRatio="none">
+        <div className="-mx-12 mt-0 mb-4 overflow-hidden pointer-events-none">
+          <svg viewBox="0 0 1000 48" className="w-full h-9 block" preserveAspectRatio="none">
             <defs>
               <linearGradient id="topHeaderRedRibbon2" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stopColor="#7f1d1d" />
@@ -159,8 +159,8 @@ export default function NotificationRelocationDocument({ data, values, quotation
       </div>
 
       {/* ── BOTTOM FLUSH GRAPHIC STRIPE (Flush to bottom edge of paper) ── */}
-      <div className="-mx-12 -mb-0 mt-0 overflow-hidden pointer-events-none">
-        <svg viewBox="0 0 1000 48" className="w-full h-[36px] block" preserveAspectRatio="none">
+      <div className="-mx-12 mb-0 mt-0 overflow-hidden pointer-events-none">
+        <svg viewBox="0 0 1000 48" className="w-full h-9 block" preserveAspectRatio="none">
           <defs>
             <linearGradient id="btmHeaderRedRibbon2" x1="0" y1="0" x2="1" y2="0">
               <stop offset="0%" stopColor="#7f1d1d" />

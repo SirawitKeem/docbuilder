@@ -32,7 +32,7 @@ async function blobToBase64(blob) {
   });
 }
 
-function EditorContent({ templateId, initialDocId, initialDocName }) {
+function EditorContent({ templateId, initialDocId, initialDocName, profileId }) {
   const router = useRouter();
   const { schema, pages } = templateRegistry[templateId];
   const [currentPage, setCurrentPage] = useState(1);
@@ -64,6 +64,7 @@ function EditorContent({ templateId, initialDocId, initialDocName }) {
           name: docName,
           templateId,
           templateName: schema.fullName,
+          profileId: profileId || null,
           values,
           status: "draft",
         }),
@@ -274,6 +275,7 @@ export default function DocumentEditor({ templateId, profileId, docId }) {
   const [initialValues, setInitialValues] = useState(null); // null = กำลังโหลด
   const [loadedDocId, setLoadedDocId] = useState(docId || null);
   const [loadedDocName, setLoadedDocName] = useState(null);
+  const [activeProfileId, setActiveProfileId] = useState(profileId || null);
 
   useEffect(() => {
     const { schema } = templateRegistry[templateId];
@@ -292,6 +294,9 @@ export default function DocumentEditor({ templateId, profileId, docId }) {
             setInitialValues(mergedValues);
             setLoadedDocId(doc.id);
             setLoadedDocName(doc.name || null);
+            if (doc.profileId) {
+              setActiveProfileId(doc.profileId);
+            }
             return;
           }
         } catch (err) {
@@ -331,7 +336,12 @@ export default function DocumentEditor({ templateId, profileId, docId }) {
 
   return (
     <DocumentFieldsProvider initialValues={initialValues}>
-      <EditorContent templateId={templateId} initialDocId={loadedDocId} initialDocName={loadedDocName} />
+      <EditorContent
+        templateId={templateId}
+        initialDocId={loadedDocId}
+        initialDocName={loadedDocName}
+        profileId={activeProfileId || profileId || null}
+      />
     </DocumentFieldsProvider>
   );
 }

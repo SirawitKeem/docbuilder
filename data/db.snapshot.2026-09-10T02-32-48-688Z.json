@@ -1,33 +1,4 @@
 {
-  "organizations": [
-    {
-      "id": "org-crestzendo",
-      "name": "บริษัท เครสท์ เซนโด จำกัด",
-      "nameEn": "Crest Zendo Co., Ltd.",
-      "taxId": "0105558073755",
-      "branch": "สำนักงานใหญ่",
-      "address": "8/40 The Connect 37, ซอยช่างอากาศอุทิศ 10 แยก 1-2 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210",
-      "phone": "02-123-4567",
-      "email": "contact@crestzendo.com",
-      "website": "https://crestzendo.com",
-      "logo": "",
-      "createdAt": "2026-08-01T00:00:00.000Z",
-      "updatedAt": "2026-08-01T00:00:00.000Z"
-    }
-  ],
-  "users": [
-    {
-      "id": "usr-admin",
-      "orgId": "org-crestzendo",
-      "fullName": "สิรวิทย์ เพชรจำรัส",
-      "email": "keem@crestzendo.com",
-      "role": "Owner / Admin",
-      "avatar": "",
-      "twoFactorEnabled": true,
-      "createdAt": "2026-08-01T00:00:00.000Z",
-      "updatedAt": "2026-08-01T00:00:00.000Z"
-    }
-  ],
   "fieldProfiles": [
     {
       "id": "profile-1787103435257",
@@ -88,7 +59,6 @@
       "updatedAt": "2026-08-21T01:18:50.686Z"
     }
   ],
-  "fieldProfileTemplates": [],
   "documents": [
     {
       "id": "doc-1788331547618",
@@ -98,7 +68,7 @@
       "templateName": "หนังสือแจ้งเปลี่ยนแปลงที่ตั้งสำนักงานใหญ่",
       "createdBy": "นายสมชาย ใจดี (ผู้จัดทำ)",
       "createdAt": "2026-09-02T06:45:47.617Z",
-      "updatedAt": "2026-09-10T02:40:42.224Z",
+      "updatedAt": "2026-09-02T06:45:47.617Z",
       "status": "draft",
       "sentTo": null,
       "values": {
@@ -142,10 +112,7 @@
           "status": "pending",
           "signedAt": null
         }
-      ],
-      "orgId": "org-crestzendo",
-      "createdByUserId": "usr-admin",
-      "templateVersionId": "tv-tmpl-notification-standard-v1"
+      ]
     },
     {
       "id": "doc-1787812462153",
@@ -294,10 +261,7 @@
         "specialDiscount": 0,
         "senderPosition": "Executive Assistant - Technology & Governance",
         "senderEmail": "narin@crestzendo.com"
-      },
-      "orgId": "org-crestzendo",
-      "createdByUserId": "usr-admin",
-      "templateVersionId": "tv-tmpl-quotation-standard-v1"
+      }
     },
     {
       "id": "qt-1787638573675",
@@ -446,10 +410,7 @@
         "specialDiscount": 0,
         "senderPosition": "Executive Assistant - Technology & Governance",
         "senderEmail": "narin@crestzendo.com"
-      },
-      "orgId": "org-crestzendo",
-      "createdByUserId": "usr-admin",
-      "templateVersionId": "tv-tmpl-quotation-standard-v1"
+      }
     },
     {
       "id": "qt-1787631227758",
@@ -785,10 +746,7 @@
         "updatedAt": "2026-08-25T04:13:47.758Z",
         "status": "draft",
         "sentTo": null
-      },
-      "orgId": "org-crestzendo",
-      "createdByUserId": "usr-admin",
-      "templateVersionId": "tv-tmpl-quotation-standard-v1"
+      }
     },
     {
       "id": "doc-1787207517799",
@@ -809,10 +767,7 @@
         "reseller_address": "888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
         "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
         "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
-      },
-      "orgId": "org-crestzendo",
-      "createdByUserId": "usr-admin",
-      "templateVersionId": "tv-tmpl-partner-standard-v1"
+      }
     },
     {
       "id": "doc-1787192788708",
@@ -833,10 +788,7 @@
         "reseller_address": "888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
         "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
         "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
-      },
-      "orgId": "org-crestzendo",
-      "createdByUserId": "usr-admin",
-      "templateVersionId": "tv-tmpl-partner-standard-v1"
+      }
     },
     {
       "id": "doc-1787128888165",
@@ -856,10 +808,7 @@
         "reseller_address": "เลขที่ 888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
         "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
         "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
-      },
-      "orgId": "org-crestzendo",
-      "createdByUserId": "usr-admin",
-      "templateVersionId": "tv-tmpl-partner-standard-v1"
+      }
     }
   ],
   "sentHistory": [
@@ -1009,10 +958,7 @@
         "specialDiscount": 0,
         "senderPosition": "Executive Assistant - Technology & Governance",
         "senderEmail": "narin@crestzendo.com"
-      },
-      "documentId": "qt-1787638573675",
-      "sentByUserId": "usr-admin",
-      "channel": "email"
+      }
     },
     {
       "id": "history-1787207517811",
@@ -1032,10 +978,7 @@
         "reseller_address": "888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
         "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
         "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
-      },
-      "documentId": "doc-1787192788708",
-      "sentByUserId": "usr-admin",
-      "channel": "email"
+      }
     },
     {
       "id": "history-1787128888176",
@@ -1055,10 +998,7 @@
         "reseller_address": "เลขที่ 888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
         "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
         "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
-      },
-      "documentId": "doc-1787128888165",
-      "sentByUserId": "usr-admin",
-      "channel": "email"
+      }
     },
     {
       "id": "history-1787128342315",
@@ -1078,10 +1018,7 @@
         "reseller_address": "เลขที่ 888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
         "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
         "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
-      },
-      "documentId": "doc-1787128888165",
-      "sentByUserId": "usr-admin",
-      "channel": "email"
+      }
     },
     {
       "id": "history-1787125902243",
@@ -1101,10 +1038,7 @@
         "reseller_address": "เลขที่ 888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
         "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
         "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
-      },
-      "documentId": "doc-1787128888165",
-      "sentByUserId": "usr-admin",
-      "channel": "email"
+      }
     },
     {
       "id": "history-1787125495740",
@@ -1124,10 +1058,7 @@
         "reseller_address": "เลขที่ 888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
         "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
         "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
-      },
-      "documentId": "doc-1787128888165",
-      "sentByUserId": "usr-admin",
-      "channel": "email"
+      }
     },
     {
       "id": "history-1787122422801",
@@ -1147,10 +1078,7 @@
         "reseller_address": "เลขที่ 888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
         "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
         "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
-      },
-      "documentId": "doc-1787128888165",
-      "sentByUserId": "usr-admin",
-      "channel": "email"
+      }
     },
     {
       "id": "history-1787120846132",
@@ -1170,10 +1098,7 @@
         "reseller_address": "เลขที่ 888 อาคารเอ็มไพร์ ทาวเวอร์ ชั้น 21 ถนนสาทรใต้ แขวงยานนาวา เขตสาทร กรุงเทพมหานคร 10120",
         "reseller_signatory_name": "นายวิทวัส อัครเดชากุล",
         "reseller_signatory_position": "กรรมการผู้มีอำนาจลงนามผูกพันบริษัท"
-      },
-      "documentId": "doc-1787128888165",
-      "sentByUserId": "usr-admin",
-      "channel": "email"
+      }
     }
   ],
   "categories": [
@@ -1187,8 +1112,7 @@
       "badge": "มาตรฐาน",
       "order": 1,
       "createdAt": "2026-09-01T00:00:00.000Z",
-      "updatedAt": "2026-09-01T00:00:00.000Z",
-      "createdByUserId": "usr-admin"
+      "updatedAt": "2026-09-01T00:00:00.000Z"
     },
     {
       "id": "nda",
@@ -1200,8 +1124,7 @@
       "badge": "มาตรฐาน",
       "order": 2,
       "createdAt": "2026-09-01T00:00:00.000Z",
-      "updatedAt": "2026-09-01T00:00:00.000Z",
-      "createdByUserId": "usr-admin"
+      "updatedAt": "2026-09-01T00:00:00.000Z"
     },
     {
       "id": "partner",
@@ -1213,8 +1136,7 @@
       "badge": "มาตรฐาน",
       "order": 3,
       "createdAt": "2026-09-01T00:00:00.000Z",
-      "updatedAt": "2026-09-01T00:00:00.000Z",
-      "createdByUserId": "usr-admin"
+      "updatedAt": "2026-09-01T00:00:00.000Z"
     },
     {
       "id": "distributor",
@@ -1226,8 +1148,7 @@
       "badge": "มาตรฐาน",
       "order": 4,
       "createdAt": "2026-09-01T00:00:00.000Z",
-      "updatedAt": "2026-09-01T00:00:00.000Z",
-      "createdByUserId": "usr-admin"
+      "updatedAt": "2026-09-01T00:00:00.000Z"
     },
     {
       "id": "notification",
@@ -1239,8 +1160,7 @@
       "badge": "มาตรฐาน",
       "order": 5,
       "createdAt": "2026-09-01T00:00:00.000Z",
-      "updatedAt": "2026-09-01T00:00:00.000Z",
-      "createdByUserId": "usr-admin"
+      "updatedAt": "2026-09-01T00:00:00.000Z"
     },
     {
       "id": "5616",
@@ -1252,8 +1172,7 @@
       "badge": "หมวดใหม่",
       "order": 1,
       "createdAt": "2026-09-04T02:39:28.275Z",
-      "updatedAt": "2026-09-04T02:39:28.276Z",
-      "createdByUserId": "usr-admin"
+      "updatedAt": "2026-09-04T02:39:28.276Z"
     },
     {
       "id": "cat-1788946775522",
@@ -1267,23 +1186,7 @@
       "available": true,
       "href": "/create/custom?categoryId=cat-1788946775522",
       "createdAt": "2026-09-09T09:39:35.523Z",
-      "updatedAt": "2026-09-09T09:39:35.524Z",
-      "createdByUserId": "usr-admin"
-    },
-    {
-      "id": "cat-1789023414853",
-      "name": "ฟหก",
-      "fullName": "ฟหกฟหก",
-      "description": "",
-      "icon": "FileText",
-      "color": "purple",
-      "badge": "หมวดใหม่",
-      "order": 1,
-      "available": true,
-      "href": "/create/custom?categoryId=cat-1789023414853",
-      "createdByUserId": "usr-admin",
-      "createdAt": "2026-09-10T06:56:54.853Z",
-      "updatedAt": "2026-09-10T06:56:54.853Z"
+      "updatedAt": "2026-09-09T09:39:35.524Z"
     }
   ],
   "customTemplates": [
@@ -1389,9 +1292,7 @@
         }
       ],
       "createdAt": "2026-09-01T00:00:00.000Z",
-      "updatedAt": "2026-09-01T00:00:00.000Z",
-      "currentVersionId": "tv-tmpl-quotation-standard-v1",
-      "createdByUserId": "usr-admin"
+      "updatedAt": "2026-09-01T00:00:00.000Z"
     },
     {
       "id": "tmpl-nda-standard",
@@ -1479,9 +1380,7 @@
         }
       ],
       "createdAt": "2026-09-01T00:00:00.000Z",
-      "updatedAt": "2026-09-01T00:00:00.000Z",
-      "currentVersionId": "tv-tmpl-nda-standard-v1",
-      "createdByUserId": "usr-admin"
+      "updatedAt": "2026-09-01T00:00:00.000Z"
     },
     {
       "id": "tmpl-partner-standard",
@@ -1569,9 +1468,7 @@
         }
       ],
       "createdAt": "2026-09-01T00:00:00.000Z",
-      "updatedAt": "2026-09-01T00:00:00.000Z",
-      "currentVersionId": "tv-tmpl-partner-standard-v1",
-      "createdByUserId": "usr-admin"
+      "updatedAt": "2026-09-01T00:00:00.000Z"
     },
     {
       "id": "tmpl-distributor-standard",
@@ -1659,9 +1556,7 @@
         }
       ],
       "createdAt": "2026-09-01T00:00:00.000Z",
-      "updatedAt": "2026-09-01T00:00:00.000Z",
-      "currentVersionId": "tv-tmpl-distributor-standard-v1",
-      "createdByUserId": "usr-admin"
+      "updatedAt": "2026-09-01T00:00:00.000Z"
     },
     {
       "id": "tmpl-notification-standard",
@@ -1759,432 +1654,7 @@
         }
       ],
       "createdAt": "2026-09-01T00:00:00.000Z",
-      "updatedAt": "2026-09-01T00:00:00.000Z",
-      "currentVersionId": "tv-tmpl-notification-standard-v1",
-      "createdByUserId": "usr-admin"
-    }
-  ],
-  "templateVersions": [
-    {
-      "id": "tv-tmpl-quotation-standard-v1",
-      "templateId": "tmpl-quotation-standard",
-      "version": 1,
-      "name": "ใบเสนอราคามาตรฐาน",
-      "description": "โครงสร้างเทมเพลตใบเสนอราคามาตรฐาน พร้อมระบบคำนวณภาษี VAT 7% และส่วนลด",
-      "categoryId": "quotation",
-      "blocks": [
-        {
-          "id": "b_header",
-          "type": "header",
-          "title": "หัวกระดาษบริษัท",
-          "settings": {
-            "hasLogo": true,
-            "logoUrl": "/quotation.png",
-            "companyName": "[ ชื่อบริษัท / ผู้เสนอราคา ]",
-            "companyNameEn": "[ Company Name (EN) ]",
-            "taxId": "0-0000-00000-00-0",
-            "address": "[ ที่อยู่สำนักงานใหญ่ / สถานประกอบการ ]",
-            "phone": "02-XXX-XXXX",
-            "email": "contact@company.com",
-            "align": "split"
-          }
-        },
-        {
-          "id": "b_title",
-          "type": "doc_title",
-          "title": "หัวเรื่องเอกสาร",
-          "settings": {
-            "titleText": "ใบเสนอราคา (QUOTATION)",
-            "subtitleText": "ต้นฉบับ / Original",
-            "align": "center"
-          }
-        },
-        {
-          "id": "b_info",
-          "type": "info_grid",
-          "title": "ข้อมูลลูกค้าและเอกสาร",
-          "settings": {
-            "billToTitle": "Bill To:",
-            "billToCompany": "[ ชื่อบริษัทลูกค้า / ผู้รับบริการ ]",
-            "attnName": "[ ชื่อผู้ติดต่อ ]",
-            "subject": "[ ระบุเรื่อง / โครงการ ]",
-            "quotationNo": "QT-YYYYMM-XXXX",
-            "date": "[ ว/ด/ป ที่ออกเอกสาร ]",
-            "validity": "30 วัน",
-            "amName": "[ ชื่อผู้จัดทำ / Account Manager ]"
-          }
-        },
-        {
-          "id": "b_table",
-          "type": "quotation_table",
-          "title": "ตารางรายการสินค้า/บริการ",
-          "settings": {
-            "vatRate": 7,
-            "items": []
-          }
-        },
-        {
-          "id": "b_terms",
-          "type": "terms",
-          "title": "เงื่อนไขและข้อกำหนด",
-          "settings": {
-            "heading": "เงื่อนไขการชำระเงินและส่งมอบ:",
-            "bullets": [
-              "ราคานี้ยังไม่รวมภาษีมูลค่าเพิ่ม (VAT 7%)",
-              "กำหนดยืนราคา 30 วันนับจากวันที่ในเอกสาร",
-              "เงื่อนไขการชำระเงิน: ภายใน 30 วันนับจากวันส่งมอบงาน"
-            ]
-          }
-        },
-        {
-          "id": "b_signatures",
-          "type": "signatures",
-          "title": "ส่วนลงนามอนุมัติ",
-          "settings": {
-            "slots": [
-              {
-                "id": "s1",
-                "name": "[ ผู้มีอำนาจลงนาม / ผู้เสนอราคา ]",
-                "role": "ผู้เสนอราคา"
-              },
-              {
-                "id": "s2",
-                "name": "............................................",
-                "role": "ผู้อนุมัติสั่งซื้อ / ลูกค้า"
-              }
-            ]
-          }
-        }
-      ],
-      "pages": [],
-      "createdAt": "2026-09-01T00:00:00.000Z",
-      "createdByUserId": "usr-admin"
-    },
-    {
-      "id": "tv-tmpl-nda-standard-v1",
-      "templateId": "tmpl-nda-standard",
-      "version": 1,
-      "name": "หนังสือสัญญาไม่เปิดเผยข้อมูล",
-      "description": "โครงสร้างสัญญามาตรฐานสำหรับการรักษาความลับทางการค้าและทรัพย์สินทางปัญญา",
-      "categoryId": "nda",
-      "blocks": [
-        {
-          "id": "b_header",
-          "type": "header",
-          "title": "หัวกระดาษ",
-          "settings": {
-            "hasLogo": true,
-            "logoUrl": "/quotation.png",
-            "companyName": "[ ชื่อบริษัท / องค์กร ]",
-            "companyNameEn": "[ Company Name (EN) ]",
-            "taxId": "0-0000-00000-00-0",
-            "address": "[ ที่อยู่สำนักงานใหญ่ ]",
-            "phone": "02-XXX-XXXX",
-            "email": "legal@company.com",
-            "align": "split"
-          }
-        },
-        {
-          "id": "b_title",
-          "type": "doc_title",
-          "title": "หัวเรื่อง",
-          "settings": {
-            "titleText": "หนังสือสัญญาไม่เปิดเผยข้อมูล",
-            "subtitleText": "Non-Disclosure Agreement (NDA)",
-            "align": "center"
-          }
-        },
-        {
-          "id": "b_text",
-          "type": "text_block",
-          "title": "โครงสร้างข้อสัญญา",
-          "settings": {
-            "content": "สัญญาฉบับนี้ทำขึ้นระหว่าง [ ชื่อคู่สัญญาฝ่ายเปิดเผยข้อมูล ] และ [ ชื่อคู่สัญญาฝ่ายรับข้อมูล ] โดยทั้งสองฝ่ายตกลงรักษาความลับของข้อมูลตามขอบเขตและระยะเวลาที่ระบุในสัญญานี้"
-          }
-        },
-        {
-          "id": "b_terms",
-          "type": "terms",
-          "title": "ข้อกำหนดความลับ",
-          "settings": {
-            "heading": "ข้อกำหนดและขอบเขตความลับ:",
-            "bullets": [
-              "ห้ามเปิดเผยข้อมูลความลับแก่บุคคลภายนอกโดยไม่ได้รับความยินยอมเป็นลายลักษณ์อักษร",
-              "ใช้ข้อมูลความลับเพื่อวัตถุประสงค์ตามที่ตกลงกันไว้เท่านั้น",
-              "สัญญานี้มีผลบังคับใช้ตามระยะเวลาที่กำหนดในสัญญา"
-            ]
-          }
-        },
-        {
-          "id": "b_signatures",
-          "type": "signatures",
-          "title": "ลงนามทั้งสองฝ่าย",
-          "settings": {
-            "slots": [
-              {
-                "id": "s1",
-                "name": "[ ผู้มีอำนาจลงนามฝ่ายเปิดเผยข้อมูล ]",
-                "role": "ฝ่ายเปิดเผยข้อมูล"
-              },
-              {
-                "id": "s2",
-                "name": "............................................",
-                "role": "ฝ่ายรับข้อมูล"
-              }
-            ]
-          }
-        }
-      ],
-      "pages": [],
-      "createdAt": "2026-09-01T00:00:00.000Z",
-      "createdByUserId": "usr-admin"
-    },
-    {
-      "id": "tv-tmpl-partner-standard-v1",
-      "templateId": "tmpl-partner-standard",
-      "version": 1,
-      "name": "สัญญาแต่งตั้งพันธมิตรตัวแทนจำหน่าย",
-      "description": "โครงสร้างสัญญาแต่งตั้งพันธมิตรทางธุรกิจ พร้อมเงื่อนไข Deal Registration",
-      "categoryId": "partner",
-      "blocks": [
-        {
-          "id": "b_header",
-          "type": "header",
-          "title": "หัวกระดาษ",
-          "settings": {
-            "hasLogo": true,
-            "logoUrl": "/quotation.png",
-            "companyName": "[ ชื่อบริษัทผู้แต่งตั้ง ]",
-            "companyNameEn": "[ Company Name (EN) ]",
-            "taxId": "0-0000-00000-00-0",
-            "address": "[ ที่อยู่สำนักงานใหญ่ ]",
-            "phone": "02-XXX-XXXX",
-            "email": "partner@company.com",
-            "align": "split"
-          }
-        },
-        {
-          "id": "b_title",
-          "type": "doc_title",
-          "title": "หัวเรื่อง",
-          "settings": {
-            "titleText": "สัญญาแต่งตั้งพันธมิตรตัวแทนจำหน่าย",
-            "subtitleText": "Partner Agreement",
-            "align": "center"
-          }
-        },
-        {
-          "id": "b_text",
-          "type": "text_block",
-          "title": "รายละเอียดข้อตกลง",
-          "settings": {
-            "content": "สัญญานี้จัดทำขึ้นระหว่าง [ ชื่อบริษัทผู้แต่งตั้ง ] และ [ ชื่อตัวแทนพันธมิตร ] เพื่อแต่งตั้งให้เป็นตัวแทนพันธมิตรในการจำหน่ายและให้บริการผลิตภัณฑ์ตามเงื่อนไขที่ตกลงกัน"
-          }
-        },
-        {
-          "id": "b_terms",
-          "type": "terms",
-          "title": "เงื่อนไขพันธมิตร",
-          "settings": {
-            "heading": "เงื่อนไขและสิทธิประโยชน์พันธมิตร:",
-            "bullets": [
-              "ส่วนแบ่งผลประโยชน์ทางการค้าตามระดับพันธมิตรที่กำหนด",
-              "การลงทะเบียนโครงการผ่านระบบ Deal Registration",
-              "ระยะเวลาสัญญาและเงื่อนไขการต่ออายุสัญญา"
-            ]
-          }
-        },
-        {
-          "id": "b_signatures",
-          "type": "signatures",
-          "title": "ลงนามแต่งตั้ง",
-          "settings": {
-            "slots": [
-              {
-                "id": "s1",
-                "name": "[ ผู้มีอำนาจลงนามผู้แต่งตั้ง ]",
-                "role": "ผู้แต่งตั้ง"
-              },
-              {
-                "id": "s2",
-                "name": "............................................",
-                "role": "ผู้รับการแต่งตั้ง (พันธมิตร)"
-              }
-            ]
-          }
-        }
-      ],
-      "pages": [],
-      "createdAt": "2026-09-01T00:00:00.000Z",
-      "createdByUserId": "usr-admin"
-    },
-    {
-      "id": "tv-tmpl-distributor-standard-v1",
-      "templateId": "tmpl-distributor-standard",
-      "version": 1,
-      "name": "สัญญาแต่งตั้งและจัดจำหน่ายซอฟต์แวร์",
-      "description": "โครงสร้างสัญญาแต่งตั้งตัวแทนจำหน่ายและจัดจำหน่ายซอฟต์แวร์",
-      "categoryId": "distributor",
-      "blocks": [
-        {
-          "id": "b_header",
-          "type": "header",
-          "title": "หัวกระดาษ",
-          "settings": {
-            "hasLogo": true,
-            "logoUrl": "/quotation.png",
-            "companyName": "[ ชื่อบริษัทผู้จัดจำหน่ายหลัก ]",
-            "companyNameEn": "[ Principal Company (EN) ]",
-            "taxId": "0-0000-00000-00-0",
-            "address": "[ ที่อยู่สำนักงานใหญ่ ]",
-            "phone": "02-XXX-XXXX",
-            "email": "distributor@company.com",
-            "align": "split"
-          }
-        },
-        {
-          "id": "b_title",
-          "type": "doc_title",
-          "title": "หัวเรื่อง",
-          "settings": {
-            "titleText": "สัญญาแต่งตั้งและจัดจำหน่ายซอฟต์แวร์",
-            "subtitleText": "Distributor Agreement",
-            "align": "center"
-          }
-        },
-        {
-          "id": "b_text",
-          "type": "text_block",
-          "title": "รายละเอียดข้อสัญญา",
-          "settings": {
-            "content": "สัญญานี้จัดทำขึ้นระหว่าง [ ชื่อบริษัทผู้จัดจำหน่ายหลัก ] และ [ ชื่อบริษัทตัวแทนจำหน่าย ] เพื่อกำหนดสิทธิและหน้าที่ในการจำหน่ายผลิตภัณฑ์ซอฟต์แวร์ในเขตพื้นที่ที่กำหนด"
-          }
-        },
-        {
-          "id": "b_terms",
-          "type": "terms",
-          "title": "ข้อกำหนดการจำหน่าย",
-          "settings": {
-            "heading": "เงื่อนไขการจำหน่ายและเป้าหมาย:",
-            "bullets": [
-              "กำหนดเป้าหมายยอดจำหน่ายและอัตราส่วนลดตามระดับตัวแทน",
-              "ขอบเขตพื้นที่และสิทธิการจัดจำหน่ายในอาณาเขตที่ตกลง",
-              "การสนับสนุนด้านการตลาดและการฝึกอบรมผลิตภัณฑ์"
-            ]
-          }
-        },
-        {
-          "id": "b_signatures",
-          "type": "signatures",
-          "title": "ลงนามคู่สัญญา",
-          "settings": {
-            "slots": [
-              {
-                "id": "s1",
-                "name": "[ ผู้มีอำนาจลงนามผู้จัดจำหน่ายหลัก ]",
-                "role": "ผู้จัดจำหน่ายหลัก"
-              },
-              {
-                "id": "s2",
-                "name": "............................................",
-                "role": "ตัวแทนจำหน่าย"
-              }
-            ]
-          }
-        }
-      ],
-      "pages": [],
-      "createdAt": "2026-09-01T00:00:00.000Z",
-      "createdByUserId": "usr-admin"
-    },
-    {
-      "id": "tv-tmpl-notification-standard-v1",
-      "templateId": "tmpl-notification-standard",
-      "version": 1,
-      "name": "หนังสือแจ้งเปลี่ยนแปลงที่ตั้งสำนักงานใหญ่",
-      "description": "หนังสือแจ้งการเปลี่ยนแปลงที่อยู่และสถานที่ตั้งสำนักงานใหญ่ทางการ (ไทย-อังกฤษ)",
-      "categoryId": "notification",
-      "blocks": [
-        {
-          "id": "b_header",
-          "type": "header",
-          "title": "หัวกระดาษ",
-          "settings": {
-            "hasLogo": true,
-            "logoUrl": "/quotation.png",
-            "companyName": "บริษัท เครสท์ เซนโด จำกัด",
-            "companyNameEn": "CREST ZENDO CO., LTD.",
-            "taxId": "0105558073755",
-            "address": "8/40 The Connect 37, ซอยช่างอากาศอุทิศ 10 แยก 1-2 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210",
-            "phone": "02-123-4567",
-            "email": "contact@crestzendo.com",
-            "align": "split"
-          }
-        },
-        {
-          "id": "b_title",
-          "type": "doc_title",
-          "title": "หัวเรื่อง",
-          "settings": {
-            "titleText": "หนังสือแจ้งเปลี่ยนแปลงที่ตั้งสำนักงานใหญ่",
-            "subtitleText": "NOTICE OF HEAD OFFICE RELOCATION",
-            "align": "center"
-          }
-        },
-        {
-          "id": "b_info",
-          "type": "info_grid",
-          "title": "ข้อมูลหนังสือ",
-          "settings": {
-            "billToTitle": "เรียน:",
-            "billToCompany": "ท่านคู่ค้า ลูกค้า และพันธมิตรทางธุรกิจทุกท่าน",
-            "attnName": "ผู้มีอุปการคุณทุกท่าน",
-            "subject": "แจ้งเปลี่ยนแปลงสถานที่ตั้งสำนักงานใหญ่แห่งใหม่",
-            "quotationNo": "TRAC-2609001",
-            "date": "01 กันยายน 2569",
-            "validity": "มีผล 16 กันยายน 2569",
-            "amName": "ฝ่ายบริหารจัดการทั่วไป"
-          }
-        },
-        {
-          "id": "b_text",
-          "type": "text_block",
-          "title": "ข้อความหนังสือแจ้ง",
-          "settings": {
-            "content": "บริษัท เครสท์ เซนโด จำกัด ขอเรียนแจ้งให้ท่านทราบว่า บริษัทฯ ได้ดำเนินการย้ายสถานที่ตั้งสำนักงานใหญ่แห่งใหม่ เพื่อรองรับการขยายตัวทางธุรกิจและการให้บริการที่มีประสิทธิภาพยิ่งขึ้น โดยมีผลบังคับใช้ตั้งแต่วันที่ 16 กันยายน 2569 เป็นต้นไป"
-          }
-        },
-        {
-          "id": "b_terms",
-          "type": "terms",
-          "title": "เปรียบเทียบที่อยู่เดิมและใหม่",
-          "settings": {
-            "heading": "รายละเอียดสถานที่ตั้งสำนักงานใหญ่:",
-            "bullets": [
-              "ที่อยู่เดิม: 45 ซอยโกสุมรวมใจ 37 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210",
-              "ที่อยู่ใหม่ (มีผล 16 ก.ย. 2569): 8/40 The Connect 37, ซอยช่างอากาศอุทิศ 10 แยก 1-2 แขวงดอนเมือง เขตดอนเมือง กรุงเทพมหานคร 10210",
-              "หมายเลขโทรศัพท์และช่องทางการติดต่อทางอิเล็กทรอนิกส์ยังคงใช้งานได้ตามปกติ"
-            ]
-          }
-        },
-        {
-          "id": "b_signatures",
-          "type": "signatures",
-          "title": "ผู้มีอำนาจลงนาม",
-          "settings": {
-            "slots": [
-              {
-                "id": "s1",
-                "name": "นายศรายุทธ โกสิยารักษ์",
-                "role": "กรรมการผู้จัดการ / CEO"
-              }
-            ]
-          }
-        }
-      ],
-      "pages": [],
-      "createdAt": "2026-09-01T00:00:00.000Z",
-      "createdByUserId": "usr-admin"
+      "updatedAt": "2026-09-01T00:00:00.000Z"
     }
   ],
   "customTokens": [
@@ -2193,12 +1663,10 @@
       "key": "url",
       "label": "URL",
       "example": "www.@",
-      "scope": "global",
+      "scope": "entity",
       "category": "custom",
       "createdAt": "2026-09-09T09:35:50.441Z",
-      "updatedAt": "2026-09-09T09:35:50.442Z",
-      "dataType": "text",
-      "createdByUserId": "usr-admin"
+      "updatedAt": "2026-09-09T09:35:50.442Z"
     }
   ],
   "notifications": [

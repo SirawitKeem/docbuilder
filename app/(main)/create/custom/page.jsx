@@ -318,10 +318,18 @@ function UniversalDocumentContent() {
   const tableVatAmount = tableSubtotal * ((Number(tableVatRate) || 0) / 100);
   const tableGrandTotal = tableSubtotal + tableVatAmount;
 
-  const isNotification =
+  const hasEditableCanvas = Boolean(
+    template?.pages &&
+    Array.isArray(template.pages) &&
+    template.pages.length > 0 &&
+    template.pages[0]?.json
+  );
+
+  const isNotification = !hasEditableCanvas && (
     template?.id === "tmpl-notification-relocation" ||
     template?.categoryId === "notification" ||
-    (template?.name || "").includes("เปลี่ยนแปลงที่ตั้ง");
+    (template?.name || "").includes("เปลี่ยนแปลงที่ตั้ง")
+  );
 
   const isQuotation =
     template?.id === "quotation" ||
@@ -382,12 +390,7 @@ function UniversalDocumentContent() {
     };
   }, [values, tableItems, tableVatRate, documentId]);
 
-  const isFabricTemplate = Boolean(
-    template?.pages &&
-    Array.isArray(template.pages) &&
-    template.pages.length > 0 &&
-    template.pages[0]?.json
-  );
+  const isFabricTemplate = hasEditableCanvas;
 
   // Save Document to JSON API
   const handleSave = async (status = "draft") => {
@@ -467,7 +470,13 @@ function UniversalDocumentContent() {
 
   const renderDocumentPage = () => (
     <div className="origin-top shadow-xl border border-gray-300 rounded-sm overflow-hidden bg-white print-paper-shadow">
-      {isNotification ? (
+      {isFabricTemplate ? (
+        <FabricPrintRenderer
+          template={template}
+          values={values}
+          watermark={watermark}
+        />
+      ) : isNotification ? (
         <NotificationRelocationDocument values={values} />
       ) : isQuotation ? (
         <QuotationDataProvider initialQuotation={quotationData} defaultReadOnly={true}>
@@ -475,12 +484,6 @@ function UniversalDocumentContent() {
             <QuotationDocument currentPage={1} />
           </div>
         </QuotationDataProvider>
-      ) : isFabricTemplate ? (
-        <FabricPrintRenderer
-          template={template}
-          values={values}
-          watermark={watermark}
-        />
       ) : (
         <UniversalTemplateRenderer template={template} scale={1} />
       )}

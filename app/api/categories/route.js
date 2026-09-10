@@ -41,6 +41,7 @@ export async function POST(req) {
       color: color || "purple",
       badge: badge || "หมวดใหม่",
       order: order || 1,
+      createdByUserId: body.createdByUserId,
     });
 
     return NextResponse.json(created, { status: 201 });
