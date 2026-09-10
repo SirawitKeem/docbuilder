@@ -460,14 +460,14 @@ export default function NewTemplateTypeModal({
                 <button
                   type="button"
                   onClick={() => setActiveMode("standard")}
-                  className="px-3.5 py-2 rounded-lg border border-border hover:bg-muted text-xs font-medium text-muted-foreground transition-colors cursor-pointer"
+                  className="inline-flex items-center justify-center h-9 px-3.5 rounded-[8px] border border-border hover:bg-muted text-xs font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer shadow-2xs"
                 >
                   ย้อนกลับ
                 </button>
                 <button
                   type="button"
                   onClick={handleConfirmCustom}
-                  className="px-4 py-2 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-semibold shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer"
+                  className="primary-button inline-flex items-center gap-1.5 h-9 px-4 rounded-[8px] text-white text-xs font-medium shadow-xs hover:opacity-95 transition-all cursor-pointer"
                 >
                   <span>เริ่มสร้างเทมเพลตขนาดนี้</span>
                   <ArrowRight size={13} />
@@ -483,7 +483,7 @@ export default function NewTemplateTypeModal({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg border border-border hover:bg-muted text-foreground text-xs font-medium transition-colors cursor-pointer"
+            className="inline-flex items-center justify-center h-9 px-4 rounded-[8px] border border-border bg-surface hover:bg-muted text-foreground text-xs font-medium transition-colors cursor-pointer shadow-2xs"
           >
             {t('actions.cancel') || "ยกเลิก"}
           </button>

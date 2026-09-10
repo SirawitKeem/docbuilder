@@ -86,7 +86,7 @@ export default function HeroSection({ userName }) {
           <div className="flex flex-wrap items-center gap-2.5">
             <Link
               href="/create"
-              className="inline-flex items-center gap-2 h-9 px-4 rounded-[6px] bg-[#6E56CF] hover:bg-[#5E47BE] text-white font-medium text-xs shadow-2xs transition-all cursor-pointer select-none"
+              className="primary-button inline-flex items-center gap-2 h-9 px-4 rounded-[8px] text-white font-medium text-xs shadow-xs hover:opacity-95 transition-all cursor-pointer select-none"
             >
               <FilePlus size={16} weight="bold" />
               <span>{t('home.createDocument') || "Create Document"}</span>
@@ -94,7 +94,7 @@ export default function HeroSection({ userName }) {
 
             <Link
               href="/templates"
-              className="inline-flex items-center gap-2 h-9 px-3.5 rounded-[6px] border border-border bg-white dark:bg-[#1E1E1E] hover:bg-muted/60 text-foreground font-medium text-xs transition-colors cursor-pointer select-none shadow-2xs"
+              className="inline-flex items-center gap-2 h-9 px-3.5 rounded-[8px] border border-border bg-surface hover:bg-muted text-foreground font-medium text-xs transition-colors cursor-pointer select-none shadow-2xs"
             >
               <Copy size={16} className="text-muted-foreground" />
               <span>{t('home.templatesCatalog') || "Templates Catalog"}</span>

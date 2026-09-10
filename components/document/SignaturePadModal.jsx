@@ -272,11 +272,11 @@ export default function SignaturePadModal({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+        <div className="px-6 py-4 bg-surface border-t border-border flex items-center justify-between">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl border border-gray-200 text-gray-700 hover:bg-white text-xs font-semibold transition-colors cursor-pointer"
+            className="inline-flex items-center justify-center h-9 px-4 rounded-[8px] border border-border text-foreground hover:bg-muted text-xs font-medium transition-colors cursor-pointer shadow-2xs"
           >
             {t('actions.cancel')}
           </button>
@@ -285,7 +285,7 @@ export default function SignaturePadModal({
             type="button"
             onClick={handleConfirm}
             disabled={activeTab === "draw" ? !hasDrawn : !uploadedImage}
-            className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] disabled:opacity-40 text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+            className="primary-button inline-flex items-center gap-1.5 h-9 px-4 rounded-[8px] text-white text-xs font-medium hover:opacity-95 disabled:opacity-40 transition-all shadow-xs cursor-pointer"
           >
             <Check size={14} />
             <span>{t('signature.apply')}</span>

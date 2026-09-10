@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { EXTENDED_ICON_MAP } from "./CreateCategoryModal";
 import { useLanguage } from "@/context/LanguageContext";
+import DeleteConfirmModal from "@/components/common/DeleteConfirmModal";
 
 export const ICON_MAP = {
   FileSignature,
@@ -65,6 +66,8 @@ export default function CategoryManagerModal({
   });
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
+  const [isDeletingCategory, setIsDeletingCategory] = useState(false);
 
   if (!isOpen) return null;
 
@@ -82,28 +85,34 @@ export default function CategoryManagerModal({
 
   const handleCancelForm = () => {
     setEditingId(null);
+    setFormData({
+      name: "",
+      fullName: "",
+      icon: "FileText",
+      color: "purple",
+      badge: "พร้อมใช้งาน",
+    });
     setErrorMsg("");
   };
 
-  const handleSave = async (e) => {
+  const handleSaveEdit = async (e) => {
     e.preventDefault();
     if (!formData.name.trim()) {
-      setErrorMsg(t('categoryManager.errorEmptyName') || "Please enter a category name");
+      setErrorMsg("Category name (EN) is required");
       return;
     }
 
     setLoading(true);
     setErrorMsg("");
     try {
-      if (editingId) {
-        const res = await fetch(`/api/categories/${editingId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...formData, description: "" }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Failed to update category");
-      }
+      const res = await fetch(`/api/categories/${editingId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to update category");
 
       handleCancelForm();
       if (onCategoriesUpdated) onCategoriesUpdated();
@@ -114,35 +123,39 @@ export default function CategoryManagerModal({
     }
   };
 
-  const handleDelete = async (cat) => {
+  const handleDelete = (cat) => {
     if (["quotation", "nda", "partner", "distributor"].includes(cat.id)) {
       alert(t('categoryManager.protectedAlert') || "System default categories cannot be deleted");
       return;
     }
+    setCategoryToDelete(cat);
+  };
 
-    if (!confirm(t('categoryManager.deleteConfirm', { name: cat.name }) || `Are you sure you want to delete category "${cat.name}"?`)) return;
-
-    setLoading(true);
+  const handleConfirmDeleteCategory = async () => {
+    if (!categoryToDelete) return;
+    setIsDeletingCategory(true);
     setErrorMsg("");
     try {
-      const res = await fetch(`/api/categories/${cat.id}`, { method: "DELETE" });
+      const res = await fetch(`/api/categories/${categoryToDelete.id}`, { method: "DELETE" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to delete category");
 
-      if (editingId === cat.id) handleCancelForm();
+      if (editingId === categoryToDelete.id) handleCancelForm();
       if (onCategoriesUpdated) onCategoriesUpdated();
+      setCategoryToDelete(null);
     } catch (err) {
       setErrorMsg(err.message);
     } finally {
-      setLoading(false);
+      setIsDeletingCategory(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-xs">
-      <div className="bg-surface rounded-[14px] shadow-lg border border-border w-full max-w-2xl overflow-hidden flex flex-col max-h-[88vh] animate-in fade-in zoom-in-98 duration-150 text-left">
-        {/* Header */}
-        <div className="px-5 py-3.5 border-b border-border flex items-center justify-between bg-surface">
+    <>
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-xs">
+        <div className="bg-surface rounded-[14px] shadow-lg border border-border w-full max-w-2xl overflow-hidden flex flex-col max-h-[88vh] animate-in fade-in zoom-in-98 duration-150 text-left">
+          {/* Header */}
+          <div className="px-5 py-3.5 border-b border-border flex items-center justify-between bg-surface">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-[8px] bg-primary/10 text-primary border border-primary/20 flex items-center justify-center shadow-2xs">
               <Layers size={18} />
@@ -328,5 +341,23 @@ export default function CategoryManagerModal({
         </div>
       </div>
     </div>
+
+      <DeleteConfirmModal
+        isOpen={Boolean(categoryToDelete)}
+        onClose={() => {
+          if (!isDeletingCategory) setCategoryToDelete(null);
+        }}
+        onConfirm={handleConfirmDeleteCategory}
+        isLoading={isDeletingCategory}
+        title={t('categoryManager.deleteConfirmTitle') || "Delete Category?"}
+        description={
+          t('categoryManager.deleteConfirmMessage', { name: categoryToDelete?.name || "" }) ||
+          `Are you sure you want to delete category "${categoryToDelete?.name || ""}"? This action cannot be undone.`
+        }
+        cancelText={t('actions.cancel') || "Cancel"}
+        confirmText={t('actions.delete') || "Delete"}
+        zIndex="z-[60]"
+      />
+    </>
   );
 }

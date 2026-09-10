@@ -372,13 +372,13 @@ export default function TopToolbar({
           <button
             onClick={onExportPdf}
             disabled={isExportingPdf}
-            className="flex items-center gap-1.5 px-3.5 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-xs sm:text-sm font-semibold shadow-xs hover:shadow transition-all disabled:opacity-50 cursor-pointer"
+            className="flex items-center gap-1.5 h-9 px-3.5 border border-border bg-white hover:bg-gray-50 text-gray-700 rounded-[8px] text-xs font-medium shadow-2xs hover:shadow-xs transition-all disabled:opacity-50 cursor-pointer"
             title="ดาวน์โหลดเอกสารเป็นไฟล์ PDF"
           >
             {isExportingPdf ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="w-4 h-4 animate-spin text-primary" />
             ) : (
-              <Download className="w-4 h-4" />
+              <Download className="w-4 h-4 text-primary" />
             )}
             <span>{isExportingPdf ? "กำลังสร้าง PDF..." : "ดาวน์โหลด PDF"}</span>
           </button>
@@ -387,7 +387,7 @@ export default function TopToolbar({
         <button
           onClick={onSave}
           disabled={saving}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold shadow-sm hover:shadow transition-all disabled:opacity-50 cursor-pointer"
+          className="primary-button flex items-center gap-2 h-9 px-4 rounded-[8px] text-white text-xs font-medium shadow-xs hover:opacity-95 transition-all disabled:opacity-50 cursor-pointer"
         >
           <Save className="w-4 h-4" />
           <span>{saving ? "กำลังบันทึก..." : "บันทึกเทมเพลต"}</span>

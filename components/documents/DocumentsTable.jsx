@@ -380,7 +380,7 @@ export default function DocumentsTable({
                 toast.action.onClick();
                 setToast(null);
               }}
-              className="ml-1 px-2.5 py-1 rounded-lg bg-[#7C3AED] hover:bg-[#4332D6] text-white text-[11px] font-bold transition-colors cursor-pointer flex items-center gap-1 shadow-xs"
+              className="primary-button ml-1 px-2.5 py-1 rounded-[6px] text-white text-[11px] font-medium transition-all cursor-pointer flex items-center gap-1 shadow-xs hover:opacity-95"
             >
               <span>{toast.action.label}</span>
               <ArrowRight size={12} />
@@ -880,14 +880,14 @@ function RenameModal({ doc, onClose, onRenamed }) {
             <button
               type="button"
               onClick={onClose}
-              className="w-full h-10 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 text-xs font-bold transition-colors cursor-pointer"
+              className="w-full h-9 rounded-[8px] border border-border bg-surface text-foreground hover:bg-muted text-xs font-medium transition-colors cursor-pointer shadow-2xs"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving || !name.trim()}
-              className="w-full h-10 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] text-white text-xs font-bold transition-colors shadow-xs flex items-center justify-center disabled:opacity-50 cursor-pointer"
+              className="primary-button w-full h-9 rounded-[8px] text-white text-xs font-medium transition-all shadow-xs flex items-center justify-center disabled:opacity-50 cursor-pointer hover:opacity-95"
             >
               <span>{saving ? "Saving..." : "Save Changes"}</span>
             </button>
@@ -996,7 +996,7 @@ function PreviewModal({ doc, onClose }) {
           <p className="text-xs text-muted-foreground">Document Preview Mode (Read-only)</p>
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-foreground hover:bg-muted rounded-lg transition-colors"
+            className="inline-flex items-center justify-center h-9 px-4 text-xs font-medium text-foreground bg-surface border border-border hover:bg-muted rounded-[8px] transition-colors shadow-2xs cursor-pointer"
           >
             Close
           </button>

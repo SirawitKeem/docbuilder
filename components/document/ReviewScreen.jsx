@@ -113,22 +113,22 @@ export default function ReviewScreen({
           <button
             onClick={onSendEmail}
             disabled={!status?.isComplete || exporting}
-            className="flex items-center gap-2 h-10 px-4 rounded-[10px] border border-[#E5E5E5] text-[#171717] text-sm font-medium hover:bg-[#F6F6FA] transition-colors disabled:opacity-60 cursor-pointer"
+            className="inline-flex items-center gap-2 h-9 px-4 rounded-[8px] border border-border bg-surface text-foreground text-xs font-medium hover:bg-muted transition-colors disabled:opacity-60 cursor-pointer shadow-2xs"
             title={t('actions.sendEmail')}
           >
-            <Send size={16} className="text-[#646469]" />
+            <Send size={15} className="text-muted-foreground" />
             <span className="hidden sm:inline">{t('actions.sendEmail')}</span>
           </button>
 
-          {/* Multi-Format Export (PDF, HTML, WebP) - Exact same coordinates, size and gradient as EditorToolbar */}
+          {/* Multi-Format Export (PDF, HTML, WebP) */}
           <div className="relative flex items-center" ref={exportMenuRef}>
             <button
               onClick={() => handleExportAction(selectedFormat)}
               disabled={!status?.isComplete || exporting}
-              className="flex items-center gap-1.5 h-10 pl-3.5 pr-2 rounded-l-[10px] bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-sm font-semibold hover:opacity-95 transition-opacity disabled:opacity-60 cursor-pointer"
+              className="primary-button inline-flex items-center gap-1.5 h-9 pl-3.5 pr-2 rounded-l-[8px] text-white text-xs font-medium hover:opacity-95 transition-all disabled:opacity-60 cursor-pointer shadow-xs"
               title={`ส่งออกเอกสารในรูปแบบ .${selectedFormat}`}
             >
-              {exporting ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
+              {exporting ? <Loader2 size={15} className="animate-spin" /> : <Download size={15} />}
               <span className="hidden sm:inline">
                 {exporting ? "กำลังส่งออก..." : `Export ${selectedFormat.toUpperCase()}`}
               </span>
@@ -136,7 +136,7 @@ export default function ReviewScreen({
             <button
               onClick={() => setExportMenuOpen(!exportMenuOpen)}
               disabled={!status?.isComplete || exporting}
-              className="h-10 px-2 rounded-r-[10px] bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white hover:opacity-95 border-l border-white/25 transition-opacity disabled:opacity-60 flex items-center justify-center cursor-pointer"
+              className="primary-button h-9 px-2 rounded-r-[8px] text-white hover:opacity-95 border-l border-white/25 transition-all disabled:opacity-60 flex items-center justify-center cursor-pointer shadow-xs"
               title="เลือกรูปแบบการส่งออก (PDF, HTML, WebP)"
             >
               <ChevronDown size={14} className={`transition-transform duration-150 ${exportMenuOpen ? "rotate-180" : ""}`} />

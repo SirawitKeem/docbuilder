@@ -326,7 +326,7 @@ export default function TemplateDetailModal({ template, onClose }) {
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-200/60 flex items-center justify-center transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-[8px] text-muted-foreground hover:text-foreground hover:bg-muted flex items-center justify-center transition-colors cursor-pointer"
           >
             <X size={18} />
           </button>
@@ -462,11 +462,11 @@ export default function TemplateDetailModal({ template, onClose }) {
         </div>
 
         {/* Modal Footer Actions */}
-        <div className="px-6 py-4 border-t border-gray-100 bg-white flex items-center justify-between gap-3">
+        <div className="px-6 py-4 border-t border-border bg-surface flex items-center justify-between gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-xs font-semibold text-gray-700 transition-colors cursor-pointer"
+            className="inline-flex items-center justify-center h-9 px-4 rounded-[8px] border border-border bg-surface hover:bg-muted text-xs font-medium text-foreground transition-colors cursor-pointer shadow-2xs"
           >
             ปิดหน้าต่าง
           </button>
@@ -474,7 +474,7 @@ export default function TemplateDetailModal({ template, onClose }) {
           <div className="flex items-center gap-2">
             <Link
               href={`/templates/new?edit=${template.id}`}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#7C3AED] hover:bg-[#4332D6] text-white text-xs font-bold shadow-xs hover:shadow-md transition-all cursor-pointer"
+              className="primary-button inline-flex items-center gap-2 h-9 px-4 rounded-[8px] text-white text-xs font-medium shadow-xs hover:opacity-95 transition-all cursor-pointer"
             >
               <Edit3 size={14} />
               <span>แก้ไขและปรับแต่งเทมเพลตนี้</span>

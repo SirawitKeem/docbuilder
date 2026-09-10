@@ -21,16 +21,16 @@ export default function SuccessScreen({ fileName, sentTo, onCreateNew }) {
       <div className="flex items-center gap-3">
         <button
           onClick={onCreateNew}
-          className="flex items-center gap-2 h-11 px-5 rounded-[10px] bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-sm font-semibold hover:opacity-95 transition-opacity"
+          className="primary-button inline-flex items-center gap-2 h-9 px-4 rounded-[8px] text-white text-xs font-medium shadow-xs hover:opacity-95 transition-all cursor-pointer"
         >
-          <FilePlus2 size={16} />
+          <FilePlus2 size={15} />
           {t('success.createNew')}
         </button>
         <Link
           href="/"
-          className="flex items-center gap-2 h-11 px-5 rounded-[10px] border border-[#E5E5E5] text-[#171717] text-sm font-medium hover:bg-[#F6F6FA] transition-colors bg-white"
+          className="inline-flex items-center gap-2 h-9 px-4 rounded-[8px] border border-border text-foreground text-xs font-medium hover:bg-muted transition-colors bg-surface shadow-2xs"
         >
-          <Clock size={16} />
+          <Clock size={15} />
           {t('success.backToHome')}
         </Link>
       </div>

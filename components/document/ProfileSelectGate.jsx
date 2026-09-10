@@ -22,6 +22,7 @@ import { templateRegistry } from "@/lib/templates/registry";
 import { checkCompatibility, getRelevantTemplates, getTemplateAllKeys } from "@/lib/profiles/compatibility";
 import DocumentEditor from "./DocumentEditor";
 import QuotationEditor from "./quotation/QuotationEditor";
+import DeleteConfirmModal from "@/components/common/DeleteConfirmModal";
 
 function formatThaiDateTime(isoString) {
   if (!isoString) return "-";
@@ -48,6 +49,8 @@ function ProfileSelectGateContent({ templateId }) {
   const [selectedId, setSelectedId] = useState(undefined); // undefined = ยังไม่เลือก
   const [searchQuery, setSearchQuery] = useState("");
   const [openMenuId, setOpenMenuId] = useState(null);
+  const [profileToDelete, setProfileToDelete] = useState(null);
+  const [isDeletingProfile, setIsDeletingProfile] = useState(false);
   const menuRef = useRef(null);
 
   const entry = templateRegistry[templateId];
@@ -75,11 +78,24 @@ function ProfileSelectGateContent({ templateId }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleDelete = async (e, id, name) => {
+  const handleDelete = (e, id, name) => {
     e.stopPropagation();
-    if (!confirm(`คุณต้องการลบชุดข้อมูล "${name}" ใช่หรือไม่?`)) return;
-    await deleteFieldProfile(id);
-    load();
+    setOpenMenuId(null);
+    setProfileToDelete({ id, name });
+  };
+
+  const handleConfirmDeleteProfile = async () => {
+    if (!profileToDelete) return;
+    setIsDeletingProfile(true);
+    try {
+      await deleteFieldProfile(profileToDelete.id);
+      setProfileToDelete(null);
+      load();
+    } catch (err) {
+      console.error("Failed to delete profile:", err);
+    } finally {
+      setIsDeletingProfile(false);
+    }
   };
 
   // หากเป็นการเปิดเอกสารเดิมด้วย ID จาก URL ให้ข้ามไปหน้า Editor ทันที
@@ -179,7 +195,7 @@ function ProfileSelectGateContent({ templateId }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={`${t('profileGate.searchPresets')} ${shortTemplateTitle}...`}
-              className="w-full h-10 pl-10 pr-4 rounded-[10px] border border-[#E5E5E5] bg-gray-50/50 text-sm outline-none focus:border-[#7C3AED] focus:ring-2 focus:ring-[#F5F3FF] transition-all"
+              className="w-full h-9 pl-10 pr-4 rounded-[8px] border border-border bg-muted/20 focus:bg-surface text-xs text-foreground outline-none focus:border-primary transition-all placeholder:text-muted-foreground/60"
             />
           </div>
 
@@ -187,7 +203,7 @@ function ProfileSelectGateContent({ templateId }) {
             <button
               onClick={() => setSelectedId(null)}
               type="button"
-              className="inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-[10px] bg-[#7C3AED] text-white text-xs font-bold hover:bg-[#4332D6] transition-colors cursor-pointer shadow-xs"
+              className="primary-button inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-[8px] text-white text-xs font-medium shadow-xs hover:opacity-95 transition-all cursor-pointer"
             >
               <FileText size={15} />
               <span>{t('profileGate.startNow')}</span>
@@ -196,7 +212,7 @@ function ProfileSelectGateContent({ templateId }) {
             <Link
               href="/profile-data/new"
               target="_blank"
-              className="inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-[10px] border border-[#E5E5E5] bg-white text-gray-700 hover:bg-gray-50 text-xs font-semibold transition-colors shrink-0"
+              className="inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-[8px] border border-border bg-surface text-foreground hover:bg-muted text-xs font-medium transition-colors shrink-0 shadow-2xs"
             >
               <Plus size={15} />
               <span>{t('profileGate.addPreset')}</span>
@@ -279,7 +295,7 @@ function ProfileSelectGateContent({ templateId }) {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => setSelectedId(p.id)}
-                            className="px-3.5 py-1.5 rounded-[10px] bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-xs font-semibold hover:opacity-95 transition-opacity shrink-0"
+                            className="primary-button h-8 px-3.5 rounded-[8px] text-white text-xs font-medium shadow-xs hover:opacity-95 transition-all shrink-0 cursor-pointer"
                           >
                             เลือกใช้งาน
                           </button>
@@ -289,7 +305,7 @@ function ProfileSelectGateContent({ templateId }) {
                               e.stopPropagation();
                               setOpenMenuId(openMenuId === p.id ? null : p.id);
                             }}
-                            className="p-1.5 rounded-[10px] border border-[#E5E5E5] bg-white hover:bg-[#F6F6FA] text-gray-600 transition-colors"
+                            className="size-8 rounded-[8px] border border-border bg-surface hover:bg-muted text-muted-foreground hover:text-foreground flex items-center justify-center transition-colors cursor-pointer shadow-2xs"
                             title="ตัวเลือกเพิ่มเติม"
                           >
                             <MoreHorizontal size={15} />
@@ -348,13 +364,30 @@ function ProfileSelectGateContent({ templateId }) {
             </div>
           </div>
 
-          <div className="inline-flex items-center gap-1.5 px-4 py-2 rounded-[10px] bg-white border border-[#E5E5E5] text-[#171717] text-xs font-semibold group-hover:bg-[#7C3AED] group-hover:text-white group-hover:border-[#7C3AED] transition-all">
+          <div className="inline-flex items-center gap-1.5 h-9 px-4 rounded-[8px] bg-surface border border-border text-foreground text-xs font-medium group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all shadow-2xs">
             <span>{t('profileGate.blankDocument')}</span>
             <ChevronRight size={15} />
           </div>
         </div>
 
       </div>
+
+      <DeleteConfirmModal
+        isOpen={Boolean(profileToDelete)}
+        onClose={() => {
+          if (!isDeletingProfile) setProfileToDelete(null);
+        }}
+        onConfirm={handleConfirmDeleteProfile}
+        isLoading={isDeletingProfile}
+        title={t('profileData.deletePreset') || "Delete Preset?"}
+        description={
+          t('profileData.deleteConfirm', { name: profileToDelete?.name || "" }) ||
+          `Are you sure you want to delete preset "${profileToDelete?.name || ""}"? This action cannot be undone.`
+        }
+        cancelText={t('actions.cancel') || "Cancel"}
+        confirmText={t('actions.delete') || "Delete"}
+        zIndex="z-[60]"
+      />
     </div>
   );
 }

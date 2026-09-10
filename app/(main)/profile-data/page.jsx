@@ -19,6 +19,7 @@ import { listFieldProfiles, deleteFieldProfile } from "@/lib/data/fieldProfiles"
 import { getRelevantTemplates } from "@/lib/profiles/compatibility";
 import { getTemplates } from "@/lib/data/templates";
 import { useLanguage } from "@/context/LanguageContext";
+import DeleteConfirmModal from "@/components/common/DeleteConfirmModal";
 
 function formatThaiDateTime(isoString) {
   if (!isoString) return "-";
@@ -38,6 +39,8 @@ function formatThaiDateTime(isoString) {
 export default function ProfileDataListPage() {
   const { t } = useLanguage();
   const [profiles, setProfiles] = useState(null);
+  const [profileToDelete, setProfileToDelete] = useState(null);
+  const [isDeletingProfile, setIsDeletingProfile] = useState(false);
   const [allTemplatesList, setAllTemplatesList] = useState([]);
   
   // UI & Filter States
@@ -76,13 +79,25 @@ export default function ProfileDataListPage() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleDelete = async (id, name) => {
-    if (!confirm(t('profileData.deleteConfirm', { name }) || `คุณต้องการลบชุดข้อมูล "${name}" ใช่หรือไม่?`)) return;
-    await deleteFieldProfile(id);
-    if (selectedProfileId === id) {
-      setSelectedProfileId(null);
+  const handleDelete = (id, name) => {
+    setProfileToDelete({ id, name });
+  };
+
+  const handleConfirmDeleteProfile = async () => {
+    if (!profileToDelete) return;
+    setIsDeletingProfile(true);
+    try {
+      await deleteFieldProfile(profileToDelete.id);
+      if (selectedProfileId === profileToDelete.id) {
+        setSelectedProfileId(null);
+      }
+      setProfileToDelete(null);
+      load();
+    } catch (err) {
+      console.error("Failed to delete profile:", err);
+    } finally {
+      setIsDeletingProfile(false);
     }
-    load();
   };
 
   if (profiles === null) {
@@ -206,7 +221,7 @@ export default function ProfileDataListPage() {
             {/* Create New Profile Button */}
             <Link
               href="/profile-data/new"
-              className="primary-button inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-xl text-white text-xs font-semibold hover:opacity-95 transition-opacity shrink-0"
+              className="primary-button inline-flex items-center justify-center gap-1.5 h-9 px-4 rounded-[8px] text-white text-xs font-medium hover:opacity-95 transition-all shrink-0 shadow-xs"
             >
               <Plus size={15} />
               {t('profileData.newPreset') || "New Preset"}
@@ -455,21 +470,37 @@ export default function ProfileDataListPage() {
             <div className="pt-2 flex items-center justify-between gap-3">
               <button
                 onClick={() => handleDelete(selectedProfile.id, selectedProfile.name)}
-                className="px-3.5 py-1.5 rounded-lg border border-destructive/30 text-destructive hover:bg-destructive/10 font-semibold text-xs transition-colors cursor-pointer"
+                className="h-8 px-3.5 rounded-[6px] border border-destructive/30 text-destructive hover:bg-destructive/10 font-medium text-xs transition-colors cursor-pointer"
               >
                 Delete Preset
               </button>
               <Link
                 href={`/profile-data/${selectedProfile.id}`}
-                className="primary-button px-4 py-1.5 rounded-lg text-white font-semibold text-xs hover:opacity-95 transition-opacity inline-flex items-center gap-1.5 cursor-pointer"
+                className="primary-button h-8 px-3.5 rounded-[6px] text-white font-medium text-xs shadow-xs hover:opacity-95 transition-all inline-flex items-center gap-1.5 cursor-pointer"
               >
-                <Pencil size={14} />
+                <Pencil size={13} />
                 Edit Preset
               </Link>
             </div>
           </div>
         )}
       </div>
+
+      <DeleteConfirmModal
+        isOpen={Boolean(profileToDelete)}
+        onClose={() => {
+          if (!isDeletingProfile) setProfileToDelete(null);
+        }}
+        onConfirm={handleConfirmDeleteProfile}
+        isLoading={isDeletingProfile}
+        title={t('profileData.deletePreset') || "Delete Preset?"}
+        description={
+          t('profileData.deleteConfirm', { name: profileToDelete?.name || "" }) ||
+          `Are you sure you want to delete preset "${profileToDelete?.name || ""}"? This action cannot be undone.`
+        }
+        cancelText={t('actions.cancel') || "Cancel"}
+        confirmText={t('actions.delete') || "Delete"}
+      />
     </div>
   );
 }

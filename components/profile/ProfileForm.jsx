@@ -313,17 +313,17 @@ function ProfileFormContent({ profile }) {
       </div>
 
       {/* Action Footer Buttons */}
-      <div className="flex items-center gap-3 pt-2">
+      <div className="flex items-center gap-2.5 pt-2">
         <button
           onClick={handleSave}
           disabled={saving}
-          className="primary-button h-10 px-6 rounded-xl text-white text-xs font-semibold hover:opacity-95 disabled:opacity-60 transition-opacity shadow-sm cursor-pointer"
+          className="primary-button h-9 px-5 rounded-[8px] text-white text-xs font-medium shadow-xs hover:opacity-95 disabled:opacity-60 transition-all cursor-pointer"
         >
           {saving ? "Saving..." : "Save Preset"}
         </button>
         <button
           onClick={() => router.push("/profile-data")}
-          className="h-10 px-5 rounded-xl border border-border text-foreground text-xs font-medium hover:bg-muted transition-colors bg-surface cursor-pointer"
+          className="inline-flex items-center justify-center h-9 px-4 rounded-[8px] border border-border text-foreground text-xs font-medium hover:bg-muted transition-colors bg-surface shadow-2xs cursor-pointer"
         >
           Cancel
         </button>

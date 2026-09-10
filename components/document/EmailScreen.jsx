@@ -373,9 +373,9 @@ export default function EmailScreen({
               <button
                 onClick={handleSend}
                 disabled={sending || loadingFormat || !activeAttachment}
-                className="w-full sm:w-auto px-7 h-11 rounded-[10px] bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-sm font-semibold hover:opacity-95 disabled:opacity-50 flex items-center justify-center gap-2 shrink-0 transition-opacity cursor-pointer"
+                className="primary-button w-full sm:w-auto px-6 h-9 rounded-[8px] text-white text-xs font-medium hover:opacity-95 disabled:opacity-50 flex items-center justify-center gap-2 shrink-0 transition-all cursor-pointer shadow-xs"
               >
-                {sending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                {sending ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />}
                 {sending ? t('email.sending') : t('email.confirmSend')}
               </button>
             </div>

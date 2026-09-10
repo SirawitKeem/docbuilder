@@ -23,29 +23,34 @@ export default function DeleteConfirmModal({
   onConfirm,
   title,
   description,
+  message,
   cancelText,
   confirmText,
   isLoading = false,
+  loading = false,
+  zIndex = "z-[60]",
 }) {
   const { t } = useLanguage();
+  const effectiveLoading = isLoading || loading;
+  const effectiveDescription = description || message;
 
   // Close on ESC key press
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e) => {
-      if (e.key === "Escape" && !isLoading) {
+      if (e.key === "Escape" && !effectiveLoading) {
         onClose?.();
       }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen, isLoading, onClose]);
+  }, [isOpen, effectiveLoading, onClose]);
 
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150"
+      className={`fixed inset-0 ${zIndex} bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150`}
       onClick={() => {
         if (!isLoading) onClose?.();
       }}
@@ -75,9 +80,9 @@ export default function DeleteConfirmModal({
           <h3 className="text-base sm:text-lg font-semibold text-foreground tracking-tight">
             {title || t('actions.delete') || "Delete?"}
           </h3>
-          {description && (
+          {effectiveDescription && (
             <p className="text-xs text-muted-foreground leading-relaxed">
-              {description}
+              {effectiveDescription}
             </p>
           )}
         </div>
@@ -87,7 +92,7 @@ export default function DeleteConfirmModal({
           <button
             type="button"
             onClick={onClose}
-            disabled={isLoading}
+            disabled={effectiveLoading}
             className="w-full h-9 px-3 rounded-[8px] border border-border bg-surface hover:bg-muted text-xs font-medium text-foreground transition-colors cursor-pointer disabled:opacity-50"
           >
             {cancelText || t('actions.cancel') || "Cancel"}
@@ -95,10 +100,10 @@ export default function DeleteConfirmModal({
           <button
             type="button"
             onClick={onConfirm}
-            disabled={isLoading}
+            disabled={effectiveLoading}
             className="w-full h-9 px-3 rounded-[8px] bg-red-600 hover:bg-red-700 active:bg-red-800 text-xs font-medium text-white transition-colors shadow-2xs cursor-pointer inline-flex items-center justify-center gap-1.5 disabled:opacity-50"
           >
-            {isLoading && <Loader2 size={13} className="animate-spin" />}
+            {effectiveLoading && <Loader2 size={13} className="animate-spin" />}
             <span>{confirmText || t('actions.delete') || "Delete"}</span>
           </button>
         </div>

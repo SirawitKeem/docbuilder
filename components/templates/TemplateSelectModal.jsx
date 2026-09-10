@@ -412,7 +412,7 @@ export default function TemplateSelectModal({ category, onClose }) {
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-gray-100 text-gray-400 hover:text-gray-700 hover:bg-gray-200 transition-colors flex items-center justify-center cursor-pointer"
+            className="w-8 h-8 rounded-[8px] text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center justify-center cursor-pointer"
             title="Close (ESC)"
           >
             <X size={16} />
@@ -585,17 +585,17 @@ export default function TemplateSelectModal({ category, onClose }) {
         </div>
 
         {/* Modal Bottom Bar */}
-        <div className="h-16 px-6 border-t border-gray-100 bg-gray-50/50 flex items-center justify-end gap-2.5 shrink-0">
+        <div className="h-16 px-6 border-t border-border bg-surface flex items-center justify-end gap-2.5 shrink-0">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 text-gray-700 text-xs font-semibold transition-colors cursor-pointer shadow-2xs"
+            className="inline-flex items-center justify-center h-9 px-4 rounded-[8px] border border-border bg-surface hover:bg-muted text-foreground text-xs font-medium transition-colors cursor-pointer shadow-2xs"
           >
             {t('actions.cancel') || "Cancel"}
           </button>
 
           <button
             onClick={handleUseTemplate}
-            className="px-5 py-2 rounded-xl bg-gradient-to-t from-[#6D28D9] to-[#8B5CF6] text-white text-xs font-semibold hover:opacity-95 transition-opacity shadow-sm flex items-center gap-1.5 cursor-pointer"
+            className="primary-button inline-flex items-center gap-1.5 h-9 px-4 rounded-[8px] text-white text-xs font-medium shadow-xs hover:opacity-95 transition-all cursor-pointer"
           >
             <FileText size={14} />
             <span>{t('templates.useTemplate') || "Use Template"}</span>

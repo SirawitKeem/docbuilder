@@ -29,6 +29,7 @@ import {
   Users,
 } from "lucide-react";
 import { AVAILABLE_TOKEN_CATEGORIES, fetchCustomTokens, mergeWithCustomTokens } from "@/lib/tokens/tokenEngine";
+import DeleteConfirmModal from "@/components/common/DeleteConfirmModal";
 
 
 export default function LeftSidebar({
@@ -49,6 +50,8 @@ export default function LeftSidebar({
   const [customTokens, setCustomTokens] = useState([]);
   const [isLoadingTokens, setIsLoadingTokens] = useState(false);
   const [showAddTokenModal, setShowAddTokenModal] = useState(false);
+  const [tokenToDelete, setTokenToDelete] = useState(null);
+  const [isDeletingToken, setIsDeletingToken] = useState(false);
   const [newTokenKey, setNewTokenKey] = useState("");
   const [newTokenLabel, setNewTokenLabel] = useState("");
   const [newTokenExample, setNewTokenExample] = useState("");
@@ -102,10 +105,22 @@ export default function LeftSidebar({
     }
   };
 
-  const handleDeleteCustomToken = async (id) => {
-    if (!confirm("ต้องการลบตัวแปรนี้ออกจากระบบ?")) return;
-    await fetch(`/api/custom-tokens/${id}`, { method: "DELETE" });
-    await loadCustomTokens();
+  const handleDeleteCustomToken = (tok) => {
+    setTokenToDelete(tok);
+  };
+
+  const handleConfirmDeleteToken = async () => {
+    if (!tokenToDelete) return;
+    setIsDeletingToken(true);
+    try {
+      await fetch(`/api/custom-tokens/${tokenToDelete.id}`, { method: "DELETE" });
+      await loadCustomTokens();
+      setTokenToDelete(null);
+    } catch (err) {
+      console.error("Failed to delete custom token:", err);
+    } finally {
+      setIsDeletingToken(false);
+    }
   };
 
   // All token categories (built-in + custom)
@@ -556,7 +571,7 @@ export default function LeftSidebar({
                       {/* Delete button for custom tokens */}
                       {tok.isCustom && (
                         <button
-                          onClick={(e) => { e.stopPropagation(); handleDeleteCustomToken(tok.id); }}
+                          onClick={(e) => { e.stopPropagation(); handleDeleteCustomToken(tok); }}
                           className="absolute top-1.5 right-1.5 p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity bg-white border border-red-200 text-red-400 hover:text-red-600 hover:bg-red-50 cursor-pointer shadow-2xs"
                           title="ลบตัวแปรนี้"
                         >
@@ -767,6 +782,20 @@ export default function LeftSidebar({
           </div>
         )}
       </div>
+
+      {/* Unified Delete Confirmation Modal */}
+      <DeleteConfirmModal
+        isOpen={Boolean(tokenToDelete)}
+        onClose={() => {
+          if (!isDeletingToken) setTokenToDelete(null);
+        }}
+        onConfirm={handleConfirmDeleteToken}
+        isLoading={isDeletingToken}
+        title="ลบตัวแปรนี้?"
+        description={`คุณแน่ใจหรือไม่ว่าต้องการลบตัวแปร "${tokenToDelete?.label || tokenToDelete?.key || ""}" ออกจากระบบ? การกระทำนี้ไม่สามารถย้อนกลับได้`}
+        cancelText="ยกเลิก"
+        confirmText="ลบตัวแปร"
+      />
     </aside>
   );
 }
